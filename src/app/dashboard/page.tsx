@@ -1,5 +1,5 @@
 import Items from '@/components/Items'
-import e from '@/dbschema/edgeql-js'
+import e from '@/edgeql'
 import { createClient } from 'edgedb'
 import Link from 'next/link'
 

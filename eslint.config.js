@@ -1,24 +1,12 @@
-import { FlatCompat } from "@eslint/eslintrc";
-import js from "@eslint/js";
+// @ts-check
 
-const compat = new FlatCompat();
+import eslint from '@eslint/js'
+import tseslint from 'typescript-eslint'
 
-export default [
+export default tseslint.config(
   {
-    ...compat
-      .extends(
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended-type-checked",
-        "plugin:@typescript-eslint/stylistic-type-checked",
-        "prettier",
-      )
-      .map((c) => ({
-        ...c,
-        files: ["**/*.{ts,tsx,mts}"],
-      })),
+    ignores: ['src/edgeql/', 'src/edgedb.interfaces.ts'],
   },
-  {
-    files: ["**/*.{js,jsx,cjs,mjs}"],
-    ...js.configs.recommended,
-  },
-];
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
+)

@@ -1,7 +1,7 @@
 import AddItem from '@/components/AddItem'
-import { ArrowLeftIcon } from '@heroicons/react/20/solid'
-import e from '@/dbschema/edgeql-js'
 import { auth } from '@/edgedb'
+import e from '@/edgeql'
+import { ArrowLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 
 const addItem = async (name: string) => {
