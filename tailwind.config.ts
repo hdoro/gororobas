@@ -22,6 +22,6 @@ const config: Config = {
       primaryhover: "rgb(35 157 122)",
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [require("@tailwindcss/forms"), require("tailwindcss-animate")],
 };
 export default config;
