@@ -9,6 +9,7 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { RadioGroup, RadioGroupItem } from './ui/radio-group'
+import HandleInput from './forms/HandleInput'
 
 enum Gender {
   MASCULINO = 'MASCULINO',
@@ -43,6 +44,18 @@ enum Gender {
 
 const Vegetable = S.Struct({
   names: S.Array(S.String.pipe(S.minLength(1))).pipe(S.minItems(1)),
+  handle: S.String.pipe(
+    S.minLength(1, {
+      message: () => 'Obrigatório',
+    }),
+    S.minLength(3, {
+      message: () => 'Obrigatório (mínimo de 3 caracteres)',
+    }),
+    S.pattern(/^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/, {
+      message: () =>
+        'O endereço não pode conter caracteres especiais, letras maiúsculas, espaços ou acentos',
+    }),
+  ),
   scientific_name: S.String.pipe(
     S.minLength(1, {
       message: () => 'Obrigatório',
@@ -161,87 +174,98 @@ export default function TestForm() {
           e.stopPropagation()
           form.handleSubmit()
         }}
+        className="space-y-6"
       >
-        <div className="space-y-6">
+        <form.Field
+          name="handle"
+          validators={{
+            // @ts-expect-error @TODO find way to type this
+            onChange: Vegetable.fields.handle,
+          }}
+          children={(field) => (
+            <FormField field={field} label="Endereço no site">
+              <HandleInput field={field} path="vegetais" />
+            </FormField>
+          )}
+        />
+        <form.Field
+          name="scientific_name"
+          validators={{
+            // @ts-expect-error @TODO find way to type this
+            onChange: Vegetable.fields.scientific_name,
+          }}
+          children={(field) => (
+            <FormField field={field} label="Nome científico">
+              <Input
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+              />
+            </FormField>
+          )}
+        />
+        <form.Field
+          name="gender"
+          validators={{
+            // @ts-expect-error @TODO find way to type this
+            onChange: Vegetable.fields.gender,
+          }}
+          children={(field) => (
+            <FormField field={field} label="Gênero gramatical">
+              <RadioGroup
+                defaultValue={field.state.value}
+                onValueChange={(value) => field.handleChange(value as Gender)}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value={Gender.MASCULINO}
+                    id={Gender.MASCULINO}
+                  />
+                  <Label htmlFor={Gender.MASCULINO}>Masculino</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value={Gender.FEMININO}
+                    id={Gender.FEMININO}
+                  />
+                  <Label htmlFor={Gender.FEMININO}>Feminino</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value={Gender.NEUTRO} id={Gender.NEUTRO} />
+                  <Label htmlFor={Gender.NEUTRO}>Neutro</Label>
+                </div>
+              </RadioGroup>
+            </FormField>
+          )}
+        />
+        <div className="grid grid-cols-2 gap-4">
           <form.Field
-            name="scientific_name"
+            name="height_min"
             validators={{
               // @ts-expect-error @TODO find way to type this
-              onChange: Vegetable.fields.scientific_name,
+              onChange: Vegetable.fields.height_min,
             }}
             children={(field) => (
-              <FormField field={field} label="Nome científico">
-                <Input
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
+              <FormField field={field} label="Altura mínima (cm)">
+                <NumberInput field={field} />
               </FormField>
             )}
           />
           <form.Field
-            name="gender"
+            name="height_max"
             validators={{
               // @ts-expect-error @TODO find way to type this
-              onChange: Vegetable.fields.gender,
+              onChange: Vegetable.fields.height_max,
             }}
             children={(field) => (
-              <FormField field={field} label="Gênero gramatical">
-                <RadioGroup
-                  defaultValue={field.state.value}
-                  onValueChange={(value) => field.handleChange(value as Gender)}
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value={Gender.MASCULINO}
-                      id={Gender.MASCULINO}
-                    />
-                    <Label htmlFor={Gender.MASCULINO}>Masculino</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value={Gender.FEMININO}
-                      id={Gender.FEMININO}
-                    />
-                    <Label htmlFor={Gender.FEMININO}>Feminino</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value={Gender.NEUTRO} id={Gender.NEUTRO} />
-                    <Label htmlFor={Gender.NEUTRO}>Neutro</Label>
-                  </div>
-                </RadioGroup>
+              <FormField field={field} label="Altura máxima (cm)">
+                <NumberInput field={field} />
               </FormField>
             )}
           />
-          <div className="grid grid-cols-2 gap-4">
-            <form.Field
-              name="height_min"
-              validators={{
-                // @ts-expect-error @TODO find way to type this
-                onChange: Vegetable.fields.height_min,
-              }}
-              children={(field) => (
-                <FormField field={field} label="Altura mínima (cm)">
-                  <NumberInput field={field} />
-                </FormField>
-              )}
-            />
-            <form.Field
-              name="height_max"
-              validators={{
-                // @ts-expect-error @TODO find way to type this
-                onChange: Vegetable.fields.height_max,
-              }}
-              children={(field) => (
-                <FormField field={field} label="Altura máxima (cm)">
-                  <NumberInput field={field} />
-                </FormField>
-              )}
-            />
-          </div>
         </div>
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Enviar</Button>
       </form>
     </div>
   )
