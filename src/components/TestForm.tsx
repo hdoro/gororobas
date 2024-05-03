@@ -1,15 +1,17 @@
+import type { VegetableUsage } from '@/types'
+import { USAGE_TO_LABEL } from '@/utils/labels'
 import { formatError } from '@effect/schema/ArrayFormatter'
 import * as S from '@effect/schema/Schema'
 import { useForm, type ValidationError } from '@tanstack/react-form'
 import { Effect, Either, pipe } from 'effect'
 import { MAX_ACCEPTED_HEIGHT } from '../utils/numbers'
+import CheckboxesInput from './forms/CheckboxesInput'
 import FormField from './forms/FormField'
+import HandleInput from './forms/HandleInput'
 import NumberInput from './forms/NumberInput'
+import RadioGroupInput from './forms/RadioGroupInput'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import { Label } from './ui/label'
-import { RadioGroup, RadioGroupItem } from './ui/radio-group'
-import HandleInput from './forms/HandleInput'
 
 enum Gender {
   MASCULINO = 'MASCULINO',
@@ -32,6 +34,8 @@ enum Gender {
  *      - Learn how to work with S.Optional() -> PropertySignatures went a bit over my head 🥴
  *      - Validate a S.struct with the optional field -> TS is complaining, but it works
  * - [x] Height field
+ * - [x] Handle input
+ * - [ ] Field IDs
  * - [ ] Async validation
  * - [ ] Default values
  * - [ ] Arrays
@@ -70,6 +74,13 @@ const Vegetable = S.Struct({
       blabla: 'bleble',
     },
   }),
+  usage: S.Array(
+    S.Literal(...(Object.keys(USAGE_TO_LABEL) as VegetableUsage[])),
+  )
+    .pipe(S.minItems(1))
+    .annotations({
+      message: () => 'Marque ao menos um uso',
+    }),
   height_min: S.optional(
     S.Int.pipe(
       S.positive({ message: () => 'Altura deve ser um número positivo' }),
@@ -158,6 +169,7 @@ const schemaValidator = () => {
 
 export default function TestForm() {
   const form = useForm<FormValueDecoded>({
+    options: {},
     // @ts-expect-error @TODO find way to type this
     validatorAdapter: schemaValidator,
     onSubmit: async ({ value, formApi }) => {
@@ -213,29 +225,31 @@ export default function TestForm() {
           }}
           children={(field) => (
             <FormField field={field} label="Gênero gramatical">
-              <RadioGroup
-                defaultValue={field.state.value}
-                onValueChange={(value) => field.handleChange(value as Gender)}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    value={Gender.MASCULINO}
-                    id={Gender.MASCULINO}
-                  />
-                  <Label htmlFor={Gender.MASCULINO}>Masculino</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    value={Gender.FEMININO}
-                    id={Gender.FEMININO}
-                  />
-                  <Label htmlFor={Gender.FEMININO}>Feminino</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value={Gender.NEUTRO} id={Gender.NEUTRO} />
-                  <Label htmlFor={Gender.NEUTRO}>Neutro</Label>
-                </div>
-              </RadioGroup>
+              <RadioGroupInput
+                field={field}
+                options={[
+                  { label: 'Feminino', value: Gender.FEMININO },
+                  { label: 'Masculino', value: Gender.MASCULINO },
+                  { label: 'Neutro', value: Gender.NEUTRO },
+                ]}
+              />
+            </FormField>
+          )}
+        />
+        <form.Field
+          name="usage"
+          validators={{
+            // @ts-expect-error @TODO find way to type this
+            onChange: Vegetable.fields.usage,
+          }}
+          children={(field) => (
+            <FormField field={field} label="Principais usos">
+              <CheckboxesInput
+                field={field}
+                options={Object.entries(USAGE_TO_LABEL).map(
+                  ([value, label]) => ({ value, label }),
+                )}
+              />
             </FormField>
           )}
         />

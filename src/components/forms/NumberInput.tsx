@@ -1,6 +1,7 @@
 import { formatCentimeters } from '@/utils/numbers'
 import { Input } from '../ui/input'
 import type { DeepKeys, FieldApi } from '@tanstack/react-form'
+import { getFieldId } from './form.utils'
 
 export default function NumberInput<
   FormValue extends Record<string, any>,
@@ -11,6 +12,7 @@ export default function NumberInput<
     <div className="relative">
       <Input
         name={field.name}
+        id={getFieldId(field)}
         value={value || ''}
         onBlur={field.handleBlur}
         onChange={(e) =>

@@ -1,6 +1,7 @@
 import type { DeepKeys, FieldApi } from '@tanstack/react-form'
 import { Input } from '../ui/input'
 import { slugify } from '@/utils/strings'
+import { getFieldId } from './form.utils'
 
 export default function HandleInput<
   FormValue extends Record<string, any>,
@@ -11,13 +12,14 @@ export default function HandleInput<
     <div className="flex">
       <div
         className={
-          'h-10 w-full rounded-l-md rounded-r-none border border-gray-200 bg-gray-50 px-3 py-2 text-sm flex-[0_0_max-content]'
+          'h-10 w-full flex items-center rounded-l-md rounded-r-none border border-gray-200 bg-gray-50 px-3 py-2 text-sm flex-[0_0_max-content]'
         }
       >
         gororobas.com/{path}/
       </div>
       <Input
         name={field.name}
+        id={getFieldId(field)}
         type="text"
         value={value}
         onBlur={(e) => {
