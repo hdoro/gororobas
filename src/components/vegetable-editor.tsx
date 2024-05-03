@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
   Select,
@@ -18,6 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { ChevronLeftIcon, UploadIcon } from 'lucide-react'
+import TestForm from './TestForm'
 
 export function VegetableEditor() {
   return (
@@ -50,35 +50,7 @@ export function VegetableEditor() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid gap-6">
-                      <div className="grid gap-3">
-                        <Label htmlFor="name">Name</Label>
-                        <Input
-                          className="w-full"
-                          defaultValue="Gamer Gear Pro Controller"
-                          id="name"
-                          type="text"
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="grid gap-3">
-                          <Label htmlFor="altura-min">Altura Mínima (cm)</Label>
-                          <Input
-                            defaultValue="10"
-                            id="altura-min"
-                            type="number"
-                          />
-                        </div>
-                        <div className="grid gap-3">
-                          <Label htmlFor="altura-max">Altura Máxima (cm)</Label>
-                          <Input
-                            defaultValue="100"
-                            id="altura-max"
-                            type="number"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    <TestForm />
                   </CardContent>
                 </Card>
                 <Card>

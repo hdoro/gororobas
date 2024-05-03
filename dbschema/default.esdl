@@ -5,13 +5,15 @@ module default {
 
   global current_user := (
     assert_single((
-      select User { id, name, email, userRole }
+      select User
       filter .identity = global ext::auth::ClientTokenIdentity
     ))
   );
 
   type User {
-    required identity: ext::auth::Identity;
+    required identity: ext::auth::Identity {
+      constraint exclusive;
+    };
     required name: str;
     email: str;
   
