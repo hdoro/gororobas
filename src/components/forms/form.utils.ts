@@ -5,5 +5,5 @@ export function getFieldId(
   formId?: string,
 ) {
   const name = typeof fieldOrName === 'string' ? fieldOrName : fieldOrName.name
-  return `field-${formId}-${name}`
+  return `field-${formId || ''}-${name}`
 }

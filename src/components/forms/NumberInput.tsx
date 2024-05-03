@@ -6,7 +6,13 @@ import { getFieldId } from './form.utils'
 export default function NumberInput<
   FormValue extends Record<string, any>,
   FieldName extends DeepKeys<FormValue>,
->({ field }: { field: FieldApi<FormValue, FieldName> }) {
+>({
+  field,
+  format = 'none',
+}: {
+  field: FieldApi<FormValue, FieldName>
+  format?: 'none' | 'centimeters' | 'temperature'
+}) {
   const value = Number(field.state.value)
   return (
     <div className="relative">
@@ -20,17 +26,22 @@ export default function NumberInput<
         }
         type="number"
       />
-      {value ? (
+      {value && format !== 'none' ? (
         <div
           className="absolute inset-y-0 flex items-center pl-3 text-sm text-gray-600 select-none font-normal"
           style={{
             left: `calc(${value?.toString().length || 1} * 1ch)`,
           }}
         >
-          cm{' '}
-          {!Number.isNaN(value) &&
-            value >= 100 &&
-            `(${formatCentimeters(value)})`}
+          {format === 'centimeters' && (
+            <>
+              cm{' '}
+              {!Number.isNaN(value) &&
+                value >= 100 &&
+                `(${formatCentimeters(value)})`}
+            </>
+          )}
+          {format === 'temperature' && <>ºC</>}
         </div>
       ) : null}
     </div>

@@ -24,7 +24,7 @@ export const DECIDUOUSNESS_TO_LABEL = {
   PERENIFOLIA: 'Perenifólia',
 } as const
 
-export const VEGETABLE_CYCLE_TO_LABEL = {
+export const VEGETABLE_LIFECYCLE_TO_LABEL = {
   SEMESTRAL: 'Semestral',
   ANUAL: 'Anual',
   BIENAL: 'Bienal',

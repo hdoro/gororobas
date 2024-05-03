@@ -1,6 +1,16 @@
-import type { USAGE_TO_LABEL } from '@/utils/labels'
+import type {
+  EDIBLE_PART_TO_LABEL,
+  PLANTING_METHOD_TO_LABEL,
+  STRATUM_TO_LABEL,
+  USAGE_TO_LABEL,
+  VEGETABLE_LIFECYCLE_TO_LABEL,
+} from '@/utils/labels'
 
 export type VegetableUsage = keyof typeof USAGE_TO_LABEL
+export type Stratum = keyof typeof STRATUM_TO_LABEL
+export type VegetableEdiblePart = keyof typeof EDIBLE_PART_TO_LABEL
+export type VegetableLifecycle = keyof typeof VEGETABLE_LIFECYCLE_TO_LABEL
+export type PlantingMethod = keyof typeof PLANTING_METHOD_TO_LABEL
 
 export type FormOption = {
   value: string
