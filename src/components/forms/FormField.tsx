@@ -2,7 +2,7 @@ import { cn } from '@/utils/cn'
 import type { DeepKeys, FieldApi } from '@tanstack/react-form'
 import type { PropsWithChildren } from 'react'
 import { Label } from '../ui/label'
-import { getFieldId } from './form.utils'
+import { getFieldId, getFieldLabelId } from './form.utils'
 
 export default function FormField<
   FormValue extends Record<string, any>,
@@ -21,6 +21,7 @@ export default function FormField<
       <Label
         className={cn(hasErrors && 'text-red-700')}
         htmlFor={getFieldId(field)}
+        id={getFieldLabelId(field.name)}
       >
         {label}
       </Label>

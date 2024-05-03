@@ -2,7 +2,7 @@ import type { FormOption } from '@/types'
 import type { DeepKeys, FieldApi } from '@tanstack/react-form'
 import { Label } from '../ui/label'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import { getFieldId } from './form.utils'
+import { getFieldId, getFieldProps } from './form.utils'
 
 export default function RadioGroupInput<
   FormValue extends Record<string, any>,
@@ -27,7 +27,11 @@ export default function RadioGroupInput<
         const id = `${getFieldId(field)}-${option.value}`
         return (
           <div key={id} className="flex items-center gap-2">
-            <RadioGroupItem value={option.value} id={id} />
+            <RadioGroupItem
+              {...getFieldProps(field)}
+              value={option.value}
+              id={id}
+            />
 
             <div className="space-y-1.5 leading-none">
               <Label htmlFor={id} className="font-normal">

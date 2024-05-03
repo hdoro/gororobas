@@ -1,7 +1,7 @@
+import { slugify } from '@/utils/strings'
 import type { DeepKeys, FieldApi } from '@tanstack/react-form'
 import { Input } from '../ui/input'
-import { slugify } from '@/utils/strings'
-import { getFieldId } from './form.utils'
+import { getFieldProps } from './form.utils'
 
 export default function HandleInput<
   FormValue extends Record<string, any>,
@@ -18,8 +18,7 @@ export default function HandleInput<
         gororobas.com/{path}/
       </div>
       <Input
-        name={field.name}
-        id={getFieldId(field)}
+        {...getFieldProps(field)}
         type="text"
         value={value}
         onBlur={(e) => {

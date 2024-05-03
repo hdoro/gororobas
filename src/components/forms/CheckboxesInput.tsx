@@ -1,7 +1,7 @@
 import type { FormOption } from '@/types'
 import type { DeepKeys, FieldApi } from '@tanstack/react-form'
 import { Checkbox } from '../ui/checkbox'
-import { getFieldId } from './form.utils'
+import { getFieldId, getFieldProps } from './form.utils'
 import type { CheckedState } from '@radix-ui/react-checkbox'
 import { useCallback } from 'react'
 import { Label } from '../ui/label'
@@ -40,8 +40,8 @@ export default function CheckboxesInput<
         return (
           <div className="items-top flex gap-2">
             <Checkbox
+              {...getFieldProps(field)}
               id={id}
-              name={field.name}
               value={option.value}
               checked={value.includes(option.value)}
               onCheckedChange={toggleOption(option.value)}

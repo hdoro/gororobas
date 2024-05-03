@@ -1,5 +1,11 @@
 import { Gender, Vegetable } from '@/schemas'
-import { USAGE_TO_LABEL } from '@/utils/labels'
+import {
+  EDIBLE_PART_TO_LABEL,
+  PLANTING_METHOD_TO_LABEL,
+  STRATUM_TO_LABEL,
+  USAGE_TO_LABEL,
+  VEGETABLE_LIFECYCLE_TO_LABEL,
+} from '@/utils/labels'
 import schemaValidator from '@/utils/schemaValidator'
 import * as S from '@effect/schema/Schema'
 import { useForm } from '@tanstack/react-form'
@@ -8,12 +14,10 @@ import FormField from './forms/FormField'
 import HandleInput from './forms/HandleInput'
 import NumberInput from './forms/NumberInput'
 import RadioGroupInput from './forms/RadioGroupInput'
-import { getFieldId } from './forms/form.utils'
+import TextInput from './forms/TextInput'
 import { Button } from './ui/button'
-import { Input } from './ui/input'
 
 type FormValueDecoded = S.Schema.Type<typeof Vegetable>
-type FormDefaultValue = Partial<FormValueDecoded>
 
 /**
  * FORM REQUIREMENTS:
@@ -31,25 +35,27 @@ type FormDefaultValue = Partial<FormValueDecoded>
  *      - Validate a S.struct with the optional field -> TS is complaining, but it works
  * - [x] Height field
  * - [x] Handle input
- * - [ ] Different number formatters
+ * - [x] Different number formatters
+ * - [x] Field IDs
+ * - [ ] Arrays
+ * - [ ] Objects
+ * - [ ] Arrays of objects
  * - [ ] Finish schema
- * - [ ] Field IDs
  * - [ ] Field dependency - edible_parts only if `ALIMENTO_HUMANO` in `usage`
  * - [ ] Async validation
  * - [ ] Default values
- * - [ ] Arrays
- * - [ ] Objects
  *
  * ## IMPROVEMENTS
  * - [ ] Less hacky approach to validating optionals
  * - [ ] Numbers from text fields (I think number inputs have bunch of issues, don't remember why)
+ * - [ ] Find a way of appending to `FieldAPI` so we can include unique `IDs` to them
  */
 export default function TestForm() {
   const form = useForm<FormValueDecoded>({
     options: {},
     // @ts-expect-error @TODO find way to type this
     validatorAdapter: schemaValidator,
-    onSubmit: async ({ value, formApi }) => {
+    onSubmit: async ({ value }) => {
       // Do something with form data
       console.log({ submitted: value })
     },
@@ -85,13 +91,7 @@ export default function TestForm() {
           }}
           children={(field) => (
             <FormField field={field} label="Nome científico">
-              <Input
-                id={getFieldId(field)}
-                name={field.name}
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
+              <TextInput field={field} />
             </FormField>
           )}
         />
@@ -125,6 +125,75 @@ export default function TestForm() {
               <CheckboxesInput
                 field={field}
                 options={Object.entries(USAGE_TO_LABEL).map(
+                  ([value, label]) => ({ value, label }),
+                )}
+              />
+            </FormField>
+          )}
+        />
+        {/* @TODO: make conditional */}
+        <form.Field
+          name="edible_parts"
+          validators={{
+            // @ts-expect-error @TODO find way to type this
+            onChange: Vegetable.fields.edible_parts,
+          }}
+          children={(field) => (
+            <FormField field={field} label="Partes comestíveis">
+              <CheckboxesInput
+                field={field}
+                options={Object.entries(EDIBLE_PART_TO_LABEL).map(
+                  ([value, label]) => ({ value, label }),
+                )}
+              />
+            </FormField>
+          )}
+        />
+        <form.Field
+          name="lifecycle"
+          validators={{
+            // @ts-expect-error @TODO find way to type this
+            onChange: Vegetable.fields.lifecycle,
+          }}
+          children={(field) => (
+            <FormField field={field} label="Partes comestíveis">
+              <CheckboxesInput
+                field={field}
+                options={Object.entries(VEGETABLE_LIFECYCLE_TO_LABEL).map(
+                  ([value, label]) => ({ value, label }),
+                )}
+              />
+            </FormField>
+          )}
+        />
+        <form.Field
+          name="stratum"
+          validators={{
+            // @ts-expect-error @TODO find way to type this
+            onChange: Vegetable.fields.stratum,
+          }}
+          children={(field) => (
+            <FormField field={field} label="Partes comestíveis">
+              <CheckboxesInput
+                field={field}
+                options={Object.entries(STRATUM_TO_LABEL).map(
+                  ([value, label]) => ({ value, label }),
+                )}
+              />
+            </FormField>
+          )}
+        />
+        <form.Field
+          name="planting_method"
+          validators={{
+            // @ts-expect-error @TODO find way to type this
+            onChange: Vegetable.fields.planting_method,
+          }}
+          children={(field) => (
+            <FormField field={field} label="Plantio por">
+              <CheckboxesInput
+                field={field}
+                options={Object.entries(PLANTING_METHOD_TO_LABEL).map(
                   ([value, label]) => ({ value, label }),
                 )}
               />
