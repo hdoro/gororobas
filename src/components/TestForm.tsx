@@ -9,6 +9,7 @@ import {
 import schemaValidator from '@/utils/schemaValidator'
 import * as S from '@effect/schema/Schema'
 import { useForm } from '@tanstack/react-form'
+import ArrayInput from './forms/ArrayInput'
 import CheckboxesInput from './forms/CheckboxesInput'
 import FormField from './forms/FormField'
 import HandleInput from './forms/HandleInput'
@@ -37,7 +38,7 @@ type FormValueDecoded = S.Schema.Type<typeof Vegetable>
  * - [x] Handle input
  * - [x] Different number formatters
  * - [x] Field IDs
- * - [ ] Arrays
+ * - [ ] Arrays - Can't add items, issue with forms
  * - [ ] Objects
  * - [ ] Arrays of objects
  * - [ ] Finish schema
@@ -52,7 +53,11 @@ type FormValueDecoded = S.Schema.Type<typeof Vegetable>
  */
 export default function TestForm() {
   const form = useForm<FormValueDecoded>({
-    options: {},
+    // @ts-expect-error @TODO find way of typing default values
+    defaultValues: {
+      names: [],
+      varieties: [],
+    },
     // @ts-expect-error @TODO find way to type this
     validatorAdapter: schemaValidator,
     onSubmit: async ({ value }) => {
@@ -71,6 +76,31 @@ export default function TestForm() {
         }}
         className="space-y-6"
       >
+        <form.Field
+          name="names"
+          validators={{
+            // @ts-expect-error @TODO find way to type this
+            onChange: Vegetable.fields.names,
+          }}
+          children={(field) => (
+            <FormField field={field} label="Nomes">
+              <ArrayInput
+                field={field}
+                newItemValue={{ value: '' }}
+                renderItem={(index) => (
+                  <>
+                    <form.Field name={`${field.name}[${index}].value`}>
+                      {(subField) => <TextInput field={subField} />}
+                    </form.Field>
+                    <form.Field name={`${field.name}[${index}].id`}>
+                      {(subField) => null}
+                    </form.Field>
+                  </>
+                )}
+              />
+            </FormField>
+          )}
+        />
         <form.Field
           name="handle"
           validators={{
@@ -252,6 +282,71 @@ export default function TestForm() {
             )}
           />
         </div>
+        <form.Field
+          name="varieties"
+          mode="array"
+          validators={{
+            // @ts-expect-error @TODO find way to type this
+            onChange: Vegetable.fields.varieties,
+          }}
+          children={(field) => (
+            <FormField field={field} label="Variedades">
+              <ArrayInput
+                field={field}
+                newItemValue={{
+                  names: [],
+                  photos: [],
+                }}
+                renderItem={(index) => {
+                  return (
+                    <div key={index}>
+                      <form.Field
+                        name={`${field.name}[${index}].names`}
+                        children={(subField) => (
+                          <FormField field={subField} label="Nomes">
+                            <TextInput field={subField} />
+                          </FormField>
+                        )}
+                      />
+                      <form.Field
+                        name={`${field.name}[${index}].photos`}
+                        mode="array"
+                        // @TODO: validate
+                        children={(subField) => (
+                          <FormField field={subField} label="Nomes">
+                            <ArrayInput
+                              field={field}
+                              newItemValue={{
+                                label: '',
+                                photo: '',
+                                sources: [],
+                              }}
+                              renderItem={(photoIndex) => (
+                                <div key={photoIndex}>
+                                  <form.Field
+                                    name={`${field.name}[${index}].${subField.name}[${photoIndex}].label`}
+                                    children={(photoSubField) => (
+                                      <FormField
+                                        field={photoSubField}
+                                        label="Rótulo da imagem"
+                                      >
+                                        <TextInput field={photoSubField} />
+                                      </FormField>
+                                    )}
+                                  />
+                                </div>
+                              )}
+                            />
+                          </FormField>
+                        )}
+                      />
+                    </div>
+                  )
+                }}
+              ></ArrayInput>
+            </FormField>
+          )}
+        />
         <Button type="submit">Enviar</Button>
       </form>
     </div>

@@ -21,8 +21,54 @@ export enum Gender {
   NEUTRO = 'NEUTRO',
 }
 
+/**
+ * Missing data:
+ * - Varieties
+ * - Photos
+ * - Suggestions & tips
+ * - Rich text
+ */
+
+const SourceGororobas = S.Struct({
+  sourceType: S.Literal('gororobas'),
+  userId: S.UUID,
+})
+
+const SourceExternal = S.Struct({
+  sourceType: S.Literal('external'),
+  credits: S.String.pipe(S.minLength(1)),
+  source: S.optional(S.String),
+})
+
+const Source = S.Union(SourceGororobas, SourceExternal)
+
+const PhotoWithCredits = S.Struct({
+  photo: S.Base64,
+  label: S.String,
+  sources: S.Array(Source),
+})
+
+const VegetableVariety = S.Struct({
+  names: S.Array(S.String.pipe(S.minLength(1)))
+    .pipe(S.minItems(1))
+    .annotations({
+      message: () => 'Adicione ao menos um nome',
+    }),
+  photos: S.Array(PhotoWithCredits),
+})
+
+const Name = S.Struct({
+  value: S.String.pipe(S.minLength(3)),
+  id: S.String,
+  // id: S.UUID,
+})
+
 export const Vegetable = S.Struct({
-  names: S.Array(S.String.pipe(S.minLength(1))).pipe(S.minItems(1)),
+  names: S.Array(Name)
+    .pipe(S.minItems(1))
+    .annotations({
+      message: () => 'Adicione ao menos um nome',
+    }),
   handle: S.String.pipe(
     S.minLength(1, {
       message: () => 'Obrigatório',
@@ -57,6 +103,7 @@ export const Vegetable = S.Struct({
     .annotations({
       message: () => 'Marque ao menos uma opção',
     }),
+  // @TODO: plural or singular?
   edible_parts: S.optional(
     S.Array(
       S.Literal(
@@ -117,4 +164,7 @@ export const Vegetable = S.Struct({
       }),
     ),
   ),
+
+  varieties: S.optional(S.Array(VegetableVariety)),
+  photos: S.optional(S.Array(PhotoWithCredits)),
 })

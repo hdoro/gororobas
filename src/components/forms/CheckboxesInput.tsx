@@ -38,7 +38,7 @@ export default function CheckboxesInput<
       {options.map((option) => {
         const id = `${getFieldId(field)}-${option.value}`
         return (
-          <div className="items-top flex gap-2">
+          <div key={id} className="items-top flex gap-2">
             <Checkbox
               {...getFieldProps(field)}
               id={id}
