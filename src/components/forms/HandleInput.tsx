@@ -12,7 +12,7 @@ export default function HandleInput<
     <div className="flex">
       <div
         className={
-          'h-10 w-full flex items-center rounded-l-md rounded-r-none border border-gray-200 bg-gray-50 px-3 py-2 text-sm flex-[0_0_max-content]'
+          'h-10 w-full flex items-center rounded-l-md rounded-r-none border bg-foreground/5 px-3 py-2 text-sm flex-[0_0_max-content]'
         }
       >
         gororobas.com/{path}/
