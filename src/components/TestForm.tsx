@@ -17,6 +17,7 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import NumberInput from './forms/NumberInput'
 import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
+import PhotoWithCreditsInput from './forms/PhotoWithCreditsInput'
 
 type FormValueDecoded = S.Schema.Type<typeof Vegetable>
 
@@ -105,13 +106,17 @@ export default function TestForm() {
             form={form}
             name="scientific_name"
             label="Nome científico"
-            render={({ field }) => <Input {...field} type="text" />}
+            render={({ field }) => (
+              <Input {...field} value={field.value || ''} type="text" />
+            )}
           />
           <Field
             form={form}
             name="origin"
             label="Origem"
-            render={({ field }) => <Input {...field} type="text" />}
+            render={({ field }) => (
+              <Input {...field} value={field.value || ''} type="text" />
+            )}
           />
           <Field
             form={form}
@@ -141,8 +146,6 @@ export default function TestForm() {
               />
             )}
           />
-
-          {/* @TODO: make conditional */}
           <Field
             form={form}
             name="edible_parts"
@@ -231,6 +234,13 @@ export default function TestForm() {
               )}
             />
           </div>
+
+          <Field
+            form={form}
+            name="photo_test"
+            label="Foto teste"
+            render={({ field }) => <PhotoWithCreditsInput field={field} />}
+          />
 
           <Button type="submit">Enviar</Button>
         </form>

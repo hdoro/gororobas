@@ -99,3 +99,8 @@ export const TIP_SUBJECT_TO_LABEL = {
   crescimento: 'Crescimento',
   colheita: 'Colheita e pós colheita',
 } as const
+
+export const SOURCE_TYPE_TO_LABEL = {
+  GOROROBAS: 'Pessoa no Gororobas',
+  EXTERNAL: 'Externa',
+} as const

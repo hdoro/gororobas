@@ -1,5 +1,6 @@
 import type {
   PlantingMethod,
+  SourceType,
   Stratum,
   VegetableEdiblePart,
   VegetableLifecycle,
@@ -29,24 +30,27 @@ export enum Gender {
  * - Rich text
  */
 
-const SourceGororobas = S.Struct({
-  sourceType: S.Literal('gororobas'),
-  userId: S.UUID,
+const SourceGororobasInForm = S.Struct({
+  sourceType: S.Literal('GOROROBAS' satisfies SourceType),
+  userIds: S.Array(S.UUID),
 })
 
-const SourceExternal = S.Struct({
-  sourceType: S.Literal('external'),
+const SourceExternalInForm = S.Struct({
+  sourceType: S.Literal('EXTERNAL' satisfies SourceType),
   credits: S.String.pipe(S.minLength(1)),
   source: S.optional(S.String),
 })
 
-const Source = S.Union(SourceGororobas, SourceExternal)
+const Source = S.Union(SourceGororobasInForm, SourceExternalInForm)
 
-const PhotoWithCredits = S.Struct({
-  photo: S.Base64,
-  label: S.String,
-  sources: S.Array(Source),
-})
+const PhotoWithCreditsInForm = S.extend(
+  S.Struct({
+    photo: S.Base64,
+    label: S.String,
+  }),
+  // Although we'll store sources as an array, for now we're only allowing a single source
+  Source,
+)
 
 const VegetableVariety = S.Struct({
   names: S.Array(S.String.pipe(S.minLength(1)))
@@ -54,7 +58,7 @@ const VegetableVariety = S.Struct({
     .annotations({
       message: () => 'Adicione ao menos um nome',
     }),
-  photos: S.Array(PhotoWithCredits),
+  photos: S.Array(PhotoWithCreditsInForm),
 })
 
 const Name = S.Struct({
@@ -66,6 +70,7 @@ const Name = S.Struct({
 
 export const Vegetable = S.Struct({
   names: S.Array(Name).pipe(S.minItems(1)),
+  photo_test: S.optional(PhotoWithCreditsInForm),
   handle: S.String.pipe(
     S.minLength(1, {
       message: () => 'Obrigatório',
@@ -163,5 +168,5 @@ export const Vegetable = S.Struct({
   ),
 
   varieties: S.optional(S.Array(VegetableVariety)),
-  photos: S.optional(S.Array(PhotoWithCredits)),
+  photos: S.optional(S.Array(PhotoWithCreditsInForm)),
 })
