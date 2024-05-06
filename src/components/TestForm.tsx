@@ -93,7 +93,7 @@ export default function TestForm() {
                       {(subField) => <TextInput field={subField} />}
                     </form.Field>
                     <form.Field name={`${field.name}[${index}].id`}>
-                      {(subField) => null}
+                      {() => null}
                     </form.Field>
                   </>
                 )}

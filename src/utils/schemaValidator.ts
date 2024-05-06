@@ -5,7 +5,7 @@ import { Effect, Either, pipe } from 'effect'
 
 const schemaValidator = () => {
   return {
-    validate: <A, FieldSchema extends S.Schema<A, any, never>>(
+    validate: <A, FieldSchema extends S.Schema<A, unknown, never>>(
       { value }: { value: A },
       fieldSchema:
         | FieldSchema
@@ -42,7 +42,7 @@ const schemaValidator = () => {
           .join(';\n')
       }
     },
-    async validateAsync<A, FieldSchema extends S.Schema<A, any, never>>(
+    async validateAsync<A, FieldSchema extends S.Schema<A, unknown, never>>(
       { value }: { value: A },
       fieldSchema: FieldSchema,
     ): Promise<ValidationError> {
