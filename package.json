@@ -32,9 +32,10 @@
     "next": "^14.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-hook-form": "^7.51.3",
+    "react-hook-form": "^7.51.4",
     "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.6"
   },
   "devDependencies": {
     "@edgedb/generate": "^0.5.3",
@@ -49,7 +50,9 @@
     "eslint": "^9.1.1",
     "eslint-config-next": "^14.2.3",
     "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.0.11",
     "inquirer": "^9.2.20",
+    "lint-staged": "^15.2.2",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
     "tailwindcss": "^3.4.3",
@@ -60,10 +63,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src/**/*.{ts,tsx} --no-warn-ignored",
+    "format": "prettier src --write",
+    "lint": "eslint src/**/*.{ts,tsx} --no-warn-ignored -c eslint.config.js",
     "auth:setup": "pnpm esr password-auth-setup.ts",
     "generate:edgeql": "npx @edgedb/generate edgeql-js --out src/edgeql",
     "generate:interfaces": "npx @edgedb/generate interfaces --file src/edgedb.interfaces.ts",
-    "generate:all": "pnpm generate:edgeql && pnpm generate:interfaces"
+    "generate:all": "pnpm generate:edgeql && pnpm generate:interfaces",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{ts,tsx}": "prettier --write"
   }
 }
