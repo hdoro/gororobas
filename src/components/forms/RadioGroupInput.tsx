@@ -1,49 +1,43 @@
 import type { FormOption } from '@/types'
-import type { DeepKeys, FieldApi } from '@tanstack/react-form'
-import { Label } from '../ui/label'
+import type {
+  ControllerRenderProps,
+  FieldPath,
+  FieldValues,
+} from 'react-hook-form'
+import { FormControl, FormItem, FormLabel } from '../ui/form'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import { getFieldId, getFieldProps } from './form.utils'
 
 export default function RadioGroupInput<
-  FormValue extends Record<string, any>,
-  FieldName extends DeepKeys<FormValue>,
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   field,
   options,
 }: {
-  field: FieldApi<FormValue, FieldName>
+  field: ControllerRenderProps<TFieldValues, TName>
   options: FormOption[]
 }) {
-  const value = (field.state.value as string) || ''
-
   return (
     <RadioGroup
-      defaultValue={value}
-      onValueChange={(newValue) =>
-        field.handleChange(newValue as typeof field.state.value)
-      }
+      defaultValue={field.value}
+      onValueChange={(newValue) => field.onChange(newValue)}
     >
       {options.map((option) => {
-        const id = `${getFieldId(field)}-${option.value}`
         return (
-          <div key={id} className="flex items-center gap-2">
-            <RadioGroupItem
-              {...getFieldProps(field)}
-              value={option.value}
-              id={id}
-            />
+          <FormItem key={option.value} className="flex items-center gap-2">
+            <FormControl>
+              <RadioGroupItem value={option.value} />
+            </FormControl>
 
             <div className="space-y-1.5 leading-none">
-              <Label htmlFor={id} className="font-normal">
-                {option.label}
-              </Label>
+              <FormLabel className="font-normal">{option.label}</FormLabel>
               {option.description && (
                 <p className="text-sm text-muted-foreground">
                   {option.description}
                 </p>
               )}
             </div>
-          </div>
+          </FormItem>
         )
       })}
     </RadioGroup>

@@ -1,28 +1,28 @@
 import { formatCentimeters } from '@/utils/numbers'
-import type { DeepKeys, FieldApi } from '@tanstack/react-form'
+import type {
+  ControllerRenderProps,
+  FieldPath,
+  FieldValues,
+} from 'react-hook-form'
 import { Input } from '../ui/input'
-import { getFieldProps } from './form.utils'
 
 export default function NumberInput<
-  FormValue extends Record<string, any>,
-  FieldName extends DeepKeys<FormValue>,
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   field,
   format = 'none',
 }: {
-  field: FieldApi<FormValue, FieldName>
+  field: ControllerRenderProps<TFieldValues, TName>
   format?: 'none' | 'centimeters' | 'temperature'
 }) {
-  const value = Number(field.state.value)
+  const value = Number(field.value)
   return (
     <div className="relative">
       <Input
-        {...getFieldProps(field)}
+        {...field}
         value={value || ''}
-        onBlur={field.handleBlur}
-        onChange={(e) =>
-          field.handleChange(Number(e.target.value) as typeof field.state.value)
-        }
+        onChange={(e) => field.onChange(Number(e.target.value))}
         type="number"
       />
       {value && format !== 'none' ? (

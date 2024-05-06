@@ -15,47 +15,60 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import type { DeepKeys, FieldApi } from '@tanstack/react-form'
 import { GripVerticalIcon, TrashIcon } from 'lucide-react'
 import { type PropsWithChildren } from 'react'
+import {
+  useFieldArray,
+  useFormContext,
+  type ControllerRenderProps,
+  type FieldArray,
+  type FieldPath,
+  type FieldValues,
+} from 'react-hook-form'
 import { Button } from '../ui/button'
 
 export default function ArrayInput<
-  ItemType extends { id: UniqueIdentifier },
-  FormValue extends Record<string, any>,
-  FieldName extends DeepKeys<FormValue>,
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   field,
   newItemValue,
   renderItem,
 }: {
-  field: FieldApi<FormValue, FieldName>
-  newItemValue: Omit<ItemType, 'id'>
+  field: ControllerRenderProps<TFieldValues, TName>
+  newItemValue: FieldArray<FieldValues, TName>
   renderItem: (index: number) => JSX.Element
 }) {
+  const { control } = useFormContext()
+  const fieldArray = useFieldArray({
+    control,
+    name: field.name,
+    keyName: 'id',
+  })
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   )
-  const value = (field.state.value as Array<ItemType>) || []
 
   return (
     <div className="space-y-3">
-      <pre>{JSON.stringify(value, null, 2)}</pre>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={value} strategy={verticalListSortingStrategy}>
-          {value.map((item, index) => (
+        <SortableContext
+          items={fieldArray.fields}
+          strategy={verticalListSortingStrategy}
+        >
+          {fieldArray.fields.map((item, index) => (
             <SortableItem
               key={item.id}
               id={item.id}
               index={index}
-              removeItem={() => field.removeValue(index)}
+              removeItem={() => fieldArray.remove(index)}
             >
               {renderItem(index)}
             </SortableItem>
@@ -64,10 +77,7 @@ export default function ArrayInput<
       </DndContext>
       <Button
         onClick={() => {
-          field.pushValue({
-            ...newItemValue,
-            id: Math.random().toString().split('.')[1],
-          } as any)
+          fieldArray.append(newItemValue)
         }}
         type="button"
       >
@@ -80,10 +90,13 @@ export default function ArrayInput<
     const { active, over } = event
 
     if (over && active.id !== over.id) {
-      const oldIndex = value.findIndex((item) => item.id === active.id)
-      const newIndex = value.findIndex((item) => item.id === over.id)
-      console.log({ oldIndex, newIndex, over, active })
-      field.moveValue(oldIndex, newIndex)
+      const oldIndex = fieldArray.fields.findIndex(
+        (item) => item.id === active.id,
+      )
+      const newIndex = fieldArray.fields.findIndex(
+        (item) => item.id === over.id,
+      )
+      fieldArray.move(oldIndex, newIndex)
     }
   }
 }

@@ -1,13 +1,21 @@
 import { slugify } from '@/utils/strings'
-import type { DeepKeys, FieldApi } from '@tanstack/react-form'
+import type {
+  ControllerRenderProps,
+  FieldPath,
+  FieldValues,
+} from 'react-hook-form'
 import { Input } from '../ui/input'
-import { getFieldProps } from './form.utils'
 
 export default function HandleInput<
-  FormValue extends Record<string, any>,
-  FieldName extends DeepKeys<FormValue>,
->({ field, path }: { field: FieldApi<FormValue, FieldName>; path: string }) {
-  const value = (field.state.value as string) || ''
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
+  field,
+  path,
+}: {
+  field: ControllerRenderProps<TFieldValues, TName>
+  path: string
+}) {
   return (
     <div className="flex">
       <div
@@ -18,18 +26,14 @@ export default function HandleInput<
         gororobas.com/{path}/
       </div>
       <Input
-        {...getFieldProps(field)}
+        {...field}
         type="text"
-        value={value}
         onBlur={(e) => {
-          field.handleChange(
-            slugify(e.target.value as string) as typeof field.state.value,
+          field.onChange(
+            slugify(e.target.value as string) as typeof field.value,
           )
-          field.handleBlur()
+          field.onBlur()
         }}
-        onChange={(e) =>
-          field.handleChange(e.target.value as typeof field.state.value)
-        }
         className="rounded-r-md rounded-l-none"
       />
     </div>

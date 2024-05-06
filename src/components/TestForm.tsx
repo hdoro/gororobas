@@ -6,17 +6,16 @@ import {
   USAGE_TO_LABEL,
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
-import schemaValidator from '@/utils/schemaValidator'
 import * as S from '@effect/schema/Schema'
-import { useForm } from '@tanstack/react-form'
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import ArrayInput from './forms/ArrayInput'
 import CheckboxesInput from './forms/CheckboxesInput'
-import FormField from './forms/FormField'
+import Field from './forms/Field'
 import HandleInput from './forms/HandleInput'
-import NumberInput from './forms/NumberInput'
 import RadioGroupInput from './forms/RadioGroupInput'
-import TextInput from './forms/TextInput'
 import { Button } from './ui/button'
+import { Input } from './ui/input'
+import NumberInput from './forms/NumberInput'
 
 type FormValueDecoded = S.Schema.Type<typeof Vegetable>
 
@@ -38,7 +37,7 @@ type FormValueDecoded = S.Schema.Type<typeof Vegetable>
  * - [x] Handle input
  * - [x] Different number formatters
  * - [x] Field IDs
- * - [ ] Arrays - Can't add items, issue with forms
+ * - [x] Arrays
  * - [ ] Objects
  * - [ ] Arrays of objects
  * - [ ] Finish schema
@@ -49,90 +48,56 @@ type FormValueDecoded = S.Schema.Type<typeof Vegetable>
  * ## IMPROVEMENTS
  * - [ ] Less hacky approach to validating optionals
  * - [ ] Numbers from text fields (I think number inputs have bunch of issues, don't remember why)
- * - [ ] Find a way of appending to `FieldAPI` so we can include unique `IDs` to them
  */
 export default function TestForm() {
-  const form = useForm<FormValueDecoded>({
-    // @ts-expect-error @TODO find way of typing default values
-    defaultValues: {
-      names: [],
-      varieties: [],
-    },
-    // @ts-expect-error @TODO find way to type this
-    validatorAdapter: schemaValidator,
-    onSubmit: async ({ value }) => {
-      // Do something with form data
-      console.log({ submitted: value })
-    },
-  })
+  const form = useForm<FormValueDecoded>({})
+
+  const onSubmit: SubmitHandler<FormValueDecoded> = (data, event) => {
+    console.info({ data, event })
+  }
 
   return (
     <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          form.handleSubmit()
-        }}
-        className="space-y-6"
-      >
-        <form.Field
-          name="names"
-          validators={{
-            // @ts-expect-error @TODO find way to type this
-            onChange: Vegetable.fields.names,
-          }}
-          children={(field) => (
-            <FormField field={field} label="Nomes">
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <Field
+            label="Nomes"
+            name="names"
+            form={form}
+            render={({ field }) => (
               <ArrayInput
                 field={field}
                 newItemValue={{ value: '' }}
                 renderItem={(index) => (
-                  <>
-                    <form.Field name={`${field.name}[${index}].value`}>
-                      {(subField) => <TextInput field={subField} />}
-                    </form.Field>
-                    <form.Field name={`${field.name}[${index}].id`}>
-                      {() => null}
-                    </form.Field>
-                  </>
+                  <Field
+                    form={form}
+                    name={`${field.name}.${index}.value`}
+                    label=""
+                    render={({ field: subField }) => <Input {...subField} />}
+                  />
                 )}
               />
-            </FormField>
-          )}
-        />
-        <form.Field
-          name="handle"
-          validators={{
-            // @ts-expect-error @TODO find way to type this
-            onChange: Vegetable.fields.handle,
-          }}
-          children={(field) => (
-            <FormField field={field} label="Endereço no site">
+            )}
+          />
+          <Field
+            form={form}
+            name="handle"
+            label="Endereço no site"
+            render={({ field }) => (
               <HandleInput field={field} path="vegetais" />
-            </FormField>
-          )}
-        />
-        <form.Field
-          name="scientific_name"
-          validators={{
-            // @ts-expect-error @TODO find way to type this
-            onChange: Vegetable.fields.scientific_name,
-          }}
-          children={(field) => (
-            <FormField field={field} label="Nome científico">
-              <TextInput field={field} />
-            </FormField>
-          )}
-        />
-        <form.Field
-          name="gender"
-          validators={{
-            // @ts-expect-error @TODO find way to type this
-            onChange: Vegetable.fields.gender,
-          }}
-          children={(field) => (
-            <FormField field={field} label="Gênero gramatical">
+            )}
+          />
+          <Field
+            form={form}
+            name="scientific_name"
+            label="Nome científico"
+            render={({ field }) => <Input {...field} />}
+          />
+          <Field
+            form={form}
+            name="gender"
+            label="Gênero gramatical"
+            render={({ field }) => (
               <RadioGroupInput
                 field={field}
                 options={[
@@ -141,214 +106,115 @@ export default function TestForm() {
                   { label: 'Neutro', value: Gender.NEUTRO },
                 ]}
               />
-            </FormField>
-          )}
-        />
-        <form.Field
-          name="usage"
-          validators={{
-            // @ts-expect-error @TODO find way to type this
-            onChange: Vegetable.fields.usage,
-          }}
-          children={(field) => (
-            <FormField field={field} label="Principais usos">
+            )}
+          />
+          <Field
+            form={form}
+            name="usage"
+            label="Principais usos"
+            render={({ field }) => (
               <CheckboxesInput
                 field={field}
                 options={Object.entries(USAGE_TO_LABEL).map(
                   ([value, label]) => ({ value, label }),
                 )}
               />
-            </FormField>
-          )}
-        />
-        {/* @TODO: make conditional */}
-        <form.Field
-          name="edible_parts"
-          validators={{
-            // @ts-expect-error @TODO find way to type this
-            onChange: Vegetable.fields.edible_parts,
-          }}
-          children={(field) => (
-            <FormField field={field} label="Partes comestíveis">
+            )}
+          />
+
+          {/* @TODO: make conditional */}
+          <Field
+            form={form}
+            name="edible_parts"
+            label="Partes comestíveis"
+            render={({ field }) => (
               <CheckboxesInput
                 field={field}
                 options={Object.entries(EDIBLE_PART_TO_LABEL).map(
                   ([value, label]) => ({ value, label }),
                 )}
               />
-            </FormField>
-          )}
-        />
-        <form.Field
-          name="lifecycle"
-          validators={{
-            // @ts-expect-error @TODO find way to type this
-            onChange: Vegetable.fields.lifecycle,
-          }}
-          children={(field) => (
-            <FormField field={field} label="Partes comestíveis">
+            )}
+          />
+          <Field
+            form={form}
+            name="lifecycle"
+            label="Partes comestíveis"
+            render={({ field }) => (
               <CheckboxesInput
                 field={field}
                 options={Object.entries(VEGETABLE_LIFECYCLE_TO_LABEL).map(
                   ([value, label]) => ({ value, label }),
                 )}
               />
-            </FormField>
-          )}
-        />
-        <form.Field
-          name="stratum"
-          validators={{
-            // @ts-expect-error @TODO find way to type this
-            onChange: Vegetable.fields.stratum,
-          }}
-          children={(field) => (
-            <FormField field={field} label="Partes comestíveis">
+            )}
+          />
+          <Field
+            form={form}
+            name="stratum"
+            label="Partes comestíveis"
+            render={({ field }) => (
               <CheckboxesInput
                 field={field}
                 options={Object.entries(STRATUM_TO_LABEL).map(
                   ([value, label]) => ({ value, label }),
                 )}
               />
-            </FormField>
-          )}
-        />
-        <form.Field
-          name="planting_method"
-          validators={{
-            // @ts-expect-error @TODO find way to type this
-            onChange: Vegetable.fields.planting_method,
-          }}
-          children={(field) => (
-            <FormField field={field} label="Plantio por">
+            )}
+          />
+          <Field
+            form={form}
+            name="planting_method"
+            label="Plantio por"
+            render={({ field }) => (
               <CheckboxesInput
                 field={field}
                 options={Object.entries(PLANTING_METHOD_TO_LABEL).map(
                   ([value, label]) => ({ value, label }),
                 )}
               />
-            </FormField>
-          )}
-        />
-        <div className="grid grid-cols-2 gap-4">
-          <form.Field
-            name="height_min"
-            validators={{
-              // @ts-expect-error @TODO find way to type this
-              onChange: Vegetable.fields.height_min,
-            }}
-            children={(field) => (
-              <FormField field={field} label="Altura adulta mínima">
-                <NumberInput field={field} format="centimeters" />
-              </FormField>
             )}
           />
-          <form.Field
-            name="height_max"
-            validators={{
-              // @ts-expect-error @TODO find way to type this
-              onChange: Vegetable.fields.height_max,
-            }}
-            children={(field) => (
-              <FormField field={field} label="Altura adulta máxima">
+          <div className="grid grid-cols-2 gap-4">
+            <Field
+              form={form}
+              name="height_min"
+              label="Altura adulta mínima"
+              render={({ field }) => (
                 <NumberInput field={field} format="centimeters" />
-              </FormField>
-            )}
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <form.Field
-            name="temperature_min"
-            validators={{
-              // @ts-expect-error @TODO find way to type this
-              onChange: Vegetable.fields.temperature_min,
-            }}
-            children={(field) => (
-              <FormField field={field} label="Temperatura ideal mínima">
+              )}
+            />
+            <Field
+              form={form}
+              name="height_max"
+              label="Altura adulta máxima"
+              render={({ field }) => (
+                <NumberInput field={field} format="centimeters" />
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Field
+              form={form}
+              name="temperature_min"
+              label="Temperatura ideal mínima"
+              render={({ field }) => (
                 <NumberInput field={field} format="temperature" />
-              </FormField>
-            )}
-          />
-          <form.Field
-            name="temperature_max"
-            validators={{
-              // @ts-expect-error @TODO find way to type this
-              onChange: Vegetable.fields.temperature_max,
-            }}
-            children={(field) => (
-              <FormField field={field} label="Temperatura ideal máxima">
-                <NumberInput field={field} format="centimeters" />
-              </FormField>
-            )}
-          />
-        </div>
-        <form.Field
-          name="varieties"
-          mode="array"
-          validators={{
-            // @ts-expect-error @TODO find way to type this
-            onChange: Vegetable.fields.varieties,
-          }}
-          children={(field) => (
-            <FormField field={field} label="Variedades">
-              <ArrayInput
-                field={field}
-                newItemValue={{
-                  names: [],
-                  photos: [],
-                }}
-                renderItem={(index) => {
-                  return (
-                    <div key={index}>
-                      <form.Field
-                        name={`${field.name}[${index}].names`}
-                        children={(subField) => (
-                          <FormField field={subField} label="Nomes">
-                            <TextInput field={subField} />
-                          </FormField>
-                        )}
-                      />
-                      <form.Field
-                        name={`${field.name}[${index}].photos`}
-                        mode="array"
-                        // @TODO: validate
-                        children={(subField) => (
-                          <FormField field={subField} label="Nomes">
-                            <ArrayInput
-                              field={field}
-                              newItemValue={{
-                                label: '',
-                                photo: '',
-                                sources: [],
-                              }}
-                              renderItem={(photoIndex) => (
-                                <div key={photoIndex}>
-                                  <form.Field
-                                    name={`${field.name}[${index}].${subField.name}[${photoIndex}].label`}
-                                    children={(photoSubField) => (
-                                      <FormField
-                                        field={photoSubField}
-                                        label="Rótulo da imagem"
-                                      >
-                                        <TextInput field={photoSubField} />
-                                      </FormField>
-                                    )}
-                                  />
-                                </div>
-                              )}
-                            />
-                          </FormField>
-                        )}
-                      />
-                    </div>
-                  )
-                }}
-              ></ArrayInput>
-            </FormField>
-          )}
-        />
-        <Button type="submit">Enviar</Button>
-      </form>
+              )}
+            />
+            <Field
+              form={form}
+              name="temperature_max"
+              label="Temperatura ideal máxima"
+              render={({ field }) => (
+                <NumberInput field={field} format="temperature" />
+              )}
+            />
+          </div>
+
+          <Button type="submit">Enviar</Button>
+        </form>
+      </FormProvider>
     </div>
   )
 }
