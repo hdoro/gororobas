@@ -15,7 +15,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { GripVerticalIcon, TrashIcon } from 'lucide-react'
+import { GripVerticalIcon, PlusCircleIcon, TrashIcon } from 'lucide-react'
 import { type PropsWithChildren } from 'react'
 import {
   useFieldArray,
@@ -26,16 +26,19 @@ import {
   type FieldValues,
 } from 'react-hook-form'
 import { Button } from '../ui/button'
+import { Separator } from '../ui/separator'
 
 export default function ArrayInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   field,
+  newItemLabel = 'Novo item',
   newItemValue,
   renderItem,
 }: {
   field: ControllerRenderProps<TFieldValues, TName>
+  newItemLabel?: string
   newItemValue: FieldArray<FieldValues, TName>
   renderItem: (index: number) => JSX.Element
 }) {
@@ -75,14 +78,19 @@ export default function ArrayInput<
           ))}
         </SortableContext>
       </DndContext>
-      <Button
-        onClick={() => {
-          fieldArray.append(newItemValue)
-        }}
-        type="button"
-      >
-        Novo item
-      </Button>
+      <div className="flex gap-2 items-center mt-4">
+        <Separator className="w-auto flex-1" />
+        <Button
+          onClick={() => {
+            fieldArray.append(newItemValue)
+          }}
+          type="button"
+          variant="ghost"
+        >
+          <PlusCircleIcon className="mr-2" /> {newItemLabel}
+        </Button>
+        <Separator className="w-auto flex-1" />
+      </div>
     </div>
   )
 

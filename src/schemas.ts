@@ -58,17 +58,14 @@ const VegetableVariety = S.Struct({
 })
 
 const Name = S.Struct({
-  value: S.String.pipe(S.minLength(3)),
-  id: S.String,
-  // id: S.UUID,
+  value: S.String.pipe(S.minLength(3)).annotations({
+    message: () => 'Nome deve ter ao menos 3 caracteres',
+  }),
+  id: S.optional(S.String),
 })
 
 export const Vegetable = S.Struct({
-  names: S.Array(Name)
-    .pipe(S.minItems(1))
-    .annotations({
-      message: () => 'Adicione ao menos um nome',
-    }),
+  names: S.Array(Name).pipe(S.minItems(1)),
   handle: S.String.pipe(
     S.minLength(1, {
       message: () => 'Obrigatório',
@@ -89,7 +86,7 @@ export const Vegetable = S.Struct({
       message: () => 'Obrigatório (mínimo de 3 caracteres)',
     }),
   ),
-  origin: S.String,
+  origin: S.optional(S.String),
   gender: S.Enums(Gender).annotations({
     message: () => 'Obrigatório',
     jsonSchema: {

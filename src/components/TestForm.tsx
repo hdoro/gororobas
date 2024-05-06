@@ -16,13 +16,13 @@ import RadioGroupInput from './forms/RadioGroupInput'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import NumberInput from './forms/NumberInput'
+import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
 
 type FormValueDecoded = S.Schema.Type<typeof Vegetable>
 
 /**
  * FORM REQUIREMENTS:
  *
- * - [x] Validation
  * - [x] Submit
  * - [x] Different error messages for different validations
  * - [x] Optional fields
@@ -38,8 +38,14 @@ type FormValueDecoded = S.Schema.Type<typeof Vegetable>
  * - [x] Different number formatters
  * - [x] Field IDs
  * - [x] Arrays
+ * - [ ] Validation
  * - [ ] Objects
  * - [ ] Arrays of objects
+ * - [ ] Form for photo with credits
+ * - [ ] Image input
+ * - [ ] Form for variety
+ * - [ ] Rich text
+ * - [ ] Suggestions & tips
  * - [ ] Finish schema
  * - [ ] Field dependency - edible_parts only if `ALIMENTO_HUMANO` in `usage`
  * - [ ] Async validation
@@ -50,11 +56,18 @@ type FormValueDecoded = S.Schema.Type<typeof Vegetable>
  * - [ ] Numbers from text fields (I think number inputs have bunch of issues, don't remember why)
  */
 export default function TestForm() {
-  const form = useForm<FormValueDecoded>({})
+  const form = useForm<FormValueDecoded>({
+    resolver: effectSchemaResolverResolver(Vegetable),
+    defaultValues: {
+      names: [{ value: '' }],
+    },
+  })
 
   const onSubmit: SubmitHandler<FormValueDecoded> = (data, event) => {
     console.info({ data, event })
   }
+
+  console.log(form.formState, form.getValues())
 
   return (
     <div>
@@ -68,6 +81,7 @@ export default function TestForm() {
               <ArrayInput
                 field={field}
                 newItemValue={{ value: '' }}
+                newItemLabel="Novo nome"
                 renderItem={(index) => (
                   <Field
                     form={form}
@@ -91,7 +105,13 @@ export default function TestForm() {
             form={form}
             name="scientific_name"
             label="Nome científico"
-            render={({ field }) => <Input {...field} />}
+            render={({ field }) => <Input {...field} type="text" />}
+          />
+          <Field
+            form={form}
+            name="origin"
+            label="Origem"
+            render={({ field }) => <Input {...field} type="text" />}
           />
           <Field
             form={form}

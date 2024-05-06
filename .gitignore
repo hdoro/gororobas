@@ -39,3 +39,5 @@ dbschema/edgeql-js
 dbschema/interfaces.ts
 src/edgeql
 src/edgedb.interfaces.ts
+
+src/playground
