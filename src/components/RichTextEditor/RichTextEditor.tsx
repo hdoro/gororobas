@@ -1,7 +1,6 @@
 'use client'
 
 import { OverflowNode } from '@lexical/overflow'
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin'
 import { CharacterLimitPlugin } from '@lexical/react/LexicalCharacterLimitPlugin'
 import {
   LexicalComposer,
@@ -124,7 +123,6 @@ export default function RichTextEditor(
           />
         </div>
         <HistoryPlugin />
-        <AutoFocusPlugin />
 
         <OnChangePlugin onChange={onChange} />
       </div>
