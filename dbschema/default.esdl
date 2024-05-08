@@ -29,12 +29,17 @@ module default {
       filter .identity = global ext::auth::ClientTokenIdentity
     ))
   );
+  global current_user_profile := (
+    assert_single((
+      select UserProfile
+      filter .user = global current_user
+    ))
+  );
 
   type User {
     required identity: ext::auth::Identity {
       constraint exclusive;
     };
-    required name: str;
     email: str;
   
     userRole: Role {
@@ -119,6 +124,12 @@ module default {
       allow select;
   }
 
+  abstract type UserCanInsert {
+    access policy authenticated_user_can_insert
+      allow insert
+      using (exists global current_user);
+  }
+
   abstract type WithHandle {
     required handle: str {
       annotation title := 'An unique (per-type) URL-friendly handle';
@@ -147,6 +158,7 @@ module default {
     required user: User {
       constraint exclusive;
     };
+    required name: str;
     bio: str;
     location: str;
     photo: Photo;
@@ -168,7 +180,7 @@ module default {
     multi content_links: WithHandle;
   }
 
-  type Vegetable extending WithHandle, PublicRead, Auditable {
+  type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert {
     required names: array<str>;
     required scientific_names: array<str>;
     required gender: Gender;
