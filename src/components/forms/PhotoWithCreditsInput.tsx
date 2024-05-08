@@ -8,7 +8,7 @@ import {
 } from 'react-hook-form'
 import { Input } from '../ui/input'
 import Field from './Field'
-import ImageDropzone from './ImageDropzone'
+import ImageInput from './ImageInput'
 import RadioGroupInput from './RadioGroupInput'
 
 export default function PhotoWithCreditsInput<
@@ -20,7 +20,12 @@ export default function PhotoWithCreditsInput<
   const sourceType = form.watch(`${field.name}.sourceType`) as SourceType
   return (
     <div className="flex gap-6 items-start">
-      <ImageDropzone fieldName={`${field.name}.photo`} />
+      <Field
+        form={form}
+        label="Imagem"
+        name={`${field.name}.photo`}
+        render={({ field }) => <ImageInput field={field} />}
+      />
       <div className="space-y-4 flex-1">
         <Field
           form={form}

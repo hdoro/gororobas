@@ -43,9 +43,13 @@ const SourceExternalInForm = S.Struct({
 
 const Source = S.Union(SourceGororobasInForm, SourceExternalInForm)
 
+const isFile = (input: unknown): input is File => input instanceof File
+
+const FileSchema = S.declare(isFile)
+
 const PhotoWithCreditsInForm = S.extend(
   S.Struct({
-    photo: S.Base64,
+    photo: FileSchema,
     label: S.String,
   }),
   // Although we'll store sources as an array, for now we're only allowing a single source
