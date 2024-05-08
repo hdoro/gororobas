@@ -84,7 +84,6 @@ export default function ArrayInput<
           onClick={() => {
             fieldArray.append(newItemValue)
           }}
-          type="button"
           variant="ghost"
           size="sm"
         >
@@ -131,7 +130,6 @@ export function SortableItem(
         variant="ghost"
         size="icon"
         title="Segure para mover"
-        type="button"
         {...attributes}
         {...listeners}
       >
@@ -143,7 +141,6 @@ export function SortableItem(
         size="icon"
         title={`Deletar item #${props.index + 1}`}
         onClick={props.removeItem}
-        type="button"
         className="text-gray-500 hover:text-red-700 focus-visible:text-red-700 dark:text-gray-100 dark:hover:text-red-500 dark:focus-visible:text-red-500"
       >
         <TrashIcon className="stroke-current" />

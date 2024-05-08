@@ -99,7 +99,6 @@ export default function ImageInput<
           <Button
             onClick={clearField}
             className="absolute top-2 right-2 rounded-full"
-            type="button"
             aria-label="Remover imagem"
             variant="outline"
             size="icon"
