@@ -87,7 +87,8 @@ export default function TestForm() {
                   <Field
                     form={form}
                     name={`${field.name}.${index}.value`}
-                    label=""
+                    label={`Nome ${index + 1}`}
+                    hideLabel
                     render={({ field: subField }) => <Input {...subField} />}
                   />
                 )}
@@ -237,9 +238,28 @@ export default function TestForm() {
 
           <Field
             form={form}
-            name="photo_test"
-            label="Foto teste"
-            render={({ field }) => <PhotoWithCreditsInput field={field} />}
+            name="photos"
+            label="Fotos"
+            render={({ field }) => {
+              return (
+                <ArrayInput
+                  field={field}
+                  newItemValue={{}}
+                  newItemLabel="Nova foto"
+                  renderItem={(index) => (
+                    <Field
+                      form={form}
+                      name={`${field.name}.${index}`}
+                      label="Foto"
+                      hideLabel
+                      render={({ field: subField }) => (
+                        <PhotoWithCreditsInput field={subField} />
+                      )}
+                    />
+                  )}
+                />
+              )
+            }}
           />
 
           <Button type="submit">Enviar</Button>

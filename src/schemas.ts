@@ -74,7 +74,6 @@ const Name = S.Struct({
 
 export const Vegetable = S.Struct({
   names: S.Array(Name).pipe(S.minItems(1)),
-  photo_test: S.optional(PhotoWithCreditsInForm),
   handle: S.String.pipe(
     S.minLength(1, {
       message: () => 'Obrigatório',

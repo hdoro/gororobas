@@ -23,6 +23,7 @@ export default function PhotoWithCreditsInput<
       <Field
         form={form}
         label="Imagem"
+        hideLabel
         name={`${field.name}.photo`}
         render={({ field }) => <ImageInput field={field} />}
       />

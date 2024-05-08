@@ -125,7 +125,7 @@ export function SortableItem(
   }
 
   return (
-    <div ref={setNodeRef} style={style} className="flex items-end gap-4">
+    <div ref={setNodeRef} style={style} className="flex items-start gap-4">
       <Button
         variant="ghost"
         size="icon"

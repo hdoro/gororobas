@@ -21,20 +21,23 @@ export default function Field<
   label,
   name,
   render,
+  hideLabel,
 }: {
   description?: string
   form: UseFormReturn<TFieldValues>
   label: string
   name: TName
   render: ControllerProps<TFieldValues, TName>['render']
+  // @TODO: improve this component API - perhaps tailwind-variants + slots?
+  hideLabel?: boolean
 }) {
   return (
     <FormField
       control={form.control}
       name={name}
       render={(renderProps) => (
-        <FormItem className="block space-y-2">
-          <FormLabel>{label}</FormLabel>
+        <FormItem className={hideLabel && !description ? '' : 'space-y-2'}>
+          <FormLabel className={hideLabel ? 'sr-only' : ''}>{label}</FormLabel>
           {render(renderProps)}
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
