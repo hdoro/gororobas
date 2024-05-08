@@ -1,3 +1,4 @@
+# https://github.com/mulungood/gororobas/blob/ce3b0f1621f86034efb3cf534a20391efc5c5a42/edgedb/default.esdl
 using extension auth;
 
 module default {
@@ -130,6 +131,12 @@ module default {
       using (exists global current_user);
   }
 
+  abstract type AdminCanDoAnything {
+    access policy admin_can_do_anything
+      allow all
+      using (global current_user.userRole ?= Role.ADMIN);
+  }
+
   abstract type WithHandle {
     required handle: str {
       annotation title := 'An unique (per-type) URL-friendly handle';
@@ -168,19 +175,19 @@ module default {
       using (global current_user ?= .user);
   }
 
-  type VegetableVariety extending WithHandle, PublicRead, Auditable {
+  type VegetableVariety extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
     required names: array<str>;
     multi photos: Photo;
   }
 
-  type VegetableTip extending WithHandle, WithSource, PublicRead, Auditable {
+  type VegetableTip extending WithHandle, WithSource, PublicRead, Auditable, AdminCanDoAnything {
     required subject: TipSubject;
     required content: json;
 
     multi content_links: WithHandle;
   }
 
-  type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert {
+  type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
     required names: array<str>;
     required scientific_names: array<str>;
     required gender: Gender;
