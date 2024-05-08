@@ -56,20 +56,16 @@ const PhotoWithCreditsInForm = S.extend(
   Source,
 )
 
-const VegetableVariety = S.Struct({
-  names: S.Array(S.String.pipe(S.minLength(1)))
-    .pipe(S.minItems(1))
-    .annotations({
-      message: () => 'Adicione ao menos um nome',
-    }),
-  photos: S.Array(PhotoWithCreditsInForm),
-})
-
 const Name = S.Struct({
   value: S.String.pipe(S.minLength(3)).annotations({
     message: () => 'Nome deve ter ao menos 3 caracteres',
   }),
   id: S.optional(S.String),
+})
+
+const VegetableVariety = S.Struct({
+  names: S.Array(Name).pipe(S.minItems(1)),
+  photos: S.Array(PhotoWithCreditsInForm),
 })
 
 export const Vegetable = S.Struct({
@@ -173,3 +169,5 @@ export const Vegetable = S.Struct({
   varieties: S.optional(S.Array(VegetableVariety)),
   photos: S.optional(S.Array(PhotoWithCreditsInForm)),
 })
+
+export type VegetableVarietyDecoded = S.Schema.Type<typeof VegetableVariety>

@@ -78,7 +78,7 @@ export default function ArrayInput<
           ))}
         </SortableContext>
       </DndContext>
-      <div className="flex gap-2 items-center mt-4">
+      <div className="flex gap-2 items-center !mt-4">
         <Separator className="w-auto flex-1" />
         <Button
           onClick={() => {
@@ -86,6 +86,7 @@ export default function ArrayInput<
           }}
           type="button"
           variant="ghost"
+          size="sm"
         >
           <PlusCircleIcon className="mr-2" /> {newItemLabel}
         </Button>
