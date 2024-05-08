@@ -1,4 +1,5 @@
 import type {
+  Gender,
   PlantingMethod,
   SourceType,
   Stratum,
@@ -8,6 +9,7 @@ import type {
 } from '@/types'
 import {
   EDIBLE_PART_TO_LABEL,
+  GENDER_TO_LABEL,
   PLANTING_METHOD_TO_LABEL,
   STRATUM_TO_LABEL,
   USAGE_TO_LABEL,
@@ -16,12 +18,6 @@ import {
 import * as S from '@effect/schema/Schema'
 import type { EditorState } from 'lexical'
 import { MAX_ACCEPTED_HEIGHT } from './utils/numbers'
-
-export enum Gender {
-  MASCULINO = 'MASCULINO',
-  FEMININO = 'FEMININO',
-  NEUTRO = 'NEUTRO',
-}
 
 /**
  * Missing data:
@@ -88,24 +84,11 @@ export const Vegetable = S.Struct({
         'O endereço não pode conter caracteres especiais, letras maiúsculas, espaços ou acentos',
     }),
   ),
-  scientific_name: S.String.pipe(
-    S.minLength(1, {
-      message: () => 'Obrigatório',
-    }),
-    S.minLength(3, {
-      message: () => 'Obrigatório (mínimo de 3 caracteres)',
-    }),
-  ),
+  scientific_names: S.Array(Name).pipe(S.minItems(1)),
   origin: S.optional(S.String),
-  gender: S.Enums(Gender).annotations({
-    message: () => 'Obrigatório',
-    jsonSchema: {
-      blabla: 'bleble',
-    },
-  }),
-  usage: S.Array(
-    S.Literal(...(Object.keys(USAGE_TO_LABEL) as VegetableUsage[])),
-  )
+  gender: S.Literal(...(Object.keys(GENDER_TO_LABEL) as Gender[])),
+
+  uses: S.Array(S.Literal(...(Object.keys(USAGE_TO_LABEL) as VegetableUsage[])))
     .pipe(S.minItems(1))
     .annotations({
       message: () => 'Marque ao menos uma opção',
@@ -130,7 +113,7 @@ export const Vegetable = S.Struct({
     .annotations({
       message: () => 'Marque ao menos uma opção',
     }),
-  planting_method: S.optional(
+  planting_methods: S.optional(
     S.Array(
       S.Literal(...(Object.keys(PLANTING_METHOD_TO_LABEL) as PlantingMethod[])),
     ),

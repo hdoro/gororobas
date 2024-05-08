@@ -5,10 +5,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Gender, Vegetable } from '@/schemas'
+import { Vegetable } from '@/schemas'
 import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
 import {
   EDIBLE_PART_TO_LABEL,
+  GENDER_TO_LABEL,
   PLANTING_METHOD_TO_LABEL,
   STRATUM_TO_LABEL,
   USAGE_TO_LABEL,
@@ -147,14 +148,25 @@ export default function TestForm() {
                         )}
                       />
                       <Field
+                        label="Nomes científicos"
+                        name="scientific_names"
                         form={form}
-                        name="scientific_name"
-                        label="Nome científico"
                         render={({ field }) => (
-                          <Input
-                            {...field}
-                            value={field.value || ''}
-                            type="text"
+                          <ArrayInput
+                            field={field}
+                            newItemValue={{ value: '' }}
+                            newItemLabel="Novo nome científico"
+                            renderItem={(index) => (
+                              <Field
+                                form={form}
+                                name={`${field.name}.${index}.value`}
+                                label={`Nome científico ${index + 1}`}
+                                hideLabel
+                                render={({ field: subField }) => (
+                                  <Input {...subField} />
+                                )}
+                              />
+                            )}
                           />
                         )}
                       />
@@ -308,17 +320,18 @@ export default function TestForm() {
                         render={({ field }) => (
                           <RadioGroupInput
                             field={field}
-                            options={[
-                              { label: 'Feminino', value: Gender.FEMININO },
-                              { label: 'Masculino', value: Gender.MASCULINO },
-                              { label: 'Neutro', value: Gender.NEUTRO },
-                            ]}
+                            options={Object.entries(GENDER_TO_LABEL).map(
+                              ([value, label]) => ({
+                                value,
+                                label,
+                              }),
+                            )}
                           />
                         )}
                       />
                       <Field
                         form={form}
-                        name="usage"
+                        name="uses"
                         label="Principais usos"
                         render={({ field }) => (
                           <CheckboxesInput
@@ -373,7 +386,7 @@ export default function TestForm() {
                       />
                       <Field
                         form={form}
-                        name="planting_method"
+                        name="planting_methods"
                         label="Plantio por"
                         render={({ field }) => (
                           <CheckboxesInput
