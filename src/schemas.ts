@@ -14,6 +14,7 @@ import {
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
 import * as S from '@effect/schema/Schema'
+import type { EditorState } from 'lexical'
 import { MAX_ACCEPTED_HEIGHT } from './utils/numbers'
 
 export enum Gender {
@@ -46,6 +47,11 @@ const Source = S.Union(SourceGororobasInForm, SourceExternalInForm)
 const isFile = (input: unknown): input is File => input instanceof File
 
 const FileSchema = S.declare(isFile)
+
+const isLexicalEditorState = (input: unknown): input is EditorState =>
+  typeof input === 'object' && !!input && '_nodeMap' in input
+
+const LexicalEditorState = S.declare(isLexicalEditorState)
 
 const PhotoWithCreditsInForm = S.extend(
   S.Struct({
@@ -168,6 +174,7 @@ export const Vegetable = S.Struct({
 
   varieties: S.optional(S.Array(VegetableVariety)),
   photos: S.optional(S.Array(PhotoWithCreditsInForm)),
+  content: LexicalEditorState,
 })
 
 export type VegetableVarietyDecoded = S.Schema.Type<typeof VegetableVariety>

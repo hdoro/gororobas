@@ -1,4 +1,5 @@
 import { Gender, Vegetable } from '@/schemas'
+import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
 import {
   EDIBLE_PART_TO_LABEL,
   PLANTING_METHOD_TO_LABEL,
@@ -12,12 +13,13 @@ import ArrayInput from './forms/ArrayInput'
 import CheckboxesInput from './forms/CheckboxesInput'
 import Field from './forms/Field'
 import HandleInput from './forms/HandleInput'
+import NumberInput from './forms/NumberInput'
+import PhotoWithCreditsInput from './forms/PhotoWithCreditsInput'
 import RadioGroupInput from './forms/RadioGroupInput'
+import RichTextInput from './forms/RichTextInput'
+import VegetableVarietyInput from './forms/VegetableVarietyInput'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import NumberInput from './forms/NumberInput'
-import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
-import PhotoWithCreditsInput from './forms/PhotoWithCreditsInput'
 
 type FormValueDecoded = S.Schema.Type<typeof Vegetable>
 
@@ -39,22 +41,25 @@ type FormValueDecoded = S.Schema.Type<typeof Vegetable>
  * - [x] Different number formatters
  * - [x] Field IDs
  * - [x] Arrays
- * - [ ] Validation
- * - [ ] Objects
- * - [ ] Arrays of objects
- * - [ ] Form for photo with credits
- * - [ ] Image input
- * - [ ] Form for variety
- * - [ ] Rich text
+ * - [x] Validation
+ * - [x] Objects
+ * - [x] Arrays of objects
+ * - [x] Form for photo with credits
+ * - [x] Image input
+ * - [x] Varieties
+ * - [x] Rich text
  * - [ ] Suggestions & tips
  * - [ ] Finish schema
  * - [ ] Field dependency - edible_parts only if `ALIMENTO_HUMANO` in `usage`
  * - [ ] Async validation
  * - [ ] Default values
+ * - [ ] PhotoWithCredits: select person from Gororobas
  *
  * ## IMPROVEMENTS
+ * - [ ] Better error messages for nested forms
  * - [ ] Less hacky approach to validating optionals
  * - [ ] Numbers from text fields (I think number inputs have bunch of issues, don't remember why)
+ * - [ ] When adding variety, automatically open form
  */
 export default function TestForm() {
   const form = useForm<FormValueDecoded>({
@@ -62,6 +67,7 @@ export default function TestForm() {
     defaultValues: {
       names: [{ value: '' }],
     },
+    mode: 'onBlur',
   })
 
   const onSubmit: SubmitHandler<FormValueDecoded> = (data, event) => {
@@ -250,7 +256,7 @@ export default function TestForm() {
                     <Field
                       form={form}
                       name={`${field.name}.${index}`}
-                      label="Foto"
+                      label={`Foto #${index + 1}`}
                       hideLabel
                       render={({ field: subField }) => (
                         <PhotoWithCreditsInput field={subField} />
@@ -260,6 +266,46 @@ export default function TestForm() {
                 />
               )
             }}
+          />
+
+          <Field
+            form={form}
+            name="varieties"
+            label="Variedades"
+            render={({ field }) => {
+              return (
+                <ArrayInput
+                  field={field}
+                  newItemValue={{
+                    names: [{ value: '' }],
+                  }}
+                  newItemLabel="Nova variedade"
+                  renderItem={(index) => (
+                    <Field
+                      form={form}
+                      name={`${field.name}.${index}`}
+                      label={`Variedade #${index + 1}`}
+                      hideLabel
+                      render={({ field: subField }) => (
+                        <VegetableVarietyInput index={index} field={subField} />
+                      )}
+                    />
+                  )}
+                />
+              )
+            }}
+          />
+
+          <Field
+            form={form}
+            name="content"
+            label="Conteúdo livre sobre o vegetal"
+            render={({ field }) => (
+              <RichTextInput
+                field={field}
+                placeholder="Alguma curiosidade, história, ritual, ou dica solta que gostaria de compartilhar?"
+              />
+            )}
           />
 
           <Button type="submit">Enviar</Button>
