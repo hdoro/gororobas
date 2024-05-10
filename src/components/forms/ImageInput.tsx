@@ -24,7 +24,7 @@ export default function ImageInput<
         form={form}
         label="Imagem"
         hideLabel
-        name={`${field.name}.photo`}
+        name={`${field.name}.data.file`}
         render={({ field }) => <ImageDropzone field={field} />}
       />
       <div className="space-y-4 flex-1">

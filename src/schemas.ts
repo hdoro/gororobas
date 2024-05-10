@@ -104,15 +104,10 @@ const StoredImage = S.Struct({
   storedPhotoId: S.UUID,
 })
 
-const Image = S.extend(
-  S.extend(
-    Source,
-    S.Struct({
-      label: S.String,
-    }),
-  ),
-  S.Union(NewImage, StoredImage),
-)
+const Image = S.Struct({
+  label: S.String,
+  data: S.Union(NewImage, StoredImage),
+}).pipe(S.extend(Source))
 
 export const StringInArray = S.transform(
   S.Struct({
@@ -241,7 +236,24 @@ export const Vegetable = S.Struct({
   tips: S.optional(S.Array(VegetableTipInputValue)),
   photos: S.optional(S.Array(Image)),
   content: RichText,
-})
+}).pipe(
+  S.filter((vegetable, _, ast) => {
+    if (
+      typeof vegetable.height_min !== 'number' ||
+      typeof vegetable.height_max !== 'number'
+    )
+      return
+
+    // @TODO: how to return a path?
+    return vegetable.height_max < vegetable.height_min
+      ? new ParseResult.Type(
+          ast,
+          vegetable.height_min,
+          'Altura mínima deve ser menor que a máxima',
+        )
+      : undefined
+  }),
+)
 
 export type VegetableVarietyInForm = typeof VegetableVariety.Encoded
 

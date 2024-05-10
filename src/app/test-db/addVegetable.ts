@@ -27,17 +27,21 @@ export async function addVegetable() {
           photos: [
             {
               label: 'Foto Variedade #1 - 1',
-              base64: 'base64',
-              fileName: 'fileName',
-              mimeName: 'mimeName',
+              data: {
+                base64: 'base64',
+                fileName: 'fileName',
+                mimeName: 'mimeName',
+              },
               sourceType: 'EXTERNAL',
               credits: 'Créditos',
             },
             {
               label: 'Foto Variedade #1 - 2',
-              base64: 'base64',
-              fileName: 'fileName',
-              mimeName: 'mimeName',
+              data: {
+                base64: 'base64',
+                fileName: 'fileName',
+                mimeName: 'mimeName',
+              },
               sourceType: 'GOROROBAS',
               userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
             },
@@ -49,17 +53,21 @@ export async function addVegetable() {
           photos: [
             {
               label: 'Foto Variedade #2 - 1',
-              base64: 'base64',
-              fileName: 'fileName',
-              mimeName: 'mimeName',
+              data: {
+                base64: 'base64',
+                fileName: 'fileName',
+                mimeName: 'mimeName',
+              },
               sourceType: 'EXTERNAL',
               credits: 'Créditos',
             },
             {
               label: 'Foto Variedade #2 - 2',
-              base64: 'base64',
-              fileName: 'fileName',
-              mimeName: 'mimeName',
+              data: {
+                base64: 'base64',
+                fileName: 'fileName',
+                mimeName: 'mimeName',
+              },
               sourceType: 'GOROROBAS',
               userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
             },
@@ -71,17 +79,21 @@ export async function addVegetable() {
           photos: [
             {
               label: 'Foto Variedade #3 - 1',
-              base64: 'base64',
-              fileName: 'fileName',
-              mimeName: 'mimeName',
+              data: {
+                base64: 'base64',
+                fileName: 'fileName',
+                mimeName: 'mimeName',
+              },
               sourceType: 'EXTERNAL',
               credits: 'Créditos',
             },
             {
               label: 'Foto Variedade #3 - 2',
-              base64: 'base64',
-              fileName: 'fileName',
-              mimeName: 'mimeName',
+              data: {
+                base64: 'base64',
+                fileName: 'fileName',
+                mimeName: 'mimeName',
+              },
               sourceType: 'GOROROBAS',
               userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
             },
@@ -93,17 +105,21 @@ export async function addVegetable() {
           photos: [
             {
               label: 'Foto Variedade #4 - 1',
-              base64: 'base64',
-              fileName: 'fileName',
-              mimeName: 'mimeName',
+              data: {
+                base64: 'base64',
+                fileName: 'fileName',
+                mimeName: 'mimeName',
+              },
               sourceType: 'EXTERNAL',
               credits: 'Créditos',
             },
             {
               label: 'Foto Variedade #4 - 2',
-              base64: 'base64',
-              fileName: 'fileName',
-              mimeName: 'mimeName',
+              data: {
+                base64: 'base64',
+                fileName: 'fileName',
+                mimeName: 'mimeName',
+              },
               sourceType: 'GOROROBAS',
               userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
             },
@@ -115,17 +131,21 @@ export async function addVegetable() {
           photos: [
             {
               label: 'Foto Variedade #5 - 1',
-              base64: 'base64',
-              fileName: 'fileName',
-              mimeName: 'mimeName',
+              data: {
+                base64: 'base64',
+                fileName: 'fileName',
+                mimeName: 'mimeName',
+              },
               sourceType: 'EXTERNAL',
               credits: 'Créditos',
             },
             {
               label: 'Foto Variedade #5 - 2',
-              base64: 'base64',
-              fileName: 'fileName',
-              mimeName: 'mimeName',
+              data: {
+                base64: 'base64',
+                fileName: 'fileName',
+                mimeName: 'mimeName',
+              },
               sourceType: 'GOROROBAS',
               userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
             },
@@ -146,17 +166,21 @@ export async function addVegetable() {
       photos: [
         {
           label: 'Foto Raiz - 1',
-          base64: 'base64',
-          fileName: 'fileName',
-          mimeName: 'mimeName',
+          data: {
+            base64: 'base64',
+            fileName: 'fileName',
+            mimeName: 'mimeName',
+          },
           sourceType: 'EXTERNAL',
           credits: 'Créditos',
         },
         {
           label: 'Foto Raiz - 2',
-          base64: 'base64',
-          fileName: 'fileName',
-          mimeName: 'mimeName',
+          data: {
+            base64: 'base64',
+            fileName: 'fileName',
+            mimeName: 'mimeName',
+          },
           sourceType: 'GOROROBAS',
           userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
         },

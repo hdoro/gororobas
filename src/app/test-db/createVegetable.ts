@@ -1,10 +1,5 @@
 import e from '@/edgeql'
-import {
-  NewImage,
-  StringInArray,
-  type VegetableForDB,
-  type VegetableInForm,
-} from '@/schemas'
+import { NewImage, type VegetableForDB } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { slugify } from '@/utils/strings'
 import * as S from '@effect/schema/Schema'
@@ -203,10 +198,9 @@ export async function createVegetable(
       ...(input.varieties || []).flatMap((v) => v?.photos || []),
       ...(input.photos || []),
     ].flatMap((photo) => {
-      if (!S.is(NewImage)(photo)) return []
+      if (!S.is(NewImage)(photo.data)) return []
 
-      const { label, base64, fileName, mimeName, ...optional_properties } =
-        photo
+      const { label, data, ...optional_properties } = photo
       return {
         id: generateId(),
         sanity_id: generateId(),

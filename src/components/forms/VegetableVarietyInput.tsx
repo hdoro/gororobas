@@ -39,7 +39,11 @@ export default function VegetableVarietyInput<
   const { names = [] } = value
 
   const renderablePhoto =
-    value.photos?.[0] && 'file' in value.photos[0] ? value.photos[0] : undefined
+    value.photos?.[0] &&
+    'data' in value.photos[0] &&
+    'file' in value.photos[0].data
+      ? value.photos[0]
+      : undefined
   return (
     <Dialog>
       <DialogTrigger>
@@ -52,9 +56,9 @@ export default function VegetableVarietyInput<
                 : 'flex items-center justify-center h-[6.25rem] bg-card-foreground/5',
             )}
           >
-            {renderablePhoto && 'file' in renderablePhoto ? (
+            {renderablePhoto && 'file' in renderablePhoto.data ? (
               <img
-                src={URL.createObjectURL(renderablePhoto.file)}
+                src={URL.createObjectURL(renderablePhoto.data.file)}
                 alt={renderablePhoto.label}
                 className="w-full h-auto max-h-[6.25rem] object-cover"
               />
