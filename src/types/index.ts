@@ -4,6 +4,7 @@ import type {
   PLANTING_METHOD_TO_LABEL,
   SOURCE_TYPE_TO_LABEL,
   STRATUM_TO_LABEL,
+  TIP_SUBJECT_TO_LABEL,
   USAGE_TO_LABEL,
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
@@ -15,6 +16,7 @@ export type VegetableLifecycle = keyof typeof VEGETABLE_LIFECYCLE_TO_LABEL
 export type PlantingMethod = keyof typeof PLANTING_METHOD_TO_LABEL
 export type SourceType = keyof typeof SOURCE_TYPE_TO_LABEL
 export type Gender = keyof typeof GENDER_TO_LABEL
+export type TipSubject = keyof typeof TIP_SUBJECT_TO_LABEL
 
 export type FormOption = {
   value: string

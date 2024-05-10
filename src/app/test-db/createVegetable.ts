@@ -75,6 +75,55 @@ const newVarietiesMutation = e.params(
     ),
 )
 
+const newTipsMutation = e.params(
+  {
+    tips: e.array(
+      e.tuple({
+        id: e.uuid,
+        handle: e.str,
+        subjects: e.array(e.str),
+        content: e.json,
+        content_links: e.array(e.uuid),
+        /** @see {PhotoInputValue['source']} */
+        optional_properties: e.json,
+      }),
+    ),
+  },
+  (params) =>
+    e.for(e.array_unpack(params.tips), (tip) =>
+      e.insert(e.VegetableTip, {
+        id: tip.id,
+        subjects: e.array_unpack(e.cast(e.array(e.TipSubject), tip.subjects)),
+        content: tip.content,
+        handle: tip.handle,
+        content_links: e.select(e.WithHandle, (target) => ({
+          filter: e.op(target.id, 'in', e.array_unpack(tip.content_links)),
+        })),
+        credits: e.cast(e.str, e.json_get(tip.optional_properties, 'credits')),
+        sourceType: e.cast(
+          e.SourceType,
+          e.json_get(tip.optional_properties, 'sourceType'),
+        ),
+        source: e.cast(
+          e.str,
+          e.json_get(tip.optional_properties, 'sourceType'),
+        ),
+        users: e.select(e.User, (user) => ({
+          filter: e.op(
+            user.id,
+            'in',
+            e.array_unpack(
+              e.cast(
+                e.array(e.uuid),
+                e.json_get(tip.optional_properties, 'userIds'),
+              ),
+            ),
+          ),
+        })),
+      }),
+    ),
+)
+
 const newVegetableMutation = e.params(
   {
     names: e.array(e.str),
@@ -95,8 +144,10 @@ const newVegetableMutation = e.params(
 
     // Refs
     photos: e.optional(e.array(e.uuid)),
-    varieties: e.optional(e.array(e.uuid)),
-    tips: e.optional(e.array(e.uuid)),
+    varieties: e.optional(
+      e.array(e.tuple({ id: e.uuid, order_index: e.int16 })),
+    ),
+    tips: e.optional(e.array(e.tuple({ id: e.uuid, order_index: e.int16 }))),
   },
   (params) =>
     e.insert(e.Vegetable, {
@@ -112,12 +163,26 @@ const newVegetableMutation = e.params(
       photos: e.select(e.Photo, (photo) => ({
         filter: e.op(photo.id, 'in', e.array_unpack(params.photos)),
       })),
-      varieties: e.select(e.VegetableVariety, (variety) => ({
-        filter: e.op(variety.id, 'in', e.array_unpack(params.varieties)),
-      })),
-      tips: e.select(e.VegetableTip, (tip) => ({
-        filter: e.op(tip.id, 'in', e.array_unpack(params.tips)),
-      })),
+      varieties: e.assert_distinct(
+        e.for(e.array_unpack(params.varieties), (variety) =>
+          e.select(e.VegetableVariety, (v) => ({
+            filter: e.op(v.id, '=', variety.id),
+
+            // '@order_index': e.int16(1),
+            // '@order_index': variety.order_index,
+          })),
+        ),
+      ),
+      tips: e.assert_distinct(
+        e.for(e.array_unpack(params.tips), (tip) =>
+          e.select(e.VegetableTip, (v) => ({
+            filter: e.op(v.id, '=', tip.id),
+
+            // '@order_index': e.int16(1),
+            // '@order_index': variety.order_index,
+          })),
+        ),
+      ),
     }),
 )
 
@@ -137,10 +202,7 @@ export async function createVegetable(
         id: generateId(),
         sanity_id: generateId(),
         label: label,
-        optional_properties: {
-          // userIds: [], // Default empty array for userIds to prevent type errors in EdgeDB
-          ...optional_properties,
-        },
+        optional_properties,
       }
     })
 
@@ -175,6 +237,23 @@ export async function createVegetable(
     }
 
     // #3 Create all tips
+    const tips = (input.tips || []).map(
+      ({ subjects, content, ...optional_properties }) => {
+        return {
+          id: generateId(),
+          content,
+          subjects,
+          handle: `${input.handle}-${generateId()}`,
+          content_links: [],
+          optional_properties,
+        }
+      },
+    )
+    if (tips.length > 0) {
+      await newTipsMutation.run(tx, {
+        tips,
+      })
+    }
 
     // #4 Create vegetable
     await newVegetableMutation.run(tx, {
@@ -204,15 +283,14 @@ export async function createVegetable(
 
         return photoId
       }),
-      varieties: (input.varieties || []).flatMap((variety) => {
-        // @TODO: better way to lock IDs, probably when decoding the input
-        const id = varieties.find(
-          (v) => v.names[0] === variety.names[0].value,
-        )?.id
-        if (!id) return []
-
-        return id
-      }),
+      varieties: varieties.map((variety, order_index) => ({
+        id: variety.id,
+        order_index,
+      })),
+      tips: tips.map((tip, order_index) => ({
+        id: tip.id,
+        order_index,
+      })),
     })
   })
 }

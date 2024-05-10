@@ -13,6 +13,7 @@ import { createVegetable } from './createVegetable'
 
 export async function addVegetable() {
   const session = auth.getSession()
+  console.log(session.authToken)
 
   function getContent(): VegetableDecoded {
     return {
@@ -136,7 +137,21 @@ export async function addVegetable() {
           userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
         },
       ],
-      content: {} as any,
+      content: { content: true } as any,
+      tips: [
+        {
+          subjects: ['COLHEITA'],
+          content: { content: true } as any,
+          sourceType: 'EXTERNAL',
+          credits: 'Créditos',
+        },
+        {
+          subjects: ['CRESCIMENTO'],
+          content: { content: true } as any,
+          sourceType: 'GOROROBAS',
+          userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
+        },
+      ],
     }
   }
 

@@ -117,7 +117,9 @@ module default {
     sourceType: SourceType;
     credits: str;
     source: str;
-    multi users: User;
+    multi users: User {
+      on target delete allow;
+    };
   }
 
   abstract type PublicRead {
@@ -183,7 +185,7 @@ module default {
   }
 
   type VegetableTip extending WithHandle, WithSource, PublicRead, Auditable, AdminCanDoAnything {
-    required subject: TipSubject;
+    required multi subjects: TipSubject;
     required content: json;
 
     multi content_links: WithHandle {
@@ -215,6 +217,7 @@ module default {
     multi varieties: VegetableVariety {
       constraint exclusive;
       order_index: int16;
+      
       on target delete allow;
       # When a vegetable is deleted, delete all of its varieties
       on source delete delete target;
@@ -223,6 +226,7 @@ module default {
     multi tips: VegetableTip {
       constraint exclusive;
       order_index: int16;
+      
       on target delete allow;
       # When a vegetable is deleted, delete all of its tips
       on source delete delete target;

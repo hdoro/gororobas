@@ -3,6 +3,7 @@ import type {
   PlantingMethod,
   SourceType,
   Stratum,
+  TipSubject,
   VegetableEdiblePart,
   VegetableLifecycle,
   VegetableUsage,
@@ -12,6 +13,7 @@ import {
   GENDER_TO_LABEL,
   PLANTING_METHOD_TO_LABEL,
   STRATUM_TO_LABEL,
+  TIP_SUBJECT_TO_LABEL,
   USAGE_TO_LABEL,
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
@@ -38,7 +40,8 @@ const SourceExternalInForm = S.Struct({
   source: S.optional(S.String),
 })
 
-const Source = S.Union(SourceGororobasInForm, SourceExternalInForm)
+// Although we'll store sources as an array, for now we're only allowing a single source
+const SourceInputValue = S.Union(SourceGororobasInForm, SourceExternalInForm)
 
 const isFile = (input: unknown): input is File => input instanceof File
 
@@ -54,8 +57,7 @@ const PhotoInputValue = S.extend(
     photo: FileSchema,
     label: S.String,
   }),
-  // Although we'll store sources as an array, for now we're only allowing a single source
-  Source,
+  SourceInputValue,
 )
 
 const StringArrayInputValue = S.Struct({
@@ -85,6 +87,16 @@ const VegetableVarietyInForm = S.extend(
     // When editing vegetables, existing varieties will include their current data in the DB
     inDb: S.optional(S.extend(VegetableVariety, S.Struct({ id: S.String }))),
   }),
+)
+
+const VegetableTipInputValue = S.extend(
+  S.Struct({
+    subjects: S.Array(
+      S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
+    ),
+    content: LexicalEditorState,
+  }),
+  SourceInputValue,
 )
 
 export const Vegetable = S.Struct({
@@ -173,6 +185,7 @@ export const Vegetable = S.Struct({
   ),
 
   varieties: S.optional(S.Array(VegetableVarietyInForm)),
+  tips: S.optional(S.Array(VegetableTipInputValue)),
   photos: S.optional(S.Array(PhotoInputValue)),
   content: LexicalEditorState,
 })
