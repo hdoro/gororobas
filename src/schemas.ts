@@ -8,6 +8,7 @@ import type {
   VegetableLifecycle,
   VegetableUsage,
 } from '@/types'
+import { base64ToFile, fileToBase64 } from '@/utils/files'
 import {
   EDIBLE_PART_TO_LABEL,
   GENDER_TO_LABEL,
@@ -17,17 +18,15 @@ import {
   USAGE_TO_LABEL,
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
+import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
+import { ParseResult } from '@effect/schema'
 import * as S from '@effect/schema/Schema'
-import type { EditorState } from 'lexical'
-import { MAX_ACCEPTED_HEIGHT } from './utils/numbers'
-
-/**
- * Missing data:
- * - Varieties
- * - Photos
- * - Suggestions & tips
- * - Rich text
- */
+import { Effect } from 'effect'
+import type {
+  EditorState,
+  SerializedEditorState,
+  SerializedLexicalNode,
+} from 'lexical'
 
 const SourceGororobasInForm = S.Struct({
   sourceType: S.Literal('GOROROBAS' satisfies SourceType),
@@ -40,8 +39,7 @@ const SourceExternalInForm = S.Struct({
   source: S.optional(S.String),
 })
 
-// Although we'll store sources as an array, for now we're only allowing a single source
-const SourceInputValue = S.Union(SourceGororobasInForm, SourceExternalInForm)
+const Source = S.Union(SourceGororobasInForm, SourceExternalInForm)
 
 const isFile = (input: unknown): input is File => input instanceof File
 
@@ -52,33 +50,86 @@ const isLexicalEditorState = (input: unknown): input is EditorState =>
 
 const LexicalEditorState = S.declare(isLexicalEditorState)
 
-const PhotoInputValue = S.extend(
-  S.Struct({
-    photo: FileSchema,
-    label: S.String,
-  }),
-  SourceInputValue,
-)
+const isLexicalJSON = (
+  input: unknown,
+): input is SerializedEditorState<SerializedLexicalNode> =>
+  typeof input === 'object'
 
-const StringArrayInputValue = S.Struct({
-  value: S.String.pipe(S.minLength(3)).annotations({
-    message: () => 'Nome deve ter ao menos 3 caracteres',
-  }),
-  id: S.optional(S.String),
+const LexicalJSON = S.declare(isLexicalJSON)
+
+const RichText = S.transform(LexicalEditorState, LexicalJSON, {
+  encode: (json) => ({}) as any,
+  decode: (state) => state.toJSON(),
 })
 
-export const stringArrayTransformer = S.transform(
-  StringArrayInputValue,
+export const NewImage = S.transformOrFail(
+  S.Struct({
+    file: FileSchema,
+  }),
+
+  S.Struct({
+    base64: S.String,
+    fileName: S.String,
+    mimeName: S.String,
+  }),
+  {
+    encode: (photoForDB) =>
+      ParseResult.succeed({
+        file: base64ToFile(
+          photoForDB.base64,
+          photoForDB.fileName,
+          photoForDB.mimeName,
+        ),
+      }),
+    decode: (photoInForm, _, ast) =>
+      Effect.mapBoth(
+        Effect.tryPromise({
+          try: () => fileToBase64(photoInForm.file),
+          catch: (error) => '@TODO type error',
+        }),
+        {
+          onSuccess: (base64) => ({
+            base64,
+            fileName: photoInForm.file.name,
+            mimeName: photoInForm.file.type,
+          }),
+          onFailure: (e) =>
+            new ParseResult.Type(ast, photoInForm, '@TODO type error'),
+        },
+      ),
+  },
+)
+
+const StoredImage = S.Struct({
+  storedPhotoId: S.UUID,
+})
+
+const Image = S.extend(
+  S.extend(
+    Source,
+    S.Struct({
+      label: S.String,
+    }),
+  ),
+  S.Union(NewImage, StoredImage),
+)
+
+export const StringInArray = S.transform(
+  S.Struct({
+    value: S.String.pipe(S.minLength(3)).annotations({
+      message: () => 'Ao menos 3 caracteres',
+    }),
+  }),
   S.String,
   {
-    decode: (nameInForm) => nameInForm.value,
     encode: (name) => ({ value: name }),
+    decode: (nameInForm) => nameInForm.value,
   },
 )
 
 const VegetableVariety = S.Struct({
-  names: S.Array(StringArrayInputValue).pipe(S.minItems(1)),
-  photos: S.optional(S.Array(PhotoInputValue)),
+  names: S.NonEmptyArray(StringInArray),
+  photos: S.optional(S.Array(Image)),
 })
 
 const VegetableVarietyInForm = S.extend(
@@ -94,26 +145,28 @@ const VegetableTipInputValue = S.extend(
     subjects: S.Array(
       S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
     ),
-    content: LexicalEditorState,
+    content: RichText,
   }),
-  SourceInputValue,
+  Source,
+)
+
+const Handle = S.String.pipe(
+  S.minLength(1, {
+    message: () => 'Obrigatório',
+  }),
+  S.minLength(3, {
+    message: () => 'Obrigatório (mínimo de 3 caracteres)',
+  }),
+  S.pattern(/^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/, {
+    message: () =>
+      'O endereço não pode conter caracteres especiais, letras maiúsculas, espaços ou acentos',
+  }),
 )
 
 export const Vegetable = S.Struct({
-  names: S.Array(StringArrayInputValue).pipe(S.minItems(1)),
-  handle: S.String.pipe(
-    S.minLength(1, {
-      message: () => 'Obrigatório',
-    }),
-    S.minLength(3, {
-      message: () => 'Obrigatório (mínimo de 3 caracteres)',
-    }),
-    S.pattern(/^[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*$/, {
-      message: () =>
-        'O endereço não pode conter caracteres especiais, letras maiúsculas, espaços ou acentos',
-    }),
-  ),
-  scientific_names: S.Array(StringArrayInputValue).pipe(S.minItems(1)),
+  names: S.NonEmptyArray(StringInArray),
+  handle: Handle,
+  scientific_names: S.NonEmptyArray(StringInArray),
   origin: S.optional(S.String),
   gender: S.Literal(...(Object.keys(GENDER_TO_LABEL) as Gender[])),
 
@@ -186,9 +239,11 @@ export const Vegetable = S.Struct({
 
   varieties: S.optional(S.Array(VegetableVarietyInForm)),
   tips: S.optional(S.Array(VegetableTipInputValue)),
-  photos: S.optional(S.Array(PhotoInputValue)),
-  content: LexicalEditorState,
+  photos: S.optional(S.Array(Image)),
+  content: RichText,
 })
 
-export type VegetableVarietyDecoded = S.Schema.Type<typeof VegetableVariety>
-export type VegetableDecoded = S.Schema.Type<typeof Vegetable>
+export type VegetableVarietyInForm = typeof VegetableVariety.Encoded
+
+export type VegetableForDB = typeof Vegetable.Type
+export type VegetableInForm = typeof Vegetable.Encoded

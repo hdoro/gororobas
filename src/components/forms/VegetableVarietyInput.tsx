@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import type { VegetableVarietyDecoded } from '@/schemas'
+import type { VegetableVarietyInForm } from '@/schemas'
 import { cn } from '@/utils/cn'
 import { truncate } from '@/utils/strings'
 import { ImageOffIcon } from 'lucide-react'
@@ -21,7 +21,7 @@ import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import ArrayInput from './ArrayInput'
 import Field from './Field'
-import PhotoWithCreditsInput from './PhotoWithCreditsInput'
+import ImageInput from './ImageInput'
 
 export default function VegetableVarietyInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -35,13 +35,11 @@ export default function VegetableVarietyInput<
 }) {
   const form = useFormContext()
   const freshValue = form.watch(rootField.name)
-  const value = (freshValue || {}) as Partial<VegetableVarietyDecoded>
+  const value = (freshValue || {}) as Partial<VegetableVarietyInForm>
   const { names = [] } = value
 
   const renderablePhoto =
-    value.photos?.[0]?.photo && value.photos[0].photo instanceof File
-      ? value.photos[0]
-      : undefined
+    value.photos?.[0] && 'file' in value.photos[0] ? value.photos[0] : undefined
   return (
     <Dialog>
       <DialogTrigger>
@@ -54,9 +52,9 @@ export default function VegetableVarietyInput<
                 : 'flex items-center justify-center h-[6.25rem] bg-card-foreground/5',
             )}
           >
-            {renderablePhoto ? (
+            {renderablePhoto && 'file' in renderablePhoto ? (
               <img
-                src={URL.createObjectURL(renderablePhoto.photo)}
+                src={URL.createObjectURL(renderablePhoto.file)}
                 alt={renderablePhoto.label}
                 className="w-full h-auto max-h-[6.25rem] object-cover"
               />
@@ -135,7 +133,7 @@ export default function VegetableVarietyInput<
                       label={`Foto #${index + 1}`}
                       hideLabel
                       render={({ field: subField }) => (
-                        <PhotoWithCreditsInput field={subField} />
+                        <ImageInput field={subField} />
                       )}
                     />
                   )}

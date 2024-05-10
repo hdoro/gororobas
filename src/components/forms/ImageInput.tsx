@@ -1,117 +1,99 @@
-'use client'
-
-import { cn } from '@/utils/cn'
-import { CircleXIcon, UploadCloudIcon } from 'lucide-react'
-import { useDropzone } from 'react-dropzone'
-import type {
-  ControllerRenderProps,
-  FieldPath,
-  FieldValues,
+import type { SourceType } from '@/types'
+import { SOURCE_TYPE_TO_LABEL } from '@/utils/labels'
+import {
+  useFormContext,
+  type ControllerRenderProps,
+  type FieldPath,
+  type FieldValues,
 } from 'react-hook-form'
-import { Button } from '../ui/button'
-import { useToast } from '../ui/use-toast'
-import { FormControl, FormLabel } from '../ui/form'
-
-const MAX_UPLOAD_SIZE = 3 * 1024 * 1024
+import { Input } from '../ui/input'
+import Field from './Field'
+import ImageDropzone from './ImageDropzone'
+import RadioGroupInput from './RadioGroupInput'
 
 export default function ImageInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({ field }: { field: ControllerRenderProps<TFieldValues, TName> }) {
-  const { toast } = useToast()
+  const form = useFormContext()
 
-  const {
-    getRootProps,
-    getInputProps,
-    isDragActive,
-    isDragAccept,
-    isDragReject,
-    rootRef,
-  } = useDropzone({
-    accept: {
-      'image/*': ['.png', '.avif', '.jpg', '.jpeg', '.gif', '.webp'],
-    },
-    maxFiles: 1,
-    maxSize: MAX_UPLOAD_SIZE,
-    onDropRejected: (fileRejections) => {
-      const fileRejection = fileRejections[0]
-      if (fileRejection.errors[0].code === 'file-invalid-type') {
-        toast({
-          title: 'Arquivo inválido',
-          description: 'Apenas imagens são aceitas.',
-          variant: 'destructive',
-        })
-      } else if (fileRejection.errors[0].code === 'file-too-large') {
-        toast({
-          title: 'Imagem muito grande',
-          description: 'Envie uma imagem de até 3MB.',
-          variant: 'destructive',
-        })
-      }
-    },
-    onDropAccepted: (files) => {
-      field.onChange(files[0])
-    },
-  })
-
-  function clearField() {
-    field.onChange(undefined)
-    rootRef.current?.focus()
-  }
-
+  const sourceType = form.watch(`${field.name}.sourceType`) as SourceType
   return (
-    <div
-      {...getRootProps()}
-      className={cn(
-        'relative aspect-square border-2 border-border bg-card w-[12.5rem] flex-[0_0_max-content] flex items-center justify-center rounded-lg',
-        isDragActive && 'border-dotted',
-        isDragAccept && 'bg-primary/15 border-primary/30',
-        isDragReject && 'bg-destructive/15 border-destructive/30',
-      )}
-    >
-      <FormControl>
-        <input
-          /**
-           * We can't make the input controlled by passing the field's value to `getInputProps`,
-           * else the File object will be accessed in unexpected ways, which break with the error:
-           * "InvalidStateError: An attempt was made to use an object that is not, or is no longer, usable"
-           */
-          {...getInputProps({
-            disabled: field.disabled,
-            name: field.name,
-            onBlur: field.onBlur,
-            ref: field.ref,
-          })}
-          style={{}}
-          className="sr-only"
-        />
-      </FormControl>
-
-      {field.value ? (
-        <>
-          {(field.value as File) instanceof File && (
-            <img
-              src={URL.createObjectURL(field.value)}
-              alt="Imagem selecionada"
-              className="block object-contain w-full h-full"
+    <div className="flex gap-6 items-start">
+      <Field
+        form={form}
+        label="Imagem"
+        hideLabel
+        name={`${field.name}.photo`}
+        render={({ field }) => <ImageDropzone field={field} />}
+      />
+      <div className="space-y-4 flex-1">
+        <Field
+          form={form}
+          label="Rótulo"
+          name={`${field.name}.label`}
+          render={({ field: labelField }) => (
+            <Input
+              {...labelField}
+              value={labelField.value || ''}
+              type="text"
+              placeholder="Sobre o que é a imagem?"
             />
           )}
-          <Button
-            onClick={clearField}
-            className="absolute top-2 right-2 rounded-full"
-            aria-label="Remover imagem"
-            variant="outline"
-            size="icon"
-          >
-            <CircleXIcon />
-          </Button>
-        </>
-      ) : (
-        <FormLabel className="flex flex-col items-center justify-center gap-1 text-xs text-center p-4 font-normal">
-          <UploadCloudIcon />
-          Clique aqui ou arraste a foto
-        </FormLabel>
-      )}
+        />
+        <Field
+          form={form}
+          label="Origem da imagem"
+          name={`${field.name}.sourceType`}
+          render={({ field: sourceTypeField }) => (
+            <RadioGroupInput
+              field={sourceTypeField}
+              options={[
+                {
+                  label: SOURCE_TYPE_TO_LABEL.EXTERNAL,
+                  value: 'EXTERNAL' satisfies SourceType,
+                },
+                {
+                  label: SOURCE_TYPE_TO_LABEL.GOROROBAS,
+                  value: 'GOROROBAS' satisfies SourceType,
+                },
+              ]}
+            />
+          )}
+        />
+        {/* @TODO: Gororobas source (needs access to EdgeDB users) */}
+        {sourceType === 'EXTERNAL' && (
+          <>
+            <Field
+              form={form}
+              label="Créditos"
+              name={`${field.name}.credits`}
+              render={({ field: creditsField }) => (
+                <Input
+                  {...creditsField}
+                  value={creditsField.value || ''}
+                  type="text"
+                  placeholder="Que pessoa ou organização produziu a imagem?"
+                />
+              )}
+            />
+            <Field
+              form={form}
+              label="Fonte"
+              description="De preferência um link our URL"
+              name={`${field.name}.source`}
+              render={({ field: sourceField }) => (
+                <Input
+                  {...sourceField}
+                  value={sourceField.value || ''}
+                  type="text"
+                  placeholder="Ex: https://site.br/pagina-da-imagem"
+                />
+              )}
+            />
+          </>
+        )}
+      </div>
     </div>
   )
 }

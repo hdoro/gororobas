@@ -156,7 +156,7 @@ module default {
     };
   }
 
-  type Photo extending WithSource, PublicRead, Auditable, AdminCanDoAnything {
+  type Image extending WithSource, PublicRead, Auditable, AdminCanDoAnything {
     required sanity_id: str {
       constraint exclusive;
     };
@@ -170,7 +170,7 @@ module default {
     required name: str;
     bio: str;
     location: str;
-    photo: Photo;
+    photo: Image;
 
     access policy owner_has_full_access
       allow all
@@ -179,7 +179,7 @@ module default {
 
   type VegetableVariety extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
     required names: array<str>;
-    multi photos: Photo {
+    multi photos: Image {
       order_index: int16;
     };
   }
@@ -210,7 +210,7 @@ module default {
     temperature_max: float32;
     content: json;
 
-    multi photos: Photo {
+    multi photos: Image {
       order_index: int16;
     };
 

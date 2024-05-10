@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Vegetable } from '@/schemas'
+import { Vegetable, type VegetableInForm } from '@/schemas'
 import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
 import {
   EDIBLE_PART_TO_LABEL,
@@ -15,22 +15,19 @@ import {
   USAGE_TO_LABEL,
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
-import * as S from '@effect/schema/Schema'
 import { ChevronLeftIcon } from 'lucide-react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import ArrayInput from './forms/ArrayInput'
 import CheckboxesInput from './forms/CheckboxesInput'
 import Field from './forms/Field'
 import HandleInput from './forms/HandleInput'
+import ImageInput from './forms/ImageInput'
 import NumberInput from './forms/NumberInput'
-import PhotoWithCreditsInput from './forms/PhotoWithCreditsInput'
 import RadioGroupInput from './forms/RadioGroupInput'
 import RichTextInput from './forms/RichTextInput'
 import VegetableVarietyInput from './forms/VegetableVarietyInput'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-
-type FormValueDecoded = S.Schema.Type<typeof Vegetable>
 
 /**
  * FORM REQUIREMENTS:
@@ -72,15 +69,15 @@ type FormValueDecoded = S.Schema.Type<typeof Vegetable>
  * - [ ] When adding variety, automatically open form
  */
 export default function TestForm() {
-  const form = useForm<FormValueDecoded>({
+  const form = useForm<VegetableInForm>({
     resolver: effectSchemaResolverResolver(Vegetable),
     defaultValues: {
-      names: [{ value: '' }],
+      names: [{ value: 'Nome #1' }],
     },
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<FormValueDecoded> = (data, event) => {
+  const onSubmit: SubmitHandler<VegetableInForm> = (data, event) => {
     console.info({ data, event })
   }
 
@@ -254,7 +251,7 @@ export default function TestForm() {
                                   label={`Foto #${index + 1}`}
                                   hideLabel
                                   render={({ field: subField }) => (
-                                    <PhotoWithCreditsInput field={subField} />
+                                    <ImageInput field={subField} />
                                   )}
                                 />
                               )}

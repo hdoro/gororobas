@@ -1,5 +1,10 @@
 import e from '@/edgeql'
-import { stringArrayTransformer, type VegetableDecoded } from '@/schemas'
+import {
+  NewImage,
+  StringInArray,
+  type VegetableForDB,
+  type VegetableInForm,
+} from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { slugify } from '@/utils/strings'
 import * as S from '@effect/schema/Schema'
@@ -19,7 +24,7 @@ const newPhotosMutation = e.params(
   },
   (params) =>
     e.for(e.array_unpack(params.photos), (photo) =>
-      e.insert(e.Photo, {
+      e.insert(e.Image, {
         id: photo.id,
         sanity_id: photo.sanity_id,
         label: photo.label,
@@ -68,8 +73,8 @@ const newVarietiesMutation = e.params(
         id: variety.id,
         names: variety.names,
         handle: variety.handle,
-        photos: e.select(e.Photo, (photo) => ({
-          filter: e.op(photo.id, 'in', e.array_unpack(variety.photos)),
+        photos: e.select(e.Image, (image) => ({
+          filter: e.op(image.id, 'in', e.array_unpack(variety.photos)),
         })),
       }),
     ),
@@ -160,8 +165,8 @@ const newVegetableMutation = e.params(
         e.array(e.PlantingMethod),
         params.planting_methods,
       ),
-      photos: e.select(e.Photo, (photo) => ({
-        filter: e.op(photo.id, 'in', e.array_unpack(params.photos)),
+      photos: e.select(e.Image, (image) => ({
+        filter: e.op(image.id, 'in', e.array_unpack(params.photos)),
       })),
       varieties: e.assert_distinct(
         e.for(e.array_unpack(params.varieties), (variety) =>
@@ -187,7 +192,7 @@ const newVegetableMutation = e.params(
 )
 
 export async function createVegetable(
-  input: VegetableDecoded,
+  input: VegetableForDB,
   inputClient: Client,
 ) {
   const client = inputClient.withConfig({ allow_user_specified_id: true })
@@ -197,7 +202,11 @@ export async function createVegetable(
     const allPhotos = [
       ...(input.varieties || []).flatMap((v) => v?.photos || []),
       ...(input.photos || []),
-    ].map(({ label, photo, ...optional_properties }) => {
+    ].flatMap((photo) => {
+      if (!S.is(NewImage)(photo)) return []
+
+      const { label, base64, fileName, mimeName, ...optional_properties } =
+        photo
       return {
         id: generateId(),
         sanity_id: generateId(),
@@ -207,6 +216,7 @@ export async function createVegetable(
     })
 
     if (allPhotos.length > 0) {
+      // @TODO: upload images to Sanity
       await newPhotosMutation.run(tx, {
         photos: allPhotos,
       })
@@ -216,10 +226,8 @@ export async function createVegetable(
     const varieties = (input.varieties || []).map((v) => {
       return {
         id: generateId(),
-        names: v.names.map((name) =>
-          S.decodeSync(stringArrayTransformer)(name),
-        ),
-        handle: `${input.handle}-${slugify(v.names[0].value)}`,
+        names: v.names,
+        handle: `${input.handle}-${slugify(v.names[0])}`,
         photos: (v.photos || []).flatMap((photo) => {
           // @TODO: better way to lock IDs, probably when decoding the input
           const photoId = allPhotos.find((p) => p.label === photo.label)?.id
@@ -257,6 +265,8 @@ export async function createVegetable(
 
     // #4 Create vegetable
     await newVegetableMutation.run(tx, {
+      names: input.names,
+      scientific_names: input.scientific_names,
       gender: input.gender,
       handle: input.handle,
       stratum: input.stratum,
@@ -270,12 +280,6 @@ export async function createVegetable(
       edible_parts: input.edible_parts || null,
       lifecycle: input.lifecycle || null,
       content: input.content || null,
-      names: input.names.map((name) =>
-        S.decodeSync(stringArrayTransformer)(name),
-      ),
-      scientific_names: input.scientific_names.map((name) =>
-        S.decodeSync(stringArrayTransformer)(name),
-      ),
       photos: (input.photos || []).flatMap((photo) => {
         // @TODO: better way to lock IDs, probably when decoding the input
         const photoId = allPhotos.find((p) => p.label === photo.label)?.id
