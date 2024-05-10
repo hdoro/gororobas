@@ -154,8 +154,8 @@ module default {
     };
   }
 
-  type Photo extending WithSource, PublicRead, Auditable {
-    required sanityId: str {
+  type Photo extending WithSource, PublicRead, Auditable, AdminCanDoAnything {
+    required sanity_id: str {
       constraint exclusive;
     };
     label: str;
@@ -177,14 +177,19 @@ module default {
 
   type VegetableVariety extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
     required names: array<str>;
-    multi photos: Photo;
+    multi photos: Photo {
+      order_index: int16;
+    };
   }
 
   type VegetableTip extending WithHandle, WithSource, PublicRead, Auditable, AdminCanDoAnything {
     required subject: TipSubject;
     required content: json;
 
-    multi content_links: WithHandle;
+    multi content_links: WithHandle {
+      # Let dangling links live
+      on target delete allow;
+    };
   }
 
   type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
@@ -194,6 +199,7 @@ module default {
     required stratum: array<Stratum>;
     planting_methods: array<PlantingMethod>;
     edible_parts: array<EdiblePart>;
+    lifecycle: array<VegetableLifeCycle>;
     uses: array<VegetableUsage>;
     origin: str;
     height_min: float32;
@@ -202,14 +208,24 @@ module default {
     temperature_max: float32;
     content: json;
 
-    multi photos: Photo;
+    multi photos: Photo {
+      order_index: int16;
+    };
+
     multi varieties: VegetableVariety {
       constraint exclusive;
       order_index: int16;
+      on target delete allow;
+      # When a vegetable is deleted, delete all of its varieties
+      on source delete delete target;
     };
+
     multi tips: VegetableTip {
       constraint exclusive;
       order_index: int16;
+      on target delete allow;
+      # When a vegetable is deleted, delete all of its tips
+      on source delete delete target;
     };
 
     # Computed
@@ -219,6 +235,9 @@ module default {
   type VegetableConsortium {
     required multi vegetables: Vegetable {
       order_index: int16;
+
+      # If a vegetable is in a consortium, don't allow deleting it
+      on target delete restrict;
     };
     notes: str;
   }

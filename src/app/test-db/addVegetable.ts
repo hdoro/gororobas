@@ -1,76 +1,150 @@
 'use server'
 
 import { auth } from '@/edgedb'
-import e from '@/edgeql'
+import type { VegetableDecoded } from '@/schemas'
+import type {
+  PlantingMethod,
+  VegetableEdiblePart,
+  VegetableLifecycle,
+  VegetableUsage,
+} from '@/types'
 import { generateId } from '@/utils/ids'
+import { createVegetable } from './createVegetable'
 
 export async function addVegetable() {
   const session = auth.getSession()
 
-  const handle = `quiabo-${generateId()}`
+  function getContent(): VegetableDecoded {
+    return {
+      gender: 'MASCULINO',
+      names: [{ value: `Quiabo ${generateId()}` }],
+      handle: generateId(),
+      scientific_names: [{ value: 'Abelmoschus esculentus' }],
+      varieties: [
+        {
+          names: [{ value: 'Variedade #1' }],
+          photos: [
+            {
+              label: 'Foto Variedade #1 - 1',
+              photo: null as any,
+              sourceType: 'EXTERNAL',
+              credits: 'Créditos',
+            },
+            {
+              label: 'Foto Variedade #1 - 2',
+              photo: null as any,
+              sourceType: 'GOROROBAS',
+              userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
+            },
+          ],
+          // order_index: 0,
+        },
+        {
+          names: [{ value: 'Variedade #2' }],
+          photos: [
+            {
+              label: 'Foto Variedade #2 - 1',
+              photo: null as any,
+              sourceType: 'EXTERNAL',
+              credits: 'Créditos',
+            },
+            {
+              label: 'Foto Variedade #2 - 2',
+              photo: null as any,
+              sourceType: 'GOROROBAS',
+              userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
+            },
+          ],
+          // order_index: 1,
+        },
+        {
+          names: [{ value: 'Variedade #3' }],
+          photos: [
+            {
+              label: 'Foto Variedade #3 - 1',
+              photo: null as any,
+              sourceType: 'EXTERNAL',
+              credits: 'Créditos',
+            },
+            {
+              label: 'Foto Variedade #3 - 2',
+              photo: null as any,
+              sourceType: 'GOROROBAS',
+              userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
+            },
+          ],
+          // order_index: 2,
+        },
+        {
+          names: [{ value: 'Variedade #4' }],
+          photos: [
+            {
+              label: 'Foto Variedade #4 - 1',
+              photo: null as any,
+              sourceType: 'EXTERNAL',
+              credits: 'Créditos',
+            },
+            {
+              label: 'Foto Variedade #4 - 2',
+              photo: null as any,
+              sourceType: 'GOROROBAS',
+              userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
+            },
+          ],
+          // order_index: 3,
+        },
+        {
+          names: [{ value: 'Variedade #5' }],
+          photos: [
+            {
+              label: 'Foto Variedade #5 - 1',
+              photo: null as any,
+              sourceType: 'EXTERNAL',
+              credits: 'Créditos',
+            },
+            {
+              label: 'Foto Variedade #5 - 2',
+              photo: null as any,
+              sourceType: 'GOROROBAS',
+              userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
+            },
+          ],
+          // order_index: 4,
+        },
+      ],
+      stratum: ['ALTO'],
+      height_max: 10,
+      temperature_max: 30,
+      height_min: 4,
+      temperature_min: 20,
+      edible_parts: ['FRUTO'] satisfies VegetableEdiblePart[],
+      lifecycle: ['PERENE'] satisfies VegetableLifecycle[],
+      planting_methods: ['SEMENTE'] satisfies PlantingMethod[],
+      uses: ['ALIMENTO_HUMANO'] satisfies VegetableUsage[],
+      origin: 'Continente africano',
+      photos: [
+        {
+          label: 'Foto Raiz - 1',
+          photo: null as any,
+          sourceType: 'EXTERNAL',
+          credits: 'Créditos',
+        },
+        {
+          label: 'Foto Raiz - 2',
+          photo: null as any,
+          sourceType: 'GOROROBAS',
+          userIds: ['437c5016-0d54-11ef-9b55-ff81ad9eb78e'],
+        },
+      ],
+      content: {} as any,
+    }
+  }
 
-  const Varieties = [
-    {
-      names: ['Variedade #1'],
-      handle: `${handle}-variedade-1-${generateId()}`,
-    },
-    {
-      names: ['Variedade #2'],
-      handle: `${handle}-variedade-2-${generateId()}`,
-    },
-    {
-      names: ['Variedade #3'],
-      handle: `${handle}-variedade-3-${generateId()}`,
-    },
-    {
-      names: ['Variedade #4'],
-      handle: `${handle}-variedade-4-${generateId()}`,
-    },
-    {
-      names: ['Variedade #5'],
-      handle: `${handle}-variedade-5-${generateId()}`,
-      modify: '82a6e840-0d5a-11ef-addd-b3b07f0ea253',
-    },
-  ]
-  const varietyInsertOps = Varieties.flatMap((variety) => {
-    const insert = e.insert(e.VegetableVariety, {
-      names: variety.names,
-      handle: variety.handle,
-    })
-    return insert
-  })
-  const varietyModifyOps = Varieties.flatMap((variety) => {
-    if (!variety.modify) return []
-
-    return e.update(e.VegetableVariety, (v) => ({
-      filter_single: e.op(v.id, '=', e.literal(e.uuid, variety.modify)),
-      set: {
-        names: [...variety.names, 'MODIFIED'],
-        handle: 'blebleble',
-      },
-    }))
-  })
-
-  const newItemQuery = e.insert(e.Vegetable, {
-    names: [`Quiabo ${generateId()}`],
-    handle: handle,
-    gender: 'MASCULINO',
-    scientific_names: ['Abelmoschus esculentus'],
-    stratum: ['ALTO'],
-    varieties: e.set(...varietyInsertOps),
-  })
-
+  console.time('createVegetable')
   try {
-    await session.client.transaction(async (tx) => {
-      const addRes = await newItemQuery.run(tx)
-      console.log({ addRes })
-
-      const modifyRes = await Promise.all(
-        varietyModifyOps.map((op) => op.run(tx)),
-      )
-      console.log({ modifyRes })
-    })
+    await createVegetable(getContent(), session.client)
   } catch (error) {
     console.log('ERROR', error)
   }
+  console.timeEnd('createVegetable')
 }

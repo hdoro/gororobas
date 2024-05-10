@@ -49,7 +49,7 @@ const isLexicalEditorState = (input: unknown): input is EditorState =>
 
 const LexicalEditorState = S.declare(isLexicalEditorState)
 
-const PhotoWithCreditsInForm = S.extend(
+const PhotoInputValue = S.extend(
   S.Struct({
     photo: FileSchema,
     label: S.String,
@@ -58,20 +58,37 @@ const PhotoWithCreditsInForm = S.extend(
   Source,
 )
 
-const Name = S.Struct({
+const StringArrayInputValue = S.Struct({
   value: S.String.pipe(S.minLength(3)).annotations({
     message: () => 'Nome deve ter ao menos 3 caracteres',
   }),
   id: S.optional(S.String),
 })
 
+export const stringArrayTransformer = S.transform(
+  StringArrayInputValue,
+  S.String,
+  {
+    decode: (nameInForm) => nameInForm.value,
+    encode: (name) => ({ value: name }),
+  },
+)
+
 const VegetableVariety = S.Struct({
-  names: S.Array(Name).pipe(S.minItems(1)),
-  photos: S.Array(PhotoWithCreditsInForm),
+  names: S.Array(StringArrayInputValue).pipe(S.minItems(1)),
+  photos: S.optional(S.Array(PhotoInputValue)),
 })
 
+const VegetableVarietyInForm = S.extend(
+  VegetableVariety,
+  S.Struct({
+    // When editing vegetables, existing varieties will include their current data in the DB
+    inDb: S.optional(S.extend(VegetableVariety, S.Struct({ id: S.String }))),
+  }),
+)
+
 export const Vegetable = S.Struct({
-  names: S.Array(Name).pipe(S.minItems(1)),
+  names: S.Array(StringArrayInputValue).pipe(S.minItems(1)),
   handle: S.String.pipe(
     S.minLength(1, {
       message: () => 'Obrigatório',
@@ -84,7 +101,7 @@ export const Vegetable = S.Struct({
         'O endereço não pode conter caracteres especiais, letras maiúsculas, espaços ou acentos',
     }),
   ),
-  scientific_names: S.Array(Name).pipe(S.minItems(1)),
+  scientific_names: S.Array(StringArrayInputValue).pipe(S.minItems(1)),
   origin: S.optional(S.String),
   gender: S.Literal(...(Object.keys(GENDER_TO_LABEL) as Gender[])),
 
@@ -155,9 +172,10 @@ export const Vegetable = S.Struct({
     ),
   ),
 
-  varieties: S.optional(S.Array(VegetableVariety)),
-  photos: S.optional(S.Array(PhotoWithCreditsInForm)),
+  varieties: S.optional(S.Array(VegetableVarietyInForm)),
+  photos: S.optional(S.Array(PhotoInputValue)),
   content: LexicalEditorState,
 })
 
 export type VegetableVarietyDecoded = S.Schema.Type<typeof VegetableVariety>
+export type VegetableDecoded = S.Schema.Type<typeof Vegetable>
