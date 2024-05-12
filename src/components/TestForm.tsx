@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Vegetable, type VegetableInForm } from '@/schemas'
+import { Vegetable, type VegetableForDB, type VegetableInForm } from '@/schemas'
 import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
 import {
   EDIBLE_PART_TO_LABEL,
@@ -34,6 +34,9 @@ import VegetableVarietyInput from './forms/VegetableVarietyInput'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import type { VegetableUsage } from '@/types'
+import { addVegetable } from '@/app/test-db/addVegetable'
+import { useRouter } from 'next/navigation'
+import { useToast } from './ui/use-toast'
 
 /**
  * FORM REQUIREMENTS:
@@ -79,14 +82,24 @@ export default function TestForm() {
   const form = useForm<VegetableInForm>({
     resolver: effectSchemaResolverResolver(Vegetable),
     criteriaMode: 'all',
-    defaultValues: {
-      names: [{ value: 'Nome #1' }],
-    },
+    defaultValues: {},
     mode: 'onBlur',
   })
+  const router = useRouter()
+  const toast = useToast()
 
-  const onSubmit: SubmitHandler<VegetableInForm> = (data, event) => {
+  const onSubmit: SubmitHandler<VegetableInForm> = async (data, event) => {
     console.info({ data, event })
+    const added = await addVegetable(data as any as VegetableForDB)
+    if (added) {
+      router.push(`/vegetais/${data.handle}`)
+    } else {
+      toast.toast({
+        variant: 'destructive',
+        title: 'Erro ao adicionar vegetal',
+        description: 'Por favor, tente novamente.',
+      })
+    }
   }
 
   console.log(form.formState, form.getValues())

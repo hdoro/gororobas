@@ -56,7 +56,9 @@ export default function VegetableVarietyInput<
                 : 'flex items-center justify-center h-[6.25rem] bg-card-foreground/5',
             )}
           >
-            {renderablePhoto && 'file' in renderablePhoto.data ? (
+            {renderablePhoto &&
+            'file' in renderablePhoto.data &&
+            renderablePhoto.data.file instanceof File ? (
               <img
                 src={URL.createObjectURL(renderablePhoto.data.file)}
                 alt={renderablePhoto.label}
