@@ -6,21 +6,21 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '[EdgeDB Hackathon] Gororobas',
-  description: 'Generated with the EdgeDB + EdgeDB Auth + Next.js Template',
+	title: '[EdgeDB Hackathon] Gororobas',
+	description: 'Generated with the EdgeDB + EdgeDB Auth + Next.js Template',
 }
 
 export default async function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode
+	children: React.ReactNode
 }) {
-  return (
-    <html lang="pt-br">
-      <body className={inter.className}>
-        {children}
-        <Toaster />
-      </body>
-    </html>
-  )
+	return (
+		<html lang="pt-BR">
+			<body className={inter.className}>
+				{children}
+				<Toaster />
+			</body>
+		</html>
+	)
 }

@@ -4,17 +4,17 @@ import { notFound } from 'next/navigation'
 import VegetablePage from './VegetablePage'
 
 export default async function VegetableRoute({
-  params: { handle },
+	params: { handle },
 }: {
-  params: { handle: string }
+	params: { handle: string }
 }) {
-  const session = auth.getSession()
+	const session = auth.getSession()
 
-  console.time('vegetablePageQuery')
-  const vegetable = await vegetablePageQuery.run(session.client, { handle })
-  console.timeEnd('vegetablePageQuery')
+	console.time('vegetablePageQuery')
+	const vegetable = await vegetablePageQuery.run(session.client, { handle })
+	console.timeEnd('vegetablePageQuery')
 
-  if (!vegetable) return notFound()
+	if (!vegetable) return notFound()
 
-  return <VegetablePage vegetable={vegetable} />
+	return <VegetablePage vegetable={vegetable} />
 }

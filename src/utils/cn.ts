@@ -1,5 +1,5 @@
-import { cn as tvcn, type CnOptions } from 'tailwind-variants'
+import { type CnOptions, cn as tvcn } from 'tailwind-variants'
 
 export function cn<T extends CnOptions>(...classes: T) {
-  return tvcn(...classes)({})
+	return tvcn(...classes)({})
 }
