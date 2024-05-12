@@ -22,11 +22,7 @@ import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
 import { ParseResult } from '@effect/schema'
 import * as S from '@effect/schema/Schema'
 import { Effect } from 'effect'
-import type {
-	EditorState,
-	SerializedEditorState,
-	SerializedLexicalNode,
-} from 'lexical'
+import type { EditorState, SerializedElementNode } from 'lexical'
 
 const SourceGororobasInForm = S.Struct({
 	sourceType: S.Literal('GOROROBAS' satisfies SourceType),
@@ -52,14 +48,13 @@ const LexicalEditorState = S.declare(isLexicalEditorState)
 
 const isLexicalJSON = (
 	input: unknown,
-): input is SerializedEditorState<SerializedLexicalNode> =>
-	typeof input === 'object'
+): input is SerializedElementNode['children'] => Array.isArray(input)
 
 const LexicalJSON = S.declare(isLexicalJSON)
 
 const RichText = S.transform(LexicalEditorState, LexicalJSON, {
 	encode: (json) => ({}) as any,
-	decode: (state) => state.toJSON(),
+	decode: (state) => state.toJSON().root.children,
 })
 
 export const NewImage = S.transformOrFail(
