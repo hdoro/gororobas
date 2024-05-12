@@ -1,16 +1,20 @@
 import { formatError, type Issue } from '@effect/schema/ArrayFormatter'
 import * as S from '@effect/schema/Schema'
-import { toNestErrors, validateFieldsNatively } from '@hookform/resolvers'
+import { validateFieldsNatively } from '@hookform/resolvers'
 import { Effect } from 'effect'
 import {
+  Field,
+  FieldErrors,
   FieldValues,
+  InternalFieldName,
   ResolverOptions,
   ResolverResult,
+  get,
+  set,
   type FieldError,
-  type FieldErrors,
 } from 'react-hook-form'
 
-type Resolver = <FormSchema extends S.Struct<any>>(
+type Resolver = <FormSchema extends S.Struct<any> | S.filter<S.Struct<any>>>(
   schema: FormSchema,
 ) => <TFieldValues extends FieldValues, TContext>(
   values: TFieldValues,
@@ -24,13 +28,46 @@ const TAG_TO_TYPE_MAP: Partial<Record<Issue['_tag'], FieldError['type']>> = {
   Refinement: 'pattern',
 }
 
+/**
+ * Adaptation of @hookform/resolvers official implementation to avoid validating native
+ * errors more than once.
+ *
+ * @see https://github.com/react-hook-form/resolvers/blob/master/src/toNestErrors.ts */
+const toNestErrors = <TFieldValues extends FieldValues>(
+  errors: FieldErrors,
+  options: ResolverOptions<TFieldValues>,
+): FieldErrors<TFieldValues> => {
+  const fieldErrors = {} as FieldErrors<TFieldValues>
+  for (const path in errors) {
+    const field = get(options.fields, path) as Field['_f'] | undefined
+    const error = Object.assign(errors[path] || {}, {
+      ref: field && field.ref,
+    })
+
+    if (isNameInFieldArray(options.names || Object.keys(errors), path)) {
+      const fieldArrayErrors = Object.assign({}, get(fieldErrors, path))
+
+      set(fieldArrayErrors, 'root', error)
+      set(fieldErrors, path, fieldArrayErrors)
+    } else {
+      set(fieldErrors, path, error)
+    }
+  }
+
+  return fieldErrors
+}
+
+const isNameInFieldArray = (
+  names: InternalFieldName[],
+  name: InternalFieldName,
+) => names.some((n) => n.startsWith(name + '.'))
+
 export const effectSchemaResolverResolver: Resolver =
-  (formSchema) => async (values, context, options) => {
+  (formSchema) => async (values, _context, options) => {
     // react-hook-form will handle throwing errors for native validation
     options.shouldUseNativeValidation && validateFieldsNatively({}, options)
 
     const getResult = Effect.gen(function* () {
-      console.log({ formSchema, values, context, options })
       const decoded = yield* S.decodeUnknown(formSchema, {
         errors: 'all',
       })(values)
@@ -43,7 +80,6 @@ export const effectSchemaResolverResolver: Resolver =
       Effect.catchAll((e) =>
         formatError(e).pipe(
           Effect.map((errors) => {
-            console.log({ errors })
             const fieldErrors: FieldErrors = Object.fromEntries(
               errors.flatMap((e, i) => {
                 // Skip optional errors about undefined values

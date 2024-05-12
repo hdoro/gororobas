@@ -16,7 +16,12 @@ import {
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
 import { ChevronLeftIcon } from 'lucide-react'
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import {
+  FormProvider,
+  SubmitHandler,
+  useForm,
+  useFormContext,
+} from 'react-hook-form'
 import ArrayInput from './forms/ArrayInput'
 import CheckboxesInput from './forms/CheckboxesInput'
 import Field from './forms/Field'
@@ -28,6 +33,7 @@ import RichTextInput from './forms/RichTextInput'
 import VegetableVarietyInput from './forms/VegetableVarietyInput'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
+import type { VegetableUsage } from '@/types'
 
 /**
  * FORM REQUIREMENTS:
@@ -54,23 +60,25 @@ import { Input } from './ui/input'
  * - [x] Image input
  * - [x] Varieties
  * - [x] Rich text
+ * - [x] Finish schema
+ * - [x] Field dependency - edible_parts only if `ALIMENTO_HUMANO` in `usage`
+ * - [x] Async validation
  * - [ ] Suggestions & tips
- * - [ ] Finish schema
- * - [ ] Field dependency - edible_parts only if `ALIMENTO_HUMANO` in `usage`
- * - [ ] Async validation
  * - [ ] Default values
  * - [ ] PhotoWithCredits: select person from Gororobas
  * - [ ] RTE: links, perhaps even to other entities in the DB
  *
  * ## IMPROVEMENTS
- * - [ ] Better error messages for nested forms
- * - [ ] Less hacky approach to validating optionals
+ * - [x] Better error messages for nested forms
  * - [ ] Numbers from text fields (I think number inputs have bunch of issues, don't remember why)
  * - [ ] When adding variety, automatically open form
+ * - [ ] In the reoslver, can we validate the encoding schema instead of fully decoding it? It'd make it slightly faster.
+ *
  */
 export default function TestForm() {
   const form = useForm<VegetableInForm>({
     resolver: effectSchemaResolverResolver(Vegetable),
+    criteriaMode: 'all',
     defaultValues: {
       names: [{ value: 'Nome #1' }],
     },
@@ -342,23 +350,11 @@ export default function TestForm() {
                           />
                         )}
                       />
-                      <Field
-                        form={form}
-                        name="edible_parts"
-                        label="Partes comestíveis"
-                        render={({ field }) => (
-                          <CheckboxesInput
-                            field={field}
-                            options={Object.entries(EDIBLE_PART_TO_LABEL).map(
-                              ([value, label]) => ({ value, label }),
-                            )}
-                          />
-                        )}
-                      />
+                      <EdibleParts />
                       <Field
                         form={form}
                         name="lifecycle"
-                        label="Partes comestíveis"
+                        label="Ciclo de vida"
                         render={({ field }) => (
                           <CheckboxesInput
                             field={field}
@@ -371,7 +367,7 @@ export default function TestForm() {
                       <Field
                         form={form}
                         name="stratum"
-                        label="Partes comestíveis"
+                        label="Estrato de cultivo"
                         render={({ field }) => (
                           <CheckboxesInput
                             field={field}
@@ -409,5 +405,28 @@ export default function TestForm() {
         </main>
       </div>
     </div>
+  )
+}
+
+function EdibleParts() {
+  const form = useFormContext()
+  const uses = (form.watch('uses') || []) as VegetableUsage[]
+
+  if (!uses.includes('ALIMENTO_HUMANO')) return null
+
+  return (
+    <Field
+      form={form}
+      name="edible_parts"
+      label="Partes comestíveis"
+      render={({ field }) => (
+        <CheckboxesInput
+          field={field}
+          options={Object.entries(EDIBLE_PART_TO_LABEL).map(
+            ([value, label]) => ({ value, label }),
+          )}
+        />
+      )}
+    />
   )
 }

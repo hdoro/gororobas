@@ -8,6 +8,7 @@ import {
   FieldValues,
   FormProvider as RHFProvider,
   useFormContext,
+  type FieldError,
 } from 'react-hook-form'
 
 import { Label } from '@/components/ui/label'
@@ -49,7 +50,6 @@ const useFormField = () => {
   if (!fieldContext) {
     throw new Error('useFormField should be used within <FormField>')
   }
-
   const { id } = itemContext
 
   return {
@@ -59,6 +59,11 @@ const useFormField = () => {
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,
     ...fieldState,
+    error: fieldState.error as
+      | undefined
+      | FieldError
+      // Array fields include the errors of their children, based on the path
+      | { [arraySubfieldPath: string]: FieldError }[],
   }
 }
 
@@ -144,8 +149,16 @@ const FormMessage = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
-  const { error, formMessageId } = useFormField()
-  const body = error ? String(error?.message) : children
+  const { error, formMessageId, name } = useFormField()
+  let body = children
+  if (Array.isArray(error)) {
+    const subFieldsWithError = error.filter(
+      (e) => typeof e === 'object' && !!e && Object.keys(e).length > 0,
+    ).length
+    body = `${subFieldsWithError} campo${subFieldsWithError > 1 ? 's' : ''} com erro`
+  } else if (typeof error === 'object' && 'message' in error) {
+    body = String(error?.message)
+  }
 
   if (!body) {
     return null
