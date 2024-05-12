@@ -90,7 +90,7 @@ export default function TestForm() {
 
 	const onSubmit: SubmitHandler<VegetableInForm> = async (data, event) => {
 		console.info({ data, event })
-		const added = await addVegetable(data as any as VegetableForDB)
+		const added = await addVegetable(data as unknown as VegetableForDB)
 		if (added) {
 			router.push(`/vegetais/${data.handle}`)
 		} else {

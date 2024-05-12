@@ -12,11 +12,13 @@ export const { GET, POST } = auth.createAuthRouteHandlers({
 			console.log('email verification required')
 		}
 		if (isSignUp) {
-			const client = auth.getSession().client.withConfig({
+			const userClient = auth.getSession().client.withConfig({
 				allow_user_specified_id: true,
+				// Skip access policies as users can't create `User` objects
+				apply_access_policies: false,
 			})
 
-			const emailData = await client.querySingle<{ email: string }>(`
+			const emailData = await userClient.querySingle<{ email: string }>(`
         SELECT ext::auth::EmailFactor {
           email
         } FILTER .identity = (global ext::auth::ClientTokenIdentity)
@@ -25,7 +27,7 @@ export const { GET, POST } = auth.createAuthRouteHandlers({
 			const userId = generateId()
 			const initialName = emailData?.email.split('@')[0]
 			const initialHandle = slugify(`${initialName}-${userId.slice(0, 6)}`)
-			await client.query(
+			await userClient.query(
 				`
         INSERT User {
           id := <uuid>$userId,

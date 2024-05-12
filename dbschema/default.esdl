@@ -23,6 +23,7 @@ module default {
   scalar type Stratum extending enum<EMERGENTE,ALTO,MEDIO,BAIXO,RASTEIRO>;
   scalar type PlantingMethod extending enum<BROTO,ENXERTO,ESTACA,RIZOMA,SEMENTE,TUBERCULO>;
   scalar type TipSubject extending enum<PLANTIO,CRESCIMENTO,COLHEITA>;
+  scalar type VegetableWishlistStatus extending enum<QUERO_CULTIVAR,SEM_INTERESSE,JA_CULTIVEI,ESTOU_CULTIVANDO>;
 
   global current_user := (
     assert_single((
@@ -37,11 +38,25 @@ module default {
     ))
   );
 
-  type User {
+  abstract type UserCanInsert {
+    access policy authenticated_user_can_insert
+      allow insert
+      using (exists global current_user);
+  }
+
+  abstract type AdminCanDoAnything {
+    access policy admin_can_do_anything
+      allow all
+      using (global current_user.userRole ?= Role.ADMIN);
+  }
+
+  type User extending AdminCanDoAnything {
     required identity: ext::auth::Identity {
       constraint exclusive;
     };
-    email: str;
+    email: str {
+      constraint exclusive;
+    };
   
     userRole: Role {
       default := "USER";
@@ -54,6 +69,10 @@ module default {
       rewrite insert using (datetime_of_statement());
       rewrite update using (datetime_of_statement());
     }
+
+    access policy owner_can_select_or_delete
+      allow select, delete
+      using (global current_user.identity ?= .identity);
   }
 
   scalar type HistoryAction extending enum<`INSERT`, `UPDATE`, `DELETE`>;
@@ -63,7 +82,7 @@ module default {
       default := datetime_current();
       readonly := true;
     };
-    performed_by: User;
+    performed_by: UserProfile;
     old: json;
     new: json;
     target: Auditable {
@@ -79,8 +98,8 @@ module default {
     updated_at: datetime {
       rewrite insert, update using (datetime_of_statement());
     };
-    created_by: User {
-      rewrite insert using (global current_user);
+    created_by: UserProfile {
+      rewrite insert using (global current_user_profile);
       on target delete allow;
     };
 
@@ -88,7 +107,7 @@ module default {
       insert HistoryLog {
         action := HistoryAction.`INSERT`,
         target := __new__,
-        performed_by := global current_user,
+        performed_by := global current_user_profile,
         new := <json>__new__
       }
     );
@@ -97,7 +116,7 @@ module default {
       insert HistoryLog {
         action := HistoryAction.`UPDATE`,
         target := __new__,
-        performed_by := global current_user,
+        performed_by := global current_user_profile,
         old := <json>__old__,
         new := <json>__new__,
       }
@@ -107,7 +126,7 @@ module default {
       insert HistoryLog {
         action := HistoryAction.`DELETE`,
         target := __old__,
-        performed_by := global current_user,
+        performed_by := global current_user_profile,
         old := <json>__old__
       }
     );
@@ -117,7 +136,7 @@ module default {
     sourceType: SourceType;
     credits: str;
     source: str;
-    multi users: User {
+    multi users: UserProfile {
       on target delete allow;
     };
   }
@@ -125,18 +144,6 @@ module default {
   abstract type PublicRead {
     access policy public_read_only
       allow select;
-  }
-
-  abstract type UserCanInsert {
-    access policy authenticated_user_can_insert
-      allow insert
-      using (exists global current_user);
-  }
-
-  abstract type AdminCanDoAnything {
-    access policy admin_can_do_anything
-      allow all
-      using (global current_user.userRole ?= Role.ADMIN);
   }
 
   abstract type WithHandle {
@@ -166,7 +173,7 @@ module default {
     crop: json;
   }
 
-  type UserProfile extending WithHandle, PublicRead, Auditable {
+  type UserProfile extending WithHandle, PublicRead {
     required user: User {
       constraint exclusive;
     };
@@ -239,13 +246,21 @@ module default {
     consortia := .<vegetables[is VegetableConsortium];
   }
 
-  type VegetableConsortium {
-    required multi vegetables: Vegetable {
+  type VegetableConsortium extending AdminCanDoAnything {
+    multi vegetables: Vegetable {
       order_index: int16;
 
       # If a vegetable is in a consortium, don't allow deleting it
       on target delete restrict;
     };
     notes: str;
+  }
+
+  type UserWishlist {
+    required user_profile: UserProfile;
+    required vegetable: Vegetable;
+    required status: VegetableWishlistStatus;
+
+    constraint exclusive on ((.user_profile, .vegetable));
   }
 }

@@ -23,7 +23,7 @@ export const vegetablePageQuery = e.params(
 			temperature_min: true,
 			temperature_max: true,
 			content: true,
-			photos: {
+			photos: (image) => ({
 				sanity_id: true,
 				hotspot: true,
 				crop: true,
@@ -32,11 +32,17 @@ export const vegetablePageQuery = e.params(
 				source: true,
 				credits: true,
 				users: true,
-			},
-			varieties: {
+
+				order_by: {
+					expression: image['@order_index'],
+					direction: 'ASC',
+					empty: e.EMPTY_LAST,
+				},
+			}),
+			varieties: (variety) => ({
 				handle: true,
 				names: true,
-				photos: {
+				photos: (image) => ({
 					sanity_id: true,
 					hotspot: true,
 					crop: true,
@@ -45,9 +51,21 @@ export const vegetablePageQuery = e.params(
 					source: true,
 					credits: true,
 					users: true,
+
+					order_by: {
+						expression: image['@order_index'],
+						direction: 'ASC',
+						empty: e.EMPTY_LAST,
+					},
+				}),
+
+				order_by: {
+					expression: variety['@order_index'],
+					direction: 'ASC',
+					empty: e.EMPTY_LAST,
 				},
-			},
-			tips: {
+			}),
+			tips: (tip) => ({
 				handle: true,
 				subjects: true,
 				content: true,
@@ -55,7 +73,13 @@ export const vegetablePageQuery = e.params(
 				source: true,
 				credits: true,
 				users: true,
-			},
+
+				order_by: {
+					expression: tip['@order_index'],
+					direction: 'ASC',
+					empty: e.EMPTY_LAST,
+				},
+			}),
 		})),
 )
 
