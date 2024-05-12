@@ -366,7 +366,7 @@ export default function TestForm() {
                       <EdibleParts />
                       <Field
                         form={form}
-                        name="lifecycle"
+                        name="lifecycles"
                         label="Ciclo de vida"
                         render={({ field }) => (
                           <CheckboxesInput
@@ -379,7 +379,7 @@ export default function TestForm() {
                       />
                       <Field
                         form={form}
-                        name="stratum"
+                        name="strata"
                         label="Estrato de cultivo"
                         render={({ field }) => (
                           <CheckboxesInput

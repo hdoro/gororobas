@@ -16,3 +16,11 @@ export function formatCentimeters(cm: number) {
     unitDisplay: 'narrow',
   }).format(cm)
 }
+
+export function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max)
+}
+
+export function average(numbers: number[]) {
+  return numbers.reduce((a, b) => a + b, 0) / numbers.length
+}

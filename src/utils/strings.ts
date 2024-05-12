@@ -1,3 +1,5 @@
+import type { Gender } from '@/edgedb.interfaces'
+
 /**
  * Limits a string to a certain length for UI or SEO purposes.
  *
@@ -72,48 +74,48 @@ export function concatStringArray(arr: string[]) {
   return arr.reduce((acc, val) => acc + ' ' + val, '').trim()
 }
 
-// const GENDER_ARTICLES: Record<Gender, string> = {
-//   masculine: 'o',
-//   feminine: 'a',
-//   neutral: '',
-// }
+const GENDER_ARTICLES: Record<Gender, string> = {
+  FEMININO: 'a',
+  MASCULINO: 'o',
+  NEUTRO: '',
+}
 
-// const GENDER_PREPOSITIONS: Record<Gender, string> = {
-//   masculine: 'do',
-//   feminine: 'da',
-//   neutral: 'de',
-// }
+const GENDER_PREPOSITIONS: Record<Gender, string> = {
+  FEMININO: 'da',
+  MASCULINO: 'do',
+  NEUTRO: 'de',
+}
 
-// const GENDER_SUFFIX: Record<Gender, string> = {
-//   masculine: 'o',
-//   feminine: 'a',
-//   neutral: 'e',
-// }
+const GENDER_SUFFIX: Record<Gender, string> = {
+  FEMININO: 'a',
+  MASCULINO: 'o',
+  NEUTRO: 'e',
+}
 
-// type StrPad = 'both' | 'start' | 'end' | 'none'
+type StrPad = 'both' | 'start' | 'end' | 'none'
 
-// function padString(str: string, pad: StrPad = 'none') {
-//   if (pad === 'both') return ` ${str} `
-//   if (pad === 'start') return ` ${str}`
-//   if (pad === 'end') return `${str} `
+function padString(str: string, pad: StrPad = 'none') {
+  if (pad === 'both') return ` ${str} `
+  if (pad === 'start') return ` ${str}`
+  if (pad === 'end') return `${str} `
 
-//   return str
-// }
+  return str
+}
 
-// export const gender = {
-//   article: (gender: Gender = 'neutral', pad: StrPad = 'none') => {
-//     const article = GENDER_ARTICLES[gender]
-//     if (!article || article === '') return ''
+export const gender = {
+  article: (gender: Gender = 'NEUTRO', pad: StrPad = 'none') => {
+    const article = GENDER_ARTICLES[gender]
+    if (!article || article === '') return ''
 
-//     return padString(article, pad)
-//   },
-//   preposition: (gender: Gender = 'neutral', pad: StrPad = 'none') => {
-//     const preposition = GENDER_PREPOSITIONS[gender]
-//     if (!preposition || preposition === '') return ''
+    return padString(article, pad)
+  },
+  preposition: (gender: Gender = 'NEUTRO', pad: StrPad = 'none') => {
+    const preposition = GENDER_PREPOSITIONS[gender]
+    if (!preposition || preposition === '') return ''
 
-//     return padString(preposition, pad)
-//   },
-//   suffix: (gender: Gender = 'neutral') => {
-//     return GENDER_SUFFIX[gender]
-//   },
-// }
+    return padString(preposition, pad)
+  },
+  suffix: (gender: Gender = 'NEUTRO') => {
+    return GENDER_SUFFIX[gender]
+  },
+}

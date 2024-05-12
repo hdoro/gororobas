@@ -161,6 +161,9 @@ module default {
       constraint exclusive;
     };
     label: str;
+    # Sanity-compliant values
+    hotspot: json;
+    crop: json;
   }
 
   type UserProfile extending WithHandle, PublicRead, Auditable {
@@ -198,10 +201,10 @@ module default {
     required names: array<str>;
     required scientific_names: array<str>;
     required gender: Gender;
-    required stratum: array<Stratum>;
+    required strata: array<Stratum>;
     planting_methods: array<PlantingMethod>;
     edible_parts: array<EdiblePart>;
-    lifecycle: array<VegetableLifeCycle>;
+    lifecycles: array<VegetableLifeCycle>;
     uses: array<VegetableUsage>;
     origin: str;
     height_min: float32;

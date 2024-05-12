@@ -1,3 +1,4 @@
+import type { Image } from '@/edgedb.interfaces'
 import type {
   EDIBLE_PART_TO_LABEL,
   GENDER_TO_LABEL,
@@ -8,6 +9,10 @@ import type {
   USAGE_TO_LABEL,
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
+import type {
+  SanityImageCrop,
+  SanityImageHotspot,
+} from '@sanity/image-url/lib/types/types'
 
 export type VegetableUsage = keyof typeof USAGE_TO_LABEL
 export type Stratum = keyof typeof STRATUM_TO_LABEL
@@ -22,4 +27,9 @@ export type FormOption = {
   value: string
   label: string
   description?: string
+}
+
+export type ImageForRendering = Pick<Image, 'sanity_id' | 'label'> & {
+  hotspot?: SanityImageHotspot | any
+  crop?: SanityImageCrop | any
 }

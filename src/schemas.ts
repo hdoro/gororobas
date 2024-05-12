@@ -178,14 +178,14 @@ export const Vegetable = S.Struct({
       ),
     ),
   ),
-  lifecycle: S.optional(
+  lifecycles: S.optional(
     S.Array(
       S.Literal(
         ...(Object.keys(VEGETABLE_LIFECYCLE_TO_LABEL) as VegetableLifecycle[]),
       ),
     ),
   ),
-  stratum: S.Array(S.Literal(...(Object.keys(STRATUM_TO_LABEL) as Stratum[])))
+  strata: S.Array(S.Literal(...(Object.keys(STRATUM_TO_LABEL) as Stratum[])))
     .pipe(S.minItems(1))
     .annotations({
       message: () => 'Marque ao menos uma opção',
