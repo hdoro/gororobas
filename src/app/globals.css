@@ -65,3 +65,14 @@ html,
 body {
   height: 100%;
 }
+
+.tiptap-placeholder::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap[contenteditable='true'] {
+  @apply outline-none space-y-[0.5em];
+}

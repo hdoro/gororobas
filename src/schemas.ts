@@ -21,8 +21,8 @@ import {
 import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
 import { ParseResult } from '@effect/schema'
 import * as S from '@effect/schema/Schema'
+import type { JSONContent } from '@tiptap/react'
 import { Effect } from 'effect'
-import type { EditorState, SerializedElementNode } from 'lexical'
 
 const SourceGororobasInForm = S.Struct({
 	sourceType: S.Literal('GOROROBAS' satisfies SourceType),
@@ -41,21 +41,10 @@ const isFile = (input: unknown): input is File => input instanceof File
 
 const FileSchema = S.declare(isFile)
 
-const isLexicalEditorState = (input: unknown): input is EditorState =>
-	typeof input === 'object' && !!input && '_nodeMap' in input
+const isTipTapJSON = (input: unknown): input is JSONContent =>
+	typeof input === 'object' && !!input && 'type' in input
 
-const LexicalEditorState = S.declare(isLexicalEditorState)
-
-const isLexicalJSON = (
-	input: unknown,
-): input is SerializedElementNode['children'] => Array.isArray(input)
-
-const LexicalJSON = S.declare(isLexicalJSON)
-
-const RichText = S.transform(LexicalEditorState, LexicalJSON, {
-	encode: (json) => ({}) as any,
-	decode: (state) => state.toJSON().root.children,
-})
+const RichText = S.declare(isTipTapJSON)
 
 export const NewImage = S.transformOrFail(
 	S.Struct({
