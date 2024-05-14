@@ -96,7 +96,8 @@ export const NewImage = S.transformOrFail(
 )
 
 export const StoredImage = S.Struct({
-	storedPhotoId: S.UUID,
+	stored_image_id: S.UUID,
+	sanity_id: S.String,
 	hotspot: S.optional(S.Object),
 	crop: S.optional(S.Object),
 })

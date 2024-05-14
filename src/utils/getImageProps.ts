@@ -132,7 +132,16 @@ function createGetImageProps(imageBuilder: ImageUrlBuilder) {
 						LARGEST_VIEWPORT * (Number(props.maxWidth.match(/\d*/)?.[0]) / 100),
 					)
 
-		const baseBuilder = imageBuilder.image(image).fit('max').auto('format')
+		const baseBuilder = imageBuilder
+			.image({
+				asset: {
+					_ref: image.sanity_id,
+				},
+				crop: image.crop,
+				hotspot: image.hotspot,
+			})
+			.fit('max')
+			.auto('format')
 		const builder = props.imageTransformer
 			? props.imageTransformer(baseBuilder)
 			: baseBuilder

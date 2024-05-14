@@ -7,7 +7,7 @@ import { sanityServerClientRaw } from '@/utils/sanity.client'
 import { slugify } from '@/utils/strings'
 import * as S from '@effect/schema/Schema'
 import createClient from 'edgedb'
-import { Effect } from 'effect'
+import { Effect, pipe } from 'effect'
 import inquirer from 'inquirer'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import type {
@@ -45,21 +45,28 @@ const SOURCE_MAP: Record<(SourceExternal | SourceUser)['_type'], SourceType> = {
 	'source.user': 'GOROROBAS',
 }
 
+// @TODO single source
 function sanitySourcesToEdgeDB(
 	sources: Required<SanityVegetable>['photos'][number]['sources'],
 ) {
 	const userId = (sources?.find((s) => s._type === 'source.user') as SourceUser)
 		?.user?._ref
 
+	const sourceType = sources?.[0]._type
+		? SOURCE_MAP[sources[0]._type]
+		: 'EXTERNAL'
+
+	if (sourceType === 'GOROROBAS') {
+		return {
+			sourceType,
+			// userIds: userId ? [userId] : undefined,
+		} as SourceForDB
+	}
+
 	return {
-		credits: (
-			sources?.find((s) => s._type === 'source.external') as SourceExternal
-		)?.credits as string,
-		source: (
-			sources?.find((s) => s._type === 'source.external') as SourceExternal
-		)?.source,
-		sourceType: sources?.[0]._type ? SOURCE_MAP[sources[0]._type] : 'EXTERNAL',
-		userIds: userId ? [userId] : undefined,
+		sourceType,
+		credits: (sources?.[0] as SourceExternal | undefined)?.credits,
+		source: (sources?.[0] as SourceExternal | undefined)?.source,
 	} as SourceForDB
 }
 
@@ -70,7 +77,8 @@ function sanityPhotoToEdgeDB(
 		...sanitySourcesToEdgeDB(photo.sources),
 		label: photo.label || '',
 		data: {
-			storedPhotoId: photo.media?.asset?._ref as string,
+			stored_image_id: generateId(),
+			sanity_id: photo.media?.asset?._ref as string,
 			hotspot: photo.media?.hotspot,
 			crop: photo.media?.crop,
 		},
@@ -78,7 +86,7 @@ function sanityPhotoToEdgeDB(
 }
 
 async function main() {
-	const answers = existsSync(VEGETABLES_FILE)
+	const { fetchFreshData } = existsSync(VEGETABLES_FILE)
 		? await inquirer.prompt([
 				{
 					type: 'confirm',
@@ -89,7 +97,7 @@ async function main() {
 		: { fetchFreshData: true }
 
 	const sanityVegetables = (
-		answers.fetchFreshData
+		fetchFreshData
 			? await sanityServerClientRaw
 					.withConfig({
 						perspective: 'previewDrafts',
@@ -98,8 +106,44 @@ async function main() {
 			: JSON.parse(readFileSync(VEGETABLES_FILE, 'utf-8'))
 	) as Q_VEGETABLES_RAW_INDEXResult
 
-	if (answers.fetchFreshData) {
+	if (fetchFreshData) {
 		writeFileSync(VEGETABLES_FILE, JSON.stringify(sanityVegetables, null, 2))
+	}
+
+	const { deleteVegetablesInDB } = await inquirer.prompt([
+		{
+			type: 'confirm',
+			name: 'deleteVegetablesInDB',
+			message: 'Delete vegetables in EdgeDB?',
+		},
+	] as const)
+
+	if (deleteVegetablesInDB) {
+		await Effect.runPromise(
+			pipe(
+				Effect.tryPromise({
+					try: () =>
+						createClient({
+							// Note: when developing locally you will need to set tls security to
+							// insecure, because the development server uses self-signed certificates
+							// which will cause api calls with the fetch api to fail.
+							tlsSecurity:
+								process.env.NODE_ENV === 'development' ? 'insecure' : 'default',
+						})
+							.withConfig({
+								allow_user_specified_id: true,
+								apply_access_policies: false,
+							})
+							.query('DELETE Vegetable; DELETE Image;'),
+					catch: (e) => {
+						console.error(e)
+						return Effect.succeed(undefined)
+					},
+				}),
+				Effect.tap(() => Effect.logInfo('Deleted vegetables in EdgeDB')),
+				Effect.withLogSpan('deleteVegetablesInDB'),
+			),
+		)
 	}
 
 	const formattedVegetables = sanityVegetables.flatMap((vegetable) => {
@@ -147,12 +191,13 @@ async function main() {
 	})
 
 	console.time('Creating vegetables')
+	const failed: typeof formattedVegetables = []
 	await Effect.runPromise(
 		Effect.forEach(
 			formattedVegetables,
 			(vegetable) =>
-				Effect.tryPromise({
-					try: () =>
+				pipe(
+					Effect.tryPromise(() =>
 						createVegetable(
 							vegetable,
 							createClient({
@@ -168,19 +213,27 @@ async function main() {
 								apply_access_policies: false,
 							}),
 						),
-					catch: (e) => {
-						console.error(
-							`\n\n\nError creating vegetable ${vegetable.names[0]}`,
-							vegetable,
+					),
+					Effect.tap(() => Effect.logDebug(`Created ${vegetable.names[0]}`)),
+					Effect.tapError((error) => {
+						failed.push(vegetable)
+						return Effect.logError(
+							`Failed to create ${vegetable.names[0]}`,
+							error,
 						)
-						console.error(e)
-						return Effect.succeed(undefined)
-					},
-				}),
-			{ concurrency: 10 },
+					}),
+					Effect.catchAll(() => Effect.succeed('')),
+					Effect.withLogSpan('createVegetable'),
+				),
+			{ concurrency: 1 },
 		),
 	)
 	console.timeEnd('Creating vegetables')
+
+	if (failed.length) {
+		console.error('\n\n\nFailed to create the following vegetables:')
+		console.error(failed)
+	}
 }
 
 main()

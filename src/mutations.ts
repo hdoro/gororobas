@@ -1,8 +1,8 @@
 import e from '@/edgeql'
 
-export const newPhotosMutation = e.params(
+export const newImagesMutation = e.params(
 	{
-		photos: e.array(
+		images: e.array(
 			e.tuple({
 				id: e.uuid,
 				sanity_id: e.str,
@@ -13,7 +13,7 @@ export const newPhotosMutation = e.params(
 		),
 	},
 	(params) =>
-		e.for(e.array_unpack(params.photos), (photo) =>
+		e.for(e.array_unpack(params.images), (photo) =>
 			e.insert(e.Image, {
 				id: photo.id,
 				sanity_id: photo.sanity_id,
