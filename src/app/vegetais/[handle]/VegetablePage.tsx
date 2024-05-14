@@ -112,6 +112,7 @@ export default function VegetablePage({
 		(image) => (image && getImageDimensions(image)?.aspectRatio) || [],
 	)
 	const averageAspectRatio = average(aspectRatios)
+
 	return (
 		<main className="py-12">
 			<div className="flex gap-[4.5rem] max-w-[73.125rem] mx-auto px-20 box-content">
@@ -121,7 +122,7 @@ export default function VegetablePage({
 							<Text level="h1" as="h1">
 								{names[0]}
 							</Text>
-							{scientific_names[0] && (
+							{scientific_names?.[0] && (
 								<Text level="h2" weight="normal" className="italic">
 									{scientific_names[0]}
 								</Text>

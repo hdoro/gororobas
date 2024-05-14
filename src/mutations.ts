@@ -30,7 +30,7 @@ export const newPhotosMutation = e.params(
 					e.str,
 					e.json_get(photo.optional_properties, 'sourceType'),
 				),
-				users: e.select(e.User, (user) => ({
+				users: e.select(e.UserProfile, (user) => ({
 					filter: e.op(
 						user.id,
 						'in',
@@ -101,7 +101,7 @@ export const newTipsMutation = e.params(
 					e.str,
 					e.json_get(tip.optional_properties, 'sourceType'),
 				),
-				users: e.select(e.User, (user) => ({
+				users: e.select(e.UserProfile, (user) => ({
 					filter: e.op(
 						user.id,
 						'in',
@@ -119,11 +119,11 @@ export const newTipsMutation = e.params(
 export const newVegetableMutation = e.params(
 	{
 		names: e.array(e.str),
-		scientific_names: e.array(e.str),
+		scientific_names: e.optional(e.array(e.str)),
 		handle: e.str,
-		gender: e.Gender,
+		gender: e.optional(e.Gender),
 		origin: e.optional(e.str),
-		strata: e.array(e.str),
+		strata: e.optional(e.array(e.str)),
 		uses: e.optional(e.array(e.str)),
 		edible_parts: e.optional(e.array(e.str)),
 		lifecycles: e.optional(e.array(e.str)),

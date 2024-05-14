@@ -1,11 +1,11 @@
 import type {
+	EdiblePart,
 	Gender,
 	PlantingMethod,
 	SourceType,
 	Stratum,
 	TipSubject,
-	VegetableEdiblePart,
-	VegetableLifecycle,
+	VegetableLifeCycle,
 	VegetableUsage,
 } from '@/types'
 import { base64ToFile, fileToBase64 } from '@/utils/files'
@@ -95,14 +95,16 @@ export const NewImage = S.transformOrFail(
 	},
 )
 
-const StoredImage = S.Struct({
+export const StoredImage = S.Struct({
 	storedPhotoId: S.UUID,
+	hotspot: S.optional(S.Object),
+	crop: S.optional(S.Object),
 })
 
 const Image = S.Struct({
 	label: S.String,
 	data: S.Union(NewImage, StoredImage),
-}).pipe(S.extend(Source))
+}).pipe(S.extend(S.partial(Source)))
 
 export const StringInArray = S.transform(
 	S.Struct({
@@ -118,20 +120,14 @@ export const StringInArray = S.transform(
 )
 
 const VegetableVariety = S.Struct({
+	id: S.UUID,
 	names: S.NonEmptyArray(StringInArray),
 	photos: S.optional(S.Array(Image)),
 })
 
-const VegetableVarietyInForm = S.extend(
-	VegetableVariety,
+const VegetableTipInForm = S.extend(
 	S.Struct({
-		// When editing vegetables, existing varieties will include their current data in the DB
-		inDb: S.optional(S.extend(VegetableVariety, S.Struct({ id: S.String }))),
-	}),
-)
-
-const VegetableTipInputValue = S.extend(
-	S.Struct({
+		id: S.UUID,
 		subjects: S.Array(
 			S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
 		),
@@ -156,35 +152,35 @@ const Handle = S.String.pipe(
 export const Vegetable = S.Struct({
 	names: S.NonEmptyArray(StringInArray),
 	handle: Handle,
-	scientific_names: S.NonEmptyArray(StringInArray),
+	scientific_names: S.optional(S.Array(StringInArray)),
 	origin: S.optional(S.String),
-	gender: S.Literal(...(Object.keys(GENDER_TO_LABEL) as Gender[])),
+	gender: S.optional(S.Literal(...(Object.keys(GENDER_TO_LABEL) as Gender[]))),
 
-	uses: S.Array(S.Literal(...(Object.keys(USAGE_TO_LABEL) as VegetableUsage[])))
-		.pipe(S.minItems(1))
-		.annotations({
-			message: () => 'Marque ao menos uma opção',
-		}),
+	uses: S.optional(
+		S.Array(S.Literal(...(Object.keys(USAGE_TO_LABEL) as VegetableUsage[])))
+			.pipe(S.minItems(1))
+			.annotations({
+				message: () => 'Marque ao menos uma opção',
+			}),
+	),
 	// @TODO: plural or singular?
 	edible_parts: S.optional(
-		S.Array(
-			S.Literal(
-				...(Object.keys(EDIBLE_PART_TO_LABEL) as VegetableEdiblePart[]),
-			),
-		),
+		S.Array(S.Literal(...(Object.keys(EDIBLE_PART_TO_LABEL) as EdiblePart[]))),
 	),
 	lifecycles: S.optional(
 		S.Array(
 			S.Literal(
-				...(Object.keys(VEGETABLE_LIFECYCLE_TO_LABEL) as VegetableLifecycle[]),
+				...(Object.keys(VEGETABLE_LIFECYCLE_TO_LABEL) as VegetableLifeCycle[]),
 			),
 		),
 	),
-	strata: S.Array(S.Literal(...(Object.keys(STRATUM_TO_LABEL) as Stratum[])))
-		.pipe(S.minItems(1))
-		.annotations({
-			message: () => 'Marque ao menos uma opção',
-		}),
+	strata: S.optional(
+		S.Array(S.Literal(...(Object.keys(STRATUM_TO_LABEL) as Stratum[])))
+			.pipe(S.minItems(1))
+			.annotations({
+				message: () => 'Marque ao menos uma opção',
+			}),
+	),
 	planting_methods: S.optional(
 		S.Array(
 			S.Literal(...(Object.keys(PLANTING_METHOD_TO_LABEL) as PlantingMethod[])),
@@ -227,10 +223,10 @@ export const Vegetable = S.Struct({
 		),
 	),
 
-	varieties: S.optional(S.Array(VegetableVarietyInForm)),
-	tips: S.optional(S.Array(VegetableTipInputValue)),
+	varieties: S.optional(S.Array(VegetableVariety)),
+	tips: S.optional(S.Array(VegetableTipInForm)),
 	photos: S.optional(S.Array(Image)),
-	content: RichText,
+	content: S.optional(RichText),
 }).pipe(
 	S.filter((vegetable, _, ast) => {
 		if (
@@ -254,3 +250,5 @@ export type VegetableVarietyInForm = typeof VegetableVariety.Encoded
 
 export type VegetableForDB = typeof Vegetable.Type
 export type VegetableInForm = typeof Vegetable.Encoded
+
+export type SourceForDB = typeof Source.Type

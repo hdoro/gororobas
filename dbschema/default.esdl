@@ -17,7 +17,7 @@ module default {
   scalar type Role extending enum<ADMIN,USER,MODERATOR>;
   scalar type SourceType extending enum<GOROROBAS,EXTERNAL>;
   scalar type Gender extending enum<FEMININO,MASCULINO,NEUTRO>;
-  scalar type VegetableUsage extending enum<ALIMENTO_ANIMAL,ALIMENTO_HUMANO,CONSTRUCAO,MATERIA_ORGANICA,MEDICINAL,COSMETICO,PAISAGISMO,RITUALISTICO>;
+  scalar type VegetableUsage extending enum<ALIMENTO_ANIMAL,ALIMENTO_HUMANO,CONSTRUCAO,MATERIA_ORGANICA,MEDICINAL,COSMETICO,ORNAMENTAL,RITUALISTICO>;
   scalar type EdiblePart extending enum<FRUTO,FLOR,FOLHA,CAULE,SEMENTE,CASCA,BULBO,BROTO,RAIZ,TUBERCULO,RIZOMA>;
   scalar type VegetableLifeCycle extending enum<SEMESTRAL,ANUAL,BIENAL,PERENE>;
   scalar type Stratum extending enum<EMERGENTE,ALTO,MEDIO,BAIXO,RASTEIRO>;
@@ -206,9 +206,9 @@ module default {
 
   type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
     required names: array<str>;
-    required scientific_names: array<str>;
-    required gender: Gender;
-    required strata: array<Stratum>;
+    scientific_names: array<str>;
+    strata: array<Stratum>;
+    gender: Gender;
     planting_methods: array<PlantingMethod>;
     edible_parts: array<EdiblePart>;
     lifecycles: array<VegetableLifeCycle>;

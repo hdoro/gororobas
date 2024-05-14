@@ -4,7 +4,7 @@ import {
 	newVarietiesMutation,
 	newVegetableMutation,
 } from '@/mutations'
-import { NewImage, type VegetableForDB } from '@/schemas'
+import { StoredImage, type VegetableForDB } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { slugify } from '@/utils/strings'
 import * as S from '@effect/schema/Schema'
@@ -22,12 +22,12 @@ export async function createVegetable(
 			...(input.varieties || []).flatMap((v) => v?.photos || []),
 			...(input.photos || []),
 		].flatMap((photo) => {
-			if (!S.is(NewImage)(photo.data)) return []
+			if (!S.is(StoredImage)(photo.data)) return []
 
 			const { label, data, ...optional_properties } = photo
 			return {
 				id: generateId(),
-				sanity_id: generateId(),
+				sanity_id: photo.data.storedPhotoId,
 				label: label,
 				optional_properties,
 			}
@@ -48,7 +48,11 @@ export async function createVegetable(
 				handle: `${input.handle}-${slugify(v.names[0])}`,
 				photos: (v.photos || []).flatMap((photo) => {
 					// @TODO: better way to lock IDs, probably when decoding the input
-					const photoId = allPhotos.find((p) => p.label === photo.label)?.id
+					const photoId = allPhotos.find(
+						(p) =>
+							p.label === photo.label ||
+							p.sanity_id === photo.data?.storedPhotoId,
+					)?.id
 					if (!photoId) return []
 
 					return photoId
@@ -84,10 +88,10 @@ export async function createVegetable(
 		// #4 Create vegetable
 		await newVegetableMutation.run(tx, {
 			names: input.names,
-			scientific_names: input.scientific_names,
-			gender: input.gender,
 			handle: input.handle,
-			strata: input.strata,
+			scientific_names: input.scientific_names || null,
+			gender: input.gender || null,
+			strata: input.strata || null,
 			temperature_max: input.temperature_max || null,
 			temperature_min: input.temperature_min || null,
 			height_max: input.height_max || null,
@@ -100,7 +104,11 @@ export async function createVegetable(
 			content: input.content || null,
 			photos: (input.photos || []).flatMap((photo) => {
 				// @TODO: better way to lock IDs, probably when decoding the input
-				const photoId = allPhotos.find((p) => p.label === photo.label)?.id
+				const photoId = allPhotos.find(
+					(p) =>
+						p.label === photo.label ||
+						p.sanity_id === photo.data?.storedPhotoId,
+				)?.id
 				if (!photoId) return []
 
 				return photoId
