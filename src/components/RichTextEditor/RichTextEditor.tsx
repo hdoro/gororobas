@@ -1,14 +1,21 @@
 'use client'
 
 import { cn } from '@/utils/cn'
+import Mention from '@tiptap/extension-mention'
 import Placeholder from '@tiptap/extension-placeholder'
-import { EditorContent, useEditor, type JSONContent } from '@tiptap/react'
+import {
+	EditorContent,
+	type JSONContent,
+	mergeAttributes,
+	useEditor,
+} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { useMemo } from 'react'
 import FormatToolbar from './FormatToolbar'
+import MentionSuggestions from './MentionSuggestions'
 import {
-	richTextEditorTheme,
 	type RichTextEditorThemeVariants,
+	richTextEditorTheme,
 } from './RichTextEditor.theme'
 
 export default function RichTextEditor(
@@ -55,6 +62,19 @@ export default function RichTextEditor(
 			Placeholder.configure({
 				placeholder: props.placeholder,
 				emptyEditorClass: cn('tiptap-placeholder', classes.placeholder()),
+			}),
+			Mention.configure({
+				suggestion: MentionSuggestions,
+				renderHTML: ({ options, node }) => {
+					return [
+						'span',
+						mergeAttributes(
+							{ className: 'font-semibold' },
+							options.HTMLAttributes,
+						),
+						`${options.suggestion.char}${node.attrs.label}`,
+					]
+				},
 			}),
 		],
 		[props.placeholder, classes],

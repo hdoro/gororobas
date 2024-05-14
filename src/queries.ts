@@ -84,3 +84,28 @@ export const vegetablePageQuery = e.params(
 )
 
 export type VegetablePageData = Exclude<$infer<typeof vegetablePageQuery>, null>
+
+export const findUsersToMentionQuery = e.params(
+	{
+		query: e.str,
+	},
+	(params) =>
+		e.select(e.UserProfile, (user) => ({
+			filter: e.op(user.name, 'ilike', params.query),
+
+			id: true,
+			name: true,
+			handle: true,
+			photo: {
+				sanity_id: true,
+				hotspot: true,
+				crop: true,
+				label: true,
+			},
+		})),
+)
+
+export type UsersToMentionData = Exclude<
+	$infer<typeof findUsersToMentionQuery>,
+	null
+>
