@@ -175,3 +175,29 @@ export const newVegetableMutation = e.params(
 			),
 		}),
 )
+
+export const setWishlistStatusMutation = e.params(
+	{
+		vegetable_id: e.uuid,
+		status: e.VegetableWishlistStatus,
+	},
+	(params) =>
+		e
+			.insert(e.UserWishlist, {
+				vegetable: e.select(e.Vegetable, (v) => ({
+					filter_single: e.op(v.id, '=', params.vegetable_id),
+				})),
+				status: params.status,
+				user_profile: e.global.current_user_profile,
+			})
+			.unlessConflict((userWishlist) => ({
+				// When there's a conflict on the composite exclusivity constraint of the wishlist (user_profile, vegetable)
+				on: e.tuple([userWishlist.user_profile, userWishlist.vegetable]),
+				// Simply update existing objects
+				else: e.update(userWishlist, () => ({
+					set: {
+						status: params.status,
+					},
+				})),
+			})),
+)

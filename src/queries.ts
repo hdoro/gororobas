@@ -8,6 +8,7 @@ export const vegetablePageQuery = e.params(
 		e.select(e.Vegetable, (vegetable) => ({
 			filter_single: e.op(vegetable.handle, '=', params.handle),
 
+			id: true,
 			names: true,
 			scientific_names: true,
 			handle: true,
@@ -109,3 +110,21 @@ export type UsersToMentionData = Exclude<
 	$infer<typeof findUsersToMentionQuery>,
 	null
 >
+
+export const UserWishlistQuery = e.params(
+	{
+		vegetable_id: e.uuid,
+	},
+	(params) =>
+		e.select(e.UserWishlist, (wishlist) => ({
+			status: true,
+
+			filter_single: e.op(
+				wishlist.vegetable,
+				'=',
+				e.select(e.Vegetable, (vegetable) => ({
+					filter_single: e.op(vegetable.id, '=', params.vegetable_id),
+				})),
+			),
+		})),
+)

@@ -31,6 +31,7 @@ module default {
       filter .identity = global ext::auth::ClientTokenIdentity
     ))
   );
+
   global current_user_profile := (
     assert_single((
       select UserProfile
@@ -253,14 +254,18 @@ module default {
       # If a vegetable is in a consortium, don't allow deleting it
       on target delete restrict;
     };
-    notes: str;
+    notes: json;
   }
 
-  type UserWishlist {
+  type UserWishlist extending AdminCanDoAnything {
     required user_profile: UserProfile;
     required vegetable: Vegetable;
     required status: VegetableWishlistStatus;
 
     constraint exclusive on ((.user_profile, .vegetable));
+    
+    access policy owner_can_do_anything
+      allow all
+      using (global current_user_profile ?= .user_profile);
   }
 }

@@ -7,6 +7,7 @@ import type {
 	TipSubject,
 	VegetableLifeCycle,
 	VegetableUsage,
+	VegetableWishlistStatus,
 } from '@/edgedb.interfaces'
 
 export const STRATUM_TO_LABEL = {
@@ -97,3 +98,10 @@ export const GENDER_TO_LABEL = {
 	MASCULINO: 'Masculino',
 	NEUTRO: 'Neutro',
 } as const satisfies Record<Gender, string>
+
+export const WISHLIST_STATUS_TO_LABEL = {
+	QUERO_CULTIVAR: 'Quero cultivar',
+	SEM_INTERESSE: 'Sem interesse',
+	JA_CULTIVEI: 'Já cultivei',
+	ESTOU_CULTIVANDO: 'Estou cultivando',
+} as const satisfies Record<VegetableWishlistStatus, string>

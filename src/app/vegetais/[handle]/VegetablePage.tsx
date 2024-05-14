@@ -6,7 +6,6 @@ import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import ShapesIcon from '@/components/icons/ShapesIcon'
 import ShovelIcon from '@/components/icons/ShovelIcon'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
 	Carousel,
 	CarouselContent,
@@ -26,8 +25,14 @@ import {
 } from '@/utils/labels'
 import { average } from '@/utils/numbers'
 import { gender } from '@/utils/strings'
-import { Fragment, type PropsWithChildren, type SVGProps } from 'react'
+import {
+	Fragment,
+	Suspense,
+	type PropsWithChildren,
+	type SVGProps,
+} from 'react'
 import VegetableTips from './VegetableTips'
+import WishlistButtonData from './WishlistButtonData'
 
 function TwoColInfo({
 	left,
@@ -128,15 +133,9 @@ export default function VegetablePage({
 								</Text>
 							)}
 						</div>
-						<Button
-						// onClick={() =>
-						//   alert(
-						//     'Nós também! Mas ainda não terminamos essa funcionalidade 😝',
-						//   )
-						// }
-						>
-							Quero plantar
-						</Button>
+						<Suspense>
+							<WishlistButtonData vegetable_id={vegetable.id} />
+						</Suspense>
 					</div>
 
 					{vegetable.photos && mainImage?.sanity_id && (
@@ -206,7 +205,7 @@ export default function VegetablePage({
 						{names.length > 1 && (
 							<TwoColInfo
 								left={`Também conhecid${gender.suffix(
-									vegetable.gender || 'masculine',
+									vegetable.gender || 'MASCULINO',
 								)} como`}
 								right={names.slice(1).join(', ')}
 							/>
@@ -295,7 +294,7 @@ export default function VegetablePage({
 			{!!vegetable.content && (
 				<section className="my-36 max-w-[73.125rem] mx-auto">
 					<SectionTitle Icon={BulbIcon}>
-						Sobre {gender.article(vegetable.gender, 'both')}
+						Sobre {gender.article(vegetable.gender || 'NEUTRO', 'both')}
 						{names[0]}
 					</SectionTitle>
 					<div className="text-base max-w-[39.375rem] mt-5 space-y-3">

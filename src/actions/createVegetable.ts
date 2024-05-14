@@ -1,5 +1,5 @@
 import {
-	newPhotosMutation,
+	newImagesMutation,
 	newTipsMutation,
 	newVarietiesMutation,
 	newVegetableMutation,
@@ -26,8 +26,8 @@ export async function createVegetable(
 
 			const { label, data, ...optional_properties } = photo
 			return {
-				id: generateId(),
-				sanity_id: photo.data.storedPhotoId,
+				id: data.stored_image_id,
+				sanity_id: data.sanity_id,
 				label: label,
 				optional_properties,
 			}
@@ -35,8 +35,8 @@ export async function createVegetable(
 
 		if (allPhotos.length > 0) {
 			// @TODO: upload images to Sanity
-			await newPhotosMutation.run(tx, {
-				photos: allPhotos,
+			await newImagesMutation.run(tx, {
+				images: allPhotos,
 			})
 		}
 
@@ -51,7 +51,8 @@ export async function createVegetable(
 					const photoId = allPhotos.find(
 						(p) =>
 							p.label === photo.label ||
-							p.sanity_id === photo.data?.storedPhotoId,
+							(S.is(StoredImage)(photo.data) &&
+								p.sanity_id === photo.data.sanity_id),
 					)?.id
 					if (!photoId) return []
 
@@ -107,7 +108,8 @@ export async function createVegetable(
 				const photoId = allPhotos.find(
 					(p) =>
 						p.label === photo.label ||
-						p.sanity_id === photo.data?.storedPhotoId,
+						(S.is(StoredImage)(photo.data) &&
+							p.sanity_id === photo.data.sanity_id),
 				)?.id
 				if (!photoId) return []
 
