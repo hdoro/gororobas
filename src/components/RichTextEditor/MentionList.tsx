@@ -1,3 +1,5 @@
+'use client'
+
 import type { UsersToMentionData } from '@/queries'
 import { forwardRef, useImperativeHandle, useState } from 'react'
 import { Button } from '../ui/button'

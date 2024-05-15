@@ -83,7 +83,9 @@ module default {
       default := datetime_current();
       readonly := true;
     };
-    performed_by: UserProfile;
+    performed_by: UserProfile {
+      on target delete allow;
+    };;
     old: json;
     new: json;
     target: Auditable {
@@ -100,6 +102,7 @@ module default {
       rewrite insert, update using (datetime_of_statement());
     };
     created_by: UserProfile {
+      # @TODO can we do this only when there is no explicit value assigned? Alternatively, can we impersonate a user when setting an auditable item as an admin?
       rewrite insert using (global current_user_profile);
       on target delete allow;
     };
@@ -177,6 +180,8 @@ module default {
   type UserProfile extending WithHandle, PublicRead {
     required user: User {
       constraint exclusive;
+
+      on target delete delete source;
     };
     required name: str;
     bio: str;
@@ -258,8 +263,12 @@ module default {
   }
 
   type UserWishlist extending AdminCanDoAnything {
-    required user_profile: UserProfile;
-    required vegetable: Vegetable;
+    required user_profile: UserProfile {
+      on target delete delete source;
+    };
+    required vegetable: Vegetable {
+      on target delete delete source;
+    };
     required status: VegetableWishlistStatus;
 
     constraint exclusive on ((.user_profile, .vegetable));

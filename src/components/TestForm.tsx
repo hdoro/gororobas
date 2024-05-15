@@ -9,6 +9,7 @@ import {
 import { Vegetable, type VegetableForDB, type VegetableInForm } from '@/schemas'
 import type { VegetableUsage } from '@/types'
 import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
+import { generateId } from '@/utils/ids'
 import {
 	EDIBLE_PART_TO_LABEL,
 	GENDER_TO_LABEL,
@@ -37,7 +38,6 @@ import VegetableVarietyInput from './forms/VegetableVarietyInput'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { useToast } from './ui/use-toast'
-import { generateId } from '@/utils/ids'
 
 /**
  * FORM REQUIREMENTS:

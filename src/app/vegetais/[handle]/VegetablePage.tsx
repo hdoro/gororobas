@@ -1,3 +1,4 @@
+import * as S from '@effect/schema/Schema'
 import { SanityImage } from '@/components/SanityImage'
 import BulbIcon from '@/components/icons/BulbIcon'
 import PotIcon from '@/components/icons/PotIcon'
@@ -27,12 +28,14 @@ import { average } from '@/utils/numbers'
 import { gender } from '@/utils/strings'
 import {
 	Fragment,
-	Suspense,
 	type PropsWithChildren,
 	type SVGProps,
+	Suspense,
 } from 'react'
 import VegetableTips from './VegetableTips'
 import WishlistButtonData from './WishlistButtonData'
+import TipTapRenderer from '@/components/TipTapRenderer'
+import { RichText } from '@/schemas'
 
 function TwoColInfo({
 	left,
@@ -260,7 +263,7 @@ export default function VegetablePage({
 					</section>
 				</>
 			)}
-			{vegetable.varieties && (
+			{Array.isArray(vegetable.varieties) && vegetable.varieties.length > 0 && (
 				<section className="my-36">
 					<SectionTitle Icon={RainbowIcon}>Variedades</SectionTitle>
 					<div className="overflow-x-auto flex gap-20 mt-3 px-[calc(calc(100vw-73.125rem)/2)]">
@@ -291,21 +294,14 @@ export default function VegetablePage({
 					</div>
 				</section>
 			)}
-			{!!vegetable.content && (
+			{S.is(RichText)(vegetable.content) && (
 				<section className="my-36 max-w-[73.125rem] mx-auto">
 					<SectionTitle Icon={BulbIcon}>
 						Sobre {gender.article(vegetable.gender || 'NEUTRO', 'both')}
 						{names[0]}
 					</SectionTitle>
 					<div className="text-base max-w-[39.375rem] mt-5 space-y-3">
-						{/* <PortableText
-              value={vegetable.content}
-              components={{
-                types: {
-                  photoWithCredits: (props) => <PhotoInPt {...props} />,
-                },
-              }}
-            /> */}
+						<TipTapRenderer content={vegetable.content} />
 					</div>
 				</section>
 			)}

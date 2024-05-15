@@ -1,3 +1,5 @@
+'use client'
+
 import { findUsersToMention } from '@/actions/findUsersToMention'
 import type { UsersToMentionData } from '@/queries'
 import { ReactRenderer } from '@tiptap/react'

@@ -1,8 +1,11 @@
+import TipTapRenderer from '@/components/TipTapRenderer'
 import { Text } from '@/components/ui/text'
 import type { TipSubject } from '@/edgedb.interfaces'
 import type { VegetablePageData } from '@/queries'
+import { RichText } from '@/schemas'
 import { cn } from '@/utils/cn'
 import { TIP_SUBJECT_TO_LABEL } from '@/utils/labels'
+import { Schema } from '@effect/schema'
 
 export default function VegetableTips({
 	vegetable,
@@ -39,12 +42,12 @@ export default function VegetableTips({
 							</Text>
 							<div className="space-y-4 flex-1">
 								{subjectTips.map((tip) => {
-									if (!tip.content) return null
+									if (!Schema.is(RichText)(tip.content)) return null
 
 									return (
 										<div key={tip.handle} className="text-lg px-4 flex gap-2">
 											<div className="w-2 h-1 flex-[0_0_0.5rem] mt-3 rounded-sm bg-green-400" />
-											{/* <PortableText value={tip.content} /> */}
+											<TipTapRenderer content={tip.content} />
 										</div>
 									)
 								})}
