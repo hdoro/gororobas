@@ -68,8 +68,6 @@ body {
 
 .tiptap-placeholder::before {
   content: attr(data-placeholder);
-  float: left;
-  height: 0;
   pointer-events: none;
 }
 

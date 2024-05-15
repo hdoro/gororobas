@@ -56,7 +56,7 @@ export function slugify(str: string) {
 	)
 }
 
-const formatter = new Intl.ListFormat('en', {
+const formatter = new Intl.ListFormat('pt-BR', {
 	style: 'long',
 	type: 'conjunction',
 })

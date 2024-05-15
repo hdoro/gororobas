@@ -34,6 +34,7 @@ import ImageInput from './forms/ImageInput'
 import NumberInput from './forms/NumberInput'
 import RadioGroupInput from './forms/RadioGroupInput'
 import RichTextInput from './forms/RichTextInput'
+import VegetableTipInput from './forms/VegetableTipInput'
 import VegetableVarietyInput from './forms/VegetableVarietyInput'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
@@ -67,16 +68,17 @@ import { useToast } from './ui/use-toast'
  * - [x] Finish schema
  * - [x] Field dependency - edible_parts only if `ALIMENTO_HUMANO` in `usage`
  * - [x] Async validation
- * - [ ] Suggestions & tips
- * - [ ] Default values
+ * - [x] RTE: links
+ * - [x] Default values
+ * - [x] Suggestions & tips
  * - [ ] PhotoWithCredits: select person from Gororobas
- * - [ ] RTE: links, perhaps even to other entities in the DB
  *
  * ## IMPROVEMENTS
  * - [x] Better error messages for nested forms
  * - [ ] Numbers from text fields (I think number inputs have bunch of issues, don't remember why)
- * - [ ] When adding variety, automatically open form
+ * - [x] When adding variety, automatically open form
  * - [ ] In the reoslver, can we validate the encoding schema instead of fully decoding it? It'd make it slightly faster.
+ * - [ ] stretch: RTE internal links to other entities in the DB
  *
  */
 export default function TestForm() {
@@ -303,6 +305,7 @@ export default function TestForm() {
 																names: [{ value: '' }],
 															}}
 															newItemLabel="Nova variedade"
+															inputType="dialog"
 															renderItem={(index) => (
 																<Field
 																	form={form}
@@ -311,6 +314,43 @@ export default function TestForm() {
 																	hideLabel
 																	render={({ field: subField }) => (
 																		<VegetableVarietyInput
+																			index={index}
+																			field={subField}
+																		/>
+																	)}
+																/>
+															)}
+														/>
+													)
+												}}
+											/>
+										</CardContent>
+									</Card>
+									<Card>
+										<CardHeader>
+											<CardTitle>Dicas</CardTitle>
+										</CardHeader>
+										<CardContent>
+											<Field
+												form={form}
+												name="tips"
+												label="Dicas"
+												hideLabel
+												render={({ field }) => {
+													return (
+														<ArrayInput
+															field={field}
+															newItemValue={{}}
+															newItemLabel="Nova dica"
+															inputType="dialog"
+															renderItem={(index) => (
+																<Field
+																	form={form}
+																	name={`${field.name}.${index}`}
+																	label={`Dica #${index + 1}`}
+																	hideLabel
+																	render={({ field: subField }) => (
+																		<VegetableTipInput
 																			index={index}
 																			field={subField}
 																		/>

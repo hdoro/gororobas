@@ -36,11 +36,13 @@ export default function ArrayInput<
 	newItemLabel = 'Novo item',
 	newItemValue,
 	renderItem,
+	inputType = 'regular',
 }: {
 	field: ControllerRenderProps<TFieldValues, TName>
 	newItemLabel?: string
 	newItemValue: FieldArray<FieldValues, TName>
 	renderItem: (index: number) => JSX.Element
+	inputType?: 'regular' | 'dialog'
 }) {
 	const { control } = useFormContext()
 	const fieldArray = useFieldArray({
@@ -82,7 +84,28 @@ export default function ArrayInput<
 				<Separator className="w-auto flex-1" />
 				<Button
 					onClick={() => {
-						fieldArray.append(newItemValue)
+						fieldArray.append(newItemValue, {
+							shouldFocus: inputType === 'regular',
+						})
+
+						// Manually open the dialog after creation
+						if (inputType === 'dialog') {
+							requestAnimationFrame(() => {
+								const newItemIndex = fieldArray.fields.length
+								const newItemElement = document.querySelector(
+									`*[data-array-item-field-name="${field.name}.${newItemIndex}"]`,
+								)
+								if (newItemElement && newItemElement instanceof HTMLElement) {
+									newItemElement.scrollIntoView?.({ behavior: 'smooth' })
+									newItemElement.focus?.()
+									if (
+										newItemElement.getAttribute('aria-haspopup') === 'dialog'
+									) {
+										newItemElement.click?.()
+									}
+								}
+							})
+						}
 					}}
 					variant="ghost"
 					size="sm"

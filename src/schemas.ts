@@ -119,7 +119,7 @@ const VegetableVariety = S.Struct({
 	photos: S.optional(S.Array(Image)),
 })
 
-const VegetableTipInForm = S.extend(
+const VegetableTip = S.extend(
 	S.Struct({
 		id: S.UUID,
 		subjects: S.Array(
@@ -219,7 +219,7 @@ export const Vegetable = S.Struct({
 	),
 
 	varieties: S.optional(S.Array(VegetableVariety)),
-	tips: S.optional(S.Array(VegetableTipInForm)),
+	tips: S.optional(S.Array(VegetableTip)),
 	photos: S.optional(S.Array(Image)),
 	content: S.optional(RichText),
 }).pipe(
@@ -242,6 +242,7 @@ export const Vegetable = S.Struct({
 )
 
 export type VegetableVarietyInForm = typeof VegetableVariety.Encoded
+export type VegetableTipInForm = typeof VegetableTip.Encoded
 
 export type VegetableForDB = typeof Vegetable.Type
 export type VegetableInForm = typeof Vegetable.Encoded
