@@ -1,5 +1,10 @@
 import { createVegetable } from '@/actions/createVegetable'
-import type { Gender, SourceType, VegetableUsage } from '@/edgedb.interfaces'
+import type {
+	Gender,
+	SourceType,
+	TipSubject,
+	VegetableUsage,
+} from '@/edgedb.interfaces'
 import type { SourceForDB, VegetableForDB } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { PLANTING_METHOD_TO_LABEL } from '@/utils/labels'
@@ -15,6 +20,7 @@ import type {
 	SourceExternal,
 	SourceUser,
 } from './2024-05-sanity-migration.types'
+import ptToTiptap from './ptToTiptap'
 
 type SanityVegetable = Q_VEGETABLES_RAW_INDEXResult[number]
 
@@ -45,18 +51,27 @@ const SOURCE_MAP: Record<(SourceExternal | SourceUser)['_type'], SourceType> = {
 	'source.user': 'GOROROBAS',
 }
 
-// @TODO single source
+const TIP_SUBJECT_MAP: Record<
+	Required<Required<SanityVegetable>['tips'][number]>['subject'],
+	TipSubject
+> = {
+	colheita: 'COLHEITA',
+	crescimento: 'CRESCIMENTO',
+	plantio: 'PLANTIO',
+}
+
 function sanitySourcesToEdgeDB(
 	sources: Required<SanityVegetable>['photos'][number]['sources'],
 ) {
-	const userId = (sources?.find((s) => s._type === 'source.user') as SourceUser)
-		?.user?._ref
-
 	const sourceType = sources?.[0]._type
 		? SOURCE_MAP[sources[0]._type]
 		: 'EXTERNAL'
 
 	if (sourceType === 'GOROROBAS') {
+		// @TODO migrate users?
+		const userId = (
+			sources?.find((s) => s._type === 'source.user') as SourceUser
+		)?.user?._ref
 		return {
 			sourceType,
 			// userIds: userId ? [userId] : undefined,
@@ -150,6 +165,7 @@ async function main() {
 		if (!vegetable.names?.[0]) return []
 
 		const formatted = {
+			id: S.is(S.UUID)(vegetable._id) ? vegetable._id : generateId(),
 			names: vegetable.names as unknown as VegetableForDB['names'],
 			gender: vegetable.gender ? GENDER_MAP[vegetable.gender] : undefined,
 			handle: vegetable.slug?.current
@@ -168,6 +184,9 @@ async function main() {
 			height_max: vegetable.height_max || 0,
 			height_min: vegetable.height_min || 0,
 			origin: vegetable.origin || '',
+			content: Array.isArray(vegetable.content)
+				? ptToTiptap(vegetable.content)
+				: undefined,
 			photos: vegetable.photos?.map(sanityPhotoToEdgeDB),
 			varieties: (vegetable.varieties || []).map((variety) => {
 				return {
@@ -176,16 +195,18 @@ async function main() {
 					id: S.is(S.UUID)(variety._key) ? variety._key : generateId(),
 				}
 			}),
-			// tips: (vegetable.tips || []).map((tip) => {
-			// 	return {
-			// 		id: S.is(S.UUID)(tip._key) ? tip._key : generateId(),
-			// 		subjects: [tip.subject],
-			// 		...sanitySourcesToEdgeDB(tip.sources),
-			// 	}
-			// }),
+			tips: (vegetable.tips || []).map((tip) => {
+				return {
+					id: S.is(S.UUID)(tip._key) ? tip._key : generateId(),
+					subjects:
+						tip.subject && TIP_SUBJECT_MAP[tip.subject]
+							? [TIP_SUBJECT_MAP[tip.subject]]
+							: [],
+					content: ptToTiptap(tip.content || []),
+					...sanitySourcesToEdgeDB(tip.sources),
+				}
+			}),
 		} satisfies VegetableForDB
-
-		// S.asserts(formatted)
 
 		return formatted
 	})

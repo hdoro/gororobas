@@ -10,6 +10,7 @@ import {
 	useEditor,
 } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import Link from '@tiptap/extension-link'
 import { useMemo } from 'react'
 import FormatToolbar from './FormatToolbar'
 import MentionSuggestions from './MentionSuggestions'
@@ -76,6 +77,7 @@ export default function RichTextEditor(
 					]
 				},
 			}),
+			Link,
 		],
 		[props.placeholder, classes],
 	)
@@ -83,7 +85,7 @@ export default function RichTextEditor(
 		extensions,
 		content: props.editorState,
 		onUpdate: ({ editor }) => {
-			props.onChange(editor.getJSON())
+			props.onChange(Object.assign({}, editor.getJSON(), { version: 1 }))
 		},
 	})
 

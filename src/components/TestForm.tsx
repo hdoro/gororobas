@@ -37,6 +37,7 @@ import VegetableVarietyInput from './forms/VegetableVarietyInput'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { useToast } from './ui/use-toast'
+import { generateId } from '@/utils/ids'
 
 /**
  * FORM REQUIREMENTS:
@@ -82,7 +83,9 @@ export default function TestForm() {
 	const form = useForm<VegetableInForm>({
 		resolver: effectSchemaResolverResolver(Vegetable),
 		criteriaMode: 'all',
-		defaultValues: {},
+		defaultValues: {
+			id: generateId(),
+		},
 		mode: 'onBlur',
 	})
 	const router = useRouter()

@@ -41,10 +41,14 @@ const isFile = (input: unknown): input is File => input instanceof File
 
 const FileSchema = S.declare(isFile)
 
-const isTipTapJSON = (input: unknown): input is JSONContent =>
-	typeof input === 'object' && !!input && 'type' in input
+const isTipTapJSON = (input: unknown): input is JSONContent & { version: 1 } =>
+	typeof input === 'object' &&
+	!!input &&
+	'type' in input &&
+	'version' in input &&
+	input.version === 1
 
-const RichText = S.declare(isTipTapJSON)
+export const RichText = S.declare(isTipTapJSON)
 
 export const NewImage = S.transformOrFail(
 	S.Struct({
@@ -140,6 +144,7 @@ const Handle = S.String.pipe(
 )
 
 export const Vegetable = S.Struct({
+	id: S.UUID,
 	names: S.NonEmptyArray(StringInArray),
 	handle: Handle,
 	scientific_names: S.optional(S.Array(StringInArray)),
