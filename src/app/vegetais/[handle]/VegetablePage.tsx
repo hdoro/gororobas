@@ -1,5 +1,5 @@
-import * as S from '@effect/schema/Schema'
 import { SanityImage } from '@/components/SanityImage'
+import TipTapRenderer from '@/components/TipTapRenderer'
 import BulbIcon from '@/components/icons/BulbIcon'
 import PotIcon from '@/components/icons/PotIcon'
 import RainbowIcon from '@/components/icons/RainbowIcon'
@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/carousel'
 import { Text } from '@/components/ui/text'
 import type { VegetablePageData } from '@/queries'
+import { RichText } from '@/schemas'
 import { getImageDimensions } from '@/utils/getImageProps'
 import {
 	EDIBLE_PART_TO_LABEL,
@@ -26,6 +27,7 @@ import {
 } from '@/utils/labels'
 import { average } from '@/utils/numbers'
 import { gender } from '@/utils/strings'
+import * as S from '@effect/schema/Schema'
 import {
 	Fragment,
 	type PropsWithChildren,
@@ -34,8 +36,6 @@ import {
 } from 'react'
 import VegetableTips from './VegetableTips'
 import WishlistButtonData from './WishlistButtonData'
-import TipTapRenderer from '@/components/TipTapRenderer'
-import { RichText } from '@/schemas'
 
 function TwoColInfo({
 	left,

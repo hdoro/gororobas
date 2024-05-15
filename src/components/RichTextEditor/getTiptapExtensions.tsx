@@ -59,6 +59,7 @@ export function getTiptapExtensions({
 			},
 		}),
 		Link.configure({
+			openOnClick: false,
 			HTMLAttributes: {
 				class: classes.tiptapLink(),
 			},

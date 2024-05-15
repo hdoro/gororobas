@@ -1,7 +1,7 @@
 import type { RichText } from '@/schemas'
 import { generateHTML } from '@tiptap/html'
-import { getTiptapExtensions } from './RichTextEditor/getTiptapExtensions'
 import { richTextEditorTheme } from './RichTextEditor/RichTextEditor.theme'
+import { getTiptapExtensions } from './RichTextEditor/getTiptapExtensions'
 
 export default function TipTapRenderer({
 	content,
