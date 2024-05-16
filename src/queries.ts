@@ -128,3 +128,28 @@ export const UserWishlistQuery = e.params(
 			),
 		})),
 )
+
+export const vegetablesForReferenceQuery = e.select(
+	e.Vegetable,
+	(vegetable) => ({
+		id: true,
+		label: vegetable.names.index(0),
+		photos: (image) => ({
+			sanity_id: true,
+			hotspot: true,
+			crop: true,
+			label: true,
+			sourceType: true,
+			source: true,
+			credits: true,
+			users: true,
+
+			limit: 1,
+			order_by: {
+				expression: image['@order_index'],
+				direction: 'ASC',
+				empty: e.EMPTY_LAST,
+			},
+		}),
+	}),
+)

@@ -2,6 +2,7 @@ import {
 	newImagesMutation,
 	newTipsMutation,
 	newVarietiesMutation,
+	newVegetableFriendshipsMutation,
 	newVegetableMutation,
 } from '@/mutations'
 import { StoredImage, type VegetableForDB } from '@/schemas'
@@ -88,6 +89,7 @@ export async function createVegetable(
 
 		// #4 Create vegetable
 		await newVegetableMutation.run(tx, {
+			id: input.id,
 			names: input.names,
 			handle: input.handle,
 			scientific_names: input.scientific_names || null,
@@ -124,5 +126,13 @@ export async function createVegetable(
 				order_index,
 			})),
 		})
+
+		// #5 Create friendships
+		if (input.friends && input.friends.length > 0) {
+			await newVegetableFriendshipsMutation.run(tx, {
+				friends: input.friends,
+				vegetable_id: input.id,
+			})
+		}
 	})
 }

@@ -11,19 +11,19 @@ import type { VegetableTipInForm } from '@/schemas'
 import { TIP_SUBJECT_TO_LABEL } from '@/utils/labels'
 import { semanticListItems } from '@/utils/strings'
 import {
-	useFormContext,
 	type ControllerRenderProps,
 	type FieldPath,
 	type FieldValues,
+	useFormContext,
 } from 'react-hook-form'
 import TipTapRenderer from '../TipTapRenderer'
 import { Button } from '../ui/button'
+import { FormControl } from '../ui/form'
+import { Text } from '../ui/text'
 import CheckboxesInput from './CheckboxesInput'
 import Field from './Field'
 import RichTextInput from './RichTextInput'
 import SourceInput from './SourceInput'
-import { FormControl } from '../ui/form'
-import { Text } from '../ui/text'
 
 export default function VegetableTipInput<
 	TFieldValues extends FieldValues = FieldValues,

@@ -20,6 +20,12 @@ export type FormOption = {
 	description?: string
 }
 
+export type ReferenceOption = {
+	id: string
+	label: string
+	image?: ImageForRendering
+}
+
 export type ImageForRendering = Pick<Image, 'sanity_id' | 'label'> & {
 	hotspot?: SanityImageHotspot | unknown
 	crop?: SanityImageCrop | unknown

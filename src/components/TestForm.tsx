@@ -33,6 +33,7 @@ import HandleInput from './forms/HandleInput'
 import ImageInput from './forms/ImageInput'
 import NumberInput from './forms/NumberInput'
 import RadioGroupInput from './forms/RadioGroupInput'
+import ReferenceListInput from './forms/ReferenceListInput'
 import RichTextInput from './forms/RichTextInput'
 import VegetableTipInput from './forms/VegetableTipInput'
 import VegetableVarietyInput from './forms/VegetableVarietyInput'
@@ -107,11 +108,19 @@ export default function TestForm() {
 		}
 	}
 
+	async function test() {
+		const added = await addVegetable()
+		console.log(added)
+	}
+
 	console.log(form.formState, form.getValues())
 
 	return (
 		<div className="flex min-h-screen w-full flex-col bg-bac-100/40 dark:bg-gray-800/40">
 			<div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+				<button onClick={test} type="button">
+					TEST ADDING
+				</button>
 				<main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
 					<FormProvider {...form}>
 						<form
@@ -241,6 +250,17 @@ export default function TestForm() {
 													)}
 												/>
 											</div>
+											<Field
+												form={form}
+												name="friends"
+												label="Amigues"
+												render={({ field }) => (
+													<ReferenceListInput
+														field={field}
+														objectType="Vegetable"
+													/>
+												)}
+											/>
 											<Field
 												form={form}
 												name="content"

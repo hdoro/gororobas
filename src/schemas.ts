@@ -222,6 +222,7 @@ export const Vegetable = S.Struct({
 	tips: S.optional(S.Array(VegetableTip)),
 	photos: S.optional(S.Array(Image)),
 	content: S.optional(RichText),
+	friends: S.optional(S.Array(S.UUID)),
 }).pipe(
 	S.filter((vegetable, _, ast) => {
 		if (
