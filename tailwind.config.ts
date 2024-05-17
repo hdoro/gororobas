@@ -1,5 +1,4 @@
 import type { Config } from 'tailwindcss'
-import { fontFamily } from 'tailwindcss/defaultTheme'
 
 const config: Config = {
 	content: ['src/**/*.{js,ts,jsx,tsx,mdx}'],
@@ -14,15 +13,41 @@ const config: Config = {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
-				background: 'hsl(var(--background))',
+				background: {
+					DEFAULT: 'hsl(var(--background))',
+					base: 'hsl(var(--background-base))',
+					card: 'hsl(var(--background-card))',
+				},
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',
+					50: 'hsl(var(--primary-50))',
+					100: 'hsl(var(--primary-100))',
+					200: 'hsl(var(--primary-200))',
+					300: 'hsl(var(--primary-300))',
+					400: 'hsl(var(--primary-400))',
+					500: 'hsl(var(--primary-500))',
+					600: 'hsl(var(--primary-600))',
+					700: 'hsl(var(--primary-700))',
+					800: 'hsl(var(--primary-800))',
+					900: 'hsl(var(--primary-900))',
+					950: 'hsl(var(--primary-950))',
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))',
+					50: 'hsl(var(--secondary-50))',
+					100: 'hsl(var(--secondary-100))',
+					200: 'hsl(var(--secondary-200))',
+					300: 'hsl(var(--secondary-300))',
+					400: 'hsl(var(--secondary-400))',
+					500: 'hsl(var(--secondary-500))',
+					600: 'hsl(var(--secondary-600))',
+					700: 'hsl(var(--secondary-700))',
+					800: 'hsl(var(--secondary-800))',
+					900: 'hsl(var(--secondary-900))',
+					950: 'hsl(var(--secondary-950))',
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
@@ -63,9 +88,7 @@ const config: Config = {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)',
 			},
-			fontFamily: {
-				sans: ['var(--font-sans)', ...fontFamily.sans],
-			},
+
 			keyframes: {
 				'accordion-down': {
 					from: { height: '0' },

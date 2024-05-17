@@ -113,13 +113,11 @@ export default function TestForm() {
 		console.log(added)
 	}
 
-	console.log(form.formState, form.getValues())
-
 	return (
 		<div className="flex min-h-screen w-full flex-col bg-bac-100/40 dark:bg-gray-800/40">
 			<div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
 				<button onClick={test} type="button">
-					TEST ADDING
+					TEST ADDING FAKE VEGETABLE
 				</button>
 				<main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
 					<FormProvider {...form}>
@@ -128,7 +126,7 @@ export default function TestForm() {
 							className="mx-auto grid max-w-[70rem] flex-1 auto-rows-max gap-4"
 						>
 							<div className="flex items-center gap-4">
-								<Button className="h-7 w-7" size="icon" variant="outline">
+								<Button className="h-7 w-7" size="icon" mode="outline">
 									<ChevronLeftIcon className="h-4 w-4" />
 									<span className="sr-only">Back</span>
 								</Button>
@@ -469,12 +467,6 @@ export default function TestForm() {
 										</CardContent>
 									</Card>
 								</div>
-							</div>
-							<div className="flex items-center justify-center gap-2 md:hidden">
-								<Button size="sm" variant="outline">
-									Discard
-								</Button>
-								<Button size="sm">Save Product</Button>
 							</div>
 						</form>
 					</FormProvider>

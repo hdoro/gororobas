@@ -70,7 +70,7 @@ export default function VegetableTipInput<
 						Editar dica {typeof tipIndex === 'number' && `#${tipIndex + 1}`}
 					</DialogTitle>
 					<DialogClose asChild>
-						<Button variant="outline" size="sm" tabIndex={0}>
+						<Button tone="neutral" mode="outline" size="sm" tabIndex={0}>
 							Fechar
 						</Button>
 					</DialogClose>

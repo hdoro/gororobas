@@ -33,15 +33,12 @@ const FormatToolbar = ({ editor }: { editor: Editor }) => {
 			<BubbleMenu
 				editor={editor}
 				tippyOptions={{ duration: 100 }}
-				className={cn(
-					'z-10 will-change-transform',
-					'flex gap-2 p-3 shadow-md rounded-md bg-white border',
-				)}
+				className="z-10 will-change-transform flex gap-2 p-3 shadow-md rounded-md bg-white border"
 			>
 				<Button
 					onClick={() => editor.chain().focus().toggleBold().run()}
 					disabled={!editor.can().chain().focus().toggleBold().run()}
-					variant={editor.isActive('bold') ? 'outline' : 'ghost'}
+					mode={editor.isActive('bold') ? 'outline' : 'bleed'}
 					size="icon"
 					aria-label="Negrito"
 				>
@@ -51,7 +48,7 @@ const FormatToolbar = ({ editor }: { editor: Editor }) => {
 				<Button
 					onClick={() => editor.chain().focus().toggleItalic().run()}
 					disabled={!editor.can().chain().focus().toggleItalic().run()}
-					variant={editor.isActive('italic') ? 'outline' : 'ghost'}
+					mode={editor.isActive('italic') ? 'outline' : 'bleed'}
 					size="icon"
 					aria-label="Itálico"
 				>
@@ -60,7 +57,7 @@ const FormatToolbar = ({ editor }: { editor: Editor }) => {
 				<Button
 					onClick={() => editor.chain().focus().toggleStrike().run()}
 					disabled={!editor.can().chain().focus().toggleStrike().run()}
-					variant={editor.isActive('strike') ? 'outline' : 'ghost'}
+					mode={editor.isActive('strike') ? 'outline' : 'bleed'}
 					size="icon"
 					aria-label="Riscado"
 				>
@@ -69,7 +66,7 @@ const FormatToolbar = ({ editor }: { editor: Editor }) => {
 				<Button
 					onClick={() => editor.chain().focus().toggleBulletList().run()}
 					disabled={!editor.can().chain().focus().toggleBulletList().run()}
-					variant={editor.isActive('bulletList') ? 'outline' : 'ghost'}
+					mode={editor.isActive('bulletList') ? 'outline' : 'bleed'}
 					size="icon"
 					aria-label="Lista não ordenada"
 				>
@@ -78,7 +75,7 @@ const FormatToolbar = ({ editor }: { editor: Editor }) => {
 				<Button
 					onClick={() => editor.chain().focus().toggleOrderedList().run()}
 					disabled={!editor.can().chain().focus().toggleOrderedList().run()}
-					variant={editor.isActive('orderedList') ? 'outline' : 'ghost'}
+					mode={editor.isActive('orderedList') ? 'outline' : 'bleed'}
 					size="icon"
 					aria-label="Lista numérica"
 				>
@@ -89,7 +86,7 @@ const FormatToolbar = ({ editor }: { editor: Editor }) => {
 					disabled={
 						!editor.can().chain().focus().toggleLink({ href: '' }).run()
 					}
-					variant={editor.isActive('link') ? 'outline' : 'ghost'}
+					mode={editor.isActive('link') ? 'outline' : 'bleed'}
 					size="icon"
 					aria-label="Ícone"
 				>
@@ -153,7 +150,8 @@ const FormatToolbar = ({ editor }: { editor: Editor }) => {
 										editor.commands.unsetLink()
 										editor.commands.focus()
 									}}
-									variant="destructive"
+									tone="destructive"
+									mode="bleed"
 									size="sm"
 								>
 									<TrashIcon className="mr-2" /> Deletar link

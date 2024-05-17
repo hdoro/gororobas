@@ -1,37 +1,108 @@
-import { Slot } from '@radix-ui/react-slot'
-import { type VariantProps, cva } from 'class-variance-authority'
 import * as React from 'react'
+import { Slot } from '@radix-ui/react-slot'
+import { type VariantProps, tv } from 'tailwind-variants'
 
 import { cn } from '@/utils/cn'
 
-const buttonVariants = cva(
-	'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-	{
-		variants: {
-			variant: {
-				default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-				destructive:
-					'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-				outline:
-					'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-				secondary:
-					'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-				ghost: 'hover:bg-accent hover:text-accent-foreground',
-				link: 'text-primary underline-offset-4 hover:underline',
-			},
-			size: {
-				default: 'h-10 px-4 py-2',
-				sm: 'h-9 rounded-md px-3',
-				lg: 'h-11 rounded-md px-8',
-				icon: 'h-10 w-10',
-			},
+const buttonVariants = tv({
+	base: 'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm leading-none font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border',
+	variants: {
+		tone: {
+			primary: '',
+			secondary: '',
+			neutral: '',
+			destructive: '',
 		},
-		defaultVariants: {
-			variant: 'default',
-			size: 'default',
+		mode: {
+			default: '',
+			outline: '',
+			bleed: '',
+		},
+		size: {
+			default: 'h-10 px-4 py-2',
+			sm: 'h-9 rounded-md px-3',
+			lg: 'h-11 rounded-md px-8',
+			icon: 'h-10 w-10',
 		},
 	},
-)
+	defaultVariants: {
+		tone: 'primary',
+		mode: 'default',
+		size: 'default',
+	},
+	compoundVariants: [
+		{
+			tone: 'primary',
+			mode: 'default',
+			class:
+				'bg-primary-700 border-primary-700 text-primary-50 hover:bg-primary-600',
+		},
+		{
+			tone: 'primary',
+			mode: 'outline',
+			class:
+				'text-primary-800 border-primary-200 bg-primary-100 hover:bg-primary-50',
+		},
+		{
+			tone: 'primary',
+			mode: 'bleed',
+			class:
+				'text-primary-800 border-transparent hover:bg-primary-100 hover:text-primary-900 hover:border-primary-100',
+		},
+		{
+			tone: 'secondary',
+			mode: 'default',
+			class:
+				'bg-secondary-700 border-secondary-700 text-secondary-50 hover:bg-secondary-600',
+		},
+		{
+			tone: 'secondary',
+			mode: 'outline',
+			class:
+				'text-secondary-800 border-secondary-200 bg-secondary-100 hover:bg-secondary-50',
+		},
+		{
+			tone: 'secondary',
+			mode: 'bleed',
+			class:
+				'text-secondary-800 border-transparent hover:bg-secondary-100 hover:border-secondary-100',
+		},
+		{
+			tone: 'neutral',
+			mode: 'default',
+			class: 'bg-stone-700 border-stone-700 text-stone-50 hover:bg-stone-600',
+		},
+		{
+			tone: 'neutral',
+			mode: 'outline',
+			class: 'text-stone-800 border-stone-200 bg-stone-100 hover:bg-stone-50',
+		},
+		{
+			tone: 'neutral',
+			mode: 'bleed',
+			class:
+				'text-stone-800 border-transparent hover:bg-stone-100 hover:border-stone-100',
+		},
+		{
+			tone: 'destructive',
+			mode: 'default',
+			class:
+				'bg-destructive border-destructive text-destructive-foreground hover:bg-destructive/90',
+		},
+		{
+			tone: 'destructive',
+			mode: 'outline',
+			class:
+				'text-destructive border-destructive bg-destructive-foreground hover:bg-destructive/20',
+		},
+		{
+			tone: 'destructive',
+			mode: 'bleed',
+			class:
+				'text-destructive border-transparent hover:bg-destructive/10 hover:border-destructive/10',
+		},
+	],
+})
 
 export interface ButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -40,14 +111,12 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	({ className, variant, size, asChild = false, ...props }, ref) => {
+	({ className, tone, mode, size, asChild = false, ...props }, ref) => {
 		const Comp = asChild ? Slot : 'button'
 		return (
 			<Comp
-				className={cn(buttonVariants({ variant, size, className }))}
+				className={cn(buttonVariants({ tone, mode, size, className }))}
 				ref={ref}
-				// Default to type="button" if a regular button element
-				type={asChild ? undefined : 'button'}
 				{...props}
 			/>
 		)

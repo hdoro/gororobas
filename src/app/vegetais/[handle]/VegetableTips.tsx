@@ -30,7 +30,7 @@ export default function VegetableTips({
 							key={subject}
 							className={cn(
 								'mt-10 pb-10 flex gap-10',
-								idx + 1 < arr.length && 'border-b-2 border-b-gray-100',
+								idx + 1 < arr.length && 'border-b-2 border-b-secondary-50',
 							)}
 						>
 							<Text

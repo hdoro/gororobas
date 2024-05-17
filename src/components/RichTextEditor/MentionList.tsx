@@ -62,7 +62,8 @@ export default forwardRef<
 				props.items.map((item, index) => (
 					<Button
 						key={item.id}
-						variant={index === selectedIndex ? 'outline' : 'ghost'}
+						tone="neutral"
+						mode={index === selectedIndex ? 'outline' : 'bleed'}
 						onClick={() => selectItem(index)}
 						type="button"
 						size="sm"

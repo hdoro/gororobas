@@ -60,9 +60,7 @@ function TwoColInfo({
 						if (!item) return null
 						return (
 							// biome-ignore lint: we need to use the index to account for empty paragraphs
-							<Badge key={item + i} variant="secondary">
-								{item}
-							</Badge>
+							<Badge key={item + i}>{item}</Badge>
 						)
 					})}
 				{typeof right === 'string' && (

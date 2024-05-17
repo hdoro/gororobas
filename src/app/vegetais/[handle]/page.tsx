@@ -10,9 +10,9 @@ export default async function VegetableRoute({
 }) {
 	const session = auth.getSession()
 
-	console.time('vegetablePageQuery')
+	// console.time('vegetablePageQuery')
 	const vegetable = await vegetablePageQuery.run(session.client, { handle })
-	console.timeEnd('vegetablePageQuery')
+	// console.timeEnd('vegetablePageQuery')
 
 	if (!vegetable) return notFound()
 

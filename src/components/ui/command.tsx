@@ -42,7 +42,7 @@ const CommandInput = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
 	<div
-		className="flex items-center px-3 ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
+		className="flex items-center px-3 rounded-md ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
 		cmdk-input-wrapper=""
 	>
 		<Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />

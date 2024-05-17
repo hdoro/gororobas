@@ -50,7 +50,7 @@ export default function ReferenceListInput<
 	const selectedOptions = selected.flatMap((id) => optionsMap[id] || [])
 
 	return (
-		<FormItem className="space-y-2 border rounded-md p-2">
+		<FormItem className={'border rounded-md'}>
 			<Command
 				onFocus={() => setFocused(true)}
 				onBlur={() => setFocused(false)}
@@ -106,7 +106,7 @@ export default function ReferenceListInput<
 				</CommandList>
 			</Command>
 			{selectedOptions.length > 0 && (
-				<div className="flex gap-2 flex-wrap min-h-10">
+				<div className="flex gap-2 flex-wrap min-h-10 p-2">
 					{selectedOptions.map((option) => {
 						return (
 							<div

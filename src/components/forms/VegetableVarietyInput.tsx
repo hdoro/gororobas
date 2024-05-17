@@ -47,13 +47,13 @@ export default function VegetableVarietyInput<
 	return (
 		<Dialog>
 			<DialogTrigger
-				className="block w-full h-full bg-gray-50 p-3 border rounded-md ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+				className="block w-full h-full bg-background p-3 border rounded-md ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 				data-array-item-field-name={rootField.name}
 			>
 				<div className="flex items-center gap-3">
 					<div
 						className={cn(
-							'flex-[0_0_6.25rem] w-[6.25rem] rounded-lg overflow-hidden text-gray-700',
+							'flex-[0_0_6.25rem] w-[6.25rem] rounded-lg overflow-hidden text-primary-700',
 							renderablePhoto
 								? 'h-auto'
 								: 'flex items-center justify-center h-[6.25rem] bg-card-foreground/5',
@@ -72,7 +72,7 @@ export default function VegetableVarietyInput<
 						)}
 					</div>
 					<div className="space-y-1 text-left">
-						<h2 className={names[0]?.value ? '' : 'text-muted-foreground'}>
+						<h2 className={names[0]?.value ? '' : 'text-primary-700'}>
 							{names[0]?.value || 'Variedade sem nome'}
 						</h2>
 						{names.length > 1 && (
@@ -96,7 +96,7 @@ export default function VegetableVarietyInput<
 						{typeof varietyIndex === 'number' && `#${varietyIndex + 1}`}
 					</DialogTitle>
 					<DialogClose asChild>
-						<Button variant="outline" size="sm">
+						<Button mode="outline" tone="neutral" size="sm">
 							Fechar
 						</Button>
 					</DialogClose>

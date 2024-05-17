@@ -43,7 +43,10 @@ export function getTiptapExtensions({
 		}),
 		Placeholder.configure({
 			placeholder: placeholder || '',
-			emptyEditorClass: cn('tiptap-placeholder', classes.placeholder()),
+			emptyEditorClass: cn(
+				'tiptap-placeholder',
+				classes.placeholder(),
+			) as string,
 		}),
 		Mention.configure({
 			suggestion: MentionSuggestions,

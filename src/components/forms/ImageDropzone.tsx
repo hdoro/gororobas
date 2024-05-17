@@ -100,10 +100,11 @@ export default function ImageDropzone<
 						onClick={clearField}
 						className="absolute top-2 right-2 rounded-full"
 						aria-label="Remover imagem"
-						variant="outline"
+						tone="destructive"
+						mode="outline"
 						size="icon"
 					>
-						<CircleXIcon />
+						<CircleXIcon className="stroke-current" />
 					</Button>
 				</>
 			) : (

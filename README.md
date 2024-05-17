@@ -6,7 +6,8 @@ Documentation is WIP
 
 - [ ] Finish form
   - [x] Editing tips
-  - [ ] (SourceInput) Select users
+  - [x] Select & query friends of a vegetable
+  - [ ] (SourceInput) move to array and allow selecting users
 
 
 ## User Authentication
@@ -14,7 +15,7 @@ Documentation is WIP
 - [x] Login & sign-up forms - done by EdgeDB?
 - [x] Auth emails - done by EdgeDB?
 - [x] Admin & regular roles
-- [ ] If no User/UserProfile (failed the auth callback), create
+- [ ] If session but no User/UserProfile (failed the auth callback), create
 
 ## Vegetable submission
 
@@ -40,22 +41,10 @@ Documentation is WIP
 - [ ] Photos carousel dialog
 - [ ] Tips carousel dialog
 - [ ] Query all users that have wishlisted to display on vegetable page
-- [ ] Query consortiums
-
-
-## Consortiums
-
-- [ ] Editor
-- [ ] Edit suggestion
-- [ ] Page
-
-## Indexes rendering
-
-- [ ] Vegetables grid
-- [ ] Consortiums Grid
 
 ## Homepage
 
+- [ ] Vegetables grid
 - [ ] Design
 - [ ] Rendering
 

@@ -107,7 +107,7 @@ export default function ArrayInput<
 							})
 						}
 					}}
-					variant="ghost"
+					mode="bleed"
 					size="sm"
 				>
 					<PlusCircleIcon className="mr-2" /> {newItemLabel}
@@ -150,9 +150,10 @@ export function SortableItem(
 	return (
 		<div ref={setNodeRef} style={style} className="flex items-start gap-4">
 			<Button
-				variant="ghost"
+				mode="bleed"
 				size="icon"
 				title="Segure para mover"
+				tone="neutral"
 				{...attributes}
 				{...listeners}
 			>
@@ -160,11 +161,11 @@ export function SortableItem(
 			</Button>
 			<div className="flex-1">{props.children}</div>
 			<Button
-				variant="ghost"
+				mode="bleed"
+				tone="destructive"
 				size="icon"
 				title={`Deletar item #${props.index + 1}`}
 				onClick={props.removeItem}
-				className="text-gray-500 hover:text-red-700 focus-visible:text-red-700 dark:text-gray-100 dark:hover:text-red-500 dark:focus-visible:text-red-500"
 			>
 				<TrashIcon className="stroke-current" />
 			</Button>

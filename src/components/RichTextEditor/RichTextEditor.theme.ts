@@ -11,7 +11,7 @@ export const richTextEditorTheme = tv({
 		tiptapBold: '',
 		tiptapListUl: 'list-disc pl-[1em] space-y-[0.25em]',
 		tiptapListOl: 'list-decimal pl-[1em] space-y-[0.25em]',
-		tiptapLink: 'text-customgreen-600 underline',
+		tiptapLink: 'text-primary-600 underline',
 	},
 	variants: {
 		type: {
@@ -27,7 +27,7 @@ export const richTextEditorTheme = tv({
 			},
 			formTextarea: {
 				contentEditable:
-					'text-sm leading-tight font-normal *:w-full rounded-md *:rounded-md *:border *:border-input *:bg-background *:px-3 *:py-2 *:ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 *:disabled:cursor-not-allowed *:disabled:opacity-50',
+					'text-sm leading-tight font-normal *:w-full rounded-md *:rounded-md *:border *:border-input *:bg-card *:px-3 *:py-2 *:ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 *:disabled:cursor-not-allowed *:disabled:opacity-50',
 				placeholder: 'pt-0.5 text-muted-foreground',
 				tiptapBold: 'font-semibold',
 			},
