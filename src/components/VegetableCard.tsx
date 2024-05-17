@@ -1,6 +1,5 @@
 'use client'
 
-import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import { Badge } from '@/components/ui/badge'
 import {
 	Carousel,
@@ -11,11 +10,12 @@ import {
 	type CarouselApi,
 } from '@/components/ui/carousel'
 import type { VegetableCardData } from '@/queries'
-import { use, useCallback, useEffect, useState } from 'react'
-import { SanityImage } from './SanityImage'
 import { cn } from '@/utils/cn'
-import Link from 'next/link'
 import { paths } from '@/utils/urls'
+import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
+import Link from 'next/link'
+import { useCallback, useEffect, useState } from 'react'
+import { SanityImage } from './SanityImage'
 
 export default function VegetableCard({
 	vegetable,

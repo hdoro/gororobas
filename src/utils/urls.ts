@@ -61,4 +61,5 @@ export function formatPath(path?: string): string {
 
 export const paths = {
 	vegetable: (handle: string) => formatPath(`/vegetais/${handle}`),
+	editVegetable: (handle: string) => formatPath(`/vegetais/${handle}/editar`),
 }
