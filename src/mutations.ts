@@ -116,8 +116,34 @@ export const newTipsMutation = e.params(
 			}),
 		),
 )
+
+export const newVegetableFriendshipsMutation = e.params(
+	{
+		vegetable_id: e.uuid,
+		friends: e.array(
+			e.tuple({
+				id: e.uuid,
+				unique_key: e.str,
+			}),
+		),
+	},
+	(params) =>
+		e.for(e.array_unpack(params.friends), (friend) =>
+			e
+				.insert(e.VegetableFriendship, {
+					unique_key: friend.unique_key,
+					vegetables: e.select(e.Vegetable, (v) => ({
+						filter: e.op(v.id, 'in', e.set(params.vegetable_id, friend.id)),
+					})),
+				})
+				// If the friendship already exists, do nothing
+				.unlessConflict(),
+		),
+)
+
 export const newVegetableMutation = e.params(
 	{
+		id: e.uuid,
 		names: e.array(e.str),
 		scientific_names: e.optional(e.array(e.str)),
 		handle: e.str,

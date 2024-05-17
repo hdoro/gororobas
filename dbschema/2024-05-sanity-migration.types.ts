@@ -14,1067 +14,1223 @@
 
 // Source: schema.json
 export type SanityImagePaletteSwatch = {
-  _type: "sanity.imagePaletteSwatch";
-  background?: string;
-  foreground?: string;
-  population?: number;
-  title?: string;
-};
+	_type: 'sanity.imagePaletteSwatch'
+	background?: string
+	foreground?: string
+	population?: number
+	title?: string
+}
 
 export type SanityImagePalette = {
-  _type: "sanity.imagePalette";
-  darkMuted?: SanityImagePaletteSwatch;
-  lightVibrant?: SanityImagePaletteSwatch;
-  darkVibrant?: SanityImagePaletteSwatch;
-  vibrant?: SanityImagePaletteSwatch;
-  dominant?: SanityImagePaletteSwatch;
-  lightMuted?: SanityImagePaletteSwatch;
-  muted?: SanityImagePaletteSwatch;
-};
+	_type: 'sanity.imagePalette'
+	darkMuted?: SanityImagePaletteSwatch
+	lightVibrant?: SanityImagePaletteSwatch
+	darkVibrant?: SanityImagePaletteSwatch
+	vibrant?: SanityImagePaletteSwatch
+	dominant?: SanityImagePaletteSwatch
+	lightMuted?: SanityImagePaletteSwatch
+	muted?: SanityImagePaletteSwatch
+}
 
 export type SanityImageDimensions = {
-  _type: "sanity.imageDimensions";
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
-};
+	_type: 'sanity.imageDimensions'
+	height?: number
+	width?: number
+	aspectRatio?: number
+}
 
 export type SanityFileAsset = {
-  _id: string;
-  _type: "sanity.fileAsset";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  originalFilename?: string;
-  label?: string;
-  title?: string;
-  description?: string;
-  altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
-  uploadId?: string;
-  path?: string;
-  url?: string;
-  source?: SanityAssetSourceData;
-};
+	_id: string
+	_type: 'sanity.fileAsset'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	originalFilename?: string
+	label?: string
+	title?: string
+	description?: string
+	altText?: string
+	sha1hash?: string
+	extension?: string
+	mimeType?: string
+	size?: number
+	assetId?: string
+	uploadId?: string
+	path?: string
+	url?: string
+	source?: SanityAssetSourceData
+}
 
 export type Geopoint = {
-  _type: "geopoint";
-  lat?: number;
-  lng?: number;
-  alt?: number;
-};
+	_type: 'geopoint'
+	lat?: number
+	lng?: number
+	alt?: number
+}
 
-export type Sources = Array<({
-  _key: string;
-} & SourceUser) | ({
-  _key: string;
-} & SourceExternal)>;
+export type Sources = Array<
+	| ({
+			_key: string
+	  } & SourceUser)
+	| ({
+			_key: string
+	  } & SourceExternal)
+>
 
 export type SourceExternal = {
-  _type: "source.external";
-  credits?: string;
-  source?: string;
-};
+	_type: 'source.external'
+	credits?: string
+	source?: string
+}
 
 export type SourceUser = {
-  _type: "source.user";
-  user?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "user";
-  };
-  comment?: string;
-  date?: string;
-};
+	_type: 'source.user'
+	user?: {
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		[internalGroqTypeReferenceTo]?: 'user'
+	}
+	comment?: string
+	date?: string
+}
 
 export type LinkLabelled = {
-  _type: "link.labelled";
-  label?: string;
-  type?: "internal" | "external";
-  internalLink?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "home";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "route";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "recipe";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "category";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "user";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "tag";
-  };
-  url?: string;
-};
+	_type: 'link.labelled'
+	label?: string
+	type?: 'internal' | 'external'
+	internalLink?:
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'home'
+		  }
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'route'
+		  }
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'recipe'
+		  }
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'category'
+		  }
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'user'
+		  }
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'tag'
+		  }
+	url?: string
+}
 
 export type LinkPte = {
-  _type: "link.pte";
-  type?: "internal" | "external";
-  internalLink?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "home";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "route";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "recipe";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "category";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "user";
-  } | {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "tag";
-  };
-  url?: string;
-};
+	_type: 'link.pte'
+	type?: 'internal' | 'external'
+	internalLink?:
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'home'
+		  }
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'route'
+		  }
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'recipe'
+		  }
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'category'
+		  }
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'user'
+		  }
+		| {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'tag'
+		  }
+	url?: string
+}
 
 export type VegetableVariety = {
-  _type: "vegetableVariety";
-  names?: Array<string>;
-  photos?: Array<{
-    _key: string;
-  } & PhotoWithCredits>;
-};
+	_type: 'vegetableVariety'
+	names?: Array<string>
+	photos?: Array<
+		{
+			_key: string
+		} & PhotoWithCredits
+	>
+}
 
 export type VegetableSource = {
-  _type: "vegetableSource";
-  title?: string;
-  url?: string;
-  credits?: string;
-  date?: string;
-  source_type?: string;
-};
+	_type: 'vegetableSource'
+	title?: string
+	url?: string
+	credits?: string
+	date?: string
+	source_type?: string
+}
 
 export type RichText = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  }>;
-  style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-  listItem?: "bullet" | "number";
-  markDefs?: Array<{
-    href?: string;
-    _type: "link";
-    _key: string;
-  }>;
-  level?: number;
-  _type: "block";
-  _key: string;
-}>;
+	children?: Array<{
+		marks?: Array<string>
+		text?: string
+		_type: 'span'
+		_key: string
+	}>
+	style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+	listItem?: 'bullet' | 'number'
+	markDefs?: Array<{
+		href?: string
+		_type: 'link'
+		_key: string
+	}>
+	level?: number
+	_type: 'block'
+	_key: string
+}>
 
 export type RecipeStep = {
-  _type: "recipe.step";
-  title?: string;
-  description?: string;
-  photos?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
-  relatedIngredients?: Array<string>;
-};
+	_type: 'recipe.step'
+	title?: string
+	description?: string
+	photos?: Array<{
+		asset?: {
+			_ref: string
+			_type: 'reference'
+			_weak?: boolean
+			[internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+		}
+		hotspot?: SanityImageHotspot
+		crop?: SanityImageCrop
+		_type: 'image'
+		_key: string
+	}>
+	relatedIngredients?: Array<string>
+}
 
 export type RecipeIngredient = {
-  _type: "recipe.ingredient";
-  title?: string;
-  description?: string;
-};
+	_type: 'recipe.ingredient'
+	title?: string
+	description?: string
+}
 
 export type RecipeDivider = {
-  _type: "recipe.divider";
-  title?: string;
-};
+	_type: 'recipe.divider'
+	title?: string
+}
 
 export type PhotoWithCredits = {
-  _type: "photoWithCredits";
-  media?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  label?: string;
-  sources?: Sources;
-};
+	_type: 'photoWithCredits'
+	media?: {
+		asset?: {
+			_ref: string
+			_type: 'reference'
+			_weak?: boolean
+			[internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+		}
+		hotspot?: SanityImageHotspot
+		crop?: SanityImageCrop
+		_type: 'image'
+	}
+	label?: string
+	sources?: Sources
+}
 
 export type Vegetable = {
-  _id: string;
-  _type: "vegetable";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  names?: Array<string>;
-  gender?: "masculine" | "feminine" | "neutral";
-  slug?: Slug;
-  scientific_name?: string;
-  usage?: Array<"ALIMENTO_ANIMAL" | "ALIMENTO_HUMANO" | "CONSTRUCAO" | "MATERIA_ORGANICA" | "MEDICINAL" | "COSMETIC" | "PAISAGISMO" | "RITUALISTICO">;
-  edible_part?: Array<"FRUTO" | "FLOR" | "FOLHA" | "CAULE" | "SEMENTE" | "CASCA" | "BULBO" | "BROTO" | "RAIZ" | "TUBERCULO" | "RIZOMA">;
-  planting_method?: Array<"SEMENTE" | "ESTACA" | "ENXERTO" | "RIZOMA" | "BROTO" | "TUBERCULO">;
-  recommendations?: string;
-  tips?: Array<{
-    subject?: "plantio" | "crescimento" | "colheita";
-    content?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        href?: string;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    } | ({
-      _key: string;
-    } & PhotoWithCredits)>;
-    sources?: Sources;
-    _key: string;
-  }>;
-  origin?: string;
-  height_min?: number;
-  height_max?: number;
-  stratum?: Array<"EMERGENTE" | "ALTO" | "MEDIO" | "BAIXO" | "RASTEIRO">;
-  succession?: Array<"PIONEIRA" | "SECUNDARIA" | "CLIMAX">;
-  cycle?: Array<"SEMESTRAL" | "ANUAL" | "BIENAL" | "PERENE">;
-  deciduousness?: Array<"DECIDUA" | "SEMIDECIDUA" | "PERENIFOLIA">;
-  light_adaptation?: Array<"HELIOFITA" | "ESCIOFITA" | "MESOFITA">;
-  water_adaptation?: Array<"HIGROFITA" | "XEROFITA" | "MESOFITA">;
-  biomes?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "biome";
-  }>;
-  photos?: Array<{
-    _key: string;
-  } & PhotoWithCredits>;
-  varieties?: Array<{
-    _key: string;
-  } & VegetableVariety>;
-  sources?: Array<{
-    _key: string;
-  } & VegetableSource>;
-  content?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | ({
-    _key: string;
-  } & PhotoWithCredits)>;
-};
+	_id: string
+	_type: 'vegetable'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	names?: Array<string>
+	gender?: 'masculine' | 'feminine' | 'neutral'
+	slug?: Slug
+	scientific_name?: string
+	usage?: Array<
+		| 'ALIMENTO_ANIMAL'
+		| 'ALIMENTO_HUMANO'
+		| 'CONSTRUCAO'
+		| 'MATERIA_ORGANICA'
+		| 'MEDICINAL'
+		| 'COSMETIC'
+		| 'PAISAGISMO'
+		| 'RITUALISTICO'
+	>
+	edible_part?: Array<
+		| 'FRUTO'
+		| 'FLOR'
+		| 'FOLHA'
+		| 'CAULE'
+		| 'SEMENTE'
+		| 'CASCA'
+		| 'BULBO'
+		| 'BROTO'
+		| 'RAIZ'
+		| 'TUBERCULO'
+		| 'RIZOMA'
+	>
+	planting_method?: Array<
+		'SEMENTE' | 'ESTACA' | 'ENXERTO' | 'RIZOMA' | 'BROTO' | 'TUBERCULO'
+	>
+	recommendations?: string
+	tips?: Array<{
+		subject?: 'plantio' | 'crescimento' | 'colheita'
+		content?: Array<
+			| {
+					children?: Array<{
+						marks?: Array<string>
+						text?: string
+						_type: 'span'
+						_key: string
+					}>
+					style?:
+						| 'normal'
+						| 'h1'
+						| 'h2'
+						| 'h3'
+						| 'h4'
+						| 'h5'
+						| 'h6'
+						| 'blockquote'
+					listItem?: 'bullet' | 'number'
+					markDefs?: Array<{
+						href?: string
+						_type: 'link'
+						_key: string
+					}>
+					level?: number
+					_type: 'block'
+					_key: string
+			  }
+			| ({
+					_key: string
+			  } & PhotoWithCredits)
+		>
+		sources?: Sources
+		_key: string
+	}>
+	origin?: string
+	height_min?: number
+	height_max?: number
+	stratum?: Array<'EMERGENTE' | 'ALTO' | 'MEDIO' | 'BAIXO' | 'RASTEIRO'>
+	succession?: Array<'PIONEIRA' | 'SECUNDARIA' | 'CLIMAX'>
+	cycle?: Array<'SEMESTRAL' | 'ANUAL' | 'BIENAL' | 'PERENE'>
+	deciduousness?: Array<'DECIDUA' | 'SEMIDECIDUA' | 'PERENIFOLIA'>
+	light_adaptation?: Array<'HELIOFITA' | 'ESCIOFITA' | 'MESOFITA'>
+	water_adaptation?: Array<'HIGROFITA' | 'XEROFITA' | 'MESOFITA'>
+	biomes?: Array<{
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		_key: string
+		[internalGroqTypeReferenceTo]?: 'biome'
+	}>
+	photos?: Array<
+		{
+			_key: string
+		} & PhotoWithCredits
+	>
+	varieties?: Array<
+		{
+			_key: string
+		} & VegetableVariety
+	>
+	sources?: Array<
+		{
+			_key: string
+		} & VegetableSource
+	>
+	content?: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>
+					text?: string
+					_type: 'span'
+					_key: string
+				}>
+				style?:
+					| 'normal'
+					| 'h1'
+					| 'h2'
+					| 'h3'
+					| 'h4'
+					| 'h5'
+					| 'h6'
+					| 'blockquote'
+				listItem?: 'bullet' | 'number'
+				markDefs?: Array<{
+					href?: string
+					_type: 'link'
+					_key: string
+				}>
+				level?: number
+				_type: 'block'
+				_key: string
+		  }
+		| ({
+				_key: string
+		  } & PhotoWithCredits)
+	>
+}
 
 export type Tag = {
-  _id: string;
-  _type: "tag";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-};
+	_id: string
+	_type: 'tag'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	title?: string
+	slug?: Slug
+}
 
 export type SettingsRecipePage = {
-  _id: string;
-  _type: "settings.recipePage";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  feedbackCta?: {
-    title?: string;
-    subtitle?: string;
-    ctaLabel?: string;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-  };
-  shareRecipeCta?: {
-    title?: string;
-    subtitle?: string;
-    ctaLabel?: string;
-  };
-};
+	_id: string
+	_type: 'settings.recipePage'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	feedbackCta?: {
+		title?: string
+		subtitle?: string
+		ctaLabel?: string
+		image?: {
+			asset?: {
+				_ref: string
+				_type: 'reference'
+				_weak?: boolean
+				[internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+			}
+			hotspot?: SanityImageHotspot
+			crop?: SanityImageCrop
+			_type: 'image'
+		}
+	}
+	shareRecipeCta?: {
+		title?: string
+		subtitle?: string
+		ctaLabel?: string
+	}
+}
 
 export type SettingsLogin = {
-  _id: string;
-  _type: "settings.login";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  leftImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  rightImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  login?: {
-    title?: string;
-    email?: string;
-    password?: string;
-    submitBtn?: string;
-    forgotCta?: string;
-    signupTitle?: string;
-    signupCta?: string;
-  };
-  signup?: {
-    title?: string;
-    name?: string;
-    email?: string;
-    password?: string;
-    submitBtn?: string;
-    loginTitle?: string;
-    loginCta?: string;
-  };
-};
+	_id: string
+	_type: 'settings.login'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	leftImage?: {
+		asset?: {
+			_ref: string
+			_type: 'reference'
+			_weak?: boolean
+			[internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+		}
+		hotspot?: SanityImageHotspot
+		crop?: SanityImageCrop
+		_type: 'image'
+	}
+	rightImage?: {
+		asset?: {
+			_ref: string
+			_type: 'reference'
+			_weak?: boolean
+			[internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+		}
+		hotspot?: SanityImageHotspot
+		crop?: SanityImageCrop
+		_type: 'image'
+	}
+	login?: {
+		title?: string
+		email?: string
+		password?: string
+		submitBtn?: string
+		forgotCta?: string
+		signupTitle?: string
+		signupCta?: string
+	}
+	signup?: {
+		title?: string
+		name?: string
+		email?: string
+		password?: string
+		submitBtn?: string
+		loginTitle?: string
+		loginCta?: string
+	}
+}
 
 export type SettingsApproval = {
-  _id: string;
-  _type: "settings.approval";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  pendingReview?: {
-    publicTitle?: string;
-    publicDescription?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "normal";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        url?: string;
-        _type: "absUrl";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }>;
-    ownerTitle?: string;
-    ownerDescription?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      } | {
-        bold?: boolean;
-        _type: "userName";
-        _key: string;
-      }>;
-      style?: "normal";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        url?: string;
-        _type: "absUrl";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }>;
-  };
-  notVegetarian?: {
-    publicTitle?: string;
-    publicDescription?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "normal";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        url?: string;
-        _type: "absUrl";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }>;
-    ownerTitle?: string;
-    ownerDescription?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      } | {
-        bold?: boolean;
-        _type: "userName";
-        _key: string;
-      }>;
-      style?: "normal";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        url?: string;
-        _type: "absUrl";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }>;
-  };
-  unapproved?: {
-    publicTitle?: string;
-    publicDescription?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "normal";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        url?: string;
-        _type: "absUrl";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }>;
-    ownerTitle?: string;
-    ownerDescription?: Array<{
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      } | {
-        bold?: boolean;
-        _type: "userName";
-        _key: string;
-      }>;
-      style?: "normal";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        url?: string;
-        _type: "absUrl";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }>;
-  };
-};
+	_id: string
+	_type: 'settings.approval'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	pendingReview?: {
+		publicTitle?: string
+		publicDescription?: Array<{
+			children?: Array<{
+				marks?: Array<string>
+				text?: string
+				_type: 'span'
+				_key: string
+			}>
+			style?: 'normal'
+			listItem?: 'bullet' | 'number'
+			markDefs?: Array<{
+				url?: string
+				_type: 'absUrl'
+				_key: string
+			}>
+			level?: number
+			_type: 'block'
+			_key: string
+		}>
+		ownerTitle?: string
+		ownerDescription?: Array<{
+			children?: Array<
+				| {
+						marks?: Array<string>
+						text?: string
+						_type: 'span'
+						_key: string
+				  }
+				| {
+						bold?: boolean
+						_type: 'userName'
+						_key: string
+				  }
+			>
+			style?: 'normal'
+			listItem?: 'bullet' | 'number'
+			markDefs?: Array<{
+				url?: string
+				_type: 'absUrl'
+				_key: string
+			}>
+			level?: number
+			_type: 'block'
+			_key: string
+		}>
+	}
+	notVegetarian?: {
+		publicTitle?: string
+		publicDescription?: Array<{
+			children?: Array<{
+				marks?: Array<string>
+				text?: string
+				_type: 'span'
+				_key: string
+			}>
+			style?: 'normal'
+			listItem?: 'bullet' | 'number'
+			markDefs?: Array<{
+				url?: string
+				_type: 'absUrl'
+				_key: string
+			}>
+			level?: number
+			_type: 'block'
+			_key: string
+		}>
+		ownerTitle?: string
+		ownerDescription?: Array<{
+			children?: Array<
+				| {
+						marks?: Array<string>
+						text?: string
+						_type: 'span'
+						_key: string
+				  }
+				| {
+						bold?: boolean
+						_type: 'userName'
+						_key: string
+				  }
+			>
+			style?: 'normal'
+			listItem?: 'bullet' | 'number'
+			markDefs?: Array<{
+				url?: string
+				_type: 'absUrl'
+				_key: string
+			}>
+			level?: number
+			_type: 'block'
+			_key: string
+		}>
+	}
+	unapproved?: {
+		publicTitle?: string
+		publicDescription?: Array<{
+			children?: Array<{
+				marks?: Array<string>
+				text?: string
+				_type: 'span'
+				_key: string
+			}>
+			style?: 'normal'
+			listItem?: 'bullet' | 'number'
+			markDefs?: Array<{
+				url?: string
+				_type: 'absUrl'
+				_key: string
+			}>
+			level?: number
+			_type: 'block'
+			_key: string
+		}>
+		ownerTitle?: string
+		ownerDescription?: Array<{
+			children?: Array<
+				| {
+						marks?: Array<string>
+						text?: string
+						_type: 'span'
+						_key: string
+				  }
+				| {
+						bold?: boolean
+						_type: 'userName'
+						_key: string
+				  }
+			>
+			style?: 'normal'
+			listItem?: 'bullet' | 'number'
+			markDefs?: Array<{
+				url?: string
+				_type: 'absUrl'
+				_key: string
+			}>
+			level?: number
+			_type: 'block'
+			_key: string
+		}>
+	}
+}
 
 export type Route = {
-  _id: string;
-  _type: "route";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  internalTitle?: string;
-  slug?: Slug;
-  indexable?: boolean;
-};
+	_id: string
+	_type: 'route'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	internalTitle?: string
+	slug?: Slug
+	indexable?: boolean
+}
 
 export type NoteTag = {
-  _id: string;
-  _type: "note.tag";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  value?: string;
-};
+	_id: string
+	_type: 'note.tag'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	title?: string
+	value?: string
+}
 
 export type Note = {
-  _id: string;
-  _type: "note";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  tag?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "note.tag";
-  }>;
-  front?: string;
-  back?: string;
-  visibility?: "public" | "private";
-  photos?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
-  authors?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "user";
-  }>;
-  slug?: Slug;
-  status?: "pendingReview" | "approved" | "notVegetarian" | "unapproved";
-  date?: string;
-};
+	_id: string
+	_type: 'note'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	tag?: Array<{
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		_key: string
+		[internalGroqTypeReferenceTo]?: 'note.tag'
+	}>
+	front?: string
+	back?: string
+	visibility?: 'public' | 'private'
+	photos?: Array<{
+		asset?: {
+			_ref: string
+			_type: 'reference'
+			_weak?: boolean
+			[internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+		}
+		hotspot?: SanityImageHotspot
+		crop?: SanityImageCrop
+		_type: 'image'
+		_key: string
+	}>
+	authors?: Array<{
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		_key: string
+		[internalGroqTypeReferenceTo]?: 'user'
+	}>
+	slug?: Slug
+	status?: 'pendingReview' | 'approved' | 'notVegetarian' | 'unapproved'
+	date?: string
+}
 
 export type Home = {
-  _id: string;
-  _type: "home";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  seoTitle?: string;
-  seoDescription?: string;
-  ogImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  hero?: HomeHero;
-  body?: Array<({
-    _key: string;
-  } & BlockCategories) | ({
-    _key: string;
-  } & BlockHandpickedRecipes) | ({
-    _key: string;
-  } & BlockLatestRecipes) | ({
-    _key: string;
-  } & BlockCta)>;
-};
+	_id: string
+	_type: 'home'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	seoTitle?: string
+	seoDescription?: string
+	ogImage?: {
+		asset?: {
+			_ref: string
+			_type: 'reference'
+			_weak?: boolean
+			[internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+		}
+		hotspot?: SanityImageHotspot
+		crop?: SanityImageCrop
+		_type: 'image'
+	}
+	hero?: HomeHero
+	body?: Array<
+		| ({
+				_key: string
+		  } & BlockCategories)
+		| ({
+				_key: string
+		  } & BlockHandpickedRecipes)
+		| ({
+				_key: string
+		  } & BlockLatestRecipes)
+		| ({
+				_key: string
+		  } & BlockCta)
+	>
+}
 
 export type HomeHero = {
-  _type: "home.hero";
-  title?: string;
-  subtitle?: string;
-  recipes?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "recipe";
-  }>;
-  recipesImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-};
+	_type: 'home.hero'
+	title?: string
+	subtitle?: string
+	recipes?: Array<{
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		_key: string
+		[internalGroqTypeReferenceTo]?: 'recipe'
+	}>
+	recipesImage?: {
+		asset?: {
+			_ref: string
+			_type: 'reference'
+			_weak?: boolean
+			[internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+		}
+		hotspot?: SanityImageHotspot
+		crop?: SanityImageCrop
+		_type: 'image'
+	}
+}
 
 export type Feedback = {
-  _id: string;
-  _type: "feedback";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  comment?: string;
-  photos?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
-  status?: "pendingReview" | "approved" | "unapproved";
-  recipe?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "recipe";
-  };
-  tags?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "tag";
-  }>;
-  author?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "user";
-  };
-};
+	_id: string
+	_type: 'feedback'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	comment?: string
+	photos?: Array<{
+		asset?: {
+			_ref: string
+			_type: 'reference'
+			_weak?: boolean
+			[internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+		}
+		hotspot?: SanityImageHotspot
+		crop?: SanityImageCrop
+		_type: 'image'
+		_key: string
+	}>
+	status?: 'pendingReview' | 'approved' | 'unapproved'
+	recipe?: {
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		[internalGroqTypeReferenceTo]?: 'recipe'
+	}
+	tags?: Array<{
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		_key: string
+		[internalGroqTypeReferenceTo]?: 'tag'
+	}>
+	author?: {
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		[internalGroqTypeReferenceTo]?: 'user'
+	}
+}
 
 export type User = {
-  _id: string;
-  _type: "user";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  authId?: string;
-  name?: string;
-  email?: string;
-  location?: string;
-  handle?: Slug;
-  emailVerified?: boolean;
-  gororobasBeta?: boolean;
-};
+	_id: string
+	_type: 'user'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	authId?: string
+	name?: string
+	email?: string
+	location?: string
+	handle?: Slug
+	emailVerified?: boolean
+	gororobasBeta?: boolean
+}
 
 export type Recipe = {
-  _id: string;
-  _type: "recipe";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  description?: string;
-  photos?: Array<{
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
-  status?: "pendingReview" | "approved" | "notVegetarian" | "unapproved";
-  unapprovedReason?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    } | {
-      bold?: boolean;
-      _type: "userName";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      url?: string;
-      _type: "absUrl";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  duration?: "30min" | "1hr" | "2hr" | "2hr+";
-  slug?: Slug;
-  authors?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "user";
-  }>;
-  categories?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "category";
-  }>;
-  ingredients?: Array<({
-    _key: string;
-  } & RecipeIngredient) | ({
-    _key: string;
-  } & RecipeDivider)>;
-  steps?: Array<({
-    _key: string;
-  } & RecipeStep) | ({
-    _key: string;
-  } & RecipeDivider)>;
-};
+	_id: string
+	_type: 'recipe'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	title?: string
+	description?: string
+	photos?: Array<{
+		asset?: {
+			_ref: string
+			_type: 'reference'
+			_weak?: boolean
+			[internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+		}
+		hotspot?: SanityImageHotspot
+		crop?: SanityImageCrop
+		_type: 'image'
+		_key: string
+	}>
+	status?: 'pendingReview' | 'approved' | 'notVegetarian' | 'unapproved'
+	unapprovedReason?: Array<{
+		children?: Array<
+			| {
+					marks?: Array<string>
+					text?: string
+					_type: 'span'
+					_key: string
+			  }
+			| {
+					bold?: boolean
+					_type: 'userName'
+					_key: string
+			  }
+		>
+		style?: 'normal'
+		listItem?: 'bullet' | 'number'
+		markDefs?: Array<{
+			url?: string
+			_type: 'absUrl'
+			_key: string
+		}>
+		level?: number
+		_type: 'block'
+		_key: string
+	}>
+	duration?: '30min' | '1hr' | '2hr' | '2hr+'
+	slug?: Slug
+	authors?: Array<{
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		_key: string
+		[internalGroqTypeReferenceTo]?: 'user'
+	}>
+	categories?: Array<{
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		_key: string
+		[internalGroqTypeReferenceTo]?: 'category'
+	}>
+	ingredients?: Array<
+		| ({
+				_key: string
+		  } & RecipeIngredient)
+		| ({
+				_key: string
+		  } & RecipeDivider)
+	>
+	steps?: Array<
+		| ({
+				_key: string
+		  } & RecipeStep)
+		| ({
+				_key: string
+		  } & RecipeDivider)
+	>
+}
 
 export type Consortium = {
-  _id: string;
-  _type: "consortium";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  slug?: Slug;
-  name?: string;
-  vegetables?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "vegetable";
-  }>;
-};
+	_id: string
+	_type: 'consortium'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	slug?: Slug
+	name?: string
+	vegetables?: Array<{
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		_key: string
+		[internalGroqTypeReferenceTo]?: 'vegetable'
+	}>
+}
 
 export type Category = {
-  _id: string;
-  _type: "category";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-  tone?: "primary" | "secondary";
-  icon?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  searchTitle?: string;
-};
+	_id: string
+	_type: 'category'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	title?: string
+	slug?: Slug
+	tone?: 'primary' | 'secondary'
+	icon?: {
+		asset?: {
+			_ref: string
+			_type: 'reference'
+			_weak?: boolean
+			[internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+		}
+		hotspot?: SanityImageHotspot
+		crop?: SanityImageCrop
+		_type: 'image'
+	}
+	searchTitle?: string
+}
 
 export type Biome = {
-  _id: string;
-  _type: "biome";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name?: string;
-  slug?: Slug;
-};
+	_id: string
+	_type: 'biome'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	name?: string
+	slug?: Slug
+}
 
 export type Article = {
-  _id: string;
-  _type: "article";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  slug?: Slug;
-  content?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  } | ({
-    _key: string;
-  } & PhotoWithCredits)>;
-};
+	_id: string
+	_type: 'article'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	title?: string
+	slug?: Slug
+	content?: Array<
+		| {
+				children?: Array<{
+					marks?: Array<string>
+					text?: string
+					_type: 'span'
+					_key: string
+				}>
+				style?:
+					| 'normal'
+					| 'h1'
+					| 'h2'
+					| 'h3'
+					| 'h4'
+					| 'h5'
+					| 'h6'
+					| 'blockquote'
+				listItem?: 'bullet' | 'number'
+				markDefs?: Array<{
+					href?: string
+					_type: 'link'
+					_key: string
+				}>
+				level?: number
+				_type: 'block'
+				_key: string
+		  }
+		| ({
+				_key: string
+		  } & PhotoWithCredits)
+	>
+}
 
 export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
-};
+	_type: 'sanity.imageCrop'
+	top?: number
+	bottom?: number
+	left?: number
+	right?: number
+}
 
 export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-};
+	_type: 'sanity.imageHotspot'
+	x?: number
+	y?: number
+	height?: number
+	width?: number
+}
 
 export type SanityImageAsset = {
-  _id: string;
-  _type: "sanity.imageAsset";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  originalFilename?: string;
-  label?: string;
-  title?: string;
-  description?: string;
-  altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
-  uploadId?: string;
-  path?: string;
-  url?: string;
-  metadata?: SanityImageMetadata;
-  source?: SanityAssetSourceData;
-};
+	_id: string
+	_type: 'sanity.imageAsset'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	originalFilename?: string
+	label?: string
+	title?: string
+	description?: string
+	altText?: string
+	sha1hash?: string
+	extension?: string
+	mimeType?: string
+	size?: number
+	assetId?: string
+	uploadId?: string
+	path?: string
+	url?: string
+	metadata?: SanityImageMetadata
+	source?: SanityAssetSourceData
+}
 
 export type SanityAssetSourceData = {
-  _type: "sanity.assetSourceData";
-  name?: string;
-  id?: string;
-  url?: string;
-};
+	_type: 'sanity.assetSourceData'
+	name?: string
+	id?: string
+	url?: string
+}
 
 export type SanityImageMetadata = {
-  _type: "sanity.imageMetadata";
-  location?: Geopoint;
-  dimensions?: SanityImageDimensions;
-  palette?: SanityImagePalette;
-  lqip?: string;
-  blurHash?: string;
-  hasAlpha?: boolean;
-  isOpaque?: boolean;
-};
+	_type: 'sanity.imageMetadata'
+	location?: Geopoint
+	dimensions?: SanityImageDimensions
+	palette?: SanityImagePalette
+	lqip?: string
+	blurHash?: string
+	hasAlpha?: boolean
+	isOpaque?: boolean
+}
 
 export type Slug = {
-  _type: "slug";
-  current?: string;
-  source?: string;
-};
+	_type: 'slug'
+	current?: string
+	source?: string
+}
 
 export type BlockCategories = {
-  _type: "block.categories";
-  includeBlock?: boolean;
-  categories?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "category";
-  }>;
-};
+	_type: 'block.categories'
+	includeBlock?: boolean
+	categories?: Array<{
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		_key: string
+		[internalGroqTypeReferenceTo]?: 'category'
+	}>
+}
 
 export type BlockLatestRecipes = {
-  _type: "block.latestRecipes";
-  title?: string;
-  subtitle?: string;
-};
+	_type: 'block.latestRecipes'
+	title?: string
+	subtitle?: string
+}
 
 export type BlockHandpickedRecipes = {
-  _type: "block.handpickedRecipes";
-  title?: string;
-  subtitle?: string;
-  recipes?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "recipe";
-  }>;
-};
+	_type: 'block.handpickedRecipes'
+	title?: string
+	subtitle?: string
+	recipes?: Array<{
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		_key: string
+		[internalGroqTypeReferenceTo]?: 'recipe'
+	}>
+}
 
 export type BlockCta = {
-  _type: "block.cta";
-  title?: string;
-  subtitle?: string;
-  links?: Array<{
-    _key: string;
-  } & LinkLabelled>;
-};
-export declare const internalGroqTypeReferenceTo: unique symbol;
+	_type: 'block.cta'
+	title?: string
+	subtitle?: string
+	links?: Array<
+		{
+			_key: string
+		} & LinkLabelled
+	>
+}
+export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: ./src/queries.ts
 // Variable: Q_VEGETABLES_RAW_INDEX
 // Query: *[_type == "vegetable"]
 export type Q_VEGETABLES_RAW_INDEXResult = Array<{
-  _id: string;
-  _type: "vegetable";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  names?: Array<string>;
-  gender?: "feminine" | "masculine" | "neutral";
-  slug?: Slug;
-  scientific_name?: string;
-  usage?: Array<"ALIMENTO_ANIMAL" | "ALIMENTO_HUMANO" | "CONSTRUCAO" | "COSMETIC" | "MATERIA_ORGANICA" | "MEDICINAL" | "PAISAGISMO" | "RITUALISTICO">;
-  edible_part?: Array<"BROTO" | "BULBO" | "CASCA" | "CAULE" | "FLOR" | "FOLHA" | "FRUTO" | "RAIZ" | "RIZOMA" | "SEMENTE" | "TUBERCULO">;
-  planting_method?: Array<"BROTO" | "ENXERTO" | "ESTACA" | "RIZOMA" | "SEMENTE" | "TUBERCULO">;
-  recommendations?: string;
-  tips?: Array<{
-    subject?: "colheita" | "crescimento" | "plantio";
-    content?: Array<({
-      _key: string;
-    } & PhotoWithCredits) | {
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
-      style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-      listItem?: "bullet" | "number";
-      markDefs?: Array<{
-        href?: string;
-        _type: "link";
-        _key: string;
-      }>;
-      level?: number;
-      _type: "block";
-      _key: string;
-    }>;
-    sources?: Sources;
-    _key: string;
-  }>;
-  origin?: string;
-  height_min?: number;
-  height_max?: number;
-  stratum?: Array<"ALTO" | "BAIXO" | "EMERGENTE" | "MEDIO" | "RASTEIRO">;
-  succession?: Array<"CLIMAX" | "PIONEIRA" | "SECUNDARIA">;
-  cycle?: Array<"ANUAL" | "BIENAL" | "PERENE" | "SEMESTRAL">;
-  deciduousness?: Array<"DECIDUA" | "PERENIFOLIA" | "SEMIDECIDUA">;
-  light_adaptation?: Array<"ESCIOFITA" | "HELIOFITA" | "MESOFITA">;
-  water_adaptation?: Array<"HIGROFITA" | "MESOFITA" | "XEROFITA">;
-  biomes?: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "biome";
-  }>;
-  photos?: Array<{
-    _key: string;
-  } & PhotoWithCredits>;
-  varieties?: Array<{
-    _key: string;
-  } & VegetableVariety>;
-  sources?: Array<{
-    _key: string;
-  } & VegetableSource>;
-  content?: Array<({
-    _key: string;
-  } & PhotoWithCredits) | {
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-}>;
+	_id: string
+	_type: 'vegetable'
+	_createdAt: string
+	_updatedAt: string
+	_rev: string
+	names?: Array<string>
+	gender?: 'feminine' | 'masculine' | 'neutral'
+	slug?: Slug
+	scientific_name?: string
+	usage?: Array<
+		| 'ALIMENTO_ANIMAL'
+		| 'ALIMENTO_HUMANO'
+		| 'CONSTRUCAO'
+		| 'COSMETIC'
+		| 'MATERIA_ORGANICA'
+		| 'MEDICINAL'
+		| 'PAISAGISMO'
+		| 'RITUALISTICO'
+	>
+	edible_part?: Array<
+		| 'BROTO'
+		| 'BULBO'
+		| 'CASCA'
+		| 'CAULE'
+		| 'FLOR'
+		| 'FOLHA'
+		| 'FRUTO'
+		| 'RAIZ'
+		| 'RIZOMA'
+		| 'SEMENTE'
+		| 'TUBERCULO'
+	>
+	planting_method?: Array<
+		'BROTO' | 'ENXERTO' | 'ESTACA' | 'RIZOMA' | 'SEMENTE' | 'TUBERCULO'
+	>
+	recommendations?: string
+	tips?: Array<{
+		subject?: 'colheita' | 'crescimento' | 'plantio'
+		content?: Array<
+			| ({
+					_key: string
+			  } & PhotoWithCredits)
+			| {
+					children?: Array<{
+						marks?: Array<string>
+						text?: string
+						_type: 'span'
+						_key: string
+					}>
+					style?:
+						| 'blockquote'
+						| 'h1'
+						| 'h2'
+						| 'h3'
+						| 'h4'
+						| 'h5'
+						| 'h6'
+						| 'normal'
+					listItem?: 'bullet' | 'number'
+					markDefs?: Array<{
+						href?: string
+						_type: 'link'
+						_key: string
+					}>
+					level?: number
+					_type: 'block'
+					_key: string
+			  }
+		>
+		sources?: Sources
+		_key: string
+	}>
+	origin?: string
+	height_min?: number
+	height_max?: number
+	stratum?: Array<'ALTO' | 'BAIXO' | 'EMERGENTE' | 'MEDIO' | 'RASTEIRO'>
+	succession?: Array<'CLIMAX' | 'PIONEIRA' | 'SECUNDARIA'>
+	cycle?: Array<'ANUAL' | 'BIENAL' | 'PERENE' | 'SEMESTRAL'>
+	deciduousness?: Array<'DECIDUA' | 'PERENIFOLIA' | 'SEMIDECIDUA'>
+	light_adaptation?: Array<'ESCIOFITA' | 'HELIOFITA' | 'MESOFITA'>
+	water_adaptation?: Array<'HIGROFITA' | 'MESOFITA' | 'XEROFITA'>
+	biomes?: Array<{
+		_ref: string
+		_type: 'reference'
+		_weak?: boolean
+		_key: string
+		[internalGroqTypeReferenceTo]?: 'biome'
+	}>
+	photos?: Array<
+		{
+			_key: string
+		} & PhotoWithCredits
+	>
+	varieties?: Array<
+		{
+			_key: string
+		} & VegetableVariety
+	>
+	sources?: Array<
+		{
+			_key: string
+		} & VegetableSource
+	>
+	content?: Array<
+		| ({
+				_key: string
+		  } & PhotoWithCredits)
+		| {
+				children?: Array<{
+					marks?: Array<string>
+					text?: string
+					_type: 'span'
+					_key: string
+				}>
+				style?:
+					| 'blockquote'
+					| 'h1'
+					| 'h2'
+					| 'h3'
+					| 'h4'
+					| 'h5'
+					| 'h6'
+					| 'normal'
+				listItem?: 'bullet' | 'number'
+				markDefs?: Array<{
+					href?: string
+					_type: 'link'
+					_key: string
+				}>
+				level?: number
+				_type: 'block'
+				_key: string
+		  }
+	>
+	friends?: Array<string>
+}>

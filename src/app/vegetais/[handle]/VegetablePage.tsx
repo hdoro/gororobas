@@ -121,6 +121,7 @@ export default function VegetablePage({
 	)
 	const averageAspectRatio = average(aspectRatios)
 
+	const friends = vegetable.friends || []
 	return (
 		<main className="py-12">
 			<div className="flex gap-[4.5rem] max-w-[73.125rem] mx-auto px-20 box-content">
@@ -305,14 +306,24 @@ export default function VegetablePage({
 					</div>
 				</section>
 			)}
+			{friends.length > 0 && (
+				<section className="my-36">
+					<SectionTitle Icon={ShapesIcon}>
+						Amigues d{gender.suffix(vegetable.gender || 'NEUTRO')} {names[0]}
+					</SectionTitle>
+					<div className="overflow-x-auto flex gap-20 mt-3 px-[calc(calc(100vw-73.125rem)/2)]">
+						{friends.map((friend) => {
+							// @TODO switch to VegetableCard once that's out
+							return <div key={friend.handle}>{friend.names[0]}</div>
+						})}
+					</div>
+				</section>
+			)}
 			{/* @TODO */}
 			{false && (
 				<>
 					<section className="my-36">
 						<SectionTitle Icon={SeedlingIcon}>Quem já planta</SectionTitle>
-					</section>
-					<section className="my-36">
-						<SectionTitle Icon={ShapesIcon}>Consórcios</SectionTitle>
 					</section>
 					<section className="my-36">
 						<SectionTitle Icon={PotIcon}>Receitas</SectionTitle>

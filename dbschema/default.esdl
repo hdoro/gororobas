@@ -249,17 +249,25 @@ module default {
     };
 
     # Computed
-    consortia := .<vegetables[is VegetableConsortium];
+    multi friends := (
+      with parent_id := .id
+      select .<vegetables[is VegetableFriendship].vegetables
+      filter .id != parent_id
+    );
   }
 
-  type VegetableConsortium extending AdminCanDoAnything {
-    multi vegetables: Vegetable {
-      order_index: int16;
-
-      # If a vegetable is in a consortium, don't allow deleting it
-      on target delete restrict;
+  type VegetableFriendship extending Auditable, PublicRead, AdminCanDoAnything {
+    required multi vegetables: Vegetable {
+      # Can't modify a friendship after it's created
+      readonly := true;
+      
+      on target delete delete source;
     };
-    notes: json;
+    required unique_key: str {
+      readonly := true;
+    };
+
+    constraint exclusive on (.unique_key);
   }
 
   type UserWishlist extending AdminCanDoAnything {

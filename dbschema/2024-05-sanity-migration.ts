@@ -1,4 +1,7 @@
-import { createVegetable } from '@/actions/createVegetable'
+import {
+	createVegetable,
+	formatVegetableFriendForDB,
+} from '@/actions/createVegetable'
 import type {
 	Gender,
 	SourceType,
@@ -21,6 +24,7 @@ import type {
 	SourceUser,
 } from './2024-05-sanity-migration.types'
 import ptToTiptap from './ptToTiptap'
+import { newVegetableFriendshipsMutation } from '@/mutations'
 
 type SanityVegetable = Q_VEGETABLES_RAW_INDEXResult[number]
 
@@ -117,7 +121,12 @@ async function main() {
 					.withConfig({
 						perspective: 'previewDrafts',
 					})
-					.fetch(`*[_type == 'vegetable']`)
+					.fetch(/* groq */ `*[_type == 'vegetable']{
+						...,
+						"friends": array::unique(
+							friends[]._ref + *[_type == "vegetable"&& references(^._id)]._id
+						),
+					}`)
 			: JSON.parse(readFileSync(VEGETABLES_FILE, 'utf-8'))
 	) as Q_VEGETABLES_RAW_INDEXResult
 
@@ -133,23 +142,21 @@ async function main() {
 		},
 	] as const)
 
+	const edgeDBClient = createClient({
+		// Note: when developing locally you will need to set tls security to
+		// insecure, because the development server uses self-signed certificates
+		// which will cause api calls with the fetch api to fail.
+		tlsSecurity:
+			process.env.NODE_ENV === 'development' ? 'insecure' : 'default',
+	}).withConfig({
+		allow_user_specified_id: true,
+		apply_access_policies: false,
+	})
 	if (deleteVegetablesInDB) {
 		await Effect.runPromise(
 			pipe(
 				Effect.tryPromise({
-					try: () =>
-						createClient({
-							// Note: when developing locally you will need to set tls security to
-							// insecure, because the development server uses self-signed certificates
-							// which will cause api calls with the fetch api to fail.
-							tlsSecurity:
-								process.env.NODE_ENV === 'development' ? 'insecure' : 'default',
-						})
-							.withConfig({
-								allow_user_specified_id: true,
-								apply_access_policies: false,
-							})
-							.query('DELETE Vegetable; DELETE Image;'),
+					try: () => edgeDBClient.query('DELETE Vegetable; DELETE Image;'),
 					catch: (e) => {
 						console.error(e)
 						return Effect.succeed(undefined)
@@ -165,7 +172,7 @@ async function main() {
 		if (!vegetable.names?.[0]) return []
 
 		const formatted = {
-			id: S.is(S.UUID)(vegetable._id) ? vegetable._id : generateId(),
+			id: vegetable._id,
 			names: vegetable.names as unknown as VegetableForDB['names'],
 			gender: vegetable.gender ? GENDER_MAP[vegetable.gender] : undefined,
 			handle: vegetable.slug?.current
@@ -206,34 +213,21 @@ async function main() {
 					...sanitySourcesToEdgeDB(tip.sources),
 				}
 			}),
+			friends: vegetable.friends || [],
 		} satisfies VegetableForDB
 
 		return formatted
 	})
 
-	console.time('Creating vegetables')
 	const failed: typeof formattedVegetables = []
-	await Effect.runPromise(
+	await pipe(
+		// #1 Create vegetables without friends
 		Effect.forEach(
 			formattedVegetables,
 			(vegetable) =>
 				pipe(
 					Effect.tryPromise(() =>
-						createVegetable(
-							vegetable,
-							createClient({
-								// Note: when developing locally you will need to set tls security to
-								// insecure, because the development server uses self-signed certificates
-								// which will cause api calls with the fetch api to fail.
-								tlsSecurity:
-									process.env.NODE_ENV === 'development'
-										? 'insecure'
-										: 'default',
-							}).withConfig({
-								allow_user_specified_id: true,
-								apply_access_policies: false,
-							}),
-						),
+						createVegetable({ ...vegetable, friends: [] }, edgeDBClient),
 					),
 					Effect.tap(() => Effect.logDebug(`Created ${vegetable.names[0]}`)),
 					Effect.tapError((error) => {
@@ -244,12 +238,42 @@ async function main() {
 						)
 					}),
 					Effect.catchAll(() => Effect.succeed('')),
-					Effect.withLogSpan('createVegetable'),
+					Effect.withLogSpan('createVegetableWithoutFriends'),
 				),
-			{ concurrency: 1 },
+			{ concurrency: 2 },
 		),
+		// #2 Now that all vegetables are in place, create friendships
+		Effect.tap(() =>
+			Effect.forEach(
+				formattedVegetables.filter((v) => v.friends && v.friends.length > 0),
+				(vegetable) =>
+					pipe(
+						Effect.tryPromise(() =>
+							newVegetableFriendshipsMutation.run(edgeDBClient, {
+								friends: vegetable.friends.map((friend_id) =>
+									formatVegetableFriendForDB(friend_id, vegetable.id),
+								),
+								vegetable_id: vegetable.id,
+							}),
+						),
+						Effect.tap(() =>
+							Effect.logDebug(`Created friendships of ${vegetable.names[0]}`),
+						),
+						Effect.tapError((error) => {
+							failed.push(vegetable)
+							return Effect.logError(
+								`Failed to create friendships for ${vegetable.names[0]}`,
+								error,
+							)
+						}),
+						Effect.catchAll(() => Effect.succeed('')),
+						Effect.withLogSpan('createVegetableFriendships'),
+					),
+				{ concurrency: 1 },
+			),
+		),
+		Effect.runPromise,
 	)
-	console.timeEnd('Creating vegetables')
 
 	if (failed.length) {
 		console.error('\n\n\nFailed to create the following vegetables:')

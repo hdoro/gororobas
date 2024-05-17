@@ -130,9 +130,23 @@ export async function createVegetable(
 		// #5 Create friendships
 		if (input.friends && input.friends.length > 0) {
 			await newVegetableFriendshipsMutation.run(tx, {
-				friends: input.friends,
+				friends: input.friends.map((friend_id) =>
+					formatVegetableFriendForDB(friend_id, input.id),
+				),
 				vegetable_id: input.id,
 			})
 		}
 	})
+}
+
+export function formatVegetableFriendForDB(
+	friend_id: string,
+	vegetable_id: string,
+) {
+	return {
+		id: friend_id,
+		unique_key: [vegetable_id, friend_id]
+			.sort((a, b) => a.localeCompare(b))
+			.join('-'),
+	}
 }

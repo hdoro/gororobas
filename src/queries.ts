@@ -81,6 +81,26 @@ export const vegetablePageQuery = e.params(
 					empty: e.EMPTY_LAST,
 				},
 			}),
+			friends: {
+				names: true,
+				handle: true,
+				photos: (image) => ({
+					sanity_id: true,
+					hotspot: true,
+					crop: true,
+					label: true,
+					sourceType: true,
+					source: true,
+					credits: true,
+					users: true,
+
+					order_by: {
+						expression: image['@order_index'],
+						direction: 'ASC',
+						empty: e.EMPTY_LAST,
+					},
+				}),
+			},
 		})),
 )
 
