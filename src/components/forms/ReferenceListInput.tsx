@@ -5,7 +5,7 @@ import {
 import type { ImageForRendering, ReferenceOption } from '@/types'
 import { cn } from '@/utils/cn'
 import { CommandLoading } from 'cmdk'
-import { XIcon } from 'lucide-react'
+import { CheckIcon, XIcon } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import type {
 	ControllerRenderProps,
@@ -50,11 +50,11 @@ export default function ReferenceListInput<
 	const selectedOptions = selected.flatMap((id) => optionsMap[id] || [])
 
 	return (
-		<FormItem className="space-y-3 border rounded-md p-2">
+		<FormItem className="space-y-2 border rounded-md p-2">
 			<Command
 				onFocus={() => setFocused(true)}
 				onBlur={() => setFocused(false)}
-				className=""
+				className="relative overflow-visible p-0"
 			>
 				<FormLabel className="font-normal sr-only">
 					Busque por vegetais no Gororobas
@@ -67,7 +67,12 @@ export default function ReferenceListInput<
 						className="border-none p-0"
 					/>
 				</FormControl>
-				<CommandList className={focused ? '' : 'sr-only'}>
+				<CommandList
+					className={cn(
+						'absolute w-full z-10 left-0 top-full translate-y-2 bg-card border rounded-md p-2',
+						focused ? '' : 'sr-only',
+					)}
+				>
 					{!options && (
 						<CommandLoading>
 							<Carrot className="animate-spin h-6 w-6" /> Carregando
@@ -76,28 +81,28 @@ export default function ReferenceListInput<
 					<CommandEmpty className="flex items-center gap-2">
 						Nenhum vegetal encontrado
 					</CommandEmpty>
-					{options?.map((option) => {
-						if (selected.includes(option.id)) return null
-						return (
-							<CommandItem
-								key={option.id}
-								className="flex items-center gap-2"
-								value={option.id}
-								keywords={[option.label]}
-								onSelect={toggleOption}
-							>
-								{option.image && (
-									<SanityImage
-										image={option.image}
-										maxWidth={24}
-										className="w-6 h-6 rounded-full block"
-										alt={`Foto de ${option.label}`}
-									/>
-								)}
-								<span>{option.label}</span>
-							</CommandItem>
-						)
-					})}
+					{options?.map((option) => (
+						<CommandItem
+							key={option.id}
+							className="flex items-center gap-2"
+							value={option.id}
+							keywords={[option.label]}
+							onSelect={toggleOption}
+						>
+							{option.image && (
+								<SanityImage
+									image={option.image}
+									maxWidth={24}
+									className="w-6 h-6 rounded-full block object-cover"
+									alt={`Foto de ${option.label}`}
+								/>
+							)}
+							<span>{option.label}</span>
+							{selected.includes(option.id) && (
+								<CheckIcon className="w-4 h-4" />
+							)}
+						</CommandItem>
+					))}
 				</CommandList>
 			</Command>
 			{selectedOptions.length > 0 && (
@@ -115,7 +120,7 @@ export default function ReferenceListInput<
 									<SanityImage
 										image={option.image}
 										maxWidth={24}
-										className="w-6 h-6 rounded-full block"
+										className="w-6 h-6 rounded-full block object-cover"
 										alt={`Foto de ${option.label}`}
 									/>
 								)}
