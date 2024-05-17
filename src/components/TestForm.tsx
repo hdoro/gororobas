@@ -114,7 +114,7 @@ export default function TestForm() {
 	}
 
 	return (
-		<div className="flex min-h-screen w-full flex-col bg-bac-100/40 dark:bg-gray-800/40">
+		<div className="flex min-h-screen w-full flex-col bg-bac-100/40 dark:bg-stone-800/40">
 			<div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
 				<button onClick={test} type="button">
 					TEST ADDING FAKE VEGETABLE

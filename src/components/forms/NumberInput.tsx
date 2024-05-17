@@ -27,7 +27,7 @@ export default function NumberInput<
 			/>
 			{value && format !== 'none' ? (
 				<div
-					className="absolute inset-y-0 flex items-center pl-3 text-sm text-gray-600 select-none font-normal"
+					className="absolute inset-y-0 flex items-center pl-3 text-sm text-stone-600 select-none font-normal"
 					style={{
 						left: `calc(${value?.toString().length || 1} * 1ch)`,
 					}}

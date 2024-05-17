@@ -44,7 +44,7 @@ export default function VegetableTipInput<
 		<Dialog>
 			<FormControl>
 				<DialogTrigger
-					className="block w-full h-full bg-gray-50 p-3 border rounded-md ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+					className="block w-full h-full bg-stone-50 p-3 border rounded-md ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 					data-array-item-field-name={rootField.name}
 				>
 					<div className="space-y-1 text-left">

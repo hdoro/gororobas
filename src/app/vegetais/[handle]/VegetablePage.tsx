@@ -1,5 +1,6 @@
 import { SanityImage } from '@/components/SanityImage'
 import TipTapRenderer from '@/components/TipTapRenderer'
+import VegetableCard from '@/components/VegetableCard'
 import BulbIcon from '@/components/icons/BulbIcon'
 import PotIcon from '@/components/icons/PotIcon'
 import RainbowIcon from '@/components/icons/RainbowIcon'
@@ -36,6 +37,7 @@ import {
 } from 'react'
 import VegetableTips from './VegetableTips'
 import WishlistButtonData from './WishlistButtonData'
+import VegetableFriendsIcon from '@/components/icons/VegetableFriendsIcon'
 
 function TwoColInfo({
 	left,
@@ -173,7 +175,7 @@ export default function VegetablePage({
 											return (
 												<CarouselItem
 													key={photo.sanity_id || idx}
-													className="relative flex justify-center bg-gray-200 pl-0 overflow-hidden rounded-2xl"
+													className="relative flex justify-center bg-stone-200 pl-0 overflow-hidden rounded-2xl"
 												>
 													<SanityImage
 														image={photo}
@@ -306,14 +308,13 @@ export default function VegetablePage({
 			)}
 			{friends.length > 0 && (
 				<section className="my-36">
-					<SectionTitle Icon={ShapesIcon}>
+					<SectionTitle Icon={VegetableFriendsIcon}>
 						Amigues d{gender.suffix(vegetable.gender || 'NEUTRO')} {names[0]}
 					</SectionTitle>
-					<div className="overflow-x-auto flex gap-20 mt-3 px-[calc(calc(100vw-73.125rem)/2)]">
-						{friends.map((friend) => {
-							// @TODO switch to VegetableCard once that's out
-							return <div key={friend.handle}>{friend.names[0]}</div>
-						})}
+					<div className="overflow-x-auto flex gap-x-9 gap-y-7 mt-3 px-[calc(calc(100vw-73.125rem)/2)]">
+						{friends.map((friend) => (
+							<VegetableCard key={friend.handle} vegetable={friend} />
+						))}
 					</div>
 				</section>
 			)}

@@ -23,6 +23,7 @@ Documentation is WIP
 - [x] Server action
 - [x] Encode form value to EdgeDB schema
 - [ ] Upload images to Sanity
+- [ ] OrderIndex for Tips, Varieties and Photos
 - [ ] Send to server, error handling, state management, etc.
 
 ## Editing existing vegetable

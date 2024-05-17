@@ -131,6 +131,9 @@ importers:
       embla-carousel-react:
         specifier: ^8.0.4
         version: 8.0.4(react@18.3.1)
+      embla-carousel-wheel-gestures:
+        specifier: 8.0.0-rc05
+        version: 8.0.0-rc05(embla-carousel@8.0.4)
       lucide-react:
         specifier: ^0.378.0
         version: 0.378.0(react@18.3.1)
@@ -1487,6 +1490,12 @@ packages:
     peerDependencies:
       embla-carousel: 8.0.4
 
+  embla-carousel-wheel-gestures@8.0.0-rc05:
+    resolution: {integrity: sha512-KfPlGuOvMterlg01FDd+Iws5wefInkyks4ai3p4n4B5WAiyel+DHs4AFu09UmshcnHpIH5cLJQ6VJCbp/kyy1A==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      embla-carousel: ^8.0.0 || ~8.0.0-rc03
+
   embla-carousel@8.0.4:
     resolution: {integrity: sha512-INndmilrV9KY4Wnb4F2tI55DuQnFjf3GPOaPDT2LGYiKhIWVNUhv1nz/RI7CZ6WoIZ8MYHP4t6Qm/cqpcGHknA==}
 
@@ -2600,6 +2609,10 @@ packages:
 
   wcwidth@1.0.1:
     resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
+
+  wheel-gestures@2.2.5:
+    resolution: {integrity: sha512-01BlXRjBVt5Gy0VH2rRqMeccHruTGq2Gd1fx0UqCPN8KDeDCmlTXsRGc/hXJk6W+wnO9CNJp2xfntMNRArBxKQ==}
+    engines: {node: '>=10'}
 
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
@@ -3959,6 +3972,11 @@ snapshots:
     dependencies:
       embla-carousel: 8.0.4
 
+  embla-carousel-wheel-gestures@8.0.0-rc05(embla-carousel@8.0.4):
+    dependencies:
+      embla-carousel: 8.0.4
+      wheel-gestures: 2.2.5
+
   embla-carousel@8.0.4: {}
 
   emoji-regex@10.3.0: {}
@@ -5097,6 +5115,8 @@ snapshots:
   wcwidth@1.0.1:
     dependencies:
       defaults: 1.0.4
+
+  wheel-gestures@2.2.5: {}
 
   which@2.0.2:
     dependencies:

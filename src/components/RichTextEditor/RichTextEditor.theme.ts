@@ -16,13 +16,13 @@ export const richTextEditorTheme = tv({
 	variants: {
 		type: {
 			noteTitle: {
-				contentEditable: 'text-2xl font-semibold text-gray-800',
-				placeholder: 'text-2xl font-semibold text-gray-600',
+				contentEditable: 'text-2xl font-semibold text-stone-800',
+				placeholder: 'text-2xl font-semibold text-stone-600',
 				tiptapBold: 'font-bold',
 			},
 			noteBody: {
-				contentEditable: 'text-xl font-normal text-gray-700',
-				placeholder: 'text-xl font-normal text-gray-500',
+				contentEditable: 'text-xl font-normal text-stone-700',
+				placeholder: 'text-xl font-normal text-stone-500',
 				tiptapBold: 'font-semibold',
 			},
 			formTextarea: {

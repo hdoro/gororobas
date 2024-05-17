@@ -1,4 +1,5 @@
 import e, { type $infer } from '@/edgeql'
+import type { $Vegetable } from './edgeql/modules/default'
 
 export const vegetablePageQuery = e.params(
 	{
@@ -81,8 +82,9 @@ export const vegetablePageQuery = e.params(
 					empty: e.EMPTY_LAST,
 				},
 			}),
-			friends: {
-				names: true,
+			friends: (friend) => ({
+				id: true,
+				name: friend.names.index(0),
 				handle: true,
 				photos: (image) => ({
 					sanity_id: true,
@@ -100,7 +102,7 @@ export const vegetablePageQuery = e.params(
 						empty: e.EMPTY_LAST,
 					},
 				}),
-			},
+			}),
 		})),
 )
 
@@ -173,3 +175,5 @@ export const vegetablesForReferenceQuery = e.select(
 		}),
 	}),
 )
+
+export type VegetableCardData = VegetablePageData['friends'][0]

@@ -4,6 +4,7 @@ import Autoplay from 'embla-carousel-autoplay'
 import useEmblaCarousel, {
 	type UseEmblaCarouselType,
 } from 'embla-carousel-react'
+import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import * as React from 'react'
 
@@ -58,6 +59,7 @@ const Carousel = React.forwardRef<
 					stopOnInteraction: true,
 					stopOnMouseEnter: true,
 				}),
+				WheelGesturesPlugin(),
 			],
 			className,
 			children,
@@ -216,18 +218,23 @@ const CarouselPrevious = React.forwardRef<
 				ref={ref}
 				mode={mode}
 				size={size}
+				tone={tone}
 				className={cn(
-					'absolute  h-8 w-8 rounded-full',
+					'absolute h-6 w-6 rounded-full',
 					orientation === 'horizontal'
 						? '-left-12 top-1/2 -translate-y-1/2'
 						: '-top-12 left-1/2 -translate-x-1/2 rotate-90',
 					className,
 				)}
 				disabled={!canScrollPrev}
-				onClick={scrollPrev}
+				onClick={(event) => {
+					event.preventDefault()
+					event.stopPropagation()
+					scrollPrev()
+				}}
 				{...props}
 			>
-				<ArrowLeft className="h-4 w-4" />
+				<ArrowLeft className="h-3 w-3" />
 				<span className="sr-only">Previous slide</span>
 			</Button>
 		)
@@ -250,18 +257,23 @@ const CarouselNext = React.forwardRef<
 				ref={ref}
 				mode={mode}
 				size={size}
+				tone={tone}
 				className={cn(
-					'absolute h-8 w-8 rounded-full',
+					'absolute h-6 w-6 rounded-full',
 					orientation === 'horizontal'
 						? '-right-12 top-1/2 -translate-y-1/2'
 						: '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
 					className,
 				)}
 				disabled={!canScrollNext}
-				onClick={scrollNext}
+				onClick={(event) => {
+					event.preventDefault()
+					event.stopPropagation()
+					scrollNext()
+				}}
 				{...props}
 			>
-				<ArrowRight className="h-4 w-4" />
+				<ArrowRight className="h-3 w-3" />
 				<span className="sr-only">Next slide</span>
 			</Button>
 		)
