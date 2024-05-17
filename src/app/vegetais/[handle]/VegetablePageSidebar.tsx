@@ -7,6 +7,8 @@ import { paths } from '@/utils/urls'
 import { Schema } from '@effect/schema'
 import { Edit2Icon } from 'lucide-react'
 import Link from 'next/link'
+import { Suspense } from 'react'
+import WishlistedBy from './WishlistedBy'
 
 export default function VegetablePageSidebar({
 	vegetable,
@@ -38,7 +40,7 @@ export default function VegetablePageSidebar({
 				label: 'Amizades',
 				href: '#amizades',
 			},
-		// @TODO: quem já planta e notas
+		// @TODO: notas
 	].flatMap((link) => link || [])
 
 	return (
@@ -81,7 +83,9 @@ export default function VegetablePageSidebar({
 					</Link>
 				</Button>
 			</nav>
-			{/* @TODO quem já planta */}
+			<Suspense>
+				<WishlistedBy vegetable_id={vegetable.id} />
+			</Suspense>
 		</div>
 	)
 }

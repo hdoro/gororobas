@@ -24,7 +24,6 @@ export default function WishlistButton(props: {
 	const { toast } = useToast()
 	const [optimisticStatus, setOptimisticStatus] =
 		useState<VegetableWishlistStatus>(props.status || 'QUERO_CULTIVAR')
-	console.log({ optimisticStatus, props })
 
 	async function updateStatus(status: VegetableWishlistStatus) {
 		const prevStatus = optimisticStatus

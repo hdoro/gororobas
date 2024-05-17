@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/carousel'
 import { Text } from '@/components/ui/text'
 import type { VegetablePageData } from '@/queries'
+import { cn } from '@/utils/cn'
 import { getImageDimensions } from '@/utils/getImageProps'
 import {
 	EDIBLE_PART_TO_LABEL,
@@ -21,7 +22,6 @@ import { average } from '@/utils/numbers'
 import { gender } from '@/utils/strings'
 import { Fragment, Suspense } from 'react'
 import WishlistButtonData from './WishlistButtonData'
-import { cn } from '@/utils/cn'
 
 export function VegetablePageHero({
 	vegetable,

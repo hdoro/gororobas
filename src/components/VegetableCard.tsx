@@ -3,11 +3,11 @@
 import { Badge } from '@/components/ui/badge'
 import {
 	Carousel,
+	type CarouselApi,
 	CarouselContent,
 	CarouselItem,
 	CarouselNext,
 	CarouselPrevious,
-	type CarouselApi,
 } from '@/components/ui/carousel'
 import type { VegetableCardData } from '@/queries'
 import { cn } from '@/utils/cn'

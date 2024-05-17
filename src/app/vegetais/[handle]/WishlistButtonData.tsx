@@ -1,6 +1,6 @@
 import { auth } from '@/edgedb'
 import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
-import { UserWishlistQuery } from '@/queries'
+import { userWishlistQuery } from '@/queries'
 import WishlistButton from './WishlistButton'
 
 export default async function WishlistButtonData(props: {
@@ -11,7 +11,7 @@ export default async function WishlistButtonData(props: {
 
 	let status: VegetableWishlistStatus | null = null
 	if (isSignedIn) {
-		const data = await UserWishlistQuery.run(session.client, {
+		const data = await userWishlistQuery.run(session.client, {
 			vegetable_id: props.vegetable_id,
 		})
 		if (data?.status) status = data?.status

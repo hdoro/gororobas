@@ -1,11 +1,11 @@
 'use client'
 
 import {
-	useCallback,
 	type AnchorHTMLAttributes,
 	type DetailedHTMLProps,
 	type MouseEventHandler,
 	type PropsWithChildren,
+	useCallback,
 } from 'react'
 
 export default function AnchorLink({

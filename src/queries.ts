@@ -1,5 +1,15 @@
 import e, { type $infer } from '@/edgeql'
-import type { $Vegetable } from './edgeql/modules/default'
+
+const PHOTO_FIELDS = {
+	sanity_id: true,
+	hotspot: true,
+	crop: true,
+	label: true,
+	sourceType: true,
+	source: true,
+	credits: true,
+	users: true,
+} as const
 
 export const vegetablePageQuery = e.params(
 	{
@@ -26,14 +36,7 @@ export const vegetablePageQuery = e.params(
 			temperature_max: true,
 			content: true,
 			photos: (image) => ({
-				sanity_id: true,
-				hotspot: true,
-				crop: true,
-				label: true,
-				sourceType: true,
-				source: true,
-				credits: true,
-				users: true,
+				...PHOTO_FIELDS,
 
 				order_by: {
 					expression: image['@order_index'],
@@ -45,14 +48,7 @@ export const vegetablePageQuery = e.params(
 				handle: true,
 				names: true,
 				photos: (image) => ({
-					sanity_id: true,
-					hotspot: true,
-					crop: true,
-					label: true,
-					sourceType: true,
-					source: true,
-					credits: true,
-					users: true,
+					...PHOTO_FIELDS,
 
 					order_by: {
 						expression: image['@order_index'],
@@ -87,14 +83,7 @@ export const vegetablePageQuery = e.params(
 				name: friend.names.index(0),
 				handle: true,
 				photos: (image) => ({
-					sanity_id: true,
-					hotspot: true,
-					crop: true,
-					label: true,
-					sourceType: true,
-					source: true,
-					credits: true,
-					users: true,
+					...PHOTO_FIELDS,
 
 					order_by: {
 						expression: image['@order_index'],
@@ -108,6 +97,25 @@ export const vegetablePageQuery = e.params(
 
 export type VegetablePageData = Exclude<$infer<typeof vegetablePageQuery>, null>
 
+export const wishlistedByQuery = e.params({ vegetable_id: e.uuid }, (params) =>
+	e.select(e.Vegetable, (vegetable) => ({
+		filter_single: e.op(vegetable.id, '=', params.vegetable_id),
+
+		wishlisted_by: {
+			status: true,
+			user_profile: {
+				name: true,
+				handle: true,
+				photo: PHOTO_FIELDS,
+			},
+
+			limit: 20,
+		},
+	})),
+)
+
+export type WishlistedByData = Exclude<$infer<typeof wishlistedByQuery>, null>
+
 export const findUsersToMentionQuery = e.params(
 	{
 		query: e.str,
@@ -119,12 +127,7 @@ export const findUsersToMentionQuery = e.params(
 			id: true,
 			name: true,
 			handle: true,
-			photo: {
-				sanity_id: true,
-				hotspot: true,
-				crop: true,
-				label: true,
-			},
+			photo: PHOTO_FIELDS,
 		})),
 )
 
@@ -133,7 +136,7 @@ export type UsersToMentionData = Exclude<
 	null
 >
 
-export const UserWishlistQuery = e.params(
+export const userWishlistQuery = e.params(
 	{
 		vegetable_id: e.uuid,
 	},
@@ -157,14 +160,7 @@ export const vegetablesForReferenceQuery = e.select(
 		id: true,
 		label: vegetable.names.index(0),
 		photos: (image) => ({
-			sanity_id: true,
-			hotspot: true,
-			crop: true,
-			label: true,
-			sourceType: true,
-			source: true,
-			credits: true,
-			users: true,
+			...PHOTO_FIELDS,
 
 			limit: 1,
 			order_by: {

@@ -254,6 +254,11 @@ module default {
       select .<vegetables[is VegetableFriendship].vegetables
       filter .id != parent_id
     );
+    multi wishlisted_by := (
+      with parent_id := .id
+      select .<vegetable[is UserWishlist]
+          filter .status != <VegetableWishlistStatus>'SEM_INTERESSE'
+    );
   }
 
   type VegetableFriendship extending Auditable, PublicRead, AdminCanDoAnything {

@@ -14,8 +14,8 @@ import { gender } from '@/utils/strings'
 import * as S from '@effect/schema/Schema'
 import type { PropsWithChildren, SVGProps } from 'react'
 import { VegetablePageHero } from './VegetablePageHero'
-import VegetableTips from './VegetableTips'
 import VegetablePageSidebar from './VegetablePageSidebar'
+import VegetableTips from './VegetableTips'
 
 function SectionTitle({
 	children,

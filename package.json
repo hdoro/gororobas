@@ -89,6 +89,6 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{js,ts,tsx,css}": "biome check --apply --staged --diagnostic-level=error"
+    "*.{js,ts,tsx,css}": "biome check --staged --diagnostic-level=error"
   }
 }
