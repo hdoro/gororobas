@@ -60,8 +60,16 @@ export function formatPath(path?: string): string {
 }
 
 export const paths = {
+	profile: () => '/perfil',
+	signinNotice: () => '/entrar',
 	signin: () => SIGNIN_URL,
 	signup: () => SIGNUP_URL,
 	vegetable: (handle: string) => formatPath(`/vegetais/${handle}`),
 	editVegetable: (handle: string) => formatPath(`/vegetais/${handle}/editar`),
+}
+
+export function getAuthRedirect(isSignedIn: boolean) {
+	if (!isSignedIn) return paths.signinNotice()
+
+	return paths.profile()
 }

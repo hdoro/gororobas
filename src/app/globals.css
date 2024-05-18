@@ -50,6 +50,8 @@
     --input: 240 5.9% 90%;
     --ring: 142.1 76.2% 36.3%;
     --radius: 0.5rem;
+
+    --page-padding: 1rem;
   }
 
   /* .dark {
@@ -66,6 +68,18 @@
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --page-padding: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --page-padding: 5rem;
   }
 }
 

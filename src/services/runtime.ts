@@ -1,6 +1,6 @@
 import { Effect, Metric } from 'effect'
-import { TracingLive } from './Tracing'
 import type { SpanOptions } from 'effect/Tracer'
+import { TracingLive } from './Tracing'
 
 export function runServerEffect<A, E, R>(
 	effect: Effect.Effect<A, E, R>,

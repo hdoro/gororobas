@@ -1,9 +1,27 @@
+import Footer from '@/components/Footer'
 import { Toaster } from '@/components/ui/toaster'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
+import { cn } from '@/utils/cn'
 
-const fontFamily = Plus_Jakarta_Sans({ subsets: ['latin'] })
+const fontFamily = Plus_Jakarta_Sans({
+	subsets: ['latin'],
+	display: 'auto',
+	fallback: [
+		'system-ui',
+		'-apple-system',
+		'BlinkMacSystemFont',
+		'Segoe UI',
+		'Roboto',
+		'Oxygen',
+		'Ubuntu',
+		'Cantarell',
+		'Open Sans',
+		'Helvetica Neue',
+		'sans-serif',
+	],
+})
 
 export const metadata: Metadata = {
 	title: '[EdgeDB Hackathon] Gororobas',
@@ -17,8 +35,9 @@ export default async function RootLayout({
 }) {
 	return (
 		<html lang="pt-BR">
-			<body className={fontFamily.className}>
-				{children}
+			<body className={cn(fontFamily.className, 'flex flex-col min-h-dvh')}>
+				<div className="flex-1">{children}</div>
+				<Footer />
 				<Toaster />
 			</body>
 		</html>
