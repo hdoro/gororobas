@@ -4,7 +4,12 @@
 		"enabled": true
 	},
 	"files": {
-		"include": ["src/**/*", "dbschema/**/*.ts", "./tailwind.config.ts"],
+		"include": [
+			"src/**/*",
+			"dbschema/**/*.ts",
+			"./tailwind.config.ts",
+			"./package.json"
+		],
 		"ignore": [
 			"src/edgeql/**/*",
 			"src/edgedb.interfaces.ts",

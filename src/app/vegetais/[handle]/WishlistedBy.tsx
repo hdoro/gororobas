@@ -7,7 +7,11 @@ import { cn } from '@/utils/cn'
 import { Effect, Metric, pipe } from 'effect'
 import { SproutIcon } from 'lucide-react'
 
-const timer = Metric.timer('WishlistedBy')
+const metrics = {
+	duration: Metric.timer('wishlisted_by_duration'),
+	failures: Metric.counter('wishlisted_by_errors', { incremental: true }),
+	success: Metric.counter('wishlisted_by_successes', { incremental: true }),
+}
 
 const fetchWishlistedBy = (vegetable_id: string) =>
 	pipe(
@@ -26,9 +30,11 @@ const fetchWishlistedBy = (vegetable_id: string) =>
 		}),
 		Effect.tapError((error) => Effect.logError(error)),
 		Effect.catchAll(() => Effect.succeed(null)),
-		Metric.trackDuration(timer),
-		Effect.withSpan('WishlistedBy', { attributes: { vegetable_id } }),
-		Effect.withLogSpan('WishlistedBy'),
+		Metric.trackDuration(metrics.duration),
+		Metric.trackSuccessWith(metrics.success, () => 1),
+		Metric.trackErrorWith(metrics.success, () => 1),
+		Effect.withSpan('wishlisted_by', { attributes: { vegetable_id } }),
+		Effect.withLogSpan('wishlisted_by'),
 	)
 
 function AvatarsStrip({
