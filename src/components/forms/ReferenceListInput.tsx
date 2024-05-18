@@ -1,6 +1,6 @@
 import {
 	type ReferenceObjectType,
-	listPossibleReferences,
+	listReferenceOptions,
 } from '@/actions/listPossibleReferences'
 import type { ImageForRendering, ReferenceOption } from '@/types'
 import { cn } from '@/utils/cn'
@@ -158,7 +158,7 @@ function useReferenceOptions(objectType: ReferenceObjectType) {
 	}, [options])
 
 	const fetchOptions = useCallback(async () => {
-		const fetchedOptions = await listPossibleReferences(objectType)
+		const fetchedOptions = await listReferenceOptions(objectType)
 		if ('error' in fetchedOptions) {
 			setError(fetchedOptions.error)
 		} else {

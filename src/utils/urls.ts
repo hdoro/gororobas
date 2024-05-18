@@ -1,4 +1,4 @@
-import { BASE_URL } from './config'
+import { BASE_URL, SIGNIN_URL, SIGNUP_URL } from './config'
 
 export function pathToAbsUrl(path?: string): string | undefined {
 	if (typeof path !== 'string') return
@@ -60,6 +60,8 @@ export function formatPath(path?: string): string {
 }
 
 export const paths = {
+	signin: () => SIGNIN_URL,
+	signup: () => SIGNUP_URL,
 	vegetable: (handle: string) => formatPath(`/vegetais/${handle}`),
 	editVegetable: (handle: string) => formatPath(`/vegetais/${handle}/editar`),
 }

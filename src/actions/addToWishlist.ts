@@ -3,9 +3,8 @@
 import { auth } from '@/edgedb'
 import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
 import { setWishlistStatusMutation } from '@/mutations'
-import { Effect, Metric, pipe } from 'effect'
-
-const timer = Metric.timer('addToWishlist')
+import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { Effect, pipe } from 'effect'
 
 export async function addToWishlist(
 	vegetable_id: string,
@@ -13,21 +12,22 @@ export async function addToWishlist(
 ) {
 	const session = auth.getSession()
 
-	return pipe(
-		Effect.tryPromise({
-			try: () =>
-				setWishlistStatusMutation.run(session.client, {
-					vegetable_id,
-					status: wishlist_status,
-				}),
-			catch: (error) => console.log(error),
-		}),
-		Effect.map(() => true),
-		Effect.tapError((error) => Effect.logError(error)),
-		Effect.catchAll(() => Effect.succeed(false)),
-		Metric.trackDuration(timer),
-		Effect.withSpan('WishlistedBy', { attributes: { vegetable_id } }),
-		Effect.withLogSpan('WishlistedBy'),
-		Effect.runPromise,
+	return runServerEffect(
+		pipe(
+			Effect.tryPromise({
+				try: () =>
+					setWishlistStatusMutation.run(session.client, {
+						vegetable_id,
+						status: wishlist_status,
+					}),
+				catch: (error) => console.log(error),
+			}),
+			Effect.map(() => true),
+			...buildTraceAndMetrics('add_to_wishlist', {
+				vegetable_id,
+				wishlist_status,
+			}),
+			Effect.catchAll(() => Effect.succeed(false)),
+		),
 	)
 }

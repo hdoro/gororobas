@@ -2,16 +2,11 @@ import { SanityImage } from '@/components/SanityImage'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import { Text } from '@/components/ui/text'
 import { client } from '@/edgedb'
-import { type WishlistedByData, wishlistedByQuery } from '@/queries'
+import { wishlistedByQuery, type WishlistedByData } from '@/queries'
+import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { cn } from '@/utils/cn'
-import { Effect, Metric, pipe } from 'effect'
+import { Effect, pipe } from 'effect'
 import { SproutIcon } from 'lucide-react'
-
-const metrics = {
-	duration: Metric.timer('wishlisted_by_duration'),
-	failures: Metric.counter('wishlisted_by_errors', { incremental: true }),
-	success: Metric.counter('wishlisted_by_successes', { incremental: true }),
-}
 
 const fetchWishlistedBy = (vegetable_id: string) =>
 	pipe(
@@ -28,13 +23,8 @@ const fetchWishlistedBy = (vegetable_id: string) =>
 				),
 			catch: (error) => console.log(error),
 		}),
-		Effect.tapError((error) => Effect.logError(error)),
+		...buildTraceAndMetrics('wishlisted_by', { vegetable_id }),
 		Effect.catchAll(() => Effect.succeed(null)),
-		Metric.trackDuration(metrics.duration),
-		Metric.trackSuccessWith(metrics.success, () => 1),
-		Metric.trackErrorWith(metrics.success, () => 1),
-		Effect.withSpan('wishlisted_by', { attributes: { vegetable_id } }),
-		Effect.withLogSpan('wishlisted_by'),
 	)
 
 function AvatarsStrip({
@@ -81,10 +71,7 @@ function AvatarsStrip({
 export default async function WishlistedBy(props: {
 	vegetable_id: string
 }) {
-	const data = await pipe(
-		fetchWishlistedBy(props.vegetable_id),
-		Effect.runPromise,
-	)
+	const data = await runServerEffect(fetchWishlistedBy(props.vegetable_id))
 
 	if (!data?.wishlisted_by || data.wishlisted_by.length === 0) {
 		return null

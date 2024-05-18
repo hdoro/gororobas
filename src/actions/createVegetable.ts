@@ -1,3 +1,5 @@
+'use server'
+
 import {
 	newImagesMutation,
 	newTipsMutation,
@@ -5,16 +7,40 @@ import {
 	newVegetableFriendshipsMutation,
 	newVegetableMutation,
 } from '@/mutations'
-import { StoredImage, type VegetableForDB } from '@/schemas'
+import { StoredImage, Vegetable, type VegetableForDB } from '@/schemas'
+import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { generateId } from '@/utils/ids'
 import { slugify } from '@/utils/strings'
+import { Schema } from '@effect/schema'
 import * as S from '@effect/schema/Schema'
 import type { Client } from 'edgedb'
+import { Effect, pipe } from 'effect'
 
-export async function createVegetable(
-	input: VegetableForDB,
-	inputClient: Client,
-) {
+export function createVegetable(input: VegetableForDB, inputClient: Client) {
+	return runServerEffect(
+		Effect.gen(function* (_) {
+			if (!Schema.is(Vegetable)(input)) {
+				return false
+			}
+
+			return yield* pipe(
+				Effect.tryPromise({
+					try: () => getTransaction(input, inputClient),
+					catch: (error) => {
+						console.log('Failed creating vegetable', error)
+					},
+				}),
+				...buildTraceAndMetrics('create_vegetable', {
+					vegetable_id: input.id,
+				}),
+				Effect.map(() => true),
+				Effect.catchAll(() => Effect.succeed(false)),
+			)
+		}),
+	)
+}
+
+function getTransaction(input: VegetableForDB, inputClient: Client) {
 	const client = inputClient.withConfig({ allow_user_specified_id: true })
 
 	return client.transaction(async (tx) => {

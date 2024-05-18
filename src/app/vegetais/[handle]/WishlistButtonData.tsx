@@ -1,5 +1,6 @@
 import { auth } from '@/edgedb'
 import { userWishlistQuery } from '@/queries'
+import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect } from 'effect'
 import WishlistButton, { type WishlistInfo } from './WishlistButton'
 
@@ -24,16 +25,15 @@ const fetchWishlistStatus = (vegetable_id: string) =>
 			status: data?.status || null,
 		} as const
 	}).pipe(
+		...buildTraceAndMetrics('fetch_wishlist_status', { vegetable_id }),
 		Effect.tapError((error) => Effect.logError(error)),
 		Effect.catchAll(() => Effect.succeed({ isSignedIn: false } as const)),
-		Effect.withSpan('fetchWishlistStatus', { attributes: { vegetable_id } }),
-		Effect.withLogSpan('fetchWishlistStatus'),
 	) satisfies Effect.Effect<WishlistInfo>
 
 export default async function WishlistButtonData(props: {
 	vegetable_id: string
 }) {
-	const response = await Effect.runPromise(
+	const response = await runServerEffect(
 		fetchWishlistStatus(props.vegetable_id),
 	)
 
