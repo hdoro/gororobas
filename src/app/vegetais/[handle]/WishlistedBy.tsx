@@ -2,7 +2,7 @@ import { SanityImage } from '@/components/SanityImage'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import { Text } from '@/components/ui/text'
 import { client } from '@/edgedb'
-import { wishlistedByQuery, type WishlistedByData } from '@/queries'
+import { type WishlistedByData, wishlistedByQuery } from '@/queries'
 import { cn } from '@/utils/cn'
 import { Effect, Metric, pipe } from 'effect'
 import { SproutIcon } from 'lucide-react'
@@ -22,11 +22,12 @@ const fetchWishlistedBy = (vegetable_id: string) =>
 						vegetable_id,
 					},
 				),
-			catch: (error) => Effect.logError(error),
+			catch: (error) => console.log(error),
 		}),
+		Effect.tapError((error) => Effect.logError(error)),
 		Effect.catchAll(() => Effect.succeed(null)),
 		Metric.trackDuration(timer),
-		Effect.withSpan('WishlistedBy'),
+		Effect.withSpan('WishlistedBy', { attributes: { vegetable_id } }),
 		Effect.withLogSpan('WishlistedBy'),
 	)
 

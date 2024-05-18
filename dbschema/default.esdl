@@ -2,18 +2,7 @@
 using extension auth;
 
 module default {
-  # QUESTIONS:
-  # 1. How do Enums evolve over time? Postgres doesn't allow modifying them
-  #   ✨ EdgeDB win #1: enums can be easily modified
-  # 2. How does removing an Enum option work?
-  #   💩 EdgeDB failure #1: the schema migration doesn't handle that, and so they can't be applied if invalid values are found
-  #   ❓ Caveat: Perhaps there's a way to handle this in the schema migration?
-  # 3. Should I include public user data in the User type, or move it to a separate one that is linked to it?
-  #   Data includes: name, location, photo
-  # 
-  # DECISIONS:
-  # 1. I'll keep storing images in Sanity (good CDN, good pricing, familiar API)
-  
+
   scalar type Role extending enum<ADMIN,USER,MODERATOR>;
   scalar type SourceType extending enum<GOROROBAS,EXTERNAL>;
   scalar type Gender extending enum<FEMININO,MASCULINO,NEUTRO>;
@@ -51,29 +40,44 @@ module default {
       using (global current_user.userRole ?= Role.ADMIN);
   }
 
-  type User extending AdminCanDoAnything {
+  # 🚧 WARNING: **access policy is deactivated**, any session can access User
+  # 👉 Don't query/modify without first checking if the user has access
+  # ❓ @TODO is there a way to implement access policies on User without getting `required link 'user' of object type 'default::UserProfile' is hidden by access policy`?
+  #   - I've tried Elvis' suggestion of using an optional property but it doesn't work - https://discord.com/channels/841451783728529451/1118375623019221012/1118577633144348682
+  #   - Created an issue in the Next template: https://github.com/edgedb/nextjs-edgedb-auth-template/issues/8
+  type User {
     required identity: ext::auth::Identity {
       constraint exclusive;
     };
     email: str {
       constraint exclusive;
     };
-  
     userRole: Role {
       default := "USER";
     };
-
     created: datetime {
       rewrite insert using (datetime_of_statement());
-    }
+    };
     updated: datetime {
       rewrite insert using (datetime_of_statement());
       rewrite update using (datetime_of_statement());
-    }
+    };
+  }
 
-    access policy owner_can_select_or_delete
-      allow select, delete
-      using (global current_user.identity ?= .identity);
+  type UserProfile extending WithHandle, PublicRead {
+    required user: User {
+      constraint exclusive;
+
+      on target delete delete source;
+    };
+    required name: str;
+    bio: str;
+    location: str;
+    photo: Image;
+
+    access policy owner_can_modify
+      allow update
+      using (global current_user ?= .user);
   }
 
   scalar type HistoryAction extending enum<`INSERT`, `UPDATE`, `DELETE`>;
@@ -177,22 +181,6 @@ module default {
     crop: json;
   }
 
-  type UserProfile extending WithHandle, PublicRead {
-    required user: User {
-      constraint exclusive;
-
-      on target delete delete source;
-    };
-    required name: str;
-    bio: str;
-    location: str;
-    photo: Image;
-
-    access policy owner_has_full_access
-      allow all
-      using (global current_user ?= .user);
-  }
-
   type VegetableVariety extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
     required names: array<str>;
     multi photos: Image {
@@ -275,7 +263,7 @@ module default {
     constraint exclusive on (.unique_key);
   }
 
-  type UserWishlist extending AdminCanDoAnything {
+  type UserWishlist {
     required user_profile: UserProfile {
       on target delete delete source;
     };

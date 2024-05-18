@@ -145,11 +145,15 @@ export const userWishlistQuery = e.params(
 			status: true,
 
 			filter_single: e.op(
-				wishlist.vegetable,
-				'=',
-				e.select(e.Vegetable, (vegetable) => ({
-					filter_single: e.op(vegetable.id, '=', params.vegetable_id),
-				})),
+				e.op(wishlist.user_profile, '=', e.global.current_user_profile),
+				'and',
+				e.op(
+					wishlist.vegetable,
+					'=',
+					e.select(e.Vegetable, (vegetable) => ({
+						filter_single: e.op(vegetable.id, '=', params.vegetable_id),
+					})),
+				),
 			),
 		})),
 )

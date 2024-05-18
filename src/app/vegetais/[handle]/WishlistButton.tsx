@@ -3,6 +3,12 @@
 import { addToWishlist } from '@/actions/addToWishlist'
 import { Button } from '@/components/ui/button'
 import {
+	Dialog,
+	DialogBody,
+	DialogContent,
+	DialogTrigger,
+} from '@/components/ui/dialog'
+import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuLabel,
@@ -11,19 +17,28 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
 import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
 import { WISHLIST_STATUS_TO_LABEL } from '@/utils/labels'
+import { paths } from '@/utils/urls'
 import { ChevronDownIcon } from 'lucide-react'
 import { useState } from 'react'
 
-export default function WishlistButton(props: {
-	vegetable_id: string
-	status: VegetableWishlistStatus | null
-}) {
+export type WishlistInfo =
+	| { isSignedIn: false }
+	| { isSignedIn: true; status: VegetableWishlistStatus | null }
+
+export default function WishlistButton(
+	props: {
+		vegetable_id: string
+	} & WishlistInfo,
+) {
 	const { toast } = useToast()
 	const [optimisticStatus, setOptimisticStatus] =
-		useState<VegetableWishlistStatus>(props.status || 'QUERO_CULTIVAR')
+		useState<VegetableWishlistStatus>(
+			('status' in props && props.status) || 'QUERO_CULTIVAR',
+		)
 
 	async function updateStatus(status: VegetableWishlistStatus) {
 		const prevStatus = optimisticStatus
@@ -36,6 +51,38 @@ export default function WishlistButton(props: {
 				title: 'Erro ao atualizar seu interesse',
 			})
 		}
+	}
+
+	if (props.isSignedIn === false) {
+		return (
+			<Dialog>
+				<DialogTrigger asChild>
+					<Button>
+						<ChevronDownIcon className="mr-2 w-[1.25em] h-auto" />
+						{WISHLIST_STATUS_TO_LABEL[optimisticStatus] ||
+							WISHLIST_STATUS_TO_LABEL.QUERO_CULTIVAR}
+					</Button>
+				</DialogTrigger>
+				<DialogContent className="max-w-lg">
+					<DialogBody className="space-y-2 pt-10">
+						<Text level="h2">Crie uma conta no Gororobas</Text>
+						<Text level="p">
+							Para salvar sua listinha de plantas você precisa ter uma conta. Só
+							assim podemos lembrar suas escolhas sem embolar quem escolheu o
+							quê 🤗
+						</Text>
+						<div className="flex items-center gap-2 pt-2">
+							<Button asChild>
+								<a href={paths.signup()}>Criar conta</a>
+							</Button>
+							<Button asChild mode="outline">
+								<a href={paths.signin()}>Entrar</a>
+							</Button>
+						</div>
+					</DialogBody>
+				</DialogContent>
+			</Dialog>
+		)
 	}
 
 	return (
