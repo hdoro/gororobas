@@ -20,11 +20,11 @@ import TipTapRenderer from '../TipTapRenderer'
 import { Button } from '../ui/button'
 import { FormControl } from '../ui/form'
 import { Text } from '../ui/text'
+import ArrayInput from './ArrayInput'
 import CheckboxesInput from './CheckboxesInput'
 import Field from './Field'
 import RichTextInput from './RichTextInput'
 import SourceInput from './SourceInput'
-import ArrayInput from './ArrayInput'
 
 export default function VegetableTipInput<
 	TFieldValues extends FieldValues = FieldValues,

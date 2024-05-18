@@ -1,10 +1,12 @@
 'use client'
 
+import { updateProfileAction } from '@/actions/updateProfile'
 import UserAvatar from '@/components/UserAvatar'
 import Field from '@/components/forms/Field'
 import HandleInput from '@/components/forms/HandleInput'
 import ImageInput from '@/components/forms/ImageInput'
 import RichTextInput from '@/components/forms/RichTextInput'
+import TwoColumnFields from '@/components/forms/TwoColumnFields'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -13,69 +15,101 @@ import { useToast } from '@/components/ui/use-toast'
 import type { ProfilePageData } from '@/queries'
 import {
 	ImageDBToFormTransformer,
-	ImageData,
 	ProfileData,
-	RichText,
+	type ProfileDataForDB,
 	type ProfileDataInForm,
+	RichText,
 } from '@/schemas'
+import { getChangedObjectSubset } from '@/utils/diffs'
 import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
-import { generateId } from '@/utils/ids'
 import { Schema } from '@effect/schema'
 import { Either } from 'effect'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
 	FormProvider,
+	type SubmitHandler,
 	useForm,
 	useFormContext,
-	type SubmitHandler,
 } from 'react-hook-form'
 
 export default function ProfileForm({
 	profile: profileInDb,
 }: { profile: ProfilePageData }) {
-	const photoForForm = Schema.decodeUnknownEither(ImageDBToFormTransformer)(
-		profileInDb.photo,
-	)
-	const bioInDB = Schema.encodeUnknownEither(RichText)(profileInDb.bio)
+	const toast = useToast()
+	const [status, setStatus] = useState<'idle' | 'submitting'>('idle')
 
-	const form = useForm<ProfileDataInForm>({
-		resolver: effectSchemaResolverResolver(ProfileData),
-		criteriaMode: 'all',
-		defaultValues: {
+	const initialValue = useMemo(() => {
+		const photoForForm = Schema.decodeUnknownEither(ImageDBToFormTransformer)(
+			profileInDb.photo,
+		)
+		const bioInDB = Schema.encodeUnknownEither(RichText)(profileInDb.bio)
+
+		return {
 			id: profileInDb.id,
 			name: profileInDb.name,
 			handle: profileInDb.handle,
 			location: profileInDb.location || undefined,
-			photo: Either.isRight(photoForForm)
-				? (photoForForm.right as any)
-				: undefined,
+			photo: Either.isRight(photoForForm) ? photoForForm.right : undefined,
 			bio: Either.isRight(bioInDB) ? bioInDB.right : undefined,
-		},
+		} as ProfileDataInForm
+	}, [profileInDb])
+
+	const form = useForm<ProfileDataInForm>({
+		resolver: effectSchemaResolverResolver(ProfileData),
+		criteriaMode: 'all',
+		defaultValues: initialValue,
 		mode: 'onBlur',
+		disabled: status === 'submitting',
 	})
-	const router = useRouter()
-	const toast = useToast()
-	console.log({ photoForForm, inDb: profileInDb.photo })
 
 	const onSubmit: SubmitHandler<ProfileDataInForm> = async (data, event) => {
-		console.log({ data })
+		const decodedData = data as unknown as ProfileDataForDB
+
+		const dataThatChanged = getChangedObjectSubset({
+			prev: Schema.decodeSync(ProfileData)(initialValue),
+			next: decodedData,
+		})
+		if (Object.keys(dataThatChanged).length === 0) {
+			toast.toast({
+				variant: 'default',
+				title: 'Tudo certo, nada foi alterado',
+			})
+		}
+
+		setStatus('submitting')
+		const response = await updateProfileAction(dataThatChanged)
+		if (response === true) {
+			toast.toast({
+				variant: 'default',
+				title: 'Perfil editado com sucesso ✨',
+			})
+		} else {
+			toast.toast({
+				variant: 'destructive',
+				title: 'Erro ao editar',
+				description: 'Por favor, tente novamente.',
+			})
+		}
+		setStatus('idle')
 	}
 
 	return (
-		<main className="flex flex-wrap gap-8 px-page py-20">
+		<main className="flex flex-wrap gap-8 px-pageX py-pageY">
 			<FormProvider {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
 					className="space-y-4 max-w-4xl flex-1"
+					aria-disabled={form.formState.disabled}
 				>
 					<Card>
-						<CardHeader className="flex flex-row items-center justify-between">
+						<CardHeader className="flex !flex-row items-center justify-between flex-wrap">
 							<CardTitle>Modifique seu perfil</CardTitle>
-							<Button type="submit">Salvar alterações</Button>
+							<Button type="submit" disabled={form.formState.disabled}>
+								Salvar alterações
+							</Button>
 						</CardHeader>
-						<CardContent className="space-y-6">
-							<div className="grid gap-4 grid-cols-2">
+						<CardContent className="space-y-6 @container">
+							<TwoColumnFields>
 								<Field
 									form={form}
 									name="name"
@@ -89,13 +123,12 @@ export default function ProfileForm({
 									form={form}
 									name="location"
 									label="Território ou localidade"
-									description={'"Nômade", "Ciganx", "Terra" são válidos também'}
 									render={({ field }) => (
 										<Input {...field} value={field.value || ''} type="text" />
 									)}
 								/>
-							</div>
-							<div className="grid gap-4 grid-cols-2">
+							</TwoColumnFields>
+							<TwoColumnFields>
 								<Field
 									form={form}
 									name="handle"
@@ -106,23 +139,23 @@ export default function ProfileForm({
 								/>
 								<Field
 									form={form}
-									name="photo"
-									label="Fotinha!"
-									description="Caso queira, claro. Pode ser de vegetais que cê gosta, inclusive ✨"
+									name="bio"
+									label="Curiosidades sobre você"
 									render={({ field }) => (
-										<ImageInput field={field} includeMetadata={false} />
+										<RichTextInput
+											field={field}
+											placeholder="O que te encanta na cozinha? O que te levou à agroecologia?"
+										/>
 									)}
 								/>
-							</div>
+							</TwoColumnFields>
 							<Field
 								form={form}
-								name="bio"
-								label="Curiosidades sobre você"
+								name="photo"
+								label="Fotinha!"
+								description="Caso queira, claro. Pode ser de vegetais que cê gosta, inclusive ✨"
 								render={({ field }) => (
-									<RichTextInput
-										field={field}
-										placeholder="O que te encanta na cozinha? O que te levou à agroecologia?"
-									/>
+									<ImageInput field={field} includeMetadata={false} />
 								)}
 							/>
 						</CardContent>
@@ -148,7 +181,7 @@ function ProfilePreview() {
 			{name && (
 				<div>
 					<Text level="h2" as="h2" className="text-lg font-bold">
-						Como você vai aparecer no site:
+						Como vai aparecer no site:
 					</Text>
 				</div>
 			)}

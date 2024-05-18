@@ -22,7 +22,7 @@ const fetchWishlistStatus = (vegetable_id: string) =>
 
 		return {
 			isSignedIn: true,
-			status: data?.status || null,
+			status: data?.status ?? null,
 		} as const
 	}).pipe(
 		...buildTraceAndMetrics('fetch_wishlist_status', { vegetable_id }),

@@ -1,11 +1,15 @@
+'use client'
+
 import type { ImageData } from '@/schemas'
+import { generateId } from '@/utils/ids'
 import { CircleXIcon } from 'lucide-react'
+import { useCallback } from 'react'
 import {
-	useFormContext,
-	useWatch,
 	type ControllerRenderProps,
 	type FieldPath,
 	type FieldValues,
+	useFormContext,
+	useWatch,
 } from 'react-hook-form'
 import { SanityImage } from '../SanityImage'
 import { Button } from '../ui/button'
@@ -33,7 +37,18 @@ export default function ImageInput<
 		name: dataFieldName,
 	}) as (typeof ImageData.Encoded)['data'] | null | undefined
 
-	const ImageField = () => {
+	function clearValue() {
+		rootField.onChange({
+			...rootField.value,
+			data: undefined,
+			// As we're changing images, we need to generate a new ID for EdgeDB
+			id: generateId(),
+		})
+	}
+
+	// @TODO separate component?
+	// biome-ignore lint: no need to memoize on form
+	const ImageField = useCallback(() => {
 		if (imageData && 'sanity_id' in imageData && imageData.sanity_id) {
 			return (
 				<Field
@@ -41,28 +56,26 @@ export default function ImageInput<
 					label="Imagem"
 					hideLabel
 					name={dataFieldName}
-					render={({ field }) => {
-						function clearField() {
-							field.onChange(undefined)
-						}
-						return (
-							<div className="relative aspect-square border-2 border-border bg-card w-[12.5rem] flex-[0_0_max-content] flex items-center justify-center rounded-lg">
+					render={({ field }) => (
+						<div className="relative aspect-square border-2 border-border bg-card w-[12.5rem] flex-[0_0_max-content] flex items-center justify-center rounded-lg">
+							{!field.disabled && (
 								<FormControl>
 									<Button
-										onClick={clearField}
+										onClick={clearValue}
 										className="absolute top-2 right-2 rounded-full"
 										aria-label="Remover imagem"
 										tone="destructive"
 										mode="outline"
 										size="icon"
+										disabled={field.disabled}
 									>
 										<CircleXIcon className="stroke-current" />
 									</Button>
 								</FormControl>
-								<SanityImage image={imageData} maxWidth={200} />
-							</div>
-						)
-					}}
+							)}
+							<SanityImage image={imageData} maxWidth={200} />
+						</div>
+					)}
 				/>
 			)
 		}
@@ -73,10 +86,12 @@ export default function ImageInput<
 				label="Imagem"
 				hideLabel
 				name={`${dataFieldName}.file`}
-				render={({ field }) => <ImageDropzone field={field} />}
+				render={({ field }) => (
+					<ImageDropzone field={field} clearValue={clearValue} />
+				)}
 			/>
 		)
-	}
+	}, [dataFieldName, imageData])
 
 	if (!includeMetadata) {
 		return <ImageField />

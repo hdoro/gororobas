@@ -21,6 +21,7 @@ export default function RichTextInput<
 			onChange={field.onChange}
 			editorState={field.value}
 			type="formTextarea"
+			disabled={field.disabled ?? false}
 		/>
 	)
 }

@@ -2,8 +2,7 @@ import type { NewImage, StoredImage } from '@/schemas'
 import type { ImageForRendering } from '@/types'
 import { cn } from '@/utils/cn'
 import { SproutIcon } from 'lucide-react'
-import { useMemo } from 'react'
-import { tv, type VariantProps } from 'tailwind-variants'
+import { type VariantProps, tv } from 'tailwind-variants'
 import { SanityImage } from './SanityImage'
 import { Text } from './ui/text'
 
@@ -32,11 +31,7 @@ const avatarVariants = tv({
 	},
 })
 
-export default function UserAvatar({
-	user,
-	fallbackTone,
-	size,
-}: {
+type UserAvatarProps = {
 	user: {
 		name?: string | undefined
 		handle?: string | undefined
@@ -49,61 +44,18 @@ export default function UserAvatar({
 			| undefined
 	}
 	fallbackTone?: 'primary' | 'secondary'
-} & VariantProps<typeof avatarVariants>) {
+} & VariantProps<typeof avatarVariants>
+
+export default function UserAvatar(props: UserAvatarProps) {
+	const { user, size } = props
+
 	if (!user.name) return null
 
 	const classes = avatarVariants({ size })
-	const { photo } = user
-
-	const imageClasses = classes.image()
-
-	const Photo = useMemo(() => {
-		if (photo) {
-			if ('file' in photo && photo.file instanceof File) {
-				return (
-					<img
-						src={URL.createObjectURL(photo.file)}
-						alt={'Foto de perfil'}
-						className={imageClasses}
-					/>
-				)
-			}
-
-			if ('sanity_id' in photo) {
-				return (
-					<SanityImage
-						image={photo}
-						alt={'Foto de perfil'}
-						maxWidth={28}
-						className={imageClasses}
-					/>
-				)
-			}
-		}
-
-		return (
-			<div
-				className={cn(
-					imageClasses,
-					'flex items-center justify-center',
-					fallbackTone === 'primary' ? 'bg-primary-200' : 'bg-secondary-200',
-				)}
-			>
-				<SproutIcon
-					className={cn(
-						'w-[70%]',
-						fallbackTone === 'primary'
-							? 'text-primary-700'
-							: 'text-secondary-700',
-					)}
-				/>
-			</div>
-		)
-	}, [photo, imageClasses, fallbackTone])
 
 	return (
 		<div key={user.name} className={classes.root()}>
-			{Photo}
+			<Photo {...props} imageClasses={classes.image()} />
 			<div className="space-2">
 				<Text className={classes.name()}>{user.name}</Text>
 				{user.location && (
@@ -112,6 +64,55 @@ export default function UserAvatar({
 					</Text>
 				)}
 			</div>
+		</div>
+	)
+}
+
+function Photo({
+	imageClasses,
+	user,
+	fallbackTone,
+	size,
+}: UserAvatarProps & { imageClasses: string }) {
+	const { photo } = user
+
+	if (photo && 'file' in photo && photo.file instanceof File) {
+		return (
+			<img
+				src={URL.createObjectURL(photo.file)}
+				alt={'Foto de perfil'}
+				className={imageClasses}
+			/>
+		)
+	}
+
+	if (photo && 'sanity_id' in photo) {
+		return (
+			<SanityImage
+				image={photo}
+				alt={'Foto de perfil'}
+				maxWidth={size === 'sm' ? 28 : 100}
+				className={imageClasses}
+			/>
+		)
+	}
+
+	return (
+		<div
+			className={cn(
+				imageClasses,
+				'flex items-center justify-center',
+				fallbackTone === 'primary' ? 'bg-primary-200' : 'bg-secondary-200',
+			)}
+		>
+			<SproutIcon
+				className={cn(
+					'w-[70%]',
+					fallbackTone === 'primary'
+						? 'text-primary-700'
+						: 'text-secondary-700',
+				)}
+			/>
 		</div>
 	)
 }

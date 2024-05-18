@@ -214,3 +214,34 @@ export const setWishlistStatusMutation = e.params(
 				})),
 			})),
 )
+
+export const updateProfileMutation = e.params(
+	{
+		name: e.optional(e.str),
+		handle: e.optional(e.str),
+		location: e.optional(e.str),
+		photo: e.optional(e.uuid),
+		bio: e.optional(e.json),
+	},
+	(params) =>
+		e.update(e.UserProfile, (userProfile) => ({
+			filter_single: e.op(
+				e.global.current_user_profile.id,
+				'=',
+				userProfile.id,
+			),
+			set: {
+				name: e.op(params.name, '??', userProfile.name),
+				handle: e.op(params.handle, '??', userProfile.handle),
+				location: e.op(params.location, '??', userProfile.location),
+				bio: e.op(params.bio, '??', userProfile.bio),
+				photo: e.op(
+					e.select(e.Image, (image) => ({
+						filter_single: e.op(image.id, '=', params.photo),
+					})),
+					'??',
+					userProfile.photo,
+				),
+			},
+		})),
+)

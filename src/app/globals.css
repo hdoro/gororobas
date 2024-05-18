@@ -51,7 +51,8 @@
     --ring: 142.1 76.2% 36.3%;
     --radius: 0.5rem;
 
-    --page-padding: 1rem;
+    --page-padding-x: 1rem;
+    --page-padding-y: 2rem;
   }
 
   /* .dark {
@@ -73,13 +74,15 @@
 
 @media (min-width: 768px) {
   :root {
-    --page-padding: 2rem;
+    --page-padding-x: 2rem;
+    --page-padding-y: 3rem;
   }
 }
 
 @media (min-width: 1280px) {
   :root {
-    --page-padding: 5rem;
+    --page-padding-x: 5rem;
+    --page-padding-y: 5rem;
   }
 }
 

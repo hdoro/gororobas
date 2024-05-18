@@ -26,6 +26,7 @@ export default function CheckboxesInput<
 						<Checkbox
 							name={field.name}
 							value={option.value}
+							disabled={field.disabled}
 							checked={value.includes(option.value)}
 							onCheckedChange={(checked) => {
 								return checked

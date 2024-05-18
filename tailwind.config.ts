@@ -104,10 +104,15 @@ const config: Config = {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 			},
 			padding: {
-				page: 'var(--page-padding)',
+				pageX: 'var(--page-padding-x)',
+				pageY: 'var(--page-padding-y)',
 			},
 		},
 	},
-	plugins: [require('@tailwindcss/forms'), require('tailwindcss-animate')],
+	plugins: [
+		require('@tailwindcss/forms'),
+		require('tailwindcss-animate'),
+		require('@tailwindcss/container-queries'),
+	],
 }
 export default config

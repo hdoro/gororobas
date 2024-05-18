@@ -26,7 +26,7 @@ export default function RadioGroupInput<
 				return (
 					<FormItem key={option.value} className="flex items-center gap-2">
 						<FormControl>
-							<RadioGroupItem value={option.value} />
+							<RadioGroupItem value={option.value} disabled={field.disabled} />
 						</FormControl>
 
 						<div className="space-y-1.5 leading-none">

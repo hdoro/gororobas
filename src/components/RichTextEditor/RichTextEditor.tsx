@@ -15,6 +15,7 @@ export default function RichTextEditor(
 		maxLength?: number
 		onChange: (editorState: JSONContent) => void
 		editorState: JSONContent
+		disabled?: boolean
 	} & RichTextEditorThemeVariants,
 ) {
 	const classes = richTextEditorTheme(props)
@@ -30,6 +31,7 @@ export default function RichTextEditor(
 		onUpdate: ({ editor }) => {
 			props.onChange(Object.assign({}, editor.getJSON(), { version: 1 }))
 		},
+		editable: props.disabled !== true,
 	})
 
 	return (

@@ -35,12 +35,12 @@ import NumberInput from './forms/NumberInput'
 import RadioGroupInput from './forms/RadioGroupInput'
 import ReferenceListInput from './forms/ReferenceListInput'
 import RichTextInput from './forms/RichTextInput'
+import SourceInput from './forms/SourceInput'
 import VegetableTipInput from './forms/VegetableTipInput'
 import VegetableVarietyInput from './forms/VegetableVarietyInput'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { useToast } from './ui/use-toast'
-import SourceInput from './forms/SourceInput'
 
 /**
  * FORM REQUIREMENTS:
@@ -135,7 +135,11 @@ export default function TestForm() {
 									Editar vegetal
 								</h1>
 								<div className="hidden items-center gap-2 md:ml-auto md:flex">
-									<Button type="submit" size="sm">
+									<Button
+										type="submit"
+										size="sm"
+										disabled={form.formState.disabled}
+									>
 										Enviar
 									</Button>
 								</div>

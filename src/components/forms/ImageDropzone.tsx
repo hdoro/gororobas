@@ -17,7 +17,13 @@ const MAX_UPLOAD_SIZE = 3 * 1024 * 1024
 export default function ImageDropzone<
 	TFieldValues extends FieldValues = FieldValues,
 	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->({ field }: { field: ControllerRenderProps<TFieldValues, TName> }) {
+>({
+	field,
+	clearValue,
+}: {
+	field: ControllerRenderProps<TFieldValues, TName>
+	clearValue: () => void
+}) {
 	const { toast } = useToast()
 
 	const {
@@ -55,7 +61,7 @@ export default function ImageDropzone<
 	})
 
 	function clearField() {
-		field.onChange(undefined)
+		clearValue()
 		rootRef.current?.focus()
 	}
 
@@ -96,16 +102,18 @@ export default function ImageDropzone<
 							className="block object-contain w-full h-full"
 						/>
 					)}
-					<Button
-						onClick={clearField}
-						className="absolute top-2 right-2 rounded-full"
-						aria-label="Remover imagem"
-						tone="destructive"
-						mode="outline"
-						size="icon"
-					>
-						<CircleXIcon className="stroke-current" />
-					</Button>
+					{!field.disabled && (
+						<Button
+							onClick={clearField}
+							className="absolute top-2 right-2 rounded-full"
+							aria-label="Remover imagem"
+							tone="destructive"
+							mode="outline"
+							size="icon"
+						>
+							<CircleXIcon className="stroke-current" />
+						</Button>
+					)}
 				</>
 			) : (
 				<FormLabel className="flex flex-col items-center justify-center gap-1 text-xs text-center p-4 font-normal">

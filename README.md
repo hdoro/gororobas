@@ -56,7 +56,7 @@ Documentation is WIP
   - Profile picture
   - Location
   - Bio
-- [ ] Diffing & mutation to edit profile
+- [x] Diffing & mutation to edit profile
 
 ## Homepage
 
@@ -95,9 +95,11 @@ Documentation is WIP
 - [ ] Set-up backups
 - [ ] Publish on Vercel
 - [ ] Set-up DB branches in Github Actions
+- [ ] Documentation
 
 ## Stretch
 
+- [ ] Debug why SanityImage is re-rendering so much in ProfileForm
 - [ ] ProfileForm: don't allow duplicate handles
 - [ ] Exclusivity constraint on source's URL, with `unlessConflict` on mutation and de-duplication in `createVegetable`
 - [ ] Move Shadcn components to tailwind-variants

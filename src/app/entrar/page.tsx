@@ -12,7 +12,7 @@ export default async function ProfileRoute() {
 	}
 
 	return (
-		<main className="min-h-full flex items-center justify-center py-16 px-page">
+		<main className="min-h-full flex items-center justify-center py-16 px-pageX">
 			<div className="max-w-md space-y-2">
 				<Text level="h1" as="h1">
 					Crie ou acesse uma

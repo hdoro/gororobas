@@ -2,7 +2,7 @@ import UserAvatar from '@/components/UserAvatar'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import { Text } from '@/components/ui/text'
 import { client } from '@/edgedb'
-import { wishlistedByQuery, type WishlistedByData } from '@/queries'
+import { type WishlistedByData, wishlistedByQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 

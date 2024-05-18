@@ -1,3 +1,4 @@
+import { generateId } from '@/utils/ids'
 import {
 	DndContext,
 	type DragEndEvent,
@@ -27,7 +28,6 @@ import {
 } from 'react-hook-form'
 import { Button } from '../ui/button'
 import { Separator } from '../ui/separator'
-import { generateId } from '@/utils/ids'
 
 export default function ArrayInput<
 	TFieldValues extends FieldValues = FieldValues,
@@ -116,6 +116,7 @@ export default function ArrayInput<
 					}}
 					mode="bleed"
 					size="sm"
+					disabled={field.disabled}
 				>
 					<PlusCircleIcon className="mr-2" /> {newItemLabel}
 				</Button>
@@ -144,6 +145,7 @@ export function SortableItem(
 		id: UniqueIdentifier
 		removeItem: () => void
 		index: number
+		disabled?: boolean
 	}>,
 ) {
 	const { attributes, listeners, setNodeRef, transform, transition } =
@@ -161,6 +163,7 @@ export function SortableItem(
 				size="icon"
 				title="Segure para mover"
 				tone="neutral"
+				disabled={props.disabled}
 				{...attributes}
 				{...listeners}
 			>
@@ -173,6 +176,7 @@ export function SortableItem(
 				size="icon"
 				title={`Deletar item #${props.index + 1}`}
 				onClick={props.removeItem}
+				disabled={props.disabled}
 			>
 				<TrashIcon className="stroke-current" />
 			</Button>

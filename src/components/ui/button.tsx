@@ -111,12 +111,14 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	({ className, tone, mode, size, asChild = false, ...props }, ref) => {
+	({ className, tone, mode, size, asChild = false, type, ...props }, ref) => {
 		const Comp = asChild ? Slot : 'button'
 		return (
 			<Comp
 				className={cn(buttonVariants({ tone, mode, size, className }))}
 				ref={ref}
+				// In most contexts, we want to use type="button" to avoid form submission
+				type={type || 'button'}
 				{...props}
 			/>
 		)

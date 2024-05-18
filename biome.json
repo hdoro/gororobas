@@ -10,11 +10,7 @@
 			"./tailwind.config.ts",
 			"./package.json"
 		],
-		"ignore": [
-			"src/edgeql/**/*",
-			"src/edgedb.interfaces.ts",
-			"src/playground/**/*"
-		]
+		"ignore": ["src/edgeql/**/*", "src/edgedb.interfaces.ts"]
 	},
 	"linter": {
 		"enabled": true,
@@ -29,7 +25,8 @@
 			"suspicious": {
 				"noExplicitAny": "warn"
 			}
-		}
+		},
+		"ignore": ["src/playground/**/*"]
 	},
 	"javascript": {
 		"formatter": {

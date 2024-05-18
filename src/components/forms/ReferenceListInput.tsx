@@ -65,12 +65,13 @@ export default function ReferenceListInput<
 						onValueChange={setSearchQuery}
 						placeholder="Busque por vegetais no Gororobas"
 						className="border-none p-0"
+						disabled={field.disabled}
 					/>
 				</FormControl>
 				<CommandList
 					className={cn(
 						'absolute w-full z-10 left-0 top-full translate-y-2 bg-card border rounded-md p-2',
-						focused ? '' : 'sr-only',
+						focused && !field.disabled ? '' : 'sr-only',
 					)}
 				>
 					{!options && (
@@ -129,6 +130,7 @@ export default function ReferenceListInput<
 									className="button cursor-pointer rounded-full"
 									type="button"
 									onClick={() => toggleOption(option.id)}
+									disabled={field.disabled}
 								>
 									<XIcon className="w-4 h-4" />
 								</button>

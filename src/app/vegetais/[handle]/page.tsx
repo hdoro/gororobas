@@ -1,9 +1,9 @@
 import { auth } from '@/edgedb'
 import { vegetablePageQuery } from '@/queries'
-import { notFound } from 'next/navigation'
-import VegetablePage from './VegetablePage'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
+import { notFound } from 'next/navigation'
+import VegetablePage from './VegetablePage'
 
 export default async function VegetableRoute({
 	params: { handle },
