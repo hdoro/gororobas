@@ -44,7 +44,7 @@ export default function VegetablePageSidebar({
 	].flatMap((link) => link || [])
 
 	return (
-		<div>
+		<div className="flex-1">
 			<nav aria-label="Tabela de conteúdo">
 				{links.map((link, index) => (
 					<AnchorLink

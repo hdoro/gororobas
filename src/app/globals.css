@@ -86,6 +86,20 @@
   }
 }
 
+@media (min-width: 1440px) {
+  :root {
+    --page-padding-x: 7rem;
+    --page-padding-y: 7rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --page-padding-x: 10rem;
+    --page-padding-y: 10rem;
+  }
+}
+
 html,
 body {
   height: 100%;

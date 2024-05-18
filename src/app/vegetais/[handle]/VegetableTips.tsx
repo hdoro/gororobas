@@ -16,7 +16,7 @@ export default function VegetableTips({
 	if (!Array.isArray(tips) || tips.length === 0) return null
 
 	return (
-		<div className="max-w-[73.125rem] mx-auto">
+		<div className="px-pageX max-w-[73.125rem] box-content">
 			{Object.entries(TIP_SUBJECT_TO_LABEL).map(
 				([subject, label], idx, arr) => {
 					const subjectTips = tips.filter((tip) =>

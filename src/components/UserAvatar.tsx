@@ -52,11 +52,11 @@ type UserAvatarProps = VariantProps<typeof avatarVariants> & {
 }
 
 export default function UserAvatar(props: UserAvatarProps) {
-	const { user, size, includeName } = props
+	const { user, size, includeName = true } = props
 
 	if (includeName && !user.name) return null
 
-	const classes = avatarVariants({ size })
+	const classes = avatarVariants({ size, includeName })
 
 	return (
 		<div key={user.name} className={classes.root()}>

@@ -29,12 +29,13 @@ function AvatarsStrip({
 	users,
 }: { users: WishlistedByData['wishlisted_by'][number]['user_profile'][] }) {
 	return (
-		<div className="flex items-center gap-5 overflow-x-auto">
+		<div className="flex items-center gap-4 overflow-x-auto">
 			{users.map((user, index) => (
 				<UserAvatar
 					key={user.name}
 					user={user}
 					fallbackTone={index % 2 === 0 ? 'primary' : 'secondary'}
+					size="sm"
 				/>
 			))}
 		</div>

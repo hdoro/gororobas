@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 	description: 'Generated with the EdgeDB + EdgeDB Auth + Next.js Template',
 }
 
-export default async function RootLayout({
+export default function RootLayout({
 	children,
 }: {
 	children: React.ReactNode

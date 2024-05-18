@@ -7,14 +7,40 @@ const SOURCE_FIELDS = {
 	users: true,
 } as const
 
-const PHOTO_FIELDS = {
+const imageFields = e.shape(e.Image, (image) => ({
 	id: true,
 	sanity_id: true,
 	hotspot: true,
 	crop: true,
 	label: true,
 	sources: SOURCE_FIELDS,
-} as const
+}))
+
+const vegetableForCard = e.shape(e.Vegetable, (vegetable) => ({
+	id: true,
+	handle: true,
+	name: vegetable.names.index(0),
+	photos: (image) => ({
+		...imageFields(image),
+
+		order_by: {
+			expression: image['@order_index'],
+			direction: 'ASC',
+			empty: e.EMPTY_LAST,
+		},
+	}),
+}))
+
+const userProfileForAvatar = e.shape(e.UserProfile, () => ({
+	name: true,
+	handle: true,
+	photo: imageFields,
+}))
+
+export type VegetableCardData = Exclude<
+	$infer<typeof vegetableForCard>,
+	null
+>[number]
 
 export const vegetablePageQuery = e.params(
 	{
@@ -41,7 +67,7 @@ export const vegetablePageQuery = e.params(
 			temperature_max: true,
 			content: true,
 			photos: (image) => ({
-				...PHOTO_FIELDS,
+				...imageFields(image),
 
 				order_by: {
 					expression: image['@order_index'],
@@ -53,7 +79,7 @@ export const vegetablePageQuery = e.params(
 				handle: true,
 				names: true,
 				photos: (image) => ({
-					...PHOTO_FIELDS,
+					...imageFields(image),
 
 					order_by: {
 						expression: image['@order_index'],
@@ -80,20 +106,7 @@ export const vegetablePageQuery = e.params(
 					empty: e.EMPTY_LAST,
 				},
 			}),
-			friends: (friend) => ({
-				id: true,
-				name: friend.names.index(0),
-				handle: true,
-				photos: (image) => ({
-					...PHOTO_FIELDS,
-
-					order_by: {
-						expression: image['@order_index'],
-						direction: 'ASC',
-						empty: e.EMPTY_LAST,
-					},
-				}),
-			}),
+			friends: vegetableForCard,
 			sources: SOURCE_FIELDS,
 		})),
 )
@@ -106,11 +119,7 @@ export const wishlistedByQuery = e.params({ vegetable_id: e.uuid }, (params) =>
 
 		wishlisted_by: {
 			status: true,
-			user_profile: {
-				name: true,
-				handle: true,
-				photo: PHOTO_FIELDS,
-			},
+			user_profile: userProfileForAvatar,
 
 			limit: 20,
 		},
@@ -128,9 +137,7 @@ export const findUsersToMentionQuery = e.params(
 			filter: e.op(user.name, 'ilike', params.query),
 
 			id: true,
-			name: true,
-			handle: true,
-			photo: PHOTO_FIELDS,
+			...userProfileForAvatar(user),
 		})),
 )
 
@@ -167,7 +174,7 @@ export const vegetablesForReferenceQuery = e.select(
 		id: true,
 		label: vegetable.names.index(0),
 		photos: (image) => ({
-			...PHOTO_FIELDS,
+			...imageFields(image),
 
 			limit: 1,
 			order_by: {
@@ -179,8 +186,6 @@ export const vegetablesForReferenceQuery = e.select(
 	}),
 )
 
-export type VegetableCardData = VegetablePageData['friends'][0]
-
 export const profilePageQuery = e.select(e.UserProfile, (profile) => ({
 	filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
 
@@ -189,7 +194,7 @@ export const profilePageQuery = e.select(e.UserProfile, (profile) => ({
 	handle: true,
 	location: true,
 	bio: true,
-	photo: PHOTO_FIELDS,
+	photo: imageFields,
 }))
 
 export type ProfilePageData = Exclude<$infer<typeof profilePageQuery>, null>
@@ -198,5 +203,22 @@ export const profileForNavQuery = e.select(e.UserProfile, (profile) => ({
 	filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
 
 	handle: true,
-	photo: PHOTO_FIELDS,
+	photo: imageFields,
 }))
+
+export const homePageQuery = e.select({
+	featured_vegetables: e.select(e.Vegetable, (vegetable) => ({
+		...vegetableForCard(vegetable),
+
+		filter: e.op('exists', vegetable.photos),
+		limit: 12,
+	})),
+
+	profiles: e.select(e.UserProfile, (profile) => ({
+		...userProfileForAvatar(profile),
+
+		limit: 12,
+	})),
+})
+
+export type HomePageData = Exclude<$infer<typeof homePageQuery>, null>
