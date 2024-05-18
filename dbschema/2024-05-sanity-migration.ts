@@ -1,4 +1,4 @@
-import { createVegetable } from '@/actions/createVegetable'
+import { createVegetable } from '@/actions/createVegetable.implementation'
 import { formatVegetableFriendForDB } from '@/actions/formatVegetableFriendForDB'
 import type {
 	Gender,
@@ -6,7 +6,8 @@ import type {
 	TipSubject,
 	VegetableUsage,
 } from '@/edgedb.interfaces'
-import type { SourceData, SourceForDB, VegetableForDB } from '@/schemas'
+import { newVegetableFriendshipsMutation } from '@/mutations'
+import type { SourceForDB, VegetableForDB } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { PLANTING_METHOD_TO_LABEL } from '@/utils/labels'
 import { sanityServerClientRaw } from '@/utils/sanity.client'
@@ -22,7 +23,6 @@ import type {
 	SourceUser,
 } from './2024-05-sanity-migration.types'
 import ptToTiptap from './ptToTiptap'
-import { newVegetableFriendshipsMutation } from '@/mutations'
 
 type SanityVegetable = Q_VEGETABLES_RAW_INDEXResult[number]
 

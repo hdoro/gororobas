@@ -1,9 +1,14 @@
 'use server'
 
 import { auth } from '@/edgedb'
-import { newSourcesMutation, updateProfileMutation } from '@/mutations'
+import {
+	newImagesMutation,
+	newSourcesMutation,
+	updateProfileMutation,
+} from '@/mutations'
 import { NewImage, ProfileData, type ProfileDataForDB } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { uploadImagesToSanity } from '@/utils/uploadImagesToSanity'
 import { Schema } from '@effect/schema'
 import type { Client } from 'edgedb'
 import { Effect, pipe } from 'effect'
@@ -44,18 +49,24 @@ function getTransaction(input: Partial<ProfileDataForDB>, inputClient: Client) {
 		}
 
 		const { photo } = input
+		let skipPhoto = false
 		if (Schema.is(NewImage)(photo?.data)) {
-			// @TODO upload to Sanity
-			// await newImagesMutation.run(tx, {
-			// 	images: [
-			// 		{
-			// 			id: photo.id,
-			// 			label: photo.label || '',
-			// 			sanity_id: photo.data.sanity_id,
-			// 			sources: photo.sources?.map((s) => s.id) || [],
-			// 		},
-			// 	],
-			// })
+			const { [photo.id]: uploaded } = await uploadImagesToSanity([photo])
+			// @TODO: handle error - do I bring Effect into transactions?
+			if (uploaded && !('error' in uploaded)) {
+				await newImagesMutation.run(tx, {
+					images: [
+						{
+							id: photo.id,
+							label: photo.label || '',
+							sanity_id: uploaded.sanity_id,
+							sources: photo.sources?.map((s) => s.id) || [],
+						},
+					],
+				})
+			} else {
+				skipPhoto = true
+			}
 		}
 
 		await updateProfileMutation.run(tx, {
@@ -63,7 +74,7 @@ function getTransaction(input: Partial<ProfileDataForDB>, inputClient: Client) {
 			handle: input.handle ?? null,
 			location: input.location ?? null,
 			name: input.name ?? null,
-			photo: input.photo?.id ?? null,
+			photo: skipPhoto ? null : input.photo?.id ?? null,
 		})
 	})
 }

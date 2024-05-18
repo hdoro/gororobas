@@ -41,3 +41,8 @@ export function fileToBase64(file: File): Promise<string> {
 		reader.readAsDataURL(file)
 	})
 }
+
+export async function base64ToBlob(base64: string): Promise<Blob> {
+	const response = await fetch(base64)
+	return await response.blob()
+}

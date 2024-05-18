@@ -25,8 +25,8 @@ Documentation is WIP
 - [x] EdgeDB schema
 - [x] Server action
 - [x] Encode form value to EdgeDB schema
-- [ ] Upload images to Sanity
-- [ ] OrderIndex for Tips, Varieties and Photos
+- [ ] ~~OrderIndex for Tips, Varieties and Photos~~ - blocked by a bug with edgeql-js (see #stretch)
+- [x] Upload images to Sanity
 - [ ] Send to server, error handling, state management, etc.
 
 ## Editing existing vegetable
@@ -113,6 +113,14 @@ Documentation is WIP
   - numbers: X hours of stream, Y commits, Z days
 - [ ] Image hotspotting and cropping
 - [ ] Shadow routes for vegetable page (open in dialog if in vegetables grid)
+- [ ] 404 page
+- [ ] Fix `@order_index` not being accepted by edgeql-js
+    ```
+    Failed creating vegetable QueryError: invalid reference to link property in top level shape
+    |       single @order_index := __forVar__0.order_index
+    ```
+    - Happened with `edgedb@/1.6.0-canary.20240510T201054` and `@edgedb/generate@0.6.0-canary.20240510T202700` as well as the latest `@edgedb/generate@0.5.3`
+    - tried renaming to just `order`, also didn't work
 
 ### Notes
 

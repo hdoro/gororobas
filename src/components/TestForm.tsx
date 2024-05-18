@@ -1,4 +1,5 @@
 import { addVegetable } from '@/actions/addVegetable'
+import { createVegetableAction } from '@/actions/createVegetable'
 import {
 	Card,
 	CardContent,
@@ -97,8 +98,10 @@ export default function TestForm() {
 
 	const onSubmit: SubmitHandler<VegetableInForm> = async (data, event) => {
 		console.info({ data, event })
-		const added = await addVegetable(data as unknown as VegetableForDB)
-		if (added) {
+		const result = await createVegetableAction(
+			data as unknown as VegetableForDB,
+		)
+		if (result) {
 			router.push(`/vegetais/${data.handle}`)
 		} else {
 			toast.toast({

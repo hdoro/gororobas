@@ -1,5 +1,29 @@
 import e from '@/edgeql'
 
+export const newSourcesMutation = e.params(
+	{
+		sources: e.array(e.json),
+	},
+	(params) =>
+		e.for(e.array_unpack(params.sources), (source) =>
+			e.insert(e.Source, {
+				id: e.cast(e.uuid, e.json_get(source, 'id')),
+				credits: e.cast(e.str, e.json_get(source, 'credits')),
+				type: e.cast(e.SourceType, e.json_get(source, 'type')),
+				origin: e.cast(e.str, e.json_get(source, 'origin')),
+				users: e.select(e.UserProfile, (user) => ({
+					filter: e.op(
+						user.id,
+						'in',
+						e.array_unpack(
+							e.cast(e.array(e.uuid), e.json_get(source, 'userIds')),
+						),
+					),
+				})),
+			}),
+		),
+)
+
 export const newImagesMutation = e.params(
 	{
 		images: e.array(
@@ -13,14 +37,21 @@ export const newImagesMutation = e.params(
 	},
 	(params) =>
 		e.for(e.array_unpack(params.images), (photo) =>
-			e.insert(e.Image, {
-				id: photo.id,
-				sanity_id: photo.sanity_id,
-				label: photo.label,
-				sources: e.select(e.Source, (source) => ({
-					filter: e.op(source.id, 'in', e.array_unpack(photo.sources)),
+			e
+				.insert(e.Image, {
+					id: photo.id,
+					sanity_id: photo.sanity_id,
+					label: photo.label,
+					sources: e.select(e.Source, (source) => ({
+						filter: e.op(source.id, 'in', e.array_unpack(photo.sources)),
+					})),
+				})
+				// Sanity de-duplicates images if they're uploaded multiple times,
+				// so we can safely ignore conflicts
+				.unlessConflict((existingImage) => ({
+					on: existingImage.sanity_id,
+					else: existingImage,
 				})),
-			}),
 		),
 )
 export const newVarietiesMutation = e.params(
@@ -30,7 +61,7 @@ export const newVarietiesMutation = e.params(
 				id: e.uuid,
 				names: e.array(e.str),
 				handle: e.str,
-				photos: e.array(e.uuid),
+				photosSanityId: e.array(e.str),
 			}),
 		),
 	},
@@ -41,7 +72,11 @@ export const newVarietiesMutation = e.params(
 				names: variety.names,
 				handle: variety.handle,
 				photos: e.select(e.Image, (image) => ({
-					filter: e.op(image.id, 'in', e.array_unpack(variety.photos)),
+					filter: e.op(
+						image.sanity_id,
+						'in',
+						e.array_unpack(variety.photosSanityId),
+					),
 				})),
 			}),
 		),
@@ -120,7 +155,9 @@ export const newVegetableMutation = e.params(
 		content: e.optional(e.json),
 
 		// Refs
-		photos: e.optional(e.array(e.uuid)),
+		photos: e.optional(
+			e.array(e.tuple({ sanity_id: e.str, order_index: e.int16 })),
+		),
 		varieties: e.optional(
 			e.array(e.tuple({ id: e.uuid, order_index: e.int16 })),
 		),
@@ -138,14 +175,18 @@ export const newVegetableMutation = e.params(
 				e.array(e.PlantingMethod),
 				params.planting_methods,
 			),
-			photos: e.select(e.Image, (image) => ({
-				filter: e.op(image.id, 'in', e.array_unpack(params.photos)),
-			})),
+			photos: e.assert_distinct(
+				e.for(e.array_unpack(params.photos), (photo) =>
+					e.select(e.Image, (v) => ({
+						filter_single: e.op(v.sanity_id, '=', photo.sanity_id),
+						// '@order_index': photo.order_index,
+					})),
+				),
+			),
 			varieties: e.assert_distinct(
 				e.for(e.array_unpack(params.varieties), (variety) =>
 					e.select(e.VegetableVariety, (v) => ({
-						filter: e.op(v.id, '=', variety.id),
-						// '@order_index': e.int16(1),
+						filter_single: e.op(v.id, '=', variety.id),
 						// '@order_index': variety.order_index,
 					})),
 				),
@@ -153,9 +194,8 @@ export const newVegetableMutation = e.params(
 			tips: e.assert_distinct(
 				e.for(e.array_unpack(params.tips), (tip) =>
 					e.select(e.VegetableTip, (v) => ({
-						filter: e.op(v.id, '=', tip.id),
-						// '@order_index': e.int16(1),
-						// '@order_index': variety.order_index,
+						filter_single: e.op(v.id, '=', tip.id),
+						// '@order_index': tip.order_index,
 					})),
 				),
 			),
@@ -163,30 +203,6 @@ export const newVegetableMutation = e.params(
 				filter: e.op(source.id, 'in', e.array_unpack(params.sources)),
 			})),
 		}),
-)
-
-export const newSourcesMutation = e.params(
-	{
-		sources: e.array(e.json),
-	},
-	(params) =>
-		e.for(e.array_unpack(params.sources), (source) =>
-			e.insert(e.Source, {
-				id: e.cast(e.uuid, e.json_get(source, 'id')),
-				credits: e.cast(e.str, e.json_get(source, 'credits')),
-				type: e.cast(e.SourceType, e.json_get(source, 'type')),
-				origin: e.cast(e.str, e.json_get(source, 'origin')),
-				users: e.select(e.UserProfile, (user) => ({
-					filter: e.op(
-						user.id,
-						'in',
-						e.array_unpack(
-							e.cast(e.array(e.uuid), e.json_get(source, 'userIds')),
-						),
-					),
-				})),
-			}),
-		),
 )
 
 export const setWishlistStatusMutation = e.params(

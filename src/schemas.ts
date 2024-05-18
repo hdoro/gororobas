@@ -60,7 +60,7 @@ export const NewImage = S.transformOrFail(
 	S.Struct({
 		base64: S.String,
 		fileName: S.String,
-		mimeName: S.String,
+		mimeType: S.String,
 	}),
 	{
 		encode: (photoForDB) =>
@@ -68,7 +68,7 @@ export const NewImage = S.transformOrFail(
 				file: base64ToFile(
 					photoForDB.base64,
 					photoForDB.fileName,
-					photoForDB.mimeName,
+					photoForDB.mimeType,
 				),
 			}),
 		decode: (photoInForm, _, ast) =>
@@ -81,7 +81,7 @@ export const NewImage = S.transformOrFail(
 					onSuccess: (base64) => ({
 						base64,
 						fileName: photoInForm.file.name,
-						mimeName: photoInForm.file.type,
+						mimeType: photoInForm.file.type,
 					}),
 					onFailure: (e) =>
 						new ParseResult.Type(ast, photoInForm, '@TODO type error'),
@@ -102,6 +102,10 @@ export const ImageData = S.Struct({
 	data: S.Union(NewImage, StoredImage),
 	sources: S.optional(S.Array(SourceData)),
 })
+
+export type NewImageData = Omit<typeof ImageData.Type, 'data'> & {
+	data: typeof NewImage.Type
+}
 
 /** What gets stored as an `Image` Object in EdgeDB */
 const ImageObjectInDB = ImageData.pipe(S.omit('data'), S.extend(StoredImage))
