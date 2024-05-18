@@ -1,3 +1,4 @@
+import { paths } from '@/utils/urls'
 import Link from 'next/link'
 import GororobasLogo from './icons/GororobasLogo'
 
@@ -9,8 +10,8 @@ const FOOTER_LINKS = [
 
 export default function Footer() {
 	return (
-		<footer className="py-10 md:py-16 lg:py-24 bg-background-card px-pageX flex flex-col md:flex-row md:justify-start items-center md:items-start gap-[var(--page-padding)]">
-			<Link href="/" rel="home" title="Página inicial">
+		<footer className="py-10 md:py-16 lg:py-24 bg-background-card px-pageX flex flex-col md:flex-row md:justify-start items-center md:items-start gap-[var(--page-padding-x)]">
+			<Link href={paths.home()} rel="home" title="Página inicial">
 				<GororobasLogo />
 			</Link>
 			<nav aria-label="Rodapé" className="flex items-center gap-10">

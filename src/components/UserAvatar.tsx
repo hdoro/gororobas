@@ -25,17 +25,22 @@ const avatarVariants = tv({
 				name: 'text-lg',
 			},
 		},
+		includeName: {
+			true: {},
+			false: {},
+		},
 	},
 	defaultVariants: {
 		size: 'sm',
+		includeName: true,
 	},
 })
 
-type UserAvatarProps = {
+type UserAvatarProps = VariantProps<typeof avatarVariants> & {
 	user: {
-		name?: string | undefined
-		handle?: string | undefined
-		location?: string | undefined
+		name?: string | undefined | null
+		handle?: string | undefined | null
+		location?: string | undefined | null
 		photo?:
 			| ImageForRendering
 			| typeof NewImage.Encoded
@@ -44,26 +49,28 @@ type UserAvatarProps = {
 			| undefined
 	}
 	fallbackTone?: 'primary' | 'secondary'
-} & VariantProps<typeof avatarVariants>
+}
 
 export default function UserAvatar(props: UserAvatarProps) {
-	const { user, size } = props
+	const { user, size, includeName } = props
 
-	if (!user.name) return null
+	if (includeName && !user.name) return null
 
 	const classes = avatarVariants({ size })
 
 	return (
 		<div key={user.name} className={classes.root()}>
 			<Photo {...props} imageClasses={classes.image()} />
-			<div className="space-2">
-				<Text className={classes.name()}>{user.name}</Text>
-				{user.location && (
-					<Text level="sm" className={classes.location()}>
-						{user.location}
-					</Text>
-				)}
-			</div>
+			{includeName && (
+				<div className="space-2">
+					<Text className={classes.name()}>{user.name}</Text>
+					{user.location && (
+						<Text level="sm" className={classes.location()}>
+							{user.location}
+						</Text>
+					)}
+				</div>
+			)}
 		</div>
 	)
 }

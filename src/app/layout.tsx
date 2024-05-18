@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/toaster'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
+import HeaderNav from '@/components/HeaderNav'
 import { cn } from '@/utils/cn'
 
 const fontFamily = Plus_Jakarta_Sans({
@@ -36,6 +37,7 @@ export default async function RootLayout({
 	return (
 		<html lang="pt-BR">
 			<body className={cn(fontFamily.className, 'flex flex-col min-h-dvh')}>
+				<HeaderNav />
 				<div className="flex-1">{children}</div>
 				<Footer />
 				<Toaster />

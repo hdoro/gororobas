@@ -60,6 +60,7 @@ export function formatPath(path?: string): string {
 }
 
 export const paths = {
+	home: () => '/',
 	profile: () => '/perfil',
 	signinNotice: () => '/entrar',
 	signin: () => SIGNIN_URL,

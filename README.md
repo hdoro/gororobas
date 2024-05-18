@@ -4,14 +4,13 @@ Documentation is WIP
 
 ## Vegetable form
 
-- [ ] Finish form
+- [x] Finish form
   - [x] Editing tips
   - [x] Select & query friends of a vegetable
   - [x] (SourceInput) move to array and allow selecting users
     - Update createVegetables to insert sources
     - Update migration to insert sources
     - Update migration to include root vegetable sources
-  - [ ] Better deal with errors
 
 ## User Authentication
 
@@ -80,12 +79,15 @@ Documentation is WIP
 - [x] Consider skipping on notes for now
   - If so, is there an eye-catching way of using AI and RAG?
   - Won't skip, let's stretch!
+- [x] Footer
+- [x] HeaderNav
 - [ ] User profile
   - Profile picture
   - Bio
   - Social links
   - Contributions
-- [ ] More personality to theme (v0 theme generator?)
+- [x] More personality to theme
+    - ~~v0 theme generator?~~ had to do manually, wasn't out at this moment
 
 ## Deployment
 
@@ -99,6 +101,7 @@ Documentation is WIP
 
 ## Stretch
 
+- [ ] Better form errors (especially photos, varieties and tips)
 - [ ] Debug why SanityImage is re-rendering so much in ProfileForm
 - [ ] ProfileForm: don't allow duplicate handles
 - [ ] Exclusivity constraint on source's URL, with `unlessConflict` on mutation and de-duplication in `createVegetable`
