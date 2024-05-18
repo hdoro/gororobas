@@ -1,7 +1,7 @@
 import {
 	type ReferenceObjectType,
 	listReferenceOptions,
-} from '@/actions/listPossibleReferences'
+} from '@/actions/listReferenceOptions'
 import type { ImageForRendering, ReferenceOption } from '@/types'
 import { cn } from '@/utils/cn'
 import { CommandLoading } from 'cmdk'

@@ -1,10 +1,10 @@
 import type { SourceType } from '@/types'
 import { SOURCE_TYPE_TO_LABEL } from '@/utils/labels'
 import {
+	useFormContext,
 	type ControllerRenderProps,
 	type FieldPath,
 	type FieldValues,
-	useFormContext,
 } from 'react-hook-form'
 import { Input } from '../ui/input'
 import Field from './Field'
@@ -21,7 +21,7 @@ export default function SourceInput<
 
 	const sourceType = form.watch(`${field.name}.sourceType`) as SourceType
 	return (
-		<>
+		<div className="space-y-4">
 			<Field
 				form={form}
 				label={`Origem da ${label}`}
@@ -74,6 +74,6 @@ export default function SourceInput<
 					/>
 				</>
 			)}
-		</>
+		</div>
 	)
 }

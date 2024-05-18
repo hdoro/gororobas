@@ -2,6 +2,8 @@ import { auth } from '@/edgedb'
 import { vegetablePageQuery } from '@/queries'
 import { notFound } from 'next/navigation'
 import VegetablePage from './VegetablePage'
+import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { Effect, pipe } from 'effect'
 
 export default async function VegetableRoute({
 	params: { handle },
@@ -10,9 +12,16 @@ export default async function VegetableRoute({
 }) {
 	const session = auth.getSession()
 
-	// console.time('vegetablePageQuery')
-	const vegetable = await vegetablePageQuery.run(session.client, { handle })
-	// console.timeEnd('vegetablePageQuery')
+	const vegetable = await runServerEffect(
+		pipe(
+			Effect.tryPromise({
+				try: () => vegetablePageQuery.run(session.client, { handle }),
+				catch: (error) => console.log(error),
+			}),
+			...buildTraceAndMetrics('vegetable_page', { handle }),
+			Effect.catchAll(() => Effect.succeed(null)),
+		),
+	)
 
 	if (!vegetable) return notFound()
 

@@ -2,6 +2,7 @@
 
 import {
 	newImagesMutation,
+	newSourcesMutation,
 	newTipsMutation,
 	newVarietiesMutation,
 	newVegetableFriendshipsMutation,
@@ -15,8 +16,12 @@ import { Schema } from '@effect/schema'
 import * as S from '@effect/schema/Schema'
 import type { Client } from 'edgedb'
 import { Effect, pipe } from 'effect'
+import { formatVegetableFriendForDB } from './formatVegetableFriendForDB'
 
-export function createVegetable(input: VegetableForDB, inputClient: Client) {
+export async function createVegetable(
+	input: VegetableForDB,
+	inputClient: Client,
+) {
 	return runServerEffect(
 		Effect.gen(function* (_) {
 			if (!Schema.is(Vegetable)(input)) {
@@ -44,19 +49,30 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 	const client = inputClient.withConfig({ allow_user_specified_id: true })
 
 	return client.transaction(async (tx) => {
-		// #1 CREATE ALL PHOTOS
+		// #1 CREATE ALL SOURCES
+		const allSources = [
+			...(input.tips || []).flatMap((tip) => tip?.sources || []),
+			...(input.photos || []).flatMap((photo) => photo?.sources || []),
+			...(input.sources || []),
+		]
+		if (allSources.length > 0) {
+			await newSourcesMutation.run(tx, {
+				sources: allSources,
+			})
+		}
+
+		// #2 CREATE ALL PHOTOS
 		const allPhotos = [
 			...(input.varieties || []).flatMap((v) => v?.photos || []),
 			...(input.photos || []),
 		].flatMap((photo) => {
 			if (!S.is(StoredImage)(photo.data)) return []
 
-			const { label, data, ...optional_properties } = photo
 			return {
-				id: data.stored_image_id,
-				sanity_id: data.sanity_id,
-				label: label,
-				optional_properties,
+				id: photo.id,
+				label: photo.label || '',
+				sanity_id: photo.data.sanity_id,
+				sources: photo.sources?.map((s) => s.id) || [],
 			}
 		})
 
@@ -70,7 +86,7 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 		// #2 CREATE ALL VARIETIES
 		const varieties = (input.varieties || []).map((v) => {
 			return {
-				id: generateId(),
+				id: v.id,
 				names: v.names,
 				handle: `${input.handle}-${slugify(v.names[0])}`,
 				photos: (v.photos || []).flatMap((photo) => {
@@ -96,14 +112,14 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 
 		// #3 Create all tips
 		const tips = (input.tips || []).map(
-			({ subjects, content, ...optional_properties }) => {
+			({ subjects, content, sources, id }) => {
 				return {
-					id: generateId(),
+					id,
 					content,
 					subjects,
 					handle: `${input.handle}-${generateId()}`,
 					content_links: [],
-					optional_properties,
+					sources: sources?.map((s) => s.id) || [],
 				}
 			},
 		)
@@ -151,6 +167,7 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 				id: tip.id,
 				order_index,
 			})),
+			sources: input.sources?.map((s) => s.id) || [],
 		})
 
 		// #5 Create friendships
@@ -163,16 +180,4 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 			})
 		}
 	})
-}
-
-export function formatVegetableFriendForDB(
-	friend_id: string,
-	vegetable_id: string,
-) {
-	return {
-		id: friend_id,
-		unique_key: [vegetable_id, friend_id]
-			.sort((a, b) => a.localeCompare(b))
-			.join('-'),
-	}
 }

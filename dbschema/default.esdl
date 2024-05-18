@@ -71,7 +71,7 @@ module default {
       on target delete delete source;
     };
     required name: str;
-    bio: str;
+    bio: json;
     location: str;
     photo: Image;
 
@@ -140,12 +140,12 @@ module default {
     );
   }
 
-  abstract type WithSource {
-    sourceType: SourceType;
+  type Source {
+    required type: SourceType;
     credits: str;
-    source: str;
+    origin: str;
     multi users: UserProfile {
-      on target delete allow;
+      on target delete delete source;
     };
   }
 
@@ -171,7 +171,7 @@ module default {
     };
   }
 
-  type Image extending WithSource, PublicRead, Auditable, AdminCanDoAnything {
+  type Image extending PublicRead, Auditable, AdminCanDoAnything {
     required sanity_id: str {
       constraint exclusive;
     };
@@ -179,6 +179,10 @@ module default {
     # Sanity-compliant values
     hotspot: json;
     crop: json;
+
+    multi sources: Source {
+      on target delete allow;
+    }
   }
 
   type VegetableVariety extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
@@ -188,12 +192,16 @@ module default {
     };
   }
 
-  type VegetableTip extending WithHandle, WithSource, PublicRead, Auditable, AdminCanDoAnything {
+  type VegetableTip extending WithHandle, PublicRead, Auditable, AdminCanDoAnything {
     required multi subjects: TipSubject;
     required content: json;
 
     multi content_links: WithHandle {
       # Let dangling links live
+      on target delete allow;
+    };
+
+    multi sources: Source {
       on target delete allow;
     };
   }
@@ -234,6 +242,10 @@ module default {
       on target delete allow;
       # When a vegetable is deleted, delete all of its tips
       on source delete delete target;
+    };
+
+    multi sources: Source {
+      on target delete allow;
     };
 
     # Computed

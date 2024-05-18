@@ -64,7 +64,7 @@ export default function VegetableVarietyInput<
 						renderablePhoto.data.file instanceof File ? (
 							<img
 								src={URL.createObjectURL(renderablePhoto.data.file)}
-								alt={renderablePhoto.label}
+								alt={renderablePhoto.label || ''}
 								className="w-full h-auto max-h-[6.25rem] object-cover"
 							/>
 						) : (

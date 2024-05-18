@@ -40,6 +40,7 @@ import VegetableVarietyInput from './forms/VegetableVarietyInput'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { useToast } from './ui/use-toast'
+import SourceInput from './forms/SourceInput'
 
 /**
  * FORM REQUIREMENTS:
@@ -267,6 +268,32 @@ export default function TestForm() {
 													<RichTextInput
 														field={field}
 														placeholder="Alguma curiosidade, história, ritual, ou dica solta que gostaria de compartilhar?"
+													/>
+												)}
+											/>
+											<Field
+												form={form}
+												label="Fontes"
+												name={'sources'}
+												render={({ field: sourcesField }) => (
+													<ArrayInput
+														field={sourcesField}
+														newItemValue={{}}
+														newItemLabel="Nova fonte"
+														renderItem={(index) => (
+															<Field
+																form={form}
+																name={`${sourcesField.name}.${index}`}
+																label={`Fonte #${index + 1}`}
+																hideLabel
+																render={({ field: subField }) => (
+																	<SourceInput
+																		field={subField}
+																		label="informação"
+																	/>
+																)}
+															/>
+														)}
 													/>
 												)}
 											/>

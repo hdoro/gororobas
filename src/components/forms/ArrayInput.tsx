@@ -27,6 +27,7 @@ import {
 } from 'react-hook-form'
 import { Button } from '../ui/button'
 import { Separator } from '../ui/separator'
+import { generateId } from '@/utils/ids'
 
 export default function ArrayInput<
 	TFieldValues extends FieldValues = FieldValues,
@@ -84,9 +85,15 @@ export default function ArrayInput<
 				<Separator className="w-auto flex-1" />
 				<Button
 					onClick={() => {
-						fieldArray.append(newItemValue, {
-							shouldFocus: inputType === 'regular',
-						})
+						fieldArray.append(
+							{ id: generateId(), ...(newItemValue || {}) } as FieldArray<
+								FieldValues,
+								TName
+							>,
+							{
+								shouldFocus: inputType === 'regular',
+							},
+						)
 
 						// Manually open the dialog after creation
 						if (inputType === 'dialog') {

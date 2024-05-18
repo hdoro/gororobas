@@ -25,17 +25,19 @@ import type { JSONContent } from '@tiptap/react'
 import { Effect } from 'effect'
 
 const SourceGororobasInForm = S.Struct({
-	sourceType: S.Literal('GOROROBAS' satisfies SourceType),
+	id: S.UUID,
+	type: S.Literal('GOROROBAS' satisfies SourceType),
 	userIds: S.Array(S.UUID),
 })
 
 const SourceExternalInForm = S.Struct({
-	sourceType: S.Literal('EXTERNAL' satisfies SourceType),
+	id: S.UUID,
+	type: S.Literal('EXTERNAL' satisfies SourceType),
 	credits: S.String.pipe(S.minLength(1)),
-	source: S.optional(S.String),
+	origin: S.optional(S.String),
 })
 
-const Source = S.Union(SourceGororobasInForm, SourceExternalInForm)
+export const SourceData = S.Union(SourceGororobasInForm, SourceExternalInForm)
 
 const isFile = (input: unknown): input is File => input instanceof File
 
@@ -89,16 +91,39 @@ export const NewImage = S.transformOrFail(
 )
 
 export const StoredImage = S.Struct({
-	stored_image_id: S.UUID,
 	sanity_id: S.String,
-	hotspot: S.optional(S.Object),
-	crop: S.optional(S.Object),
+	hotspot: S.optional(S.Object, { nullable: true }),
+	crop: S.optional(S.Object, { nullable: true }),
 })
 
-const Image = S.Struct({
-	label: S.String,
+export const ImageData = S.Struct({
+	id: S.UUID,
+	label: S.optional(S.String, { nullable: true }),
 	data: S.Union(NewImage, StoredImage),
-}).pipe(S.extend(S.partial(Source)))
+	sources: S.optional(S.Array(SourceData)),
+})
+
+/** What gets stored as an `Image` Object in EdgeDB */
+const ImageObjectInDB = ImageData.pipe(S.omit('data'), S.extend(StoredImage))
+
+type ImageObjectInDB = typeof ImageObjectInDB.Type
+
+export const ImageDBToFormTransformer = S.transform(
+	ImageObjectInDB,
+	ImageData,
+	{
+		encode: (imageInForm) =>
+			({
+				...imageInForm,
+				...imageInForm.data,
+				// @TODO fail if not a stored image
+			}) as any,
+		decode: (imageInDb) => ({
+			...imageInDb,
+			data: S.decodeSync(StoredImage)(imageInDb),
+		}),
+	},
+)
 
 export const StringInArray = S.transform(
 	S.Struct({
@@ -116,19 +141,17 @@ export const StringInArray = S.transform(
 const VegetableVariety = S.Struct({
 	id: S.UUID,
 	names: S.NonEmptyArray(StringInArray),
-	photos: S.optional(S.Array(Image)),
+	photos: S.optional(S.Array(ImageData)),
 })
 
-const VegetableTip = S.extend(
-	S.Struct({
-		id: S.UUID,
-		subjects: S.Array(
-			S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
-		),
-		content: RichText,
-	}),
-	Source,
-)
+const VegetableTip = S.Struct({
+	id: S.UUID,
+	subjects: S.Array(
+		S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
+	),
+	content: RichText,
+	sources: S.optional(S.Array(SourceData)),
+})
 
 const Handle = S.String.pipe(
 	S.minLength(1, {
@@ -158,7 +181,6 @@ export const Vegetable = S.Struct({
 				message: () => 'Marque ao menos uma opção',
 			}),
 	),
-	// @TODO: plural or singular?
 	edible_parts: S.optional(
 		S.Array(S.Literal(...(Object.keys(EDIBLE_PART_TO_LABEL) as EdiblePart[]))),
 	),
@@ -220,9 +242,10 @@ export const Vegetable = S.Struct({
 
 	varieties: S.optional(S.Array(VegetableVariety)),
 	tips: S.optional(S.Array(VegetableTip)),
-	photos: S.optional(S.Array(Image)),
+	photos: S.optional(S.Array(ImageData)),
 	content: S.optional(RichText),
 	friends: S.optional(S.Array(S.UUID)),
+	sources: S.optional(S.Array(SourceData)),
 }).pipe(
 	S.filter((vegetable, _, ast) => {
 		if (
@@ -231,7 +254,7 @@ export const Vegetable = S.Struct({
 		)
 			return
 
-		// @TODO: how to return a path?
+		// @TODO: how to return a path to a field?
 		return vegetable.height_max < vegetable.height_min
 			? new ParseResult.Type(
 					ast,
@@ -248,4 +271,16 @@ export type VegetableTipInForm = typeof VegetableTip.Encoded
 export type VegetableForDB = typeof Vegetable.Type
 export type VegetableInForm = typeof Vegetable.Encoded
 
-export type SourceForDB = typeof Source.Type
+export type SourceForDB = typeof SourceData.Type
+
+export const ProfileData = S.Struct({
+	id: S.UUID,
+	name: S.String.pipe(S.minLength(3)),
+	handle: Handle,
+	photo: S.optional(ImageData),
+	location: S.optional(S.String),
+	bio: S.optional(RichText),
+})
+
+export type ProfileDataForDB = typeof ProfileData.Type
+export type ProfileDataInForm = typeof ProfileData.Encoded

@@ -1,14 +1,12 @@
-import {
-	createVegetable,
-	formatVegetableFriendForDB,
-} from '@/actions/createVegetable'
+import { createVegetable } from '@/actions/createVegetable'
+import { formatVegetableFriendForDB } from '@/actions/formatVegetableFriendForDB'
 import type {
 	Gender,
 	SourceType,
 	TipSubject,
 	VegetableUsage,
 } from '@/edgedb.interfaces'
-import type { SourceForDB, VegetableForDB } from '@/schemas'
+import type { SourceData, SourceForDB, VegetableForDB } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { PLANTING_METHOD_TO_LABEL } from '@/utils/labels'
 import { sanityServerClientRaw } from '@/utils/sanity.client'
@@ -66,41 +64,45 @@ const TIP_SUBJECT_MAP: Record<
 
 function sanitySourcesToEdgeDB(
 	sources: Required<SanityVegetable>['photos'][number]['sources'],
-) {
-	const sourceType = sources?.[0]._type
-		? SOURCE_MAP[sources[0]._type]
-		: 'EXTERNAL'
+): SourceForDB[] {
+	return (sources || []).flatMap((source) => {
+		const sourceType = SOURCE_MAP[source._type]
+		if (!sourceType) return []
 
-	if (sourceType === 'GOROROBAS') {
-		// @TODO migrate users?
-		const userId = (
-			sources?.find((s) => s._type === 'source.user') as SourceUser
-		)?.user?._ref
+		if (sourceType === 'GOROROBAS') {
+			// @TODO migrate users?
+			const userId = (
+				sources?.find((s) => s._type === 'source.user') as SourceUser
+			)?.user?._ref
+			return {
+				id: S.is(S.UUID)(source._key) ? source._key : generateId(),
+				type: sourceType,
+				userIds: [],
+				// userIds: userId ? [userId] : undefined,
+			} satisfies SourceForDB
+		}
+
 		return {
-			sourceType,
-			// userIds: userId ? [userId] : undefined,
-		} as SourceForDB
-	}
-
-	return {
-		sourceType,
-		credits: (sources?.[0] as SourceExternal | undefined)?.credits,
-		source: (sources?.[0] as SourceExternal | undefined)?.source,
-	} as SourceForDB
+			id: S.is(S.UUID)(source._key) ? source._key : generateId(),
+			type: sourceType,
+			credits: (sources?.[0] as SourceExternal | undefined)?.credits || '',
+			origin: (sources?.[0] as SourceExternal | undefined)?.source || '',
+		} satisfies SourceForDB
+	})
 }
 
 function sanityPhotoToEdgeDB(
 	photo: Required<SanityVegetable>['photos'][number],
 ): Exclude<VegetableForDB['photos'], undefined>[number] {
 	return {
-		...sanitySourcesToEdgeDB(photo.sources),
+		id: generateId(),
 		label: photo.label || '',
 		data: {
-			stored_image_id: generateId(),
 			sanity_id: photo.media?.asset?._ref as string,
 			hotspot: photo.media?.hotspot,
 			crop: photo.media?.crop,
 		},
+		sources: sanitySourcesToEdgeDB(photo.sources),
 	}
 }
 
@@ -210,7 +212,7 @@ async function main() {
 							? [TIP_SUBJECT_MAP[tip.subject]]
 							: [],
 					content: ptToTiptap(tip.content || []),
-					...sanitySourcesToEdgeDB(tip.sources),
+					sources: sanitySourcesToEdgeDB(tip.sources),
 				}
 			}),
 			friends: vegetable.friends || [],

@@ -1,14 +1,19 @@
 import e, { type $infer } from '@/edgeql'
 
+const SOURCE_FIELDS = {
+	type: true,
+	origin: true,
+	credits: true,
+	users: true,
+} as const
+
 const PHOTO_FIELDS = {
+	id: true,
 	sanity_id: true,
 	hotspot: true,
 	crop: true,
 	label: true,
-	sourceType: true,
-	source: true,
-	credits: true,
-	users: true,
+	sources: SOURCE_FIELDS,
 } as const
 
 export const vegetablePageQuery = e.params(
@@ -67,10 +72,7 @@ export const vegetablePageQuery = e.params(
 				handle: true,
 				subjects: true,
 				content: true,
-				sourceType: true,
-				source: true,
-				credits: true,
-				users: true,
+				sources: SOURCE_FIELDS,
 
 				order_by: {
 					expression: tip['@order_index'],
@@ -92,6 +94,7 @@ export const vegetablePageQuery = e.params(
 					},
 				}),
 			}),
+			sources: SOURCE_FIELDS,
 		})),
 )
 
@@ -177,3 +180,16 @@ export const vegetablesForReferenceQuery = e.select(
 )
 
 export type VegetableCardData = VegetablePageData['friends'][0]
+
+export const profilePageQuery = e.select(e.UserProfile, (profile) => ({
+	filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
+
+	name: true,
+	id: true,
+	handle: true,
+	location: true,
+	bio: true,
+	photo: PHOTO_FIELDS,
+}))
+
+export type ProfilePageData = Exclude<$infer<typeof profilePageQuery>, null>

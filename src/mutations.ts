@@ -7,8 +7,7 @@ export const newImagesMutation = e.params(
 				id: e.uuid,
 				sanity_id: e.str,
 				label: e.str,
-				/** @see {PhotoInputValue['source']} */
-				optional_properties: e.json,
+				sources: e.array(e.uuid),
 			}),
 		),
 	},
@@ -18,29 +17,8 @@ export const newImagesMutation = e.params(
 				id: photo.id,
 				sanity_id: photo.sanity_id,
 				label: photo.label,
-				credits: e.cast(
-					e.str,
-					e.json_get(photo.optional_properties, 'credits'),
-				),
-				sourceType: e.cast(
-					e.SourceType,
-					e.json_get(photo.optional_properties, 'sourceType'),
-				),
-				source: e.cast(
-					e.str,
-					e.json_get(photo.optional_properties, 'sourceType'),
-				),
-				users: e.select(e.UserProfile, (user) => ({
-					filter: e.op(
-						user.id,
-						'in',
-						e.array_unpack(
-							e.cast(
-								e.array(e.uuid),
-								e.json_get(photo.optional_properties, 'userIds'),
-							),
-						),
-					),
+				sources: e.select(e.Source, (source) => ({
+					filter: e.op(source.id, 'in', e.array_unpack(photo.sources)),
 				})),
 			}),
 		),
@@ -77,8 +55,7 @@ export const newTipsMutation = e.params(
 				subjects: e.array(e.str),
 				content: e.json,
 				content_links: e.array(e.uuid),
-				/** @see {PhotoInputValue['source']} */
-				optional_properties: e.json,
+				sources: e.array(e.uuid),
 			}),
 		),
 	},
@@ -92,26 +69,8 @@ export const newTipsMutation = e.params(
 				content_links: e.select(e.WithHandle, (target) => ({
 					filter: e.op(target.id, 'in', e.array_unpack(tip.content_links)),
 				})),
-				credits: e.cast(e.str, e.json_get(tip.optional_properties, 'credits')),
-				sourceType: e.cast(
-					e.SourceType,
-					e.json_get(tip.optional_properties, 'sourceType'),
-				),
-				source: e.cast(
-					e.str,
-					e.json_get(tip.optional_properties, 'sourceType'),
-				),
-				users: e.select(e.UserProfile, (user) => ({
-					filter: e.op(
-						user.id,
-						'in',
-						e.array_unpack(
-							e.cast(
-								e.array(e.uuid),
-								e.json_get(tip.optional_properties, 'userIds'),
-							),
-						),
-					),
+				sources: e.select(e.Source, (source) => ({
+					filter: e.op(source.id, 'in', e.array_unpack(tip.sources)),
 				})),
 			}),
 		),
@@ -166,6 +125,7 @@ export const newVegetableMutation = e.params(
 			e.array(e.tuple({ id: e.uuid, order_index: e.int16 })),
 		),
 		tips: e.optional(e.array(e.tuple({ id: e.uuid, order_index: e.int16 }))),
+		sources: e.array(e.uuid),
 	},
 	(params) =>
 		e.insert(e.Vegetable, {
@@ -199,7 +159,34 @@ export const newVegetableMutation = e.params(
 					})),
 				),
 			),
+			sources: e.select(e.Source, (source) => ({
+				filter: e.op(source.id, 'in', e.array_unpack(params.sources)),
+			})),
 		}),
+)
+
+export const newSourcesMutation = e.params(
+	{
+		sources: e.array(e.json),
+	},
+	(params) =>
+		e.for(e.array_unpack(params.sources), (source) =>
+			e.insert(e.Source, {
+				id: e.cast(e.uuid, e.json_get(source, 'id')),
+				credits: e.cast(e.str, e.json_get(source, 'credits')),
+				type: e.cast(e.SourceType, e.json_get(source, 'type')),
+				origin: e.cast(e.str, e.json_get(source, 'origin')),
+				users: e.select(e.UserProfile, (user) => ({
+					filter: e.op(
+						user.id,
+						'in',
+						e.array_unpack(
+							e.cast(e.array(e.uuid), e.json_get(source, 'userIds')),
+						),
+					),
+				})),
+			}),
+		),
 )
 
 export const setWishlistStatusMutation = e.params(

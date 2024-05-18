@@ -24,6 +24,7 @@ import CheckboxesInput from './CheckboxesInput'
 import Field from './Field'
 import RichTextInput from './RichTextInput'
 import SourceInput from './SourceInput'
+import ArrayInput from './ArrayInput'
 
 export default function VegetableTipInput<
 	TFieldValues extends FieldValues = FieldValues,
@@ -104,9 +105,30 @@ export default function VegetableTipInput<
 								/>
 							)}
 						/>
-						<div className="space-y-3">
-							<SourceInput field={rootField} label="Dica" />
-						</div>
+						<Field
+							form={form}
+							label="Fontes"
+							name={`${rootField.name}.sources`}
+							render={({ field: sourcesField }) => (
+								<ArrayInput
+									field={sourcesField}
+									// @ts-expect-error no way for TS to know the type of `newItemValue`
+									newItemValue={{}}
+									newItemLabel="Nova fonte"
+									renderItem={(index) => (
+										<Field
+											form={form}
+											name={`${sourcesField.name}.${index}`}
+											label={`Fonte #${index + 1}`}
+											hideLabel
+											render={({ field: subField }) => (
+												<SourceInput field={subField} label="dica" />
+											)}
+										/>
+									)}
+								/>
+							)}
+						/>
 					</div>
 				</DialogBody>
 			</DialogContent>

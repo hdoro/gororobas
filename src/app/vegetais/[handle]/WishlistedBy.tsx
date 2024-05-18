@@ -1,12 +1,10 @@
-import { SanityImage } from '@/components/SanityImage'
+import UserAvatar from '@/components/UserAvatar'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import { Text } from '@/components/ui/text'
 import { client } from '@/edgedb'
-import { type WishlistedByData, wishlistedByQuery } from '@/queries'
+import { wishlistedByQuery, type WishlistedByData } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { cn } from '@/utils/cn'
 import { Effect, pipe } from 'effect'
-import { SproutIcon } from 'lucide-react'
 
 const fetchWishlistedBy = (vegetable_id: string) =>
 	pipe(
@@ -32,38 +30,13 @@ function AvatarsStrip({
 }: { users: WishlistedByData['wishlisted_by'][number]['user_profile'][] }) {
 	return (
 		<div className="flex items-center gap-5 overflow-x-auto">
-			{users.map((user, index) => {
-				const tone = index % 2 === 0 ? 'primary' : 'secondary'
-				return (
-					<div key={user.name} className="flex-shrink-0 flex gap-2">
-						{user.photo ? (
-							<SanityImage
-								image={user.photo}
-								alt={`Foto de ${user.name}`}
-								maxWidth={28}
-								className="block w-7 h-7 object-cover rounded-full"
-							/>
-						) : (
-							<div
-								className={cn(
-									'w-7 h-7 rounded-full flex items-center justify-center',
-									tone === 'primary' ? 'bg-primary-200' : 'bg-secondary-200',
-								)}
-							>
-								<SproutIcon
-									className={cn(
-										'w-5',
-										tone === 'primary'
-											? 'text-primary-700'
-											: 'text-secondary-700',
-									)}
-								/>
-							</div>
-						)}
-						<Text>{user.name}</Text>
-					</div>
-				)
-			})}
+			{users.map((user, index) => (
+				<UserAvatar
+					key={user.name}
+					user={user}
+					fallbackTone={index % 2 === 0 ? 'primary' : 'secondary'}
+				/>
+			))}
 		</div>
 	)
 }

@@ -7,8 +7,11 @@ Documentation is WIP
 - [ ] Finish form
   - [x] Editing tips
   - [x] Select & query friends of a vegetable
-  - [ ] (SourceInput) move to array and allow selecting users
-
+  - [x] (SourceInput) move to array and allow selecting users
+    - Update createVegetables to insert sources
+    - Update migration to insert sources
+    - Update migration to include root vegetable sources
+  - [ ] Better deal with errors
 
 ## User Authentication
 
@@ -39,9 +42,21 @@ Documentation is WIP
 ## Vegetable page
 
 - [x] Update wishlist
+- [x] Sidebar
+- [x] Query all users that have wishlisted to display on vegetable page
 - [ ] Photos carousel dialog
 - [ ] Tips carousel dialog
-- [ ] Query all users that have wishlisted to display on vegetable page
+- [ ] Notes
+
+## Edit user profile
+
+- [x] /perfil route
+- [x] Small form with:
+  - Name
+  - Profile picture
+  - Location
+  - Bio
+- [ ] Diffing & mutation to edit profile
 
 ## Homepage
 
@@ -59,8 +74,12 @@ Documentation is WIP
 
 - [x] BiomeJS?
 - [x] Migrate data from Sanity
-- [ ] Consider skipping on notes for now
+- [x] OpenTelemetry
+- [x] Fix access control on User and UserProfile - non-admins can't access their `global_user_profile`
+  - Partial fix was to remove access control on User
+- [x] Consider skipping on notes for now
   - If so, is there an eye-catching way of using AI and RAG?
+  - Won't skip, let's stretch!
 - [ ] User profile
   - Profile picture
   - Bio
@@ -72,12 +91,15 @@ Documentation is WIP
 
 - [ ] Put on EdgeDB Cloud
 - [ ] Migrate data
+- [ ] Honeycomb
 - [ ] Set-up backups
 - [ ] Publish on Vercel
 - [ ] Set-up DB branches in Github Actions
 
 ## Stretch
 
+- [ ] ProfileForm: don't allow duplicate handles
+- [ ] Exclusivity constraint on source's URL, with `unlessConflict` on mutation and de-duplication in `createVegetable`
 - [ ] Move Shadcn components to tailwind-variants
 - [ ] Comments in tips
 - [ ] Streams timelapse
@@ -88,6 +110,7 @@ Documentation is WIP
   - Commit history, visualized
   - numbers: X hours of stream, Y commits, Z days
 - [ ] Image hotspotting and cropping
+- [ ] Shadow routes for vegetable page (open in dialog if in vegetables grid)
 
 ### Notes
 
