@@ -3,6 +3,7 @@ import type {
 	SanityImageCrop,
 	SanityImageHotspot,
 } from '@sanity/image-url/lib/types/types'
+import type { JSONContent } from '@tiptap/react'
 export type {
 	EdiblePart,
 	Gender,
@@ -30,3 +31,5 @@ export type ImageForRendering = Pick<Image, 'sanity_id' | 'label'> & {
 	hotspot?: SanityImageHotspot | unknown
 	crop?: SanityImageCrop | unknown
 }
+
+export type TiptapNode = JSONContent
