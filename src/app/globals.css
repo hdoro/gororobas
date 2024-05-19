@@ -53,6 +53,8 @@
 
     --page-padding-x: 1rem;
     --page-padding-y: 2rem;
+
+    --vegetable-card-size: 15.625rem;
   }
 
   /* .dark {
@@ -112,4 +114,13 @@ body {
 
 .tiptap[contenteditable='true'] {
   @apply outline-none space-y-[0.5em];
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
 }

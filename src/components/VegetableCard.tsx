@@ -25,7 +25,7 @@ export default function VegetableCard({
 	return (
 		<Link
 			href={paths.vegetable(vegetable.handle)}
-			className="relative overflow-hidden rounded-lg flex-1 aspect-[1.15] w-auto h-auto max-w-[15.625rem] group"
+			className="relative overflow-hidden rounded-lg flex-[0_0_var(--vegetable-card-size)] aspect-[1.15] w-[var(--vegetable-card-size)] h-auto group"
 			draggable={false}
 		>
 			{photos.length > 0 ? (
@@ -81,7 +81,7 @@ function CardWithPhotoContents({
 								return (
 									<CarouselItem
 										key={photo.sanity_id || idx}
-										className="relative flex justify-center bg-stone-200 h-full"
+										className="relative w-full h-full"
 									>
 										<SanityImage
 											image={photo}

@@ -18,6 +18,7 @@ Documentation is WIP
 - [x] Auth emails - done by EdgeDB?
 - [x] Admin & regular roles
 - [ ] If session but no User/UserProfile (failed the auth callback), create
+  - Probably do so in HeaderNav, where we fetch the profile?
 
 ## Vegetable submission
 
@@ -59,15 +60,11 @@ Documentation is WIP
 
 ## Homepage
 
-- [ ] Vegetables grid
-- [ ] Design
-- [ ] Rendering
+- [x] Design
+- [x] Vegetables grid
+- [x] People strip
+- [ ] Notes grid
 
-## AI
-
-- [ ] Relate notes to vegetables (note creation/update trigger)
-- [ ] Relate notes to suggestions and tips (note creation/update trigger)
-- [ ] Relate suggestions and tips to notes (tip creation/update trigger)
 
 ## Unstructured
 
@@ -81,13 +78,23 @@ Documentation is WIP
   - Won't skip, let's stretch!
 - [x] Footer
 - [x] HeaderNav
-- [ ] User profile
-  - Profile picture
-  - Bio
-  - Social links
-  - Contributions
 - [x] More personality to theme
     - ~~v0 theme generator?~~ had to do manually, wasn't out at this moment
+
+### Notes
+
+- [ ] Rich text editor
+- [ ] Send note
+- [ ] Display notes in Vegetable page
+- [ ] Migrate notes from Roam to EdgeDB
+- [ ] Notes grid
+- [ ] Note page
+
+## AI
+
+- [ ] Relate notes to vegetables (note creation/update trigger)
+- [ ] Relate notes to suggestions and tips (note creation/update trigger)
+- [ ] Relate suggestions and tips to notes (tip creation/update trigger)
 
 ## Deployment
 
@@ -101,12 +108,19 @@ Documentation is WIP
 
 ## Stretch
 
+- [ ] Better HeaderNav styles on mobile
+- [ ] User profile page
+  - Profile picture
+  - Bio
+  - Social links
+  - Contributions
 - [ ] Better form errors (especially photos, varieties and tips)
 - [ ] Debug why SanityImage is re-rendering so much in ProfileForm
 - [ ] ProfileForm: don't allow duplicate handles
 - [ ] Exclusivity constraint on source's URL, with `unlessConflict` on mutation and de-duplication in `createVegetable`
 - [ ] Move Shadcn components to tailwind-variants
 - [ ] Comments in tips
+- [ ] Test React 19
 - [ ] Streams timelapse
 - [ ] Blog posts
   - How to add complex objects to EdgeDB via transactions
@@ -124,12 +138,4 @@ Documentation is WIP
     ```
     - Happened with `edgedb@/1.6.0-canary.20240510T201054` and `@edgedb/generate@0.6.0-canary.20240510T202700` as well as the latest `@edgedb/generate@0.5.3`
     - tried renaming to just `order`, also didn't work
-
-### Notes
-
-- [ ] Rich text editor
-- [ ] Send note
-- [ ] Display notes in Vegetable page
-- [ ] Migrate notes from Roam to EdgeDB
-- [ ] Notes grid
-- [ ] Note page
+- Learn from Michael: https://github.com/mikearnaldi/next-effect/blob/main/app/page.tsx

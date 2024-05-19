@@ -6,8 +6,8 @@ import UserNav from './UserNav'
 import GororobasLogo from './icons/GororobasLogo'
 
 const HEADER_LINKS = [
-	{ href: '/vegetais', text: 'Vegetais' },
-	{ href: '/sobre', text: 'Sobre' },
+	{ href: paths.vegetablesIndex(), text: 'Vegetais' },
+	{ href: paths.notesIndex(), text: 'Notas' },
 ]
 
 export default async function HeaderNav() {
@@ -18,13 +18,13 @@ export default async function HeaderNav() {
 	return (
 		<nav
 			aria-label="Navegação do cabeçalho"
-			className="px-pageX pt-4 flex gap-3 justify-between items-center"
+			className="w-full px-pageX pt-4 flex flex-wrap gap-3 justify-between items-center"
 		>
 			<Link href={paths.home()} rel="home" title="Página inicial">
 				<GororobasLogo />
 			</Link>
 
-			<div className="flex items-center gap-10">
+			<div className="flex flex-wrap items-center gap-x-10 gap-y-3">
 				{HEADER_LINKS.map((link) => (
 					<Link
 						key={link.href}
