@@ -33,7 +33,7 @@ function getTransaction(input: NotesForDB, inputClient: Client) {
 			handle: note.handle,
 			title: note.title,
 			public: note.public,
-			created_at: note.created_at,
+			published_at: note.published_at,
 			created_by: note.created_by,
 			types: note.types,
 			optional_properties: note.body

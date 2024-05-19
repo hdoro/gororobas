@@ -266,7 +266,7 @@ export const insertNotesMutation = e.params(
 				handle: e.str,
 				title: e.json,
 				public: e.bool,
-				created_at: e.datetime,
+				published_at: e.datetime,
 				created_by: e.uuid,
 				types: e.array(e.str),
 
@@ -284,7 +284,7 @@ export const insertNotesMutation = e.params(
 				body: e.cast(e.json, e.json_get(note.optional_properties, 'body')),
 				public: note.public,
 				types: e.array_unpack(e.cast(e.array(e.NoteType), note.types)),
-				created_at: note.created_at,
+				published_at: note.published_at,
 				created_by: e.assert_single(
 					e.select(e.UserProfile, (user_profile) => ({
 						filter_single: e.op(user_profile.id, '=', note.created_by),

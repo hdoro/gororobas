@@ -290,7 +290,18 @@ module default {
     required multi types: NoteType;
     required public: bool;
 
+    required published_at: datetime {
+      default := datetime_of_transaction();
+    };
     required title: json;
     body: json;
+
+    access policy visible_if_public
+      allow select
+      using (.public);
+
+    access policy owner_can_do_anything
+      allow all
+      using (global current_user_profile ?= .created_by);
   }
 }

@@ -54,7 +54,8 @@
     --page-padding-x: 1rem;
     --page-padding-y: 2rem;
 
-    --vegetable-card-size: 15.625rem;
+    --vegetable-card-width: 15.625rem;
+    --note-card-width: 23.125rem;
   }
 
   /* .dark {
@@ -123,4 +124,92 @@ body {
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
+}
+
+.note-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.note-card[data-flipped='false'] {
+  --front-index: 3;
+  --front-translate: translate(0);
+
+  --back-index: 2;
+  --back-translate: translate(5%, 5%);
+}
+
+.note-card[data-flipped='true'] {
+  --front-index: 2;
+  --front-translate: translate(5%, 5%);
+
+  --back-index: 3;
+  --back-translate: translate(0);
+}
+
+.note-card--front,
+.note-card--back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: 0.3s;
+}
+
+.note-card--front {
+  z-index: var(--front-index);
+  transform: var(--front-translate);
+  --scrollbar-color: rgb(250 204 21);
+}
+
+.note-card--back {
+  z-index: var(--back-index);
+  transform: var(--back-translate);
+  --scrollbar-color: rgb(245, 158, 11);
+}
+
+.note-card--content {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-color) transparent;
+}
+
+.note-card--content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.note-card--content::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-color);
+}
+
+.note-card[data-flipped='false'] .note-card--front .note-card--content {
+  overflow-y: auto;
+}
+
+.note-card[data-flipped='true'] .note-card--back .note-card--content {
+  overflow-y: auto;
+}
+
+.note-card--type-button {
+  transition: 0.15s 0.25s;
+}
+
+.note-card--type-button:disabled {
+  opacity: 0;
+  z-index: 0;
+  transition: 0.15s;
+}
+
+.note-card--root:target .note-card--front,
+.note-card--root:target .note-card--back {
+  @apply ring-2 ring-primary-300 ring-offset-2 ring-offset-background;
+}
+
+.note-card--back pre {
+  flex: 0 0 min-content;
+}
+
+.note-card--root :global(img) {
+  max-width: 100%;
 }

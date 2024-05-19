@@ -1,4 +1,4 @@
-import TipTapRenderer from '@/components/TipTapRenderer'
+import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Text } from '@/components/ui/text'
 import type { TipSubject } from '@/edgedb.interfaces'
 import type { VegetablePageData } from '@/queries'

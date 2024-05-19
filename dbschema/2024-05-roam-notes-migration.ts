@@ -38,9 +38,7 @@ async function scrape() {
 		const date = card.querySelector('time')?.getAttribute('datetime')
 
 		const titleElement = card.querySelector('h2')
-		const title = titleElement
-			? `<h1>${titleElement.innerHTML}</h1>`
-			: undefined
+		const title = titleElement ? `<p>${titleElement.innerHTML}</p>` : undefined
 
 		const typeRaw = card.parentElement?.nextElementSibling?.textContent
 		const type = typeRaw ? TYPE_MAP[typeRaw] : undefined
@@ -66,7 +64,7 @@ async function scrape() {
 			id,
 			roamId,
 			handle,
-			created_at: date,
+			published_at: date,
 			created_by: HENRIQUES_ID,
 			types: [type],
 			title: htmlToTiptap(title),
@@ -112,7 +110,7 @@ async function scrape() {
 					...mark,
 					attrs: {
 						...(cleanMarkAttrs(mark.attrs) || {}),
-						href: pathToAbsUrl(paths.note(note.handle)),
+						href: pathToAbsUrl(paths.note(note.handle), true),
 					},
 				}
 			})

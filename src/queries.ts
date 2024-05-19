@@ -31,16 +31,28 @@ const vegetableForCard = e.shape(e.Vegetable, (vegetable) => ({
 	}),
 }))
 
+export type VegetableCardData = Exclude<
+	$infer<typeof vegetableForCard>,
+	null
+>[number]
+
 const userProfileForAvatar = e.shape(e.UserProfile, () => ({
 	name: true,
 	handle: true,
 	photo: imageFields,
 }))
 
-export type VegetableCardData = Exclude<
-	$infer<typeof vegetableForCard>,
-	null
->[number]
+const publicNotes = e.shape(e.Note, (note) => ({
+	title: true,
+	body: true,
+	handle: true,
+	published_at: true,
+	types: true,
+
+	filter: e.op(note.public, '=', true),
+}))
+
+export type NoteCardData = Exclude<$infer<typeof publicNotes>, null>[number]
 
 export const vegetablePageQuery = e.params(
 	{
@@ -219,6 +231,30 @@ export const homePageQuery = e.select({
 
 		limit: 12,
 	})),
+
+	notes: e.select(e.Note, (note) => ({
+		...publicNotes(note),
+
+		limit: 12,
+	})),
 })
 
 export type HomePageData = Exclude<$infer<typeof homePageQuery>, null>
+
+export const notePageQuery = e.params(
+	{
+		handle: e.str,
+	},
+	(params) =>
+		e.select(e.Note, (note) => ({
+			...publicNotes(note),
+
+			filter_single: e.op(note.handle, '=', params.handle),
+			created_by: (userProfile) => ({
+				...userProfileForAvatar(userProfile),
+				bio: true,
+			}),
+		})),
+)
+
+export type NotePageData = Exclude<$infer<typeof notePageQuery>, null>

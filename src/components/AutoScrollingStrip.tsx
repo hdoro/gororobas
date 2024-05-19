@@ -18,7 +18,7 @@ export default function AutoScrollingStrip(
 			className="flex justify-center gap-9 overflow-auto w-auto mx-auto hide-scrollbar"
 			style={{
 				paddingLeft: props.offset
-					? 'calc(var(--vegetable-card-size) + 2.25rem)'
+					? 'calc(var(--vegetable-card-width) + 2.25rem)'
 					: undefined,
 			}}
 		>

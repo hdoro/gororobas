@@ -295,7 +295,7 @@ export type ProfileDataInForm = typeof ProfileData.Encoded
 
 export const NoteData = S.Struct({
 	id: S.UUID,
-	created_at: S.Union(S.Date, S.DateFromSelf),
+	published_at: S.Union(S.Date, S.DateFromSelf),
 	handle: Handle,
 	title: RichText,
 	body: S.optional(RichText),

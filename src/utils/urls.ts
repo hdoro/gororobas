@@ -1,11 +1,14 @@
-import { BASE_URL, SIGNIN_URL, SIGNUP_URL } from './config'
+import { BASE_URL, PRODUCTION_URL, SIGNIN_URL, SIGNUP_URL } from './config'
 import { slugify, truncate } from './strings'
 
-export function pathToAbsUrl(path?: string): string | undefined {
+export function pathToAbsUrl(
+	path?: string,
+	forceProduction = false,
+): string | undefined {
 	if (typeof path !== 'string') return
 
 	return (
-		BASE_URL +
+		(forceProduction ? PRODUCTION_URL : BASE_URL) +
 		// When creating absolute URLs, ensure the homepage doesn't have a trailing slash
 		(path === '/' ? '' : formatPath(path))
 	)
@@ -68,9 +71,10 @@ export const paths = {
 	signup: () => SIGNUP_URL,
 	vegetablesIndex: () => '/vegetais' as const,
 	vegetable: (handle: string) => formatPath(`/vegetais/${handle}`),
+	editVegetable: (handle: string) => formatPath(`/vegetais/${handle}/editar`),
 	notesIndex: () => '/notas' as const,
 	note: (handle: string) => formatPath(`/notas/${handle}`),
-	editVegetable: (handle: string) => formatPath(`/vegetais/${handle}/editar`),
+	newNote: () => '/notas/nova' as const,
 } as const
 
 export function getAuthRedirect(isSignedIn: boolean) {

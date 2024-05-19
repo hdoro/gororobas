@@ -25,7 +25,7 @@ export default function VegetableCard({
 	return (
 		<Link
 			href={paths.vegetable(vegetable.handle)}
-			className="relative overflow-hidden rounded-lg flex-[0_0_var(--vegetable-card-size)] aspect-[1.15] w-[var(--vegetable-card-size)] h-auto group"
+			className="relative overflow-hidden rounded-lg flex-[0_0_var(--vegetable-card-width)] aspect-[1.15] w-[var(--vegetable-card-width)] h-auto group"
 			draggable={false}
 		>
 			{photos.length > 0 ? (

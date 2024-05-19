@@ -6,6 +6,7 @@ const badgeVariants = tv({
 	variants: {
 		variant: {
 			default: 'border-transparent bg-primary-100 text-primary-800',
+			note: 'border-amber-200 bg-amber-100 text-amber-800',
 			outline: 'border-current text-stone-700 bg-white',
 		},
 	},

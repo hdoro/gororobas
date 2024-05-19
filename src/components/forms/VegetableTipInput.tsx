@@ -16,7 +16,7 @@ import {
 	type FieldValues,
 	useFormContext,
 } from 'react-hook-form'
-import TipTapRenderer from '../TipTapRenderer'
+import DefaultTipTapRenderer from '../tiptap/DefaultTipTapRenderer'
 import { Button } from '../ui/button'
 import { FormControl } from '../ui/form'
 import { Text } from '../ui/text'
@@ -61,7 +61,7 @@ export default function VegetableTipInput<
 									)
 								: 'Sem assunto definido'}
 						</Text>
-						{content && <TipTapRenderer content={content} />}
+						{content && <DefaultTipTapRenderer content={content} />}
 					</div>
 				</DialogTrigger>
 			</FormControl>

@@ -1,16 +1,21 @@
 import type { HomePageData } from '@/queries'
+import { shuffleArray } from '@/utils/arrays'
+import { getRandomTransform } from '@/utils/css'
 import { paths } from '@/utils/urls'
 import Link from 'next/link'
 import AutoScrollingStrip from './AutoScrollingStrip'
+import NoteCard from './NoteCard'
+import NotesGrid from './NotesGrid'
 import SectionTitle from './SectionTitle'
 import UserAvatar from './UserAvatar'
 import SeedlingIcon from './icons/SeedlingIcon'
 import { Text } from './ui/text'
 
-export default function HomePage({
-	featured_vegetables,
-	profiles,
-}: Partial<HomePageData>) {
+export default function HomePage(data: Partial<HomePageData>) {
+	const featured_vegetables = shuffleArray(data.featured_vegetables || [])
+	const profiles = shuffleArray(data.profiles || [])
+	const notes = shuffleArray(data.notes || [])
+
 	return (
 		<>
 			<section className="text-center text-4xl md:text-5xl lg:text-6xl flex flex-col items-center gap-[0.33em] px-2 pt-24 pb-12">
@@ -30,7 +35,7 @@ export default function HomePage({
 			</section>
 			{featured_vegetables && featured_vegetables.length > 0 && (
 				<>
-					<section className="overflow-x-hidden space-y-9 -ml-[calc(var(--vegetable-card-size)_/_2)]">
+					<section className="overflow-x-hidden space-y-9 -ml-[calc(var(--vegetable-card-width)_/_2)]">
 						<AutoScrollingStrip vegetables={featured_vegetables.slice(0, 6)} />
 						{featured_vegetables.length > 6 && (
 							<AutoScrollingStrip
@@ -48,6 +53,17 @@ export default function HomePage({
 						</Link>
 					</div>
 				</>
+			)}
+			{notes && notes.length > 0 && (
+				<section className="mt-36">
+					<SectionTitle Icon={SeedlingIcon}>
+						Aprendizados e experimentos
+					</SectionTitle>
+					<Text level="h3" className="px-pageX mx-10 font-normal">
+						Na cozinha, no plantio e no sacolão
+					</Text>
+					<NotesGrid notes={notes} />
+				</section>
 			)}
 			{profiles && profiles.length > 0 && (
 				<section className="mt-36">

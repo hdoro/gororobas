@@ -1,4 +1,6 @@
-import type { NodeHandlers, NodeProps, NodeHandler } from './TipTapRender'
+import { BASE_URL } from '@/utils/config'
+import Link from 'next/link'
+import type { NodeHandler, NodeHandlers, NodeProps } from './TipTapRender'
 
 const TextRender: NodeHandler = (props: NodeProps) => {
 	if (!props.node.text) {
@@ -35,19 +37,23 @@ const TextRender: NodeHandler = (props: NodeProps) => {
 		}
 	})
 
-	const links = props.node.marks?.filter((mark) => mark.type === 'link')
+	const link = props.node.marks?.find((mark) => mark.type === 'link')
 
-	if (links?.[0]) {
+	if (typeof link?.attrs?.href === 'string') {
+		const href = link.attrs.href
+
+		const isInternal = href.startsWith(BASE_URL)
+		const Comp = isInternal ? Link : 'a'
 		return (
-			<a
-				href={links[0].attrs?.href}
+			<Comp
+				href={href}
 				style={style}
 				target="_blank"
 				rel="noopener noreferrer"
 				className="text-primary-700 underline font-medium"
 			>
 				{payload}
-			</a>
+			</Comp>
 		)
 	}
 

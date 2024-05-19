@@ -1,4 +1,5 @@
-import { createVegetable } from '@/actions/createVegetable.implementation'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { createVegetable } from '@/actions/createVegetable'
 import { formatVegetableFriendForDB } from '@/actions/formatVegetableFriendForDB'
 import type {
 	Gender,
@@ -16,7 +17,6 @@ import * as S from '@effect/schema/Schema'
 import createClient from 'edgedb'
 import { Effect, pipe } from 'effect'
 import inquirer from 'inquirer'
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import type {
 	Q_VEGETABLES_RAW_INDEXResult,
 	SourceExternal,
