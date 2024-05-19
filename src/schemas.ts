@@ -12,6 +12,7 @@ import { base64ToFile, fileToBase64 } from '@/utils/files'
 import {
 	EDIBLE_PART_TO_LABEL,
 	GENDER_TO_LABEL,
+	NOTE_TYPE_TO_LABEL,
 	PLANTING_METHOD_TO_LABEL,
 	STRATUM_TO_LABEL,
 	TIP_SUBJECT_TO_LABEL,
@@ -23,6 +24,8 @@ import { ParseResult } from '@effect/schema'
 import * as S from '@effect/schema/Schema'
 import type { JSONContent } from '@tiptap/react'
 import { Effect } from 'effect'
+import type { NoteType } from './edgedb.interfaces'
+import { FailedConvertingBlobError } from './types/errors'
 
 const SourceGororobasInForm = S.Struct({
 	id: S.UUID,
@@ -75,7 +78,8 @@ export const NewImage = S.transformOrFail(
 			Effect.mapBoth(
 				Effect.tryPromise({
 					try: () => fileToBase64(photoInForm.file),
-					catch: (error) => '@TODO type error',
+					catch: (error) =>
+						new FailedConvertingBlobError(error, photoInForm.file),
 				}),
 				{
 					onSuccess: (base64) => ({
@@ -279,8 +283,8 @@ export type SourceForDB = typeof SourceData.Type
 
 export const ProfileData = S.Struct({
 	id: S.UUID,
-	name: S.String.pipe(S.minLength(3)),
 	handle: Handle,
+	name: S.String.pipe(S.minLength(3)),
 	photo: S.optional(ImageData),
 	location: S.optional(S.String),
 	bio: S.optional(RichText),
@@ -288,3 +292,22 @@ export const ProfileData = S.Struct({
 
 export type ProfileDataForDB = typeof ProfileData.Type
 export type ProfileDataInForm = typeof ProfileData.Encoded
+
+export const NoteData = S.Struct({
+	id: S.UUID,
+	created_at: S.Union(S.Date, S.DateFromSelf),
+	handle: Handle,
+	title: RichText,
+	body: S.optional(RichText),
+	public: S.Boolean,
+	types: S.NonEmptyArray(
+		S.Literal(...(Object.keys(NOTE_TYPE_TO_LABEL) as NoteType[])),
+	),
+	created_by: S.UUID,
+})
+
+export type NoteForDB = typeof NoteData.Type
+export type NoteInForm = typeof NoteData.Encoded
+
+export const NoteDataArray = S.NonEmptyArray(NoteData)
+export type NotesForDB = typeof NoteDataArray.Type

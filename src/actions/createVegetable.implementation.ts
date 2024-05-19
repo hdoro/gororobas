@@ -1,10 +1,10 @@
 import {
-	newImagesMutation,
-	newSourcesMutation,
-	newTipsMutation,
-	newVarietiesMutation,
-	newVegetableFriendshipsMutation,
-	newVegetableMutation,
+	insertImagesMutation,
+	insertSourcesMutation,
+	insertTipsMutation,
+	insertVarietiesMutation,
+	insertVegetableFriendshipsMutation,
+	insertVegetableMutation,
 } from '@/mutations'
 import { StoredImage, Vegetable, type VegetableForDB } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
@@ -51,7 +51,7 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 			...(input.sources || []),
 		]
 		if (allSources.length > 0) {
-			await newSourcesMutation.run(tx, {
+			await insertSourcesMutation.run(tx, {
 				sources: allSources,
 			})
 		}
@@ -96,7 +96,7 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 			})
 
 			if (allPhotosFormatted.length > 0) {
-				const imagesRes = await newImagesMutation.run(tx, {
+				const imagesRes = await insertImagesMutation.run(tx, {
 					images: allPhotosFormatted,
 				})
 				console.log('IMAGESRES \n\n\n\n', imagesRes)
@@ -124,7 +124,7 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 		})
 
 		if (varieties.length > 0) {
-			await newVarietiesMutation.run(tx, {
+			await insertVarietiesMutation.run(tx, {
 				varieties,
 			})
 		}
@@ -143,13 +143,13 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 			},
 		)
 		if (tips.length > 0) {
-			await newTipsMutation.run(tx, {
+			await insertTipsMutation.run(tx, {
 				tips,
 			})
 		}
 
 		// #4 Create vegetable
-		await newVegetableMutation.run(tx, {
+		await insertVegetableMutation.run(tx, {
 			id: input.id,
 			names: input.names,
 			handle: input.handle,
@@ -210,7 +210,7 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 
 		// #5 Create friendships
 		if (input.friends && input.friends.length > 0) {
-			await newVegetableFriendshipsMutation.run(tx, {
+			await insertVegetableFriendshipsMutation.run(tx, {
 				friends: input.friends.map((friend_id) =>
 					formatVegetableFriendForDB(friend_id, input.id),
 				),

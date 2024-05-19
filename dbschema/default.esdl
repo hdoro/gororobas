@@ -12,6 +12,7 @@ module default {
   scalar type Stratum extending enum<EMERGENTE,ALTO,MEDIO,BAIXO,RASTEIRO>;
   scalar type PlantingMethod extending enum<BROTO,ENXERTO,ESTACA,RIZOMA,SEMENTE,TUBERCULO>;
   scalar type TipSubject extending enum<PLANTIO,CRESCIMENTO,COLHEITA>;
+  scalar type NoteType extending enum<EXPERIMENTO,ENSINAMENTO,DESCOBERTA>;
   scalar type VegetableWishlistStatus extending enum<QUERO_CULTIVAR,SEM_INTERESSE,JA_CULTIVEI,ESTOU_CULTIVANDO>;
 
   global current_user := (
@@ -106,8 +107,7 @@ module default {
       rewrite insert, update using (datetime_of_statement());
     };
     created_by: UserProfile {
-      # @TODO can we do this only when there is no explicit value assigned? Alternatively, can we impersonate a user when setting an auditable item as an admin?
-      rewrite insert using (global current_user_profile);
+      default := (global current_user_profile);
       on target delete allow;
     };
 
@@ -195,11 +195,6 @@ module default {
   type VegetableTip extending WithHandle, PublicRead, Auditable, AdminCanDoAnything {
     required multi subjects: TipSubject;
     required content: json;
-
-    multi content_links: WithHandle {
-      # Let dangling links live
-      on target delete allow;
-    };
 
     multi sources: Source {
       on target delete allow;
@@ -289,5 +284,13 @@ module default {
     access policy owner_can_do_anything
       allow all
       using (global current_user_profile ?= .user_profile);
+  }
+
+  type Note extending WithHandle, Auditable, AdminCanDoAnything {
+    required multi types: NoteType;
+    required public: bool;
+
+    required title: json;
+    body: json;
   }
 }

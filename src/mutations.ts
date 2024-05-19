@@ -1,6 +1,6 @@
 import e from '@/edgeql'
 
-export const newSourcesMutation = e.params(
+export const insertSourcesMutation = e.params(
 	{
 		sources: e.array(e.json),
 	},
@@ -24,7 +24,7 @@ export const newSourcesMutation = e.params(
 		),
 )
 
-export const newImagesMutation = e.params(
+export const insertImagesMutation = e.params(
 	{
 		images: e.array(
 			e.tuple({
@@ -54,7 +54,7 @@ export const newImagesMutation = e.params(
 				})),
 		),
 )
-export const newVarietiesMutation = e.params(
+export const insertVarietiesMutation = e.params(
 	{
 		varieties: e.array(
 			e.tuple({
@@ -81,7 +81,7 @@ export const newVarietiesMutation = e.params(
 			}),
 		),
 )
-export const newTipsMutation = e.params(
+export const insertTipsMutation = e.params(
 	{
 		tips: e.array(
 			e.tuple({
@@ -89,7 +89,6 @@ export const newTipsMutation = e.params(
 				handle: e.str,
 				subjects: e.array(e.str),
 				content: e.json,
-				content_links: e.array(e.uuid),
 				sources: e.array(e.uuid),
 			}),
 		),
@@ -101,9 +100,6 @@ export const newTipsMutation = e.params(
 				subjects: e.array_unpack(e.cast(e.array(e.TipSubject), tip.subjects)),
 				content: tip.content,
 				handle: tip.handle,
-				content_links: e.select(e.WithHandle, (target) => ({
-					filter: e.op(target.id, 'in', e.array_unpack(tip.content_links)),
-				})),
 				sources: e.select(e.Source, (source) => ({
 					filter: e.op(source.id, 'in', e.array_unpack(tip.sources)),
 				})),
@@ -111,7 +107,7 @@ export const newTipsMutation = e.params(
 		),
 )
 
-export const newVegetableFriendshipsMutation = e.params(
+export const insertVegetableFriendshipsMutation = e.params(
 	{
 		vegetable_id: e.uuid,
 		friends: e.array(
@@ -135,7 +131,7 @@ export const newVegetableFriendshipsMutation = e.params(
 		),
 )
 
-export const newVegetableMutation = e.params(
+export const insertVegetableMutation = e.params(
 	{
 		id: e.uuid,
 		names: e.array(e.str),
@@ -205,7 +201,7 @@ export const newVegetableMutation = e.params(
 		}),
 )
 
-export const setWishlistStatusMutation = e.params(
+export const updateWishlistStatusMutation = e.params(
 	{
 		vegetable_id: e.uuid,
 		status: e.VegetableWishlistStatus,
@@ -260,4 +256,40 @@ export const updateProfileMutation = e.params(
 				),
 			},
 		})),
+)
+
+export const insertNotesMutation = e.params(
+	{
+		notes: e.array(
+			e.tuple({
+				id: e.uuid,
+				handle: e.str,
+				title: e.json,
+				public: e.bool,
+				created_at: e.datetime,
+				created_by: e.uuid,
+				types: e.array(e.str),
+
+				/** { body: e.optional(e.json) } */
+				optional_properties: e.json,
+			}),
+		),
+	},
+	(params) =>
+		e.for(e.array_unpack(params.notes), (note) =>
+			e.insert(e.Note, {
+				id: note.id,
+				handle: note.handle,
+				title: note.title,
+				body: e.cast(e.json, e.json_get(note.optional_properties, 'body')),
+				public: note.public,
+				types: e.array_unpack(e.cast(e.array(e.NoteType), note.types)),
+				created_at: note.created_at,
+				created_by: e.assert_single(
+					e.select(e.UserProfile, (user_profile) => ({
+						filter_single: e.op(user_profile.id, '=', note.created_by),
+					})),
+				),
+			}),
+		),
 )

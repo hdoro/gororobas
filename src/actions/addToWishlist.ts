@@ -2,7 +2,7 @@
 
 import { auth } from '@/edgedb'
 import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
-import { setWishlistStatusMutation } from '@/mutations'
+import { updateWishlistStatusMutation } from '@/mutations'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 
@@ -16,7 +16,7 @@ export async function addToWishlist(
 		pipe(
 			Effect.tryPromise({
 				try: () =>
-					setWishlistStatusMutation.run(session.client, {
+					updateWishlistStatusMutation.run(session.client, {
 						vegetable_id,
 						status: wishlist_status,
 					}),

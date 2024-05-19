@@ -2,8 +2,8 @@
 
 import { auth } from '@/edgedb'
 import {
-	newImagesMutation,
-	newSourcesMutation,
+	insertImagesMutation,
+	insertSourcesMutation,
 	updateProfileMutation,
 } from '@/mutations'
 import { NewImage, ProfileData, type ProfileDataForDB } from '@/schemas'
@@ -43,7 +43,7 @@ function getTransaction(input: Partial<ProfileDataForDB>, inputClient: Client) {
 		// #1 CREATE ALL SOURCES
 		const allSources = [...(input.photo?.sources || [])]
 		if (allSources.length > 0) {
-			await newSourcesMutation.run(tx, {
+			await insertSourcesMutation.run(tx, {
 				sources: allSources,
 			})
 		}
@@ -54,7 +54,7 @@ function getTransaction(input: Partial<ProfileDataForDB>, inputClient: Client) {
 			const { [photo.id]: uploaded } = await uploadImagesToSanity([photo])
 			// @TODO: handle error - do I bring Effect into transactions?
 			if (uploaded && !('error' in uploaded)) {
-				await newImagesMutation.run(tx, {
+				await insertImagesMutation.run(tx, {
 					images: [
 						{
 							id: photo.id,

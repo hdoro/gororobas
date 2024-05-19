@@ -1,6 +1,7 @@
 import type {
 	EdiblePart,
 	Gender,
+	NoteType,
 	PlantingMethod,
 	SourceType,
 	Stratum,
@@ -105,3 +106,9 @@ export const WISHLIST_STATUS_TO_LABEL = {
 	JA_CULTIVEI: 'Já cultivei',
 	ESTOU_CULTIVANDO: 'Estou cultivando',
 } as const satisfies Record<VegetableWishlistStatus, string>
+
+export const NOTE_TYPE_TO_LABEL = {
+	DESCOBERTA: 'Descoberta',
+	ENSINAMENTO: 'Me ensinaram',
+	EXPERIMENTO: 'Experimento',
+} as const satisfies Record<NoteType, string>

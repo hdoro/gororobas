@@ -1,4 +1,5 @@
 import { BASE_URL, SIGNIN_URL, SIGNUP_URL } from './config'
+import { slugify, truncate } from './strings'
 
 export function pathToAbsUrl(path?: string): string | undefined {
 	if (typeof path !== 'string') return
@@ -76,4 +77,8 @@ export function getAuthRedirect(isSignedIn: boolean) {
 	if (!isSignedIn) return paths.signinNotice()
 
 	return paths.profile()
+}
+
+export function getStandardHandle(textContent: string, id: string) {
+	return slugify(`${truncate(textContent, 20)} ${id.slice(0, 6)}`)
 }

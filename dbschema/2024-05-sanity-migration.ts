@@ -6,7 +6,7 @@ import type {
 	TipSubject,
 	VegetableUsage,
 } from '@/edgedb.interfaces'
-import { newVegetableFriendshipsMutation } from '@/mutations'
+import { insertVegetableFriendshipsMutation } from '@/mutations'
 import type { SourceForDB, VegetableForDB } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { PLANTING_METHOD_TO_LABEL } from '@/utils/labels'
@@ -22,7 +22,7 @@ import type {
 	SourceExternal,
 	SourceUser,
 } from './2024-05-sanity-migration.types'
-import ptToTiptap from './ptToTiptap'
+import ptToTiptap from './richTextConversions'
 
 type SanityVegetable = Q_VEGETABLES_RAW_INDEXResult[number]
 
@@ -251,7 +251,7 @@ async function main() {
 				(vegetable) =>
 					pipe(
 						Effect.tryPromise(() =>
-							newVegetableFriendshipsMutation.run(edgeDBClient, {
+							insertVegetableFriendshipsMutation.run(edgeDBClient, {
 								friends: vegetable.friends.map((friend_id) =>
 									formatVegetableFriendForDB(friend_id, vegetable.id),
 								),

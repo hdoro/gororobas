@@ -1,6 +1,6 @@
 import { auth } from '@/edgedb'
 import { generateId } from '@/utils/ids'
-import { slugify } from '@/utils/strings'
+import { getStandardHandle } from '@/utils/urls'
 import { redirect } from 'next/navigation'
 
 export const { GET, POST } = auth.createAuthRouteHandlers({
@@ -26,7 +26,7 @@ export const { GET, POST } = auth.createAuthRouteHandlers({
 
 			const userId = generateId()
 			const initialName = emailData?.email.split('@')[0]
-			const initialHandle = slugify(`${initialName}-${userId.slice(0, 6)}`)
+			const initialHandle = getStandardHandle(initialName || '', userId)
 			await userClient.query(
 				`
         INSERT User {
