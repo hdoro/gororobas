@@ -12,13 +12,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
-import type { ProfilePageData } from '@/queries'
+import type { EditProfilePageData } from '@/queries'
 import {
 	ImageDBToFormTransformer,
 	ProfileData,
-	RichText,
 	type ProfileDataForDB,
 	type ProfileDataInForm,
+	RichText,
 } from '@/schemas'
 import { getChangedObjectSubset } from '@/utils/diffs'
 import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
@@ -30,14 +30,14 @@ import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import {
 	FormProvider,
+	type SubmitHandler,
 	useForm,
 	useFormContext,
-	type SubmitHandler,
 } from 'react-hook-form'
 
 export default function ProfileForm({
 	profile: profileInDb,
-}: { profile: ProfilePageData }) {
+}: { profile: EditProfilePageData }) {
 	const router = useRouter()
 	const toast = useToast()
 	const [status, setStatus] = useState<'idle' | 'submitting'>('idle')

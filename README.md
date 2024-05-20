@@ -2,6 +2,12 @@
 
 Documentation is WIP
 
+## Emails
+
+In order to receive emails locally, you need to install and run [Mailpit](https://mailpit.axllent.org/docs/install/). This will allow the EdgeDB server to send emails via your local Mailpit server.
+
+## TODOs
+
 ## Vegetable form
 
 - [x] Finish form
@@ -17,8 +23,10 @@ Documentation is WIP
 - [x] Login & sign-up forms - done by EdgeDB?
 - [x] Auth emails - done by EdgeDB?
 - [x] Admin & regular roles
-- [ ] If session but no User/UserProfile (failed the auth callback), create
+- [x] If session but no User/UserProfile (failed the auth callback), create
   - Probably do so in HeaderNav, where we fetch the profile?
+- [x] Google authentication
+- [ ] Debug faulty redirect on login (signups working fine)
 
 ## Vegetable submission
 
@@ -63,8 +71,7 @@ Documentation is WIP
 - [x] Design
 - [x] Vegetables grid
 - [x] People strip
-- [ ] Notes grid
-
+- [x] Notes grid
 
 ## Unstructured
 
@@ -80,15 +87,16 @@ Documentation is WIP
 - [x] HeaderNav
 - [x] More personality to theme
     - ~~v0 theme generator?~~ had to do manually, wasn't out at this moment
+- [ ] 404 page
 
 ### Notes
 
-- [ ] Rich text editor
+- [x] Migrate notes from Roam to EdgeDB
+- [x] Note card
+- [x] Note page
+- [x] Notes grid
 - [ ] Send note
-- [ ] Display notes in Vegetable page
-- [ ] Migrate notes from Roam to EdgeDB
-- [ ] Notes grid
-- [ ] Note page
+  - [ ] Rich text editor
 
 ## AI
 
@@ -100,6 +108,7 @@ Documentation is WIP
 
 - [ ] Put on EdgeDB Cloud
 - [ ] Migrate data
+  - Couve, Café e Cupuaçu tavam falhando
 - [ ] Honeycomb
 - [ ] Set-up backups
 - [ ] Publish on Vercel
@@ -108,8 +117,9 @@ Documentation is WIP
 
 ## Stretch
 
+- [ ] Comments in tips
 - [ ] Better HeaderNav styles on mobile
-- [ ] User profile page
+- [x] User profile page
   - Profile picture
   - Bio
   - Social links
@@ -118,8 +128,8 @@ Documentation is WIP
 - [ ] Debug why SanityImage is re-rendering so much in ProfileForm
 - [ ] ProfileForm: don't allow duplicate handles
 - [ ] Exclusivity constraint on source's URL, with `unlessConflict` on mutation and de-duplication in `createVegetable`
+- [ ] Dynamic OG Images
 - [ ] Move Shadcn components to tailwind-variants
-- [ ] Comments in tips
 - [ ] Test React 19
 - [ ] Streams timelapse
 - [ ] Blog posts
@@ -130,7 +140,6 @@ Documentation is WIP
   - numbers: X hours of stream, Y commits, Z days
 - [ ] Image hotspotting and cropping
 - [ ] Shadow routes for vegetable page (open in dialog if in vegetables grid)
-- [ ] 404 page
 - [ ] Fix `@order_index` not being accepted by edgeql-js
     ```
     Failed creating vegetable QueryError: invalid reference to link property in top level shape

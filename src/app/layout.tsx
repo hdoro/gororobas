@@ -25,8 +25,9 @@ const fontFamily = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-	title: '[EdgeDB Hackathon] Gororobas',
-	description: 'Generated with the EdgeDB + EdgeDB Auth + Next.js Template',
+	title: 'Gororobas',
+	description:
+		'Aprendendo juntes a fazer agroecologia - Por terra, território, e gororobas!',
 }
 
 export default function RootLayout({

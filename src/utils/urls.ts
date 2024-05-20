@@ -1,17 +1,18 @@
 import { BASE_URL, PRODUCTION_URL } from './config'
 import { slugify, truncate } from './strings'
 
-export function pathToAbsUrl(
-	path?: string,
+export function pathToAbsUrl<P extends string | undefined>(
+	path: P,
 	forceProduction = false,
-): string | undefined {
-	if (typeof path !== 'string') return
+): P extends string ? string : undefined {
+	if (typeof path !== 'string')
+		return undefined as P extends string ? string : undefined
 
-	return (
-		(forceProduction ? PRODUCTION_URL : BASE_URL) +
+	return ((forceProduction ? PRODUCTION_URL : BASE_URL) +
 		// When creating absolute URLs, ensure the homepage doesn't have a trailing slash
-		(path === '/' ? '' : formatPath(path))
-	)
+		(path === '/' ? '' : formatPath(path))) as P extends string
+		? string
+		: undefined
 }
 
 /**

@@ -4,12 +4,14 @@ import type { NoteCardData } from '@/queries'
 import { cn } from '@/utils/cn'
 import type { ElementTransform } from '@/utils/css'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
+import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { paths } from '@/utils/urls'
 import { Share2Icon } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
 import { Badge } from './ui/badge'
+import { truncate } from '@/utils/strings'
 
 // @TODO: make button a checkbox so I can style on/off without JS
 export default function NoteCard({
@@ -91,7 +93,7 @@ export default function NoteCard({
 							aria-hidden
 							className="w-full overflow-x-hidden px-3 py-2 whitespace-nowrap flex-1 text-amber-800 text-ellipsis bg-amber-300 bg-opacity-50 rounded-t-md"
 						>
-							<DefaultTipTapRenderer content={title as any} />
+							{truncate(tiptapJSONtoPlainText(note.title as any) || '', 60)}
 						</pre>
 						<div className="note-card--content py-3 px-4 text-amber-950 opacity-90">
 							<DefaultTipTapRenderer content={note.body as any} />

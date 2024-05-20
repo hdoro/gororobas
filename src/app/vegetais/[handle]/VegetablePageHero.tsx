@@ -43,7 +43,7 @@ export function VegetablePageHero({
 	const averageAspectRatio = average(aspectRatios)
 
 	return (
-		<div className="flex-1 max-w-[53.125rem]">
+		<div className="flex-[5] max-w-[53.125rem]">
 			<div className="flex gap-5 items-end justify-between">
 				<div>
 					<Text level="h1" as="h1">

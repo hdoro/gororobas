@@ -37,7 +37,7 @@ export default function UserProfilePage({
 							{profile.name}
 						</Text>
 						{profile.is_owner && (
-							<div className="space-x-3">
+							<div className="flex items-center gap-3">
 								<Button size="sm" asChild>
 									<Link href={paths.editProfile()}>
 										<Edit2Icon className="w-[1.25em]" />
@@ -45,10 +45,7 @@ export default function UserProfilePage({
 									</Link>
 								</Button>
 								<Button size="sm" asChild tone="secondary" mode="outline">
-									<Link href={paths.signout()}>
-										<Edit2Icon className="w-[1.25em]" />
-										Sair ou trocar conta
-									</Link>
+									<Link href={paths.signout()}>Sair ou trocar conta</Link>
 								</Button>
 							</div>
 						)}

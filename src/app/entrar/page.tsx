@@ -2,7 +2,12 @@ import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
 import { auth } from '@/edgedb'
 import { getAuthRedirect } from '@/utils/urls'
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+
+export const metadata: Metadata = {
+	title: 'Entrar no Gororobas',
+}
 
 export default async function ProfileRoute() {
 	const session = auth.getSession()

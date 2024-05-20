@@ -211,7 +211,7 @@ export const profilePageQuery = e.select(e.UserProfile, (profile) => ({
 	photo: imageFields,
 }))
 
-export type ProfilePageData = Exclude<$infer<typeof profilePageQuery>, null>
+export type EditProfilePageData = Exclude<$infer<typeof profilePageQuery>, null>
 
 export const profileForNavQuery = e.select(e.UserProfile, (profile) => ({
 	filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
