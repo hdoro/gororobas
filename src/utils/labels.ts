@@ -35,6 +35,7 @@ export const USAGE_TO_LABEL = {
 	MEDICINAL: 'Medicinal',
 	ORNAMENTAL: 'Ornamental',
 	RITUALISTICO: 'Ritualístico',
+	ECOLOGICO: 'Ecológico / ambiental',
 } as const satisfies Record<VegetableUsage, string>
 
 export const EDIBLE_PART_TO_LABEL = {

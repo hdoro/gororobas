@@ -286,6 +286,7 @@ export type Vegetable = {
 		| 'COSMETIC'
 		| 'PAISAGISMO'
 		| 'RITUALISTICO'
+		| 'ECOLOGICO'
 	>
 	edible_part?: Array<
 		| 'FRUTO'

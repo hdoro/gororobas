@@ -6,7 +6,7 @@ module default {
   scalar type Role extending enum<ADMIN,USER,MODERATOR>;
   scalar type SourceType extending enum<GOROROBAS,EXTERNAL>;
   scalar type Gender extending enum<FEMININO,MASCULINO,NEUTRO>;
-  scalar type VegetableUsage extending enum<ALIMENTO_ANIMAL,ALIMENTO_HUMANO,CONSTRUCAO,MATERIA_ORGANICA,MEDICINAL,COSMETICO,ORNAMENTAL,RITUALISTICO>;
+  scalar type VegetableUsage extending enum<ALIMENTO_ANIMAL,ALIMENTO_HUMANO,CONSTRUCAO,MATERIA_ORGANICA,MEDICINAL,COSMETICO,ORNAMENTAL,RITUALISTICO,ECOLOGICO>;
   scalar type EdiblePart extending enum<FRUTO,FLOR,FOLHA,CAULE,SEMENTE,CASCA,BULBO,BROTO,RAIZ,TUBERCULO,RIZOMA>;
   scalar type VegetableLifeCycle extending enum<SEMESTRAL,ANUAL,BIENAL,PERENE>;
   scalar type Stratum extending enum<EMERGENTE,ALTO,MEDIO,BAIXO,RASTEIRO>;
