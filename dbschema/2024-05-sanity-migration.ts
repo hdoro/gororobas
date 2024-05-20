@@ -15,7 +15,7 @@ import { sanityServerClientRaw } from '@/utils/sanity.client'
 import { slugify } from '@/utils/strings'
 import * as S from '@effect/schema/Schema'
 import createClient from 'edgedb'
-import { Effect, pipe } from 'effect'
+import { Effect, LogLevel, Logger, pipe } from 'effect'
 import inquirer from 'inquirer'
 import type {
 	Q_VEGETABLES_RAW_INDEXResult,
@@ -190,8 +190,8 @@ async function main() {
 				method in PLANTING_METHOD_TO_LABEL ? method : [],
 			),
 			lifecycles: vegetable.cycle || [],
-			height_max: vegetable.height_max || 0,
-			height_min: vegetable.height_min || 0,
+			height_max: vegetable.height_max ?? undefined,
+			height_min: vegetable.height_min ?? undefined,
 			origin: vegetable.origin || '',
 			content: Array.isArray(vegetable.content)
 				? ptToTiptap(vegetable.content)
@@ -242,7 +242,7 @@ async function main() {
 					Effect.catchAll(() => Effect.succeed('')),
 					Effect.withLogSpan('createVegetableWithoutFriends'),
 				),
-			{ concurrency: 2 },
+			{ concurrency: 1 },
 		),
 		// #2 Now that all vegetables are in place, create friendships
 		Effect.tap(() =>
@@ -250,30 +250,40 @@ async function main() {
 				formattedVegetables.filter((v) => v.friends && v.friends.length > 0),
 				(vegetable) =>
 					pipe(
-						Effect.tryPromise(() =>
-							insertVegetableFriendshipsMutation.run(edgeDBClient, {
-								friends: vegetable.friends.map((friend_id) =>
-									formatVegetableFriendForDB(friend_id, vegetable.id),
-								),
-								vegetable_id: vegetable.id,
-							}),
-						),
+						Effect.tryPromise({
+							try: () =>
+								insertVegetableFriendshipsMutation.run(edgeDBClient, {
+									friends: vegetable.friends.map((friend_id) =>
+										formatVegetableFriendForDB(friend_id, vegetable.id),
+									),
+									vegetable_id: vegetable.id,
+								}),
+							catch: (error) => {
+								failed.push(vegetable)
+								console.log(
+									`Failed to create friendships for ${vegetable.names[0]}\n\n\n\n`,
+									{
+										friends: vegetable.friends.map((friend_id) =>
+											formatVegetableFriendForDB(friend_id, vegetable.id),
+										),
+										vegetable_id: vegetable.id,
+									},
+									insertVegetableFriendshipsMutation.toEdgeQL(),
+									'\n\n\n',
+									error,
+								)
+							},
+						}),
 						Effect.tap(() =>
 							Effect.logDebug(`Created friendships of ${vegetable.names[0]}`),
 						),
-						Effect.tapError((error) => {
-							failed.push(vegetable)
-							return Effect.logError(
-								`Failed to create friendships for ${vegetable.names[0]}`,
-								error,
-							)
-						}),
 						Effect.catchAll(() => Effect.succeed('')),
 						Effect.withLogSpan('createVegetableFriendships'),
 					),
 				{ concurrency: 1 },
 			),
 		),
+		// Logger.withMinimumLogLevel(LogLevel.Debug),
 		Effect.runPromise,
 	)
 

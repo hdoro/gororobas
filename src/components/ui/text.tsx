@@ -5,11 +5,11 @@ import { type VariantProps, tv } from 'tailwind-variants'
 const textVariants = tv({
 	variants: {
 		level: {
-			h1: 'text-4xl',
-			h2: 'text-2xl',
-			h3: 'text-lg',
-			p: 'text-base',
-			sm: 'text-sm',
+			h1: 'text-3xl md:text-4xl',
+			h2: 'text-xl md:text-2xl',
+			h3: 'text-base md:text-lg',
+			p: 'text-sm md:text-base',
+			sm: 'text-xs md:text-sm',
 		},
 		weight: {
 			semibold: 'font-semibold',

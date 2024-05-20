@@ -8,6 +8,7 @@ import {
 } from '@/mutations'
 import { StoredImage, Vegetable, type VegetableForDB } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { InvalidInputError } from '@/types/errors'
 import { generateId } from '@/utils/ids'
 import { slugify } from '@/utils/strings'
 import { uploadImagesToSanity } from '@/utils/uploadImagesToSanity'
@@ -21,7 +22,7 @@ export function createVegetable(input: VegetableForDB, client: Client) {
 	return runServerEffect(
 		Effect.gen(function* (_) {
 			if (!Schema.is(Vegetable)(input)) {
-				return false
+				return yield* Effect.fail(new InvalidInputError(input, Vegetable))
 			}
 
 			return yield* pipe(
@@ -136,7 +137,6 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 					content,
 					subjects,
 					handle: `${input.handle}-${generateId()}`,
-					content_links: [],
 					sources: sources?.map((s) => s.id) || [],
 				}
 			},
@@ -187,24 +187,6 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 				order_index,
 			})),
 			sources: input.sources?.map((s) => s.id) || [],
-		})
-		console.log('\n\n\n\nprocessed', {
-			input: input.photos,
-			plainMap: (input.photos || []).map((photo) => {
-				const photoId = photosWithIds.find((p) => p.id === photo.id)?.id
-				return photoId
-			}),
-			processed: (input.photos || [])
-				.flatMap((photo) => {
-					const photoId = photosWithIds.find((p) => p.id === photo.id)?.id
-					if (!photoId) return []
-
-					return photoId
-				})
-				.map((id, order_index) => ({
-					id,
-					order_index,
-				})),
 		})
 
 		// #6 FRIENDSHIPS

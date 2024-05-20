@@ -1,4 +1,4 @@
-CREATE MIGRATION m1ihmitfe7uzg4jiux4hmch6ak2mawa37feeg6btdb3heaumqlcawa
+CREATE MIGRATION m1nv4ajoc2hgpxiequnkhe647avrdmq44knfycun5mdyhhw245ksna
     ONTO initial
 {
   CREATE EXTENSION pgcrypto VERSION '1.3';
@@ -8,9 +8,8 @@ CREATE MIGRATION m1ihmitfe7uzg4jiux4hmch6ak2mawa37feeg6btdb3heaumqlcawa
   CREATE SCALAR TYPE default::Stratum EXTENDING enum<EMERGENTE, ALTO, MEDIO, BAIXO, RASTEIRO>;
   CREATE SCALAR TYPE default::VegetableLifeCycle EXTENDING enum<SEMESTRAL, ANUAL, BIENAL, PERENE>;
   CREATE SCALAR TYPE default::VegetableUsage EXTENDING enum<ALIMENTO_ANIMAL, ALIMENTO_HUMANO, CONSTRUCAO, MATERIA_ORGANICA, MEDICINAL, COSMETICO, ORNAMENTAL, RITUALISTICO>;
-  CREATE ABSTRACT TYPE default::AdminCanDoAnything;
   CREATE SCALAR TYPE default::Role EXTENDING enum<ADMIN, USER, MODERATOR>;
-  CREATE TYPE default::User EXTENDING default::AdminCanDoAnything {
+  CREATE TYPE default::User {
       CREATE REQUIRED LINK identity: ext::auth::Identity {
           CREATE CONSTRAINT std::exclusive;
       };
@@ -39,6 +38,10 @@ CREATE MIGRATION m1ihmitfe7uzg4jiux4hmch6ak2mawa37feeg6btdb3heaumqlcawa
   FILTER
       (.identity = GLOBAL ext::auth::ClientTokenIdentity)
   )));
+  CREATE ABSTRACT TYPE default::AdminCanDoAnything {
+      CREATE ACCESS POLICY admin_can_do_anything
+          ALLOW ALL USING (((GLOBAL default::current_user).userRole ?= default::Role.ADMIN));
+  };
   CREATE ABSTRACT TYPE default::PublicRead {
       CREATE ACCESS POLICY public_read_only
           ALLOW SELECT ;
@@ -56,6 +59,7 @@ CREATE MIGRATION m1ihmitfe7uzg4jiux4hmch6ak2mawa37feeg6btdb3heaumqlcawa
       };
   };
   CREATE SCALAR TYPE default::Gender EXTENDING enum<FEMININO, MASCULINO, NEUTRO>;
+  CREATE SCALAR TYPE default::VegetableWishlistStatus EXTENDING enum<QUERO_CULTIVAR, SEM_INTERESSE, JA_CULTIVEI, ESTOU_CULTIVANDO>;
   CREATE ABSTRACT TYPE default::Auditable {
       CREATE PROPERTY created_at: std::datetime {
           SET default := (std::datetime_of_transaction());
@@ -86,17 +90,7 @@ CREATE MIGRATION m1ihmitfe7uzg4jiux4hmch6ak2mawa37feeg6btdb3heaumqlcawa
       CREATE PROPERTY temperature_max: std::float32;
       CREATE PROPERTY temperature_min: std::float32;
   };
-  ALTER TYPE default::AdminCanDoAnything {
-      CREATE ACCESS POLICY admin_can_do_anything
-          ALLOW ALL USING (((GLOBAL default::current_user).userRole ?= default::Role.ADMIN));
-  };
-  CREATE SCALAR TYPE default::SourceType EXTENDING enum<GOROROBAS, EXTERNAL>;
-  CREATE ABSTRACT TYPE default::WithSource {
-      CREATE PROPERTY credits: std::str;
-      CREATE PROPERTY source: std::str;
-      CREATE PROPERTY sourceType: default::SourceType;
-  };
-  CREATE TYPE default::Image EXTENDING default::WithSource, default::PublicRead, default::Auditable, default::AdminCanDoAnything {
+  CREATE TYPE default::Image EXTENDING default::PublicRead, default::Auditable, default::AdminCanDoAnything {
       CREATE PROPERTY crop: std::json;
       CREATE PROPERTY hotspot: std::json;
       CREATE PROPERTY label: std::str;
@@ -104,37 +98,42 @@ CREATE MIGRATION m1ihmitfe7uzg4jiux4hmch6ak2mawa37feeg6btdb3heaumqlcawa
           CREATE CONSTRAINT std::exclusive;
       };
   };
-  ALTER TYPE default::User {
-      CREATE ACCESS POLICY owner_can_select_or_delete
-          ALLOW SELECT, DELETE USING (((GLOBAL default::current_user).identity ?= .identity));
-  };
   CREATE TYPE default::UserProfile EXTENDING default::WithHandle, default::PublicRead {
       CREATE REQUIRED LINK user: default::User {
           ON TARGET DELETE DELETE SOURCE;
           CREATE CONSTRAINT std::exclusive;
       };
       CREATE LINK photo: default::Image;
-      CREATE PROPERTY bio: std::str;
+      CREATE PROPERTY bio: std::json;
       CREATE PROPERTY location: std::str;
       CREATE REQUIRED PROPERTY name: std::str;
-      CREATE ACCESS POLICY owner_has_full_access
-          ALLOW ALL USING ((GLOBAL default::current_user ?= .user));
+      CREATE ACCESS POLICY owner_can_modify
+          ALLOW UPDATE USING ((GLOBAL default::current_user ?= .user));
   };
-  CREATE SCALAR TYPE default::VegetableWishlistStatus EXTENDING enum<QUERO_CULTIVAR, SEM_INTERESSE, JA_CULTIVEI, ESTOU_CULTIVANDO>;
-  CREATE TYPE default::UserWishlist EXTENDING default::AdminCanDoAnything {
-      CREATE REQUIRED LINK user_profile: default::UserProfile {
-          ON TARGET DELETE DELETE SOURCE;
-      };
-      CREATE REQUIRED LINK vegetable: default::Vegetable {
-          ON TARGET DELETE DELETE SOURCE;
-      };
-      CREATE CONSTRAINT std::exclusive ON ((.user_profile, .vegetable));
-      CREATE REQUIRED PROPERTY status: default::VegetableWishlistStatus;
-  };
+  CREATE GLOBAL default::current_user_profile := (std::assert_single((SELECT
+      default::UserProfile
+  FILTER
+      (.user = GLOBAL default::current_user)
+  )));
   ALTER TYPE default::Auditable {
       CREATE LINK created_by: default::UserProfile {
+          SET default := (GLOBAL default::current_user_profile);
           ON TARGET DELETE ALLOW;
       };
+  };
+  CREATE SCALAR TYPE default::NoteType EXTENDING enum<EXPERIMENTO, ENSINAMENTO, DESCOBERTA>;
+  CREATE TYPE default::Note EXTENDING default::WithHandle, default::Auditable, default::AdminCanDoAnything {
+      CREATE ACCESS POLICY owner_can_do_anything
+          ALLOW ALL USING ((GLOBAL default::current_user_profile ?= .created_by));
+      CREATE REQUIRED PROPERTY public: std::bool;
+      CREATE ACCESS POLICY visible_if_public
+          ALLOW SELECT USING (.public);
+      CREATE PROPERTY body: std::json;
+      CREATE REQUIRED PROPERTY published_at: std::datetime {
+          SET default := (std::datetime_of_transaction());
+      };
+      CREATE REQUIRED PROPERTY title: std::json;
+      CREATE REQUIRED MULTI PROPERTY types: default::NoteType;
   };
   CREATE TYPE default::VegetableFriendship EXTENDING default::Auditable, default::PublicRead, default::AdminCanDoAnything {
       CREATE REQUIRED MULTI LINK vegetables: default::Vegetable {
@@ -146,14 +145,18 @@ CREATE MIGRATION m1ihmitfe7uzg4jiux4hmch6ak2mawa37feeg6btdb3heaumqlcawa
       };
       CREATE CONSTRAINT std::exclusive ON (.unique_key);
   };
-  ALTER TYPE default::WithSource {
+  CREATE SCALAR TYPE default::SourceType EXTENDING enum<GOROROBAS, EXTERNAL>;
+  CREATE TYPE default::Source {
       CREATE MULTI LINK users: default::UserProfile {
-          ON TARGET DELETE ALLOW;
+          ON TARGET DELETE DELETE SOURCE;
       };
+      CREATE PROPERTY credits: std::str;
+      CREATE PROPERTY origin: std::str;
+      CREATE REQUIRED PROPERTY type: default::SourceType;
   };
   CREATE SCALAR TYPE default::TipSubject EXTENDING enum<PLANTIO, CRESCIMENTO, COLHEITA>;
-  CREATE TYPE default::VegetableTip EXTENDING default::WithHandle, default::WithSource, default::PublicRead, default::Auditable, default::AdminCanDoAnything {
-      CREATE MULTI LINK content_links: default::WithHandle {
+  CREATE TYPE default::VegetableTip EXTENDING default::WithHandle, default::PublicRead, default::Auditable, default::AdminCanDoAnything {
+      CREATE MULTI LINK sources: default::Source {
           ON TARGET DELETE ALLOW;
       };
       CREATE REQUIRED PROPERTY content: std::json;
@@ -165,24 +168,27 @@ CREATE MIGRATION m1ihmitfe7uzg4jiux4hmch6ak2mawa37feeg6btdb3heaumqlcawa
       };
       CREATE REQUIRED PROPERTY names: array<std::str>;
   };
-  CREATE GLOBAL default::current_user_profile := (std::assert_single((SELECT
-      default::UserProfile
-  FILTER
-      (.user = GLOBAL default::current_user)
-  )));
-  ALTER TYPE default::UserWishlist {
+  CREATE TYPE default::UserWishlist EXTENDING default::PublicRead {
+      CREATE REQUIRED LINK user_profile: default::UserProfile {
+          ON TARGET DELETE DELETE SOURCE;
+      };
       CREATE ACCESS POLICY owner_can_do_anything
           ALLOW ALL USING ((GLOBAL default::current_user_profile ?= .user_profile));
+      CREATE REQUIRED LINK vegetable: default::Vegetable {
+          ON TARGET DELETE DELETE SOURCE;
+      };
+      CREATE CONSTRAINT std::exclusive ON ((.user_profile, .vegetable));
+      CREATE REQUIRED PROPERTY status: default::VegetableWishlistStatus;
   };
   ALTER TYPE default::Vegetable {
-      CREATE MULTI LINK friends := (.<vegetables[IS default::VegetableFriendship]);
-  };
-  ALTER TYPE default::Auditable {
-      ALTER LINK created_by {
-          CREATE REWRITE
-              INSERT 
-              USING (GLOBAL default::current_user_profile);
-      };
+      CREATE MULTI LINK friends := (WITH
+          parent_id := 
+              .id
+      SELECT
+          .<vegetables[IS default::VegetableFriendship].vegetables
+      FILTER
+          (.id != parent_id)
+      );
   };
   CREATE SCALAR TYPE default::HistoryAction EXTENDING enum<`INSERT`, `UPDATE`, `DELETE`>;
   CREATE TYPE default::HistoryLog {
@@ -233,10 +239,26 @@ CREATE MIGRATION m1ihmitfe7uzg4jiux4hmch6ak2mawa37feeg6btdb3heaumqlcawa
                   new := <std::json>__new__
               });
   };
+  ALTER TYPE default::Image {
+      CREATE MULTI LINK sources: default::Source {
+          ON TARGET DELETE ALLOW;
+      };
+  };
   ALTER TYPE default::Vegetable {
       CREATE MULTI LINK photos: default::Image {
           CREATE PROPERTY order_index: std::int16;
       };
+      CREATE MULTI LINK sources: default::Source {
+          ON TARGET DELETE ALLOW;
+      };
+      CREATE MULTI LINK wishlisted_by := (WITH
+          parent_id := 
+              .id
+      SELECT
+          .<vegetable[IS default::UserWishlist]
+      FILTER
+          (.status != <default::VegetableWishlistStatus>'SEM_INTERESSE')
+      );
       CREATE MULTI LINK tips: default::VegetableTip {
           ON SOURCE DELETE DELETE TARGET;
           ON TARGET DELETE ALLOW;

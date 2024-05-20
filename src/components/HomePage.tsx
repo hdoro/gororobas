@@ -1,14 +1,13 @@
 import type { HomePageData } from '@/queries'
 import { shuffleArray } from '@/utils/arrays'
-import { getRandomTransform } from '@/utils/css'
 import { paths } from '@/utils/urls'
 import Link from 'next/link'
 import AutoScrollingStrip from './AutoScrollingStrip'
-import NoteCard from './NoteCard'
 import NotesGrid from './NotesGrid'
 import SectionTitle from './SectionTitle'
 import UserAvatar from './UserAvatar'
-import SeedlingIcon from './icons/SeedlingIcon'
+import NoteIcon from './icons/NoteIcon'
+import RainbowIcon from './icons/RainbowIcon'
 import { Text } from './ui/text'
 
 export default function HomePage(data: Partial<HomePageData>) {
@@ -56,7 +55,7 @@ export default function HomePage(data: Partial<HomePageData>) {
 			)}
 			{notes && notes.length > 0 && (
 				<section className="mt-36">
-					<SectionTitle Icon={SeedlingIcon}>
+					<SectionTitle Icon={NoteIcon}>
 						Aprendizados e experimentos
 					</SectionTitle>
 					<Text level="h3" className="px-pageX mx-10 font-normal">
@@ -67,10 +66,10 @@ export default function HomePage(data: Partial<HomePageData>) {
 			)}
 			{profiles && profiles.length > 0 && (
 				<section className="mt-36">
-					<SectionTitle Icon={SeedlingIcon}>Quem se envolve</SectionTitle>
+					<SectionTitle Icon={RainbowIcon}>Quem se envolve</SectionTitle>
 					<div className="flex overflow-auto gap-12 mt-10 px-pageX hide-scrollbar">
 						{profiles.map((profile) => (
-							<UserAvatar key={profile.handle} user={profile} size="lg" />
+							<UserAvatar key={profile.handle} user={profile} size="md" />
 						))}
 					</div>
 				</section>

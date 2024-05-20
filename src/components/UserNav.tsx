@@ -1,9 +1,10 @@
+import createUserProfile from '@/app/auth/[...auth]/createUserProfile'
 import { auth } from '@/edgedb'
 import { profileForNavQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { paths } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
-import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import UserAvatar from './UserAvatar'
 import { Button } from './ui/button'
 
@@ -14,11 +15,11 @@ export default async function UserNav({ signedIn }: { signedIn: boolean }) {
 		return (
 			<>
 				<div className="flex items-center gap-2 pt-2">
-					<Button asChild>
-						<a href={paths.signup()}>Criar conta</a>
-					</Button>
 					<Button asChild mode="outline">
-						<a href={paths.signin()}>Entrar</a>
+						<a href={auth.getBuiltinUIUrl()}>Entrar</a>
+					</Button>
+					<Button asChild>
+						<a href={auth.getBuiltinUISignUpUrl()}>Criar conta</a>
 					</Button>
 				</div>
 			</>
@@ -37,20 +38,17 @@ export default async function UserNav({ signedIn }: { signedIn: boolean }) {
 	)
 
 	// @TODO auto-create User and UserProfile objects on middleware when logged-in but missing user and/or profile
-	if (!profile) return null
+	if (!profile) {
+		await runServerEffect(createUserProfile(true))
+		redirect(paths.editProfile())
+	}
 
 	return (
-		<Link
-			href={paths.profile()}
-			title="Editar perfil"
-			className="cursor-pointer"
-		>
-			<UserAvatar
-				size="sm"
-				fallbackTone={Math.random() > 0.5 ? 'primary' : 'secondary'}
-				user={profile}
-				includeName={false}
-			/>
-		</Link>
+		<UserAvatar
+			size="sm"
+			fallbackTone={Math.random() > 0.5 ? 'primary' : 'secondary'}
+			user={profile}
+			includeName={false}
+		/>
 	)
 }

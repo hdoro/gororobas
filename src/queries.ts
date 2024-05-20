@@ -1,4 +1,5 @@
 import e, { type $infer } from '@/edgeql'
+import type { VegetableWishlistStatus } from './edgedb.interfaces'
 
 const SOURCE_FIELDS = {
 	type: true,
@@ -40,6 +41,7 @@ const userProfileForAvatar = e.shape(e.UserProfile, () => ({
 	name: true,
 	handle: true,
 	photo: imageFields,
+	location: true,
 }))
 
 const publicNotes = e.shape(e.Note, (note) => ({
@@ -258,3 +260,52 @@ export const notePageQuery = e.params(
 )
 
 export type NotePageData = Exclude<$infer<typeof notePageQuery>, null>
+
+export const userProfilePageQuery = e.params(
+	{
+		handle: e.str,
+	},
+	(params) =>
+		e.select(e.UserProfile, (profile) => ({
+			filter_single: e.op(profile.handle, '=', params.handle),
+
+			...userProfileForAvatar(profile),
+			bio: true,
+			is_owner: e.op(profile.id, '=', e.global.current_user_profile.id),
+
+			notes: e.select(e.Note, (note) => ({
+				...publicNotes(note),
+
+				filter: e.op(
+					e.op(note.created_by, '=', profile),
+					'and',
+					e.op(note.public, '=', true),
+				),
+				limit: 12,
+			})),
+
+			wishlist: e.select(e.UserWishlist, (wishlist) => ({
+				status: true,
+				vegetable: vegetableForCard,
+
+				filter: e.op(
+					e.op(wishlist.user_profile.id, '=', profile.id),
+					'and',
+					e.op(
+						wishlist.status,
+						'!=',
+						e.cast(
+							e.VegetableWishlistStatus,
+							'SEM_INTERESSE' satisfies VegetableWishlistStatus,
+						),
+					),
+				),
+				limit: 20,
+			})),
+		})),
+)
+
+export type UserProfileageData = Exclude<
+	$infer<typeof userProfilePageQuery>,
+	null
+>

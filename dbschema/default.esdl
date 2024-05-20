@@ -49,6 +49,8 @@ module default {
   type User {
     required identity: ext::auth::Identity {
       constraint exclusive;
+      
+      on target delete delete source;
     };
     email: str {
       constraint exclusive;
@@ -270,7 +272,7 @@ module default {
     constraint exclusive on (.unique_key);
   }
 
-  type UserWishlist {
+  type UserWishlist extending PublicRead {
     required user_profile: UserProfile {
       on target delete delete source;
     };

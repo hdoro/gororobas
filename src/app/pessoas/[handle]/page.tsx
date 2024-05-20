@@ -1,29 +1,29 @@
 import { auth } from '@/edgedb'
-import { notePageQuery } from '@/queries'
+import { userProfilePageQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 import { notFound } from 'next/navigation'
-import NotePage from './NotePage'
+import UserProfilePage from './UserProfilePage'
 
-export default async function NoteRoute({
+export default async function UserProfileRoute({
 	params: { handle },
 }: {
 	params: { handle: string }
 }) {
 	const session = auth.getSession()
 
-	const note = await runServerEffect(
+	const profile = await runServerEffect(
 		pipe(
 			Effect.tryPromise({
-				try: () => notePageQuery.run(session.client, { handle }),
+				try: () => userProfilePageQuery.run(session.client, { handle }),
 				catch: (error) => console.log(error),
 			}),
-			...buildTraceAndMetrics('note_page', { handle }),
+			...buildTraceAndMetrics('user_profile_page', { handle }),
 			Effect.catchAll(() => Effect.succeed(null)),
 		),
 	)
 
-	if (!note) return notFound()
+	if (!profile) return notFound()
 
-	return <NotePage note={note} />
+	return <UserProfilePage profile={profile} />
 }

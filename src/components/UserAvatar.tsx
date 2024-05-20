@@ -1,14 +1,16 @@
 import type { NewImage, StoredImage } from '@/schemas'
 import type { ImageForRendering } from '@/types'
 import { cn } from '@/utils/cn'
+import { paths } from '@/utils/urls'
 import { SproutIcon } from 'lucide-react'
+import Link from 'next/link'
 import { type VariantProps, tv } from 'tailwind-variants'
 import { SanityImage } from './SanityImage'
 import { Text } from './ui/text'
 
 const avatarVariants = tv({
 	slots: {
-		root: 'flex-shrink-0 flex items-center',
+		root: 'flex-shrink-0 flex items-center flex-wrap',
 		image: 'block object-cover rounded-full',
 		name: 'max-w-[16ch] truncate',
 		location: '',
@@ -19,10 +21,16 @@ const avatarVariants = tv({
 				root: 'gap-2',
 				image: 'w-7 h-7',
 			},
-			lg: {
+			md: {
 				root: 'gap-3',
 				image: 'w-24 h-24',
 				name: 'text-lg',
+			},
+			lg: {
+				root: 'gap-4',
+				image: 'w-40 h-40',
+				name: 'text-4xl',
+				location: 'text-2xl',
 			},
 		},
 		includeName: {
@@ -49,18 +57,29 @@ type UserAvatarProps = VariantProps<typeof avatarVariants> & {
 			| undefined
 	}
 	fallbackTone?: 'primary' | 'secondary'
+	linkToProfile?: boolean
 }
 
 export default function UserAvatar(props: UserAvatarProps) {
-	const { user, size, includeName = true } = props
+	const { user, size = 'sm', includeName = true, linkToProfile = true } = props
 
 	if (includeName && !user.name) return null
 
 	const classes = avatarVariants({ size, includeName })
 
+	const RootComponent = linkToProfile && user.handle ? Link : 'div'
 	return (
-		<div key={user.name} className={classes.root()}>
-			<Photo {...props} imageClasses={classes.image()} />
+		<RootComponent
+			key={user.name}
+			className={classes.root()}
+			// @ts-expect-error href is only needed when using Link
+			href={
+				linkToProfile && user.handle
+					? paths.userProfile(user.handle)
+					: undefined
+			}
+		>
+			<UserPhoto {...props} />
 			{includeName && (
 				<div className="space-2">
 					<Text className={classes.name()}>{user.name}</Text>
@@ -71,24 +90,31 @@ export default function UserAvatar(props: UserAvatarProps) {
 					)}
 				</div>
 			)}
-		</div>
+		</RootComponent>
 	)
 }
 
-function Photo({
-	imageClasses,
+const SIZE_MAP: Record<Exclude<UserAvatarProps['size'], undefined>, number> = {
+	sm: 28,
+	md: 100,
+	lg: 160,
+}
+
+export function UserPhoto({
 	user,
-	fallbackTone,
-	size,
-}: UserAvatarProps & { imageClasses: string }) {
+	fallbackTone = 'primary',
+	size = 'sm',
+	includeName = true,
+}: UserAvatarProps) {
 	const { photo } = user
+	const classes = avatarVariants({ size, includeName })
 
 	if (photo && 'file' in photo && photo.file instanceof File) {
 		return (
 			<img
 				src={URL.createObjectURL(photo.file)}
 				alt={'Foto de perfil'}
-				className={imageClasses}
+				className={classes.image()}
 			/>
 		)
 	}
@@ -98,8 +124,8 @@ function Photo({
 			<SanityImage
 				image={photo}
 				alt={'Foto de perfil'}
-				maxWidth={size === 'sm' ? 28 : 100}
-				className={imageClasses}
+				maxWidth={SIZE_MAP[size]}
+				className={classes.image()}
 			/>
 		)
 	}
@@ -107,7 +133,7 @@ function Photo({
 	return (
 		<div
 			className={cn(
-				imageClasses,
+				classes.image(),
 				'flex items-center justify-center',
 				fallbackTone === 'primary' ? 'bg-primary-200' : 'bg-secondary-200',
 			)}

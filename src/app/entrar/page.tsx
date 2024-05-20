@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
 import { auth } from '@/edgedb'
-import { getAuthRedirect, paths } from '@/utils/urls'
+import { getAuthRedirect } from '@/utils/urls'
 import { redirect } from 'next/navigation'
 
 export default async function ProfileRoute() {
@@ -25,10 +25,10 @@ export default async function ProfileRoute() {
 				</Text>
 				<div className="flex items-center gap-2 pt-2">
 					<Button asChild>
-						<a href={paths.signup()}>Criar conta</a>
+						<a href={auth.getBuiltinUISignUpUrl()}>Criar conta</a>
 					</Button>
 					<Button asChild mode="outline">
-						<a href={paths.signin()}>Entrar</a>
+						<a href={auth.getBuiltinUIUrl()}>Entrar</a>
 					</Button>
 				</div>
 			</div>

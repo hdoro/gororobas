@@ -1,4 +1,4 @@
-import { BASE_URL, PRODUCTION_URL, SIGNIN_URL, SIGNUP_URL } from './config'
+import { BASE_URL, PRODUCTION_URL } from './config'
 import { slugify, truncate } from './strings'
 
 export function pathToAbsUrl(
@@ -65,13 +65,22 @@ export function formatPath(path?: string): string {
 
 export const paths = {
 	home: () => '/' as const,
-	profile: () => '/perfil' as const,
+
+	editProfile: () => '/perfil' as const,
+	userProfile: (handle: string) => formatPath(`/pessoas/${handle}`),
+
 	signinNotice: () => '/entrar' as const,
-	signin: () => SIGNIN_URL,
-	signup: () => SIGNUP_URL,
+	// Refer to `src/app/redirecionar/route.ts` for why this redirect is needed
+	signin: () => '/redirecionar?modo=entrar',
+	signup: () => '/redirecionar?modo=criar-conta',
+	signout: () => '/auth/signout',
+	authCallback: (isSignUp = false) =>
+		`/auth/builtin/callback${isSignUp ? '?isSignUp=true' : ''}`,
+
 	vegetablesIndex: () => '/vegetais' as const,
 	vegetable: (handle: string) => formatPath(`/vegetais/${handle}`),
 	editVegetable: (handle: string) => formatPath(`/vegetais/${handle}/editar`),
+
 	notesIndex: () => '/notas' as const,
 	note: (handle: string) => formatPath(`/notas/${handle}`),
 	newNote: () => '/notas/nova' as const,
@@ -80,7 +89,7 @@ export const paths = {
 export function getAuthRedirect(isSignedIn: boolean) {
 	if (!isSignedIn) return paths.signinNotice()
 
-	return paths.profile()
+	return paths.editProfile()
 }
 
 export function getStandardHandle(textContent: string, id: string) {

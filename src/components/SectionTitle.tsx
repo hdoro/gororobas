@@ -13,7 +13,9 @@ export default function SectionTitle({
 }>) {
 	return (
 		<Text level="h2" className="px-pageX flex gap-2.5 items-center">
-			{Icon && <Icon variant="color" className="w-8" />}
+			{Icon && (
+				<Icon variant="color" className="w-6 md:w-8 flex-[0_0_maxcontent]" />
+			)}
 			{children}
 		</Text>
 	)

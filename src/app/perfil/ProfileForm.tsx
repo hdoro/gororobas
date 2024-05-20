@@ -192,7 +192,7 @@ function ProfilePreview() {
 					photo,
 				}}
 				fallbackTone={fallbackTone}
-				size="lg"
+				size="md"
 			/>
 		</div>
 	)

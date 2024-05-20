@@ -135,7 +135,7 @@ export const ImageDBToFormTransformer = S.transform(
 
 export const StringInArray = S.transform(
 	S.Struct({
-		value: S.String.pipe(S.minLength(3)).annotations({
+		value: S.String.pipe(S.minLength(1)).annotations({
 			message: () => 'Ao menos 3 caracteres',
 		}),
 	}),
@@ -183,11 +183,7 @@ export const Vegetable = S.Struct({
 	gender: S.optional(S.Literal(...(Object.keys(GENDER_TO_LABEL) as Gender[]))),
 
 	uses: S.optional(
-		S.Array(S.Literal(...(Object.keys(USAGE_TO_LABEL) as VegetableUsage[])))
-			.pipe(S.minItems(1))
-			.annotations({
-				message: () => 'Marque ao menos uma opção',
-			}),
+		S.Array(S.Literal(...(Object.keys(USAGE_TO_LABEL) as VegetableUsage[]))),
 	),
 	edible_parts: S.optional(
 		S.Array(S.Literal(...(Object.keys(EDIBLE_PART_TO_LABEL) as EdiblePart[]))),
@@ -200,11 +196,7 @@ export const Vegetable = S.Struct({
 		),
 	),
 	strata: S.optional(
-		S.Array(S.Literal(...(Object.keys(STRATUM_TO_LABEL) as Stratum[])))
-			.pipe(S.minItems(1))
-			.annotations({
-				message: () => 'Marque ao menos uma opção',
-			}),
+		S.Array(S.Literal(...(Object.keys(STRATUM_TO_LABEL) as Stratum[]))),
 	),
 	planting_methods: S.optional(
 		S.Array(
@@ -284,7 +276,7 @@ export type SourceForDB = typeof SourceData.Type
 export const ProfileData = S.Struct({
 	id: S.UUID,
 	handle: Handle,
-	name: S.String.pipe(S.minLength(3)),
+	name: S.String.pipe(S.minLength(1)),
 	photo: S.optional(ImageData),
 	location: S.optional(S.String),
 	bio: S.optional(RichText),

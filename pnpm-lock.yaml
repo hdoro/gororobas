@@ -24,17 +24,17 @@ importers:
         specifier: ^0.3.1
         version: 0.3.1(edgedb@1.6.0-canary.20240510T201054)(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@effect/experimental':
-        specifier: ^0.16.8
-        version: 0.16.8(@effect/platform-node@0.49.8(@effect/platform@0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5))(effect@3.1.5))(@effect/platform@0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5))(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5)(ws@8.17.0)
+        specifier: ^0.16.12
+        version: 0.16.12(@effect/platform-node@0.49.12(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1))(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)(ws@8.17.0)
       '@effect/opentelemetry':
-        specifier: ^0.34.5
-        version: 0.34.5(@opentelemetry/api@1.8.0)(@opentelemetry/resources@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-metrics@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-node@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/semantic-conventions@1.24.1)(effect@3.1.5)
+        specifier: ^0.34.8
+        version: 0.34.8(@opentelemetry/api@1.8.0)(@opentelemetry/resources@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-metrics@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-node@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/semantic-conventions@1.24.1)(effect@3.2.1)
       '@effect/platform-node':
-        specifier: ^0.49.8
-        version: 0.49.8(@effect/platform@0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5))(effect@3.1.5)
+        specifier: ^0.49.12
+        version: 0.49.12(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1)
       '@effect/schema':
-        specifier: ^0.67.5
-        version: 0.67.5(effect@3.1.5)
+        specifier: ^0.67.9
+        version: 0.67.9(effect@3.2.1)
       '@hookform/resolvers':
         specifier: ^3.4.0
         version: 3.4.0(react-hook-form@7.51.4(react@18.3.1))
@@ -156,17 +156,17 @@ importers:
         specifier: 1.6.0-canary.20240510T201054
         version: 1.6.0-canary.20240510T201054
       effect:
-        specifier: ^3.1.5
-        version: 3.1.5
+        specifier: ^3.2.1
+        version: 3.2.1
       embla-carousel-autoplay:
-        specifier: ^8.1.1
-        version: 8.1.1(embla-carousel@8.1.1)
+        specifier: ^8.1.3
+        version: 8.1.3(embla-carousel@8.1.3)
       embla-carousel-react:
-        specifier: ^8.1.1
-        version: 8.1.1(react@18.3.1)
+        specifier: ^8.1.3
+        version: 8.1.3(react@18.3.1)
       embla-carousel-wheel-gestures:
         specifier: 8.0.0-rc05
-        version: 8.0.0-rc05(embla-carousel@8.1.1)
+        version: 8.0.0-rc05(embla-carousel@8.1.3)
       jsdom:
         specifier: ^24.0.0
         version: 24.0.0
@@ -366,13 +366,13 @@ packages:
     peerDependencies:
       edgedb: ^1.5.0
 
-  '@effect/experimental@0.16.8':
-    resolution: {integrity: sha512-KfrnMT8hmYNskPCebAYhtlKuiqgbJpzHCvuQM/Squl9Yhi470f9jrllS7d3XqGKGmBAHluk7YG8XMGNAQPzrNQ==}
+  '@effect/experimental@0.16.12':
+    resolution: {integrity: sha512-H0tPIDXk3T4hwwb2gUVoE0Ph0hAaKwP2g9qNUB5qx0NwR81K7t4FgMolriaT/Gk9Jt4ciNpSad2sT2WUQfbYSw==}
     peerDependencies:
-      '@effect/platform': ^0.53.8
-      '@effect/platform-node': ^0.49.8
-      '@effect/schema': ^0.67.5
-      effect: ^3.1.5
+      '@effect/platform': ^0.53.12
+      '@effect/platform-node': ^0.49.12
+      '@effect/schema': ^0.67.9
+      effect: ^3.2.1
       ioredis: ^5
       lmdb: ^3
       ws: ^8
@@ -386,8 +386,8 @@ packages:
       ws:
         optional: true
 
-  '@effect/opentelemetry@0.34.5':
-    resolution: {integrity: sha512-/QAyqb8vBXPU8bJzbpwlNH7X5SaayQO5MdmWQwx3PgUnFr/bwCyjtgnQlgu6V0IGyLasmqbBZcnk+atmsZ08sQ==}
+  '@effect/opentelemetry@0.34.8':
+    resolution: {integrity: sha512-/tFAltkcUNvPfEkZ2LFraqMLhTZYMydPors2QRzqMaDdQtm80V+b4e9TxnuMSw/gq9kfkS4O2eQV6Bz617d06A==}
     peerDependencies:
       '@opentelemetry/api': ^1.6
       '@opentelemetry/resources': ^1.22
@@ -395,8 +395,8 @@ packages:
       '@opentelemetry/sdk-trace-base': ^1.22
       '@opentelemetry/sdk-trace-node': ^1.22
       '@opentelemetry/sdk-trace-web': ^1.22
-      '@opentelemetry/semantic-conventions': ^1.22
-      effect: ^3.1.5
+      '@opentelemetry/semantic-conventions': ^1.24.1
+      effect: ^3.2.1
     peerDependenciesMeta:
       '@opentelemetry/sdk-metrics':
         optional: true
@@ -407,17 +407,17 @@ packages:
       '@opentelemetry/sdk-trace-web':
         optional: true
 
-  '@effect/platform-node-shared@0.4.27':
-    resolution: {integrity: sha512-IFWdYUecJKYisJAI4jDBSWcQY8dM/zIwc92ko6cyv7Tj+HAkrH6skZ1tRiojYjLv2rJVW77G+O/3owr0uXMILw==}
+  '@effect/platform-node-shared@0.4.31':
+    resolution: {integrity: sha512-HTgI5gvhDUCbKVWdCJv6Gro//EH8ibvEqzMuj8Acno5CQPXAYRBaNKshcj3EuqiqAHjLlBrKM7Kv15wLaBuGRw==}
     peerDependencies:
-      '@effect/platform': ^0.53.8
-      effect: ^3.1.5
+      '@effect/platform': ^0.53.12
+      effect: ^3.2.1
 
-  '@effect/platform-node@0.49.8':
-    resolution: {integrity: sha512-iANAOsFopX2Nq0X3fhMPr/f0x3vMYgaNKAS9jq7/SbxzZ7DYNFnf1oyOGAzZDTLggDJQW7Yfc6XIuJQEY/nWqQ==}
+  '@effect/platform-node@0.49.12':
+    resolution: {integrity: sha512-W0XcIvrVpRGr3y3TrOJDUz4nWMEAM/rpVh2Z6k0UbrZ5yVyqkg/5NaY2pH4eFhT0cm5yk+XyY9zHMbhSGeaVhA==}
     peerDependencies:
-      '@effect/platform': ^0.53.8
-      effect: ^3.1.5
+      '@effect/platform': ^0.53.12
+      effect: ^3.2.1
 
   '@effect/platform@0.53.8':
     resolution: {integrity: sha512-TUn2oxFIOFH1ObdeCxtGA/8BYjUtdhppbw9IcYTHkAKXE8Y8DIjNCzgs+Z7k4Oj7ZD36uqTQvVQumlmTldHhfw==}
@@ -425,10 +425,10 @@ packages:
       '@effect/schema': ^0.67.5
       effect: ^3.1.5
 
-  '@effect/schema@0.67.5':
-    resolution: {integrity: sha512-RxlnCahk1rEmbosz0ZOb6mu3PTrf27+X+LQKeytFkDgUiNqQUyrLUUTMwh0BckPeRudeWpb7WKhpJvzJyG8uBw==}
+  '@effect/schema@0.67.9':
+    resolution: {integrity: sha512-bly2PIIZGA9lhahCu+RuLHIS04H9sTYaD7Rkb+Jz2lhEHVWtzDO0hNyfigGJ7M1MDlaC3LKA9BY1uLKQmBnyRg==}
     peerDependencies:
-      effect: ^3.1.5
+      effect: ^3.2.1
 
   '@floating-ui/core@1.6.1':
     resolution: {integrity: sha512-42UH54oPZHPdRHdw6BgoBD6cg/eVTmVrFcgeRDM3jbO7uxSoipVcmcIGFcA5jmOHO5apcyvBhkSKES3fQJnu7A==}
@@ -1723,26 +1723,26 @@ packages:
     engines: {node: '>= 18.0.0'}
     hasBin: true
 
-  effect@3.1.5:
-    resolution: {integrity: sha512-nTkW/ViRF8cXVMKjusYMVp7L1eqLwMZV7K6GHoqq3MD7NjPT/tJRVhY8d6z5Vam9kxgvRAzqwJKkaRpRVz1jTw==}
+  effect@3.2.1:
+    resolution: {integrity: sha512-WnM7QyHekA+oWkJyD1g99BDqD3atAXKjarcDnUX9alIKLd8EFXdY333wpgcNJkSqtvXDsx8qYWOMbuivdwoN2w==}
 
   electron-to-chromium@1.4.727:
     resolution: {integrity: sha512-brpv4KTeC4g0Fx2FeIKytLd4UGn1zBQq5Lauy7zEWT9oqkaj5mgsxblEZIAOf1HHLlXxzr6adGViiBy5Z39/CA==}
 
-  embla-carousel-autoplay@8.1.1:
-    resolution: {integrity: sha512-MwQzErkZDBL06JGIjxx8P2YgpbfaLCWtowfbd0MfhAUgFOiMeYTHG4C3VzBRse2B/aV8K9PfXrdvFoNvhOOVHQ==}
+  embla-carousel-autoplay@8.1.3:
+    resolution: {integrity: sha512-nMPuOZ+f3yp/RzUEYDOWjO7EkhdNHfdxEoRxfwqIvTGdSQ04LAFAnMLiLWSetAXzB1bP30L391mZb9keZXRcWQ==}
     peerDependencies:
-      embla-carousel: 8.1.1
+      embla-carousel: 8.1.3
 
-  embla-carousel-react@8.1.1:
-    resolution: {integrity: sha512-VuIrNyGneFKlDzAvkRGeXjEOw+FW2Ob76R/Y+kdSuKj68bnaAJCEf8PlHtJJWle1/rR/Sfv9NTIa00zlA8iXgw==}
+  embla-carousel-react@8.1.3:
+    resolution: {integrity: sha512-YrezDPgxPDKa+OKMhSrwuPEU2OgF5147vFW473EWT3bx9DETV3W/RyWTxq0/2pf3M4VXkjqFNbS/W1xM8lTaVg==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.1 || ^18.0.0
 
-  embla-carousel-reactive-utils@8.1.1:
-    resolution: {integrity: sha512-zlsaorYN56qtoXoVNw8hA/IbUjxq0pdggZpl9b5V2Cxvrd47ZSL5Lat7GgC+kgyUEdEocP1iOmw5+vpCX9rZPA==}
+  embla-carousel-reactive-utils@8.1.3:
+    resolution: {integrity: sha512-D8tAK6NRQVEubMWb+b/BJ3VvGPsbEeEFOBM6cCCwfiyfLzNlacOAt0q2dtUEA9DbGxeWkB8ExgXzFRxhGV2Hig==}
     peerDependencies:
-      embla-carousel: 8.1.1
+      embla-carousel: 8.1.3
 
   embla-carousel-wheel-gestures@8.0.0-rc05:
     resolution: {integrity: sha512-KfPlGuOvMterlg01FDd+Iws5wefInkyks4ai3p4n4B5WAiyel+DHs4AFu09UmshcnHpIH5cLJQ6VJCbp/kyy1A==}
@@ -1750,8 +1750,8 @@ packages:
     peerDependencies:
       embla-carousel: ^8.0.0 || ~8.0.0-rc03
 
-  embla-carousel@8.1.1:
-    resolution: {integrity: sha512-PfdhNbPoNl7V5YnwuKe2zmKd0+/HY+Q4O59xQcVvinsgv2LkpAVQ1NB/q5STqAde8nZ56U2uQOe6X+9u4IZlhA==}
+  embla-carousel@8.1.3:
+    resolution: {integrity: sha512-GiRpKtzidV3v50oVMly8S+D7iE1r96ttt7fSlvtyKHoSkzrAnVcu8fX3c4j8Ol2hZSQlVfDqDIqdrFPs0u5TWQ==}
 
   emoji-regex@10.3.0:
     resolution: {integrity: sha512-QpLs9D9v9kArv4lfDEgg1X/gN5XLnf/A6l9cs8SPZLRZR3ZkY9+kwIQTxm+fsSej5UMYGE8fdoaZVIBlqG0XTw==}
@@ -2994,39 +2994,39 @@ snapshots:
       '@iarna/toml': 2.2.5
       edgedb: 1.6.0-canary.20240510T201054
 
-  '@effect/experimental@0.16.8(@effect/platform-node@0.49.8(@effect/platform@0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5))(effect@3.1.5))(@effect/platform@0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5))(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5)(ws@8.17.0)':
+  '@effect/experimental@0.16.12(@effect/platform-node@0.49.12(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1))(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)(ws@8.17.0)':
     dependencies:
-      '@effect/platform': 0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5)
-      '@effect/schema': 0.67.5(effect@3.1.5)
-      effect: 3.1.5
+      '@effect/platform': 0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)
+      '@effect/schema': 0.67.9(effect@3.2.1)
+      effect: 3.2.1
       msgpackr: 1.10.2
     optionalDependencies:
-      '@effect/platform-node': 0.49.8(@effect/platform@0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5))(effect@3.1.5)
+      '@effect/platform-node': 0.49.12(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1)
       ws: 8.17.0
 
-  '@effect/opentelemetry@0.34.5(@opentelemetry/api@1.8.0)(@opentelemetry/resources@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-metrics@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-node@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/semantic-conventions@1.24.1)(effect@3.1.5)':
+  '@effect/opentelemetry@0.34.8(@opentelemetry/api@1.8.0)(@opentelemetry/resources@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-metrics@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-node@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/semantic-conventions@1.24.1)(effect@3.2.1)':
     dependencies:
       '@opentelemetry/api': 1.8.0
       '@opentelemetry/resources': 1.24.1(@opentelemetry/api@1.8.0)
       '@opentelemetry/semantic-conventions': 1.24.1
-      effect: 3.1.5
+      effect: 3.2.1
     optionalDependencies:
       '@opentelemetry/sdk-metrics': 1.24.1(@opentelemetry/api@1.8.0)
       '@opentelemetry/sdk-trace-base': 1.24.1(@opentelemetry/api@1.8.0)
       '@opentelemetry/sdk-trace-node': 1.24.1(@opentelemetry/api@1.8.0)
 
-  '@effect/platform-node-shared@0.4.27(@effect/platform@0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5))(effect@3.1.5)':
+  '@effect/platform-node-shared@0.4.31(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1)':
     dependencies:
-      '@effect/platform': 0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5)
+      '@effect/platform': 0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)
       '@parcel/watcher': 2.4.1
-      effect: 3.1.5
+      effect: 3.2.1
       multipasta: 0.2.1
 
-  '@effect/platform-node@0.49.8(@effect/platform@0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5))(effect@3.1.5)':
+  '@effect/platform-node@0.49.12(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1)':
     dependencies:
-      '@effect/platform': 0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5)
-      '@effect/platform-node-shared': 0.4.27(@effect/platform@0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5))(effect@3.1.5)
-      effect: 3.1.5
+      '@effect/platform': 0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)
+      '@effect/platform-node-shared': 0.4.31(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1)
+      effect: 3.2.1
       mime: 3.0.0
       undici: 6.17.0
       ws: 8.17.0
@@ -3034,17 +3034,17 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@effect/platform@0.53.8(@effect/schema@0.67.5(effect@3.1.5))(effect@3.1.5)':
+  '@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)':
     dependencies:
-      '@effect/schema': 0.67.5(effect@3.1.5)
-      effect: 3.1.5
+      '@effect/schema': 0.67.9(effect@3.2.1)
+      effect: 3.2.1
       find-my-way-ts: 0.1.2
       multipasta: 0.2.1
       path-browserify: 1.0.1
 
-  '@effect/schema@0.67.5(effect@3.1.5)':
+  '@effect/schema@0.67.9(effect@3.2.1)':
     dependencies:
-      effect: 3.1.5
+      effect: 3.2.1
       fast-check: 3.18.0
 
   '@floating-ui/core@1.6.1':
@@ -4350,30 +4350,30 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  effect@3.1.5: {}
+  effect@3.2.1: {}
 
   electron-to-chromium@1.4.727: {}
 
-  embla-carousel-autoplay@8.1.1(embla-carousel@8.1.1):
+  embla-carousel-autoplay@8.1.3(embla-carousel@8.1.3):
     dependencies:
-      embla-carousel: 8.1.1
+      embla-carousel: 8.1.3
 
-  embla-carousel-react@8.1.1(react@18.3.1):
+  embla-carousel-react@8.1.3(react@18.3.1):
     dependencies:
-      embla-carousel: 8.1.1
-      embla-carousel-reactive-utils: 8.1.1(embla-carousel@8.1.1)
+      embla-carousel: 8.1.3
+      embla-carousel-reactive-utils: 8.1.3(embla-carousel@8.1.3)
       react: 18.3.1
 
-  embla-carousel-reactive-utils@8.1.1(embla-carousel@8.1.1):
+  embla-carousel-reactive-utils@8.1.3(embla-carousel@8.1.3):
     dependencies:
-      embla-carousel: 8.1.1
+      embla-carousel: 8.1.3
 
-  embla-carousel-wheel-gestures@8.0.0-rc05(embla-carousel@8.1.1):
+  embla-carousel-wheel-gestures@8.0.0-rc05(embla-carousel@8.1.3):
     dependencies:
-      embla-carousel: 8.1.1
+      embla-carousel: 8.1.3
       wheel-gestures: 2.2.5
 
-  embla-carousel@8.1.1: {}
+  embla-carousel@8.1.3: {}
 
   emoji-regex@10.3.0: {}
 

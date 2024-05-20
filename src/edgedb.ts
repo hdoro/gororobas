@@ -1,5 +1,6 @@
 import createAuth from '@edgedb/auth-nextjs/app'
 import { createClient } from 'edgedb'
+import { BASE_URL } from './utils/config'
 
 export const client = createClient({
 	// Note: when developing locally you will need to set tls security to
@@ -9,5 +10,5 @@ export const client = createClient({
 })
 
 export const auth = createAuth(client, {
-	baseUrl: 'http://localhost:3000',
+	baseUrl: BASE_URL,
 })

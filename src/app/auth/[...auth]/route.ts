@@ -1,61 +1,46 @@
 import { auth } from '@/edgedb'
-import { generateId } from '@/utils/ids'
-import { getStandardHandle } from '@/utils/urls'
+import { runServerEffect } from '@/services/runtime'
+import { EmailNotVerifiedError, SigninFailedError } from '@/types/errors'
+import { paths } from '@/utils/urls'
+import { Effect } from 'effect'
 import { redirect } from 'next/navigation'
+import createUserProfile from './createUserProfile'
 
 export const { GET, POST } = auth.createAuthRouteHandlers({
 	async onBuiltinUICallback({ error, tokenData, isSignUp }) {
-		if (error) {
-			console.error('sign in failed', error)
-		}
-		if (!tokenData) {
-			console.log('email verification required')
-		}
-		if (isSignUp) {
-			const userClient = auth.getSession().client.withConfig({
-				allow_user_specified_id: true,
-				// Skip access policies as users can't create `User` objects
-				apply_access_policies: false,
-			})
+		const response = await runServerEffect(
+			Effect.gen(function* (_) {
+				if (error) {
+					return yield* Effect.fail(new SigninFailedError(error))
+				}
 
-			const emailData = await userClient.querySingle<{ email: string }>(`
-        SELECT ext::auth::EmailFactor {
-          email
-        } FILTER .identity = (global ext::auth::ClientTokenIdentity)
-      `)
+				if (!tokenData) {
+					return yield* Effect.fail(new EmailNotVerifiedError())
+				}
 
-			const userId = generateId()
-			const initialName = emailData?.email.split('@')[0]
-			const initialHandle = getStandardHandle(initialName || '', userId)
-			await userClient.query(
-				`
-        INSERT User {
-          id := <uuid>$userId,
-          email := <str>$email,
-          userRole := 'USER',
-          identity := (global ext::auth::ClientTokenIdentity)
-        };
+				if (isSignUp) {
+					return yield* createUserProfile().pipe(
+						Effect.map(
+							() => ({ success: true, redirect: paths.editProfile() }) as const,
+						),
+					)
+				}
 
-        INSERT UserProfile {
-          user := (
-            select User
-            filter .id = <uuid>$userId
-          ),
-          name := <str>$initialName,
-          handle := <str>$initialHandle
-        };
-      `,
-				{
-					userId,
-					email: emailData?.email,
-					initialHandle,
-					initialName,
-				},
-			)
+				return { success: true, redirect: paths.editProfile() } as const
+			}).pipe(
+				Effect.catchAll(() => Effect.succeed({ success: false } as const)),
+			),
+		)
+
+		if (response.success) {
+			redirect(response.redirect)
 		}
-		redirect('/')
+
+		// If it failed, return to homepage
+		// @TODO: better error handling
+		redirect(paths.home())
 	},
 	onSignout() {
-		redirect('/')
+		redirect(paths.home())
 	},
 })

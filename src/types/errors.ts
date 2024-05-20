@@ -9,6 +9,7 @@ export class FailedUploadingImageError {
 	) {}
 }
 
+// @TODO differentiate errors from EdgeDB
 export class UnknownEdgeDBError {
 	readonly _tag = 'EdgeDBError'
 
@@ -34,4 +35,14 @@ export class FailedConvertingBlobError {
 		readonly error: unknown,
 		readonly blob: Blob | File | string,
 	) {}
+}
+
+export class SigninFailedError {
+	readonly _tag = 'SigninFailed'
+
+	constructor(readonly error: unknown) {}
+}
+
+export class EmailNotVerifiedError {
+	readonly _tag = 'export class EmailNotVerified'
 }

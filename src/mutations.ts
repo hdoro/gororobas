@@ -127,7 +127,10 @@ export const insertVegetableFriendshipsMutation = e.params(
 					})),
 				})
 				// If the friendship already exists, do nothing
-				.unlessConflict(),
+				.unlessConflict((friendship) => ({
+					on: friendship.unique_key,
+					else: friendship,
+				})),
 		),
 )
 
