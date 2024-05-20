@@ -16,25 +16,29 @@ import type { ProfilePageData } from '@/queries'
 import {
 	ImageDBToFormTransformer,
 	ProfileData,
+	RichText,
 	type ProfileDataForDB,
 	type ProfileDataInForm,
-	RichText,
 } from '@/schemas'
 import { getChangedObjectSubset } from '@/utils/diffs'
 import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
+import { generateId } from '@/utils/ids'
+import { paths } from '@/utils/urls'
 import { Schema } from '@effect/schema'
 import { Either } from 'effect'
+import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import {
 	FormProvider,
-	type SubmitHandler,
 	useForm,
 	useFormContext,
+	type SubmitHandler,
 } from 'react-hook-form'
 
 export default function ProfileForm({
 	profile: profileInDb,
 }: { profile: ProfilePageData }) {
+	const router = useRouter()
 	const toast = useToast()
 	const [status, setStatus] = useState<'idle' | 'submitting'>('idle')
 
@@ -49,7 +53,9 @@ export default function ProfileForm({
 			name: profileInDb.name,
 			handle: profileInDb.handle,
 			location: profileInDb.location || undefined,
-			photo: Either.isRight(photoForForm) ? photoForForm.right : undefined,
+			photo: Either.isRight(photoForForm)
+				? photoForForm.right
+				: { id: generateId() },
 			bio: Either.isRight(bioInDB) ? bioInDB.right : undefined,
 		} as ProfileDataInForm
 	}, [profileInDb])
@@ -82,15 +88,17 @@ export default function ProfileForm({
 			toast.toast({
 				variant: 'default',
 				title: 'Perfil editado com sucesso ✨',
+				description: 'Te enviando pra sua página...',
 			})
+			router.push(paths.userProfile(data.handle))
 		} else {
 			toast.toast({
 				variant: 'destructive',
 				title: 'Erro ao editar',
 				description: 'Por favor, tente novamente.',
 			})
+			setStatus('idle')
 		}
-		setStatus('idle')
 	}
 
 	return (

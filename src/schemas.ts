@@ -23,7 +23,7 @@ import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
 import { ParseResult } from '@effect/schema'
 import * as S from '@effect/schema/Schema'
 import type { JSONContent } from '@tiptap/react'
-import { Effect } from 'effect'
+import { Effect, pipe } from 'effect'
 import type { NoteType } from './edgedb.interfaces'
 import { FailedConvertingBlobError } from './types/errors'
 
@@ -55,44 +55,43 @@ const isTipTapJSON = (input: unknown): input is JSONContent & { version: 1 } =>
 
 export const RichText = S.declare(isTipTapJSON)
 
-export const NewImage = S.transformOrFail(
-	S.Struct({
-		file: FileSchema,
-	}),
+const NewImageInForm = S.Struct({
+	file: FileSchema,
+})
 
-	S.Struct({
-		base64: S.String,
-		fileName: S.String,
-		mimeType: S.String,
-	}),
-	{
-		encode: (photoForDB) =>
-			ParseResult.succeed({
-				file: base64ToFile(
-					photoForDB.base64,
-					photoForDB.fileName,
-					photoForDB.mimeType,
-				),
-			}),
-		decode: (photoInForm, _, ast) =>
-			Effect.mapBoth(
-				Effect.tryPromise({
-					try: () => fileToBase64(photoInForm.file),
-					catch: (error) =>
-						new FailedConvertingBlobError(error, photoInForm.file),
-				}),
-				{
-					onSuccess: (base64) => ({
-						base64,
-						fileName: photoInForm.file.name,
-						mimeType: photoInForm.file.type,
-					}),
-					onFailure: (e) =>
-						new ParseResult.Type(ast, photoInForm, '@TODO type error'),
-				},
+const NewImageForDB = S.Struct({
+	base64: S.String,
+	fileName: S.String,
+	mimeType: S.String,
+})
+
+export const NewImage = S.transformOrFail(NewImageInForm, NewImageForDB, {
+	encode: (photoForDB) =>
+		ParseResult.succeed({
+			file: base64ToFile(
+				photoForDB.base64,
+				photoForDB.fileName,
+				photoForDB.mimeType,
 			),
-	},
-)
+		}),
+	decode: (photoInForm, _, ast) =>
+		Effect.mapBoth(
+			Effect.tryPromise({
+				try: () => fileToBase64(photoInForm.file),
+				catch: (error) =>
+					new FailedConvertingBlobError(error, photoInForm.file),
+			}),
+			{
+				onSuccess: (base64) => ({
+					base64,
+					fileName: photoInForm.file.name,
+					mimeType: photoInForm.file.type,
+				}),
+				onFailure: (e) =>
+					new ParseResult.Type(ast, photoInForm, '@TODO type error'),
+			},
+		),
+})
 
 export const StoredImage = S.Struct({
 	sanity_id: S.String,
@@ -277,7 +276,19 @@ export const ProfileData = S.Struct({
 	id: S.UUID,
 	handle: Handle,
 	name: S.String.pipe(S.minLength(1)),
-	photo: S.optional(ImageData),
+	photo: S.transformOrFail(S.Any, S.Union(S.Undefined, ImageData), {
+		decode: (value) =>
+			pipe(
+				// We can validate only the data field
+				S.validate(S.Union(NewImageInForm, StoredImage))(value?.data),
+				// If it's valid, return the full `value` - Schema will decode it with ImageData after the transformation
+				Effect.map(() => value),
+				// Otherwise, return undefined
+				Effect.catchAll(() => Effect.succeed(undefined)),
+			),
+		encode: () => Effect.succeed({}),
+		strict: false,
+	}),
 	location: S.optional(S.String),
 	bio: S.optional(RichText),
 })
