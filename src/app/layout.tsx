@@ -1,10 +1,11 @@
 import Footer from '@/components/Footer'
+import HeaderNav from '@/components/HeaderNav'
 import { Toaster } from '@/components/ui/toaster'
+import { cn } from '@/utils/cn'
+import { pathToAbsUrl } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
-import HeaderNav from '@/components/HeaderNav'
-import { cn } from '@/utils/cn'
 
 const fontFamily = Plus_Jakarta_Sans({
 	subsets: ['latin'],
@@ -28,6 +29,22 @@ export const metadata: Metadata = {
 	title: 'Gororobas',
 	description:
 		'Aprendendo juntes a fazer agroecologia - Por terra, território, e gororobas!',
+	openGraph: {
+		images: [
+			{
+				url: pathToAbsUrl('/default-og.png'),
+				width: 1200,
+				height: 630,
+				alt: 'Fotos de vegetais com o título: Por terra, território, e gororobas',
+			},
+			{
+				url: pathToAbsUrl('/default-og-whatsapp.png'),
+				width: 600,
+				height: 600,
+				alt: 'Fotos de vegetais com o título: Por terra, território, e gororobas',
+			},
+		],
+	},
 }
 
 export default function RootLayout({
