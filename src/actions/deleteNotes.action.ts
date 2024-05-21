@@ -1,7 +1,7 @@
 'use server'
 
 import { auth } from '@/edgedb'
-import { deleteNotes, type DeleteNotesInput } from './deleteNotes'
+import { type DeleteNotesInput, deleteNotes } from './deleteNotes'
 
 export async function deleteNotesAction(input: typeof DeleteNotesInput.Type) {
 	const session = auth.getSession()

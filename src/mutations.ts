@@ -166,13 +166,16 @@ export const insertVegetableMutation = e.params(
 	(params) =>
 		e.insert(e.Vegetable, {
 			...params,
-			strata: e.cast(e.array(e.Stratum), params.strata),
-			uses: e.cast(e.array(e.VegetableUsage), params.uses),
-			edible_parts: e.cast(e.array(e.EdiblePart), params.edible_parts),
-			lifecycles: e.cast(e.array(e.VegetableLifeCycle), params.lifecycles),
-			planting_methods: e.cast(
-				e.array(e.PlantingMethod),
-				params.planting_methods,
+			strata: e.array_unpack(e.cast(e.array(e.Stratum), params.strata)),
+			uses: e.array_unpack(e.cast(e.array(e.VegetableUsage), params.uses)),
+			edible_parts: e.array_unpack(
+				e.cast(e.array(e.EdiblePart), params.edible_parts),
+			),
+			lifecycles: e.array_unpack(
+				e.cast(e.array(e.VegetableLifeCycle), params.lifecycles),
+			),
+			planting_methods: e.array_unpack(
+				e.cast(e.array(e.PlantingMethod), params.planting_methods),
 			),
 			photos: e.assert_distinct(
 				e.for(e.array_unpack(params.photos), (photo) =>

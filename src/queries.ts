@@ -1,5 +1,13 @@
 import e, { type $infer } from '@/edgeql'
-import type { VegetableWishlistStatus } from './edgedb.interfaces'
+import type {
+	EdiblePart,
+	PlantingMethod,
+	Stratum,
+	VegetableLifeCycle,
+	VegetableUsage,
+	VegetableWishlistStatus,
+} from './edgedb.interfaces'
+import Field from './components/forms/Field'
 
 const SOURCE_FIELDS = {
 	type: true,
@@ -311,3 +319,96 @@ export type UserProfileageData = Exclude<
 	$infer<typeof userProfilePageQuery>,
 	null
 >
+
+const VEGETABLES_PER_PAGE = 24
+export const vegetablesIndexQuery = e.params(
+	{
+		strata: e.optional(e.array(e.str)),
+		planting_methods: e.optional(e.array(e.str)),
+		edible_parts: e.optional(e.array(e.str)),
+		lifecycles: e.optional(e.array(e.str)),
+		uses: e.optional(e.array(e.str)),
+		pageIndex: e.int16,
+	},
+	(params) =>
+		e.select(e.Vegetable, (vegetable) => {
+			const filters = [
+				{ field: vegetable.strata, values: params.strata, type: e.Stratum },
+				{
+					field: vegetable.planting_methods,
+					values: params.planting_methods,
+					type: e.PlantingMethod,
+				},
+				{
+					field: vegetable.edible_parts,
+					values: params.edible_parts,
+					type: e.EdiblePart,
+				},
+				{
+					field: vegetable.lifecycles,
+					values: params.lifecycles,
+					type: e.VegetableLifeCycle,
+				},
+				{ field: vegetable.uses, values: params.uses, type: e.VegetableUsage },
+			] as const
+			const filterOps = filters.map(({ field, values, type }) =>
+				e.op(
+					// Either the param doesn't exist
+					e.op('not', e.op('exists', values)),
+					'or',
+					// Or the vegetable has at least one of the values
+					e.op(
+						e.count(
+							e.op(
+								field,
+								'intersect',
+								e.array_unpack(e.cast(e.array(type), values)),
+							),
+						),
+						'>',
+						0,
+					),
+				),
+			)
+
+			const finalFilter = filterOps.reduce((finalFilter, op, index) => {
+				if (finalFilter === null) return op
+				return e.op(finalFilter, 'and', op)
+			})
+
+			return {
+				...vegetableForCard(vegetable),
+				uses: true,
+				strata: true,
+				planting_methods: true,
+				edible_parts: true,
+				lifecycles: true,
+
+				filter: finalFilter,
+
+				limit: VEGETABLES_PER_PAGE,
+				offset: e.op(params.pageIndex, '*', VEGETABLES_PER_PAGE),
+				order_by: {
+					expression: e.count(vegetable.photos),
+					direction: e.DESC,
+					empty: e.EMPTY_LAST,
+				},
+			}
+		}),
+)
+
+export type VegetablesIndexData = Exclude<
+	$infer<typeof vegetablesIndexQuery>,
+	null
+>
+
+export type VegetablesIndexQueryParams = Pick<
+	Parameters<typeof vegetablesIndexQuery.run>[1],
+	'pageIndex'
+> & {
+	strata?: Stratum[] | null
+	planting_methods?: PlantingMethod[] | null
+	edible_parts?: EdiblePart[] | null
+	lifecycles?: VegetableLifeCycle[] | null
+	uses?: VegetableUsage[] | null
+}

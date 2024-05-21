@@ -86,7 +86,7 @@ export default function VegetablePage({
 					<SectionTitle Icon={VegetableFriendsIcon}>
 						Amigues d{gender.suffix(vegetable.gender || 'NEUTRO')} {names[0]}
 					</SectionTitle>
-					<div className="overflow-x-auto flex gap-x-9 gap-y-7 mt-3 px-pageX">
+					<div className="overflow-x-auto flex gap-x-9 gap-y-7 mt-3 px-pageX hide-scrollbar">
 						{friends.map((friend) => (
 							<VegetableCard key={friend.handle} vegetable={friend} />
 						))}

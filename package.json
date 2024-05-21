@@ -40,6 +40,7 @@
 		"@sanity/image-url": "^1.0.2",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/forms": "^0.5.7",
+		"@tanstack/react-query": "^5.37.1",
 		"@tiptap/extension-bubble-menu": "^2.4.0",
 		"@tiptap/extension-character-count": "^2.4.0",
 		"@tiptap/extension-floating-menu": "^2.4.0",

@@ -96,3 +96,19 @@ export function getAuthRedirect(isSignedIn: boolean) {
 export function getStandardHandle(textContent: string, id: string) {
 	return slugify(`${truncate(textContent, 20)} ${id.slice(0, 6)}`)
 }
+
+/**
+ * Used to replace URL parameters without prompting Next to revalidate a route's data.
+ */
+export function persistParamsInUrl(searchParams: URLSearchParams) {
+	const url = new URL(window.location.href)
+
+	url.search = searchParams ? `?${searchParams.toString()}` : ''
+
+	history.replaceState(
+		{},
+		// @ts-expect-error all major browsers ignore this parameter - the document's title does not change when navigating through history entries after running this method
+		null,
+		url,
+	)
+}

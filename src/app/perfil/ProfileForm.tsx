@@ -72,7 +72,7 @@ export default function ProfileForm({
 		const decodedData = data as unknown as ProfileDataForDB
 
 		const dataThatChanged = getChangedObjectSubset({
-			prev: Schema.decodeSync(ProfileData)(initialValue),
+			prev: initialValue,
 			next: decodedData,
 		})
 		if (Object.keys(dataThatChanged).length === 0) {

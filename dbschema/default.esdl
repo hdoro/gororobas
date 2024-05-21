@@ -206,12 +206,12 @@ module default {
   type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
     required names: array<str>;
     scientific_names: array<str>;
-    strata: array<Stratum>;
     gender: Gender;
-    planting_methods: array<PlantingMethod>;
-    edible_parts: array<EdiblePart>;
-    lifecycles: array<VegetableLifeCycle>;
-    uses: array<VegetableUsage>;
+    multi strata: Stratum;
+    multi planting_methods: PlantingMethod;
+    multi edible_parts: EdiblePart;
+    multi lifecycles: VegetableLifeCycle;
+    multi uses: VegetableUsage;
     origin: str;
     height_min: float32;
     height_max: float32;
@@ -289,14 +289,18 @@ module default {
   }
 
   type Note extending WithHandle, Auditable, AdminCanDoAnything {
-    required multi types: NoteType;
     required public: bool;
-
     required published_at: datetime {
       default := datetime_of_transaction();
     };
+    required multi types: NoteType;
+
     required title: json;
     body: json;
+
+    # Related with AI
+    multi related_vegetables: Vegetable;
+    multi related_notes: Vegetable;
 
     access policy visible_if_public
       allow select
