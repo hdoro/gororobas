@@ -4,6 +4,7 @@ import type {
 	FieldPath,
 	FieldValues,
 } from 'react-hook-form'
+import { buttonVariants } from '../ui/button'
 import { Checkbox } from '../ui/checkbox'
 import { FormControl, FormDescription, FormItem, FormLabel } from '../ui/form'
 
@@ -19,9 +20,17 @@ export default function CheckboxesInput<
 }) {
 	const value = (field.value || []) as string[]
 	return (
-		<div className="space-y-3">
+		<div className="flex gap-x-3 gap-y-2 flex-wrap">
 			{options.map((option) => (
-				<FormItem key={option.value} className="items-top flex gap-2">
+				<FormItem
+					key={option.value}
+					className={buttonVariants({
+						tone: value.includes(option.value) ? 'primary' : 'neutral',
+						mode: 'outline',
+						size: 'xs',
+						className: 'relative',
+					})}
+				>
 					<FormControl>
 						<Checkbox
 							name={field.name}
@@ -40,7 +49,13 @@ export default function CheckboxesInput<
 						/>
 					</FormControl>
 					<div className="space-y-1.5 leading-none">
-						<FormLabel className="font-normal">{option.label}</FormLabel>
+						{/*
+							The `::after` pseudo element will span the whole parent button-like <FormItem>
+							so that the whole area is clickable.
+						 */}
+						<FormLabel className="font-normal after:absolute after:content-[''] after:inset-0 after:block cursor-pointer">
+							{option.label}
+						</FormLabel>
 						{option.description && (
 							<FormDescription className="text-sm text-muted-foreground">
 								{option.description}

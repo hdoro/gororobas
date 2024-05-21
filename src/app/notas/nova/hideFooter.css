@@ -1,0 +1,7 @@
+/* Lazy way of hiding the footer only in the note editor route
+  The more robust approach would be to create a <PageTemplate> and have every route except notas/nova use it.
+  But I was lazy :)
+*/
+footer[aria-label="Rodapé"] {
+  display: none;
+}

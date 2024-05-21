@@ -1,3 +1,4 @@
+import { cn } from '@/utils/cn'
 import type {
 	ControllerProps,
 	FieldPath,
@@ -12,6 +13,12 @@ import {
 	FormMessage,
 } from '../ui/form'
 
+export type FieldClassnames = {
+	root?: string
+	label?: string
+	description?: string
+}
+
 export default function Field<
 	TFieldValues extends FieldValues = FieldValues,
 	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -22,6 +29,7 @@ export default function Field<
 	name,
 	render,
 	hideLabel,
+	classNames,
 }: {
 	description?: string
 	form: UseFormReturn<TFieldValues>
@@ -30,16 +38,30 @@ export default function Field<
 	render: ControllerProps<TFieldValues, TName>['render']
 	// @TODO: improve this component API - perhaps tailwind-variants + slots?
 	hideLabel?: boolean
+	classNames?: FieldClassnames
 }) {
 	return (
 		<FormField
 			control={form.control}
 			name={name}
 			render={(renderProps) => (
-				<FormItem className={hideLabel && !description ? '' : 'space-y-2'}>
-					<FormLabel className={hideLabel ? 'sr-only' : ''}>{label}</FormLabel>
+				<FormItem
+					className={cn(
+						hideLabel && !description ? '' : 'space-y-2',
+						classNames?.root,
+					)}
+				>
+					<FormLabel
+						className={cn(hideLabel ? 'sr-only' : '', classNames?.label)}
+					>
+						{label}
+					</FormLabel>
 					{render(renderProps)}
-					{description && <FormDescription>{description}</FormDescription>}
+					{description && (
+						<FormDescription className={classNames?.description}>
+							{description}
+						</FormDescription>
+					)}
 					<FormMessage />
 				</FormItem>
 			)}

@@ -4,6 +4,7 @@ import type { NoteCardData } from '@/queries'
 import { cn } from '@/utils/cn'
 import type { ElementTransform } from '@/utils/css'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
+import { truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { paths } from '@/utils/urls'
 import { Share2Icon } from 'lucide-react'
@@ -11,7 +12,6 @@ import Link from 'next/link'
 import { useState } from 'react'
 import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
 import { Badge } from './ui/badge'
-import { truncate } from '@/utils/strings'
 
 // @TODO: make button a checkbox so I can style on/off without JS
 export default function NoteCard({

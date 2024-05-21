@@ -4,7 +4,7 @@ import { EditorContent, type JSONContent, useEditor } from '@tiptap/react'
 import { useMemo } from 'react'
 import FormatToolbar from './FormatToolbar'
 import {
-	type RichTextEditorThemeVariants,
+	type RichTextEditorThemeProps,
 	richTextEditorTheme,
 } from './RichTextEditor.theme'
 import { getTiptapExtensions } from './getTiptapExtensions'
@@ -16,14 +16,20 @@ export default function RichTextEditor(
 		onChange: (editorState: JSONContent) => void
 		editorState: JSONContent
 		disabled?: boolean
-	} & RichTextEditorThemeVariants,
+		characterLimit?: number | undefined
+	} & RichTextEditorThemeProps,
 ) {
 	const classes = richTextEditorTheme(props)
 
-	const { placeholder } = props
+	const { placeholder, characterLimit } = props
 	const extensions = useMemo(
-		() => getTiptapExtensions({ classes, placeholder }),
-		[placeholder, classes],
+		() =>
+			getTiptapExtensions({
+				classes,
+				placeholder,
+				characterLimit,
+			}),
+		[placeholder, classes, characterLimit],
 	)
 	const editor = useEditor({
 		extensions,
@@ -37,7 +43,11 @@ export default function RichTextEditor(
 	return (
 		<>
 			{editor && <FormatToolbar editor={editor} />}
-			<EditorContent editor={editor} className={classes.contentEditable()} />
+			<EditorContent
+				editor={editor}
+				className={classes.contentEditable({ className: 'tiptap-wrapper' })}
+				data-placeholder={props.placeholder}
+			/>
 		</>
 	)
 }

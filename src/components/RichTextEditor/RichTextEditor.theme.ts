@@ -35,6 +35,4 @@ export const richTextEditorTheme = tv({
 	},
 })
 
-export type RichTextEditorThemeVariants = VariantProps<
-	typeof richTextEditorTheme
->
+export type RichTextEditorThemeProps = VariantProps<typeof richTextEditorTheme>

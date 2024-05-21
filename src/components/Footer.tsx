@@ -10,7 +10,10 @@ const FOOTER_LINKS = [
 
 export default function Footer() {
 	return (
-		<footer className="mt-36 py-10 md:py-16 lg:py-24 bg-background-card px-pageX flex flex-col md:flex-row md:justify-start items-center md:items-start gap-[var(--page-padding-x)]">
+		<footer
+			className="py-10 md:py-16 lg:py-24 bg-background-card px-pageX flex flex-col md:flex-row md:justify-start items-center md:items-start gap-[var(--page-padding-x)] border-t border-t-primary-100"
+			aria-label="Rodapé"
+		>
 			<Link href={paths.home()} rel="home" title="Página inicial">
 				<GororobasLogo />
 			</Link>

@@ -111,6 +111,18 @@ body {
 .tiptap-placeholder::before {
   content: attr(data-placeholder);
   pointer-events: none;
+  float: left;
+  height: 0;
+  
+}
+
+.tiptap-placeholder.is-empty {
+  overflow: hidden;
+  height: 1.33em;
+}
+
+.tiptap-wrapper:has(.tiptap-placeholder.is-empty)::before {
+  min-height: 1.33em;
 }
 
 .tiptap[contenteditable='true'] {

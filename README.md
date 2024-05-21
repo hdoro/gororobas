@@ -87,7 +87,7 @@ In order to receive emails locally, you need to install and run [Mailpit](https:
 - [x] HeaderNav
 - [x] More personality to theme
     - ~~v0 theme generator?~~ had to do manually, wasn't out at this moment
-- [ ] 404 page
+- [x] 404 page
 
 ### Notes
 
@@ -96,7 +96,8 @@ In order to receive emails locally, you need to install and run [Mailpit](https:
 - [x] Note page
 - [x] Notes grid
 - [ ] Send note
-  - [ ] Rich text editor
+  - [x] Rich text editor
+- [ ] Edit note
 
 ## AI
 
@@ -148,3 +149,4 @@ In order to receive emails locally, you need to install and run [Mailpit](https:
     - Happened with `edgedb@/1.6.0-canary.20240510T201054` and `@edgedb/generate@0.6.0-canary.20240510T202700` as well as the latest `@edgedb/generate@0.5.3`
     - tried renaming to just `order`, also didn't work
 - Learn from Michael: https://github.com/mikearnaldi/next-effect/blob/main/app/page.tsx
+- [ ] NoteForm: Allow modifying `published_at`
