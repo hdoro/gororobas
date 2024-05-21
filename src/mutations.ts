@@ -270,17 +270,16 @@ export const insertNotesMutation = e.params(
 				title: e.json,
 				public: e.bool,
 				published_at: e.datetime,
-				created_by: e.uuid,
 				types: e.array(e.str),
 
-				/** { body: e.optional(e.json) } */
+				/** { body: e.optional(e.json), created_by: e.uuid } */
 				optional_properties: e.json,
 			}),
 		),
 	},
 	(params) =>
-		e.for(e.array_unpack(params.notes), (note) =>
-			e.insert(e.Note, {
+		e.for(e.array_unpack(params.notes), (note) => {
+			const inserted = e.insert(e.Note, {
 				id: note.id,
 				handle: note.handle,
 				title: note.title,
@@ -290,9 +289,35 @@ export const insertNotesMutation = e.params(
 				published_at: note.published_at,
 				created_by: e.assert_single(
 					e.select(e.UserProfile, (user_profile) => ({
-						filter_single: e.op(user_profile.id, '=', note.created_by),
+						filter_single: e.op(
+							user_profile.id,
+							'=',
+							e.op(
+								e.cast(
+									e.uuid,
+									e.json_get(note.optional_properties, 'created_by'),
+								),
+								'??',
+								e.global.current_user_profile.id,
+							),
+						),
 					})),
 				),
-			}),
-		),
+			})
+
+			return e.select(inserted, (note) => ({
+				id: true,
+				handle: true,
+			}))
+		}),
+)
+
+export const deleteNotesMutation = e.params(
+	{
+		noteIds: e.array(e.uuid),
+	},
+	(params) =>
+		e.delete(e.Note, (note) => ({
+			filter: e.op(note.id, 'in', e.array_unpack(params.noteIds)),
+		})),
 )

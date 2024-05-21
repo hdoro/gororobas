@@ -23,7 +23,11 @@ export default function BooleanInput<
 	const value = Boolean(field.value)
 	return (
 		<FormControl>
-			<Switch checked={value} onCheckedChange={field.onChange} />
+			<Switch
+				checked={value}
+				onCheckedChange={field.onChange}
+				disabled={field.disabled}
+			/>
 		</FormControl>
 	)
 }

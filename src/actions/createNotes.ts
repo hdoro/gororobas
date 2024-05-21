@@ -2,6 +2,8 @@ import { insertNotesMutation } from '@/mutations'
 import { NoteDataArray, type NotesForDB } from '@/schemas'
 import { buildTraceAndMetrics } from '@/services/runtime'
 import { UnknownEdgeDBError } from '@/types/errors'
+import { tiptapJSONtoPlainText } from '@/utils/tiptap'
+import { getStandardHandle } from '@/utils/urls'
 import { Schema } from '@effect/schema'
 import type { Client } from 'edgedb'
 import { Effect, pipe } from 'effect'
@@ -30,17 +32,17 @@ function getTransaction(input: NotesForDB, inputClient: Client) {
 	return insertNotesMutation.run(client, {
 		notes: input.map((note) => ({
 			id: note.id,
-			handle: note.handle,
+			handle:
+				note.handle ||
+				getStandardHandle(tiptapJSONtoPlainText(note.title) || '', note.id),
 			title: note.title,
 			public: note.public,
 			published_at: note.published_at,
-			created_by: note.created_by,
 			types: note.types,
-			optional_properties: note.body
-				? {
-						body: note.body,
-					}
-				: {},
+			optional_properties: {
+				body: note.body ?? null,
+				created_by: note.created_by ?? null,
+			},
 		})),
 	})
 }

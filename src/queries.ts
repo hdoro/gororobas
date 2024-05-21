@@ -250,12 +250,14 @@ export const notePageQuery = e.params(
 	(params) =>
 		e.select(e.Note, (note) => ({
 			...publicNotes(note),
-
-			filter_single: e.op(note.handle, '=', params.handle),
+			id: true,
 			created_by: (userProfile) => ({
 				...userProfileForAvatar(userProfile),
 				bio: true,
 			}),
+			is_owner: e.op(note.created_by, '=', e.global.current_user_profile),
+
+			filter_single: e.op(note.handle, '=', params.handle),
 		})),
 )
 

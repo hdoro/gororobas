@@ -95,9 +95,9 @@ In order to receive emails locally, you need to install and run [Mailpit](https:
 - [x] Note card
 - [x] Note page
 - [x] Notes grid
-- [ ] Send note
+- [x] Send note
   - [x] Rich text editor
-- [ ] Edit note
+- [x] Delete note
 
 ## AI
 
@@ -150,3 +150,4 @@ In order to receive emails locally, you need to install and run [Mailpit](https:
     - tried renaming to just `order`, also didn't work
 - Learn from Michael: https://github.com/mikearnaldi/next-effect/blob/main/app/page.tsx
 - [ ] NoteForm: Allow modifying `published_at`
+- [ ] Edit note - for now, it's a Twitter like thing where you can only send/delete, no edit 😝

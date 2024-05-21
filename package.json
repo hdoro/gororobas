@@ -92,7 +92,7 @@
 		"typescript": "5.5.0-dev.20240514"
 	},
 	"scripts": {
-		"dev": "next dev",
+		"dev": "next dev --turbo",
 		"build": "next build",
 		"start": "next start",
 		"format": "prettier src --write",

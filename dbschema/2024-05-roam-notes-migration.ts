@@ -11,6 +11,7 @@ import inquirer from 'inquirer'
 import { JSDOM } from 'jsdom'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { htmlToTiptap } from './richTextConversions'
+import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 
 const NOTES_FILE = 'dbschema/notes.json'
 
@@ -57,7 +58,11 @@ async function scrape() {
 		}
 
 		const id = generateId()
-		const handle = getStandardHandle(titleElement?.innerText || '', id)
+		const titleTiptap = htmlToTiptap(title)
+		const handle = getStandardHandle(
+			tiptapJSONtoPlainText(titleTiptap) || '',
+			id,
+		)
 
 		const roamId = card.parentElement?.id || ''
 		return {
@@ -67,7 +72,7 @@ async function scrape() {
 			published_at: date,
 			created_by: HENRIQUES_ID,
 			types: [type],
-			title: htmlToTiptap(title),
+			title: titleTiptap,
 			body: body ? htmlToTiptap(body) : undefined,
 			public: true,
 		} satisfies NoteInForm & { roamId: string }

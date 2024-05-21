@@ -1,5 +1,6 @@
 'use client'
 
+import CharacterCount from '@tiptap/extension-character-count'
 import { EditorContent, type JSONContent, useEditor } from '@tiptap/react'
 import { useMemo } from 'react'
 import FormatToolbar from './FormatToolbar'
@@ -22,15 +23,22 @@ export default function RichTextEditor(
 	const classes = richTextEditorTheme(props)
 
 	const { placeholder, characterLimit } = props
-	const extensions = useMemo(
-		() =>
-			getTiptapExtensions({
-				classes,
-				placeholder,
-				characterLimit,
-			}),
-		[placeholder, classes, characterLimit],
-	)
+	const extensions = useMemo(() => {
+		const coreExtensions = getTiptapExtensions({
+			classes,
+			placeholder,
+		})
+
+		if (characterLimit) {
+			coreExtensions.push(
+				CharacterCount.configure({
+					limit: characterLimit,
+				}),
+			)
+		}
+
+		return coreExtensions
+	}, [placeholder, classes, characterLimit])
 	const editor = useEditor({
 		extensions,
 		content: props.editorState,

@@ -1,17 +1,21 @@
 'use client'
 
+import { createNotesAction } from '@/actions/createNotes.action'
 import BooleanInput, {
 	BOOLEAN_FIELD_CLASSNAMES,
 } from '@/components/forms/BooleanInput'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
 import RichTextInput from '@/components/forms/RichTextInput'
+import Carrot from '@/components/icons/Carrot'
 import { Button } from '@/components/ui/button'
+import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
 import { NoteData, type NoteForDB, type NoteInForm } from '@/schemas'
 import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
 import { generateId } from '@/utils/ids'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
+import { paths } from '@/utils/urls'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
@@ -19,7 +23,9 @@ import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
 export default function NoteForm() {
 	const router = useRouter()
 	const toast = useToast()
-	const [status, setStatus] = useState<'idle' | 'submitting'>('idle')
+	const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>(
+		'idle',
+	)
 
 	const form = useForm<NoteInForm>({
 		resolver: effectSchemaResolverResolver(NoteData),
@@ -36,38 +42,51 @@ export default function NoteForm() {
 	const onSubmit: SubmitHandler<NoteInForm> = async (data, event) => {
 		const decodedData = data as unknown as NoteForDB
 
-		// const dataThatChanged = getChangedObjectSubset({
-		// 	prev: Schema.decodeSync(ProfileData)(initialValue),
-		// 	next: decodedData,
-		// })
-		// if (Object.keys(dataThatChanged).length === 0) {
-		// 	toast.toast({
-		// 		variant: 'default',
-		// 		title: 'Tudo certo, nada foi alterado',
-		// 	})
-		// }
+		setStatus('submitting')
+		const response = await createNotesAction([decodedData])
+		if (response.success === true && response.result[0]?.handle) {
+			toast.toast({
+				variant: 'default',
+				title: 'Nota criada ✨',
+				description: 'Te enviando pra página dela...',
+			})
+			router.push(paths.note(response.result[0].handle))
+			setStatus('success')
+		} else {
+			toast.toast({
+				variant: 'destructive',
+				title: 'Erro ao criar a nota',
+				description: 'Por favor, tente novamente.',
+			})
+			setStatus('idle')
+		}
+	}
 
-		// setStatus('submitting')
-		// const response = await updateProfileAction(dataThatChanged)
-		// if (response === true) {
-		// 	toast.toast({
-		// 		variant: 'default',
-		// 		title: 'Nota criada ✨',
-		// 		description: 'Te enviando pra página dela...',
-		// 	})
-		// 	router.push(paths.userProfile(data.handle))
-		// } else {
-		// 	toast.toast({
-		// 		variant: 'destructive',
-		// 		title: 'Erro ao criar a nota',
-		// 		description: 'Por favor, tente novamente.',
-		// 	})
-		// 	setStatus('idle')
-		// }
+	if (status === 'success') {
+		return (
+			<main
+				className="h-full flex items-center justify-center text-center"
+				aria-live="polite"
+			>
+				<div className="space-y-4">
+					<Text level="h1" as="h1">
+						Nota criada com sucesso!
+					</Text>
+					<Text
+						level="h2"
+						as="p"
+						className="flex justify-center items-center gap-3"
+					>
+						<Carrot className="animate-spin h-6 w-6" /> Te levando pra página da
+						nota...
+					</Text>
+				</div>
+			</main>
+		)
 	}
 
 	return (
-		<main className="h-full pt-6 note-editor">
+		<main className="h-full pt-6">
 			<FormProvider {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
@@ -142,7 +161,9 @@ export default function NoteForm() {
 							classNames={BOOLEAN_FIELD_CLASSNAMES}
 							render={({ field }) => <BooleanInput field={field} />}
 						/>
-						<Button size="lg">Enviar</Button>
+						<Button size="lg" type="submit" disabled={form.formState.disabled}>
+							Enviar
+						</Button>
 					</div>
 				</form>
 			</FormProvider>

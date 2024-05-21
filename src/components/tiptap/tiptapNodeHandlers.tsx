@@ -72,11 +72,33 @@ const Paragraph: NodeHandler = (props) => {
 		}
 	}
 
-	return (
-		<>
-			<p style={style}>{props.children}</p>
-		</>
-	)
+	return <p style={style}>{props.children}</p>
+}
+
+const LEVEL_TO_TAG = {
+	1: 'h1',
+	2: 'h2',
+	3: 'h3',
+	4: 'h4',
+} as const
+
+const Heading: NodeHandler = (props) => {
+	// biome-ignore lint: we're modifying `style`
+	let style: React.CSSProperties = {}
+
+	if (props.node.attrs) {
+		const attrs = props.node.attrs
+
+		if (attrs.textAlign) {
+			style.textAlign = attrs.textAlign
+		}
+	}
+
+	const Component =
+		LEVEL_TO_TAG[(props.node.attrs?.level as keyof typeof LEVEL_TO_TAG) || 1] ||
+		'p'
+
+	return <Component style={style}>{props.children}</Component>
 }
 
 const BulletList: NodeHandler = (props) => {
@@ -111,6 +133,7 @@ const Image: NodeHandler = (props) => {
 export const tiptapNodeHandlers: NodeHandlers = {
 	text: TextRender,
 	paragraph: Paragraph,
+	heading: Heading,
 	doc: Passthrough,
 	hardBreak: HardBreak,
 	image: Image,

@@ -299,14 +299,14 @@ export type ProfileDataInForm = typeof ProfileData.Encoded
 export const NoteData = S.Struct({
 	id: S.UUID,
 	published_at: S.Union(S.Date, S.DateFromSelf),
-	handle: Handle,
 	title: RichText,
 	body: S.optional(RichText),
 	public: S.Boolean,
 	types: S.NonEmptyArray(
 		S.Literal(...(Object.keys(NOTE_TYPE_TO_LABEL) as NoteType[])),
 	),
-	created_by: S.UUID,
+	handle: S.optional(Handle),
+	created_by: S.optional(S.UUID),
 })
 
 export type NoteForDB = typeof NoteData.Type

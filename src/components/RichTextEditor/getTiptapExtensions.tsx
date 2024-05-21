@@ -1,5 +1,4 @@
 import { cn } from '@/utils/cn'
-import CharacterCount from '@tiptap/extension-character-count'
 import Link from '@tiptap/extension-link'
 import Mention from '@tiptap/extension-mention'
 import Placeholder from '@tiptap/extension-placeholder'
@@ -8,16 +7,17 @@ import StarterKit from '@tiptap/starter-kit'
 import MentionSuggestions from './MentionSuggestions'
 import type { richTextEditorTheme } from './RichTextEditor.theme'
 
+/**
+ * Does not include CharacterCount extension because it breaks server actions.
+ */
 export function getTiptapExtensions({
 	classes,
 	placeholder,
-	characterLimit,
 }: {
 	classes: ReturnType<typeof richTextEditorTheme>
 	placeholder?: string
-	characterLimit?: number | undefined
-}) {
-	const extensions: Extensions = [
+}): Extensions {
+	return [
 		StarterKit.configure({
 			bulletList: {
 				keepMarks: true,
@@ -74,14 +74,4 @@ export function getTiptapExtensions({
 			},
 		}),
 	]
-
-	if (characterLimit) {
-		extensions.push(
-			CharacterCount.configure({
-				limit: characterLimit,
-			}),
-		)
-	}
-
-	return extensions
 }
