@@ -1,4 +1,5 @@
 import e, { type $infer } from '@/edgeql'
+import Field from './components/forms/Field'
 import type {
 	EdiblePart,
 	PlantingMethod,
@@ -7,7 +8,7 @@ import type {
 	VegetableUsage,
 	VegetableWishlistStatus,
 } from './edgedb.interfaces'
-import Field from './components/forms/Field'
+import { VEGETABLES_PER_PAGE } from './utils/config'
 
 const SOURCE_FIELDS = {
 	type: true,
@@ -320,7 +321,6 @@ export type UserProfileageData = Exclude<
 	null
 >
 
-const VEGETABLES_PER_PAGE = 24
 export const vegetablesIndexQuery = e.params(
 	{
 		strata: e.optional(e.array(e.str)),
@@ -412,3 +412,8 @@ export type VegetablesIndexQueryParams = Pick<
 	lifecycles?: VegetableLifeCycle[] | null
 	uses?: VegetableUsage[] | null
 }
+
+export type VegetablesIndexFilterParams = Omit<
+	VegetablesIndexQueryParams,
+	'pageIndex'
+>

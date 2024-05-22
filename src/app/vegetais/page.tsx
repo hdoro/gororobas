@@ -1,12 +1,14 @@
+import {
+	HydrationBoundary,
+	QueryClient,
+	dehydrate,
+} from '@tanstack/react-query'
 import type { Metadata } from 'next'
 import TanstackQueryProvider from './TanstackQueryProvider'
 import VegetablesIndex from './VegetablesIndex'
-import fetchVegetablesIndex from './fetchVegetablesIndex'
-import {
-	dehydrate,
-	HydrationBoundary,
-	QueryClient,
-} from '@tanstack/react-query'
+import fetchVegetablesIndex, {
+	type VegetablesIndexRouteData,
+} from './fetchVegetablesIndex'
 import {
 	nextSearchParamsToQueryParams,
 	queryParamsToQueryKey,
@@ -27,11 +29,14 @@ export default async function VegetablesRoute({
 }) {
 	const queryClient = new QueryClient()
 
-	await queryClient.prefetchQuery({
+	await queryClient.prefetchInfiniteQuery({
 		queryKey: queryParamsToQueryKey(
 			nextSearchParamsToQueryParams(searchParams),
 		),
 		queryFn: () => fetchVegetablesIndex(searchParams),
+		initialPageParam: 0,
+		getNextPageParam: (lastPage: VegetablesIndexRouteData) =>
+			lastPage.queryParams.pageIndex + 1,
 	})
 
 	return (

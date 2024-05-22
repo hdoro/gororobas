@@ -81,6 +81,7 @@ export const paths = {
 	vegetablesIndex: () => '/vegetais' as const,
 	vegetable: (handle: string) => formatPath(`/vegetais/${handle}`),
 	editVegetable: (handle: string) => formatPath(`/vegetais/${handle}/editar`),
+	newVegetable: () => '/vegetais/novo' as const,
 
 	notesIndex: () => '/notas' as const,
 	note: (handle: string) => formatPath(`/notas/${handle}`),

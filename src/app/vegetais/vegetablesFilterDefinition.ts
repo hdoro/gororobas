@@ -1,4 +1,7 @@
-import type { VegetablesIndexQueryParams } from '@/queries'
+import type {
+	VegetablesIndexFilterParams,
+	VegetablesIndexQueryParams,
+} from '@/queries'
 import {
 	EDIBLE_PART_TO_LABEL,
 	PLANTING_METHOD_TO_LABEL,
@@ -8,7 +11,8 @@ import {
 } from '@/utils/labels'
 import type { ReadonlyURLSearchParams } from 'next/navigation'
 
-const vegetablesFilterDefinition = [
+const PAGE_INDEX_QUERY_KEY = 'pagina'
+const FILTER_DEFINITIONS = [
 	{
 		queryKey: 'estrato',
 		filterKey: 'strata',
@@ -49,7 +53,11 @@ export function searchParamsToNextSearchParams(
 export function nextSearchParamsToQueryParams(
 	searchParams: NextSearchParams,
 ): VegetablesIndexQueryParams {
-	const filters = vegetablesFilterDefinition.reduce(
+	const pageIndex = searchParams[PAGE_INDEX_QUERY_KEY]
+		? Number(searchParams[PAGE_INDEX_QUERY_KEY] as string)
+		: 0
+
+	const filters = FILTER_DEFINITIONS.reduce(
 		(accFilters, definition) => {
 			const { queryKey, filterKey, values } = definition
 			const queryValue = searchParams[queryKey]
@@ -67,10 +75,6 @@ export function nextSearchParamsToQueryParams(
 		{} as Record<string, string[]>,
 	)
 
-	const pageIndex = searchParams.pagina
-		? Number(searchParams.pagina as string)
-		: 0
-
 	return {
 		...filters,
 		pageIndex,
@@ -78,11 +82,17 @@ export function nextSearchParamsToQueryParams(
 }
 
 export function queryParamsToSearchParams(
-	params: VegetablesIndexQueryParams,
+	filterParams: VegetablesIndexFilterParams,
+	pageIndex?: number,
 ): URLSearchParams {
 	const searchParams = new URLSearchParams()
-	Object.entries(params).forEach(([key, value]) => {
-		const definition = vegetablesFilterDefinition.find(
+	if (pageIndex) {
+		searchParams.set(PAGE_INDEX_QUERY_KEY, String(pageIndex))
+	}
+
+	// Set all filters
+	Object.entries(filterParams).forEach(([key, value]) => {
+		const definition = FILTER_DEFINITIONS.find(
 			(definition) => definition.filterKey === key,
 		)
 		if (!definition || !value) return
@@ -99,17 +109,19 @@ export function queryParamsToSearchParams(
 	return searchParams
 }
 
-export function queryParamsToQueryKey(params: VegetablesIndexQueryParams) {
+export function queryParamsToQueryKey(
+	filterParams: VegetablesIndexFilterParams,
+) {
 	return [
 		'vegetables',
-		...Object.entries(params)
-			.map(([key, value]) => {
+		...Object.entries(filterParams)
+			.flatMap(([key, value]) => {
 				if (!value) return []
 				if (!Array.isArray(value)) {
-					return [key, value]
+					return [key, String(value)]
 				}
-				return [key, ...value.sort((a, b) => a.localeCompare(b))]
+				return [key, ...value]
 			})
-			.flat(2),
+			.sort((a, b) => a.localeCompare(b)),
 	]
 }
