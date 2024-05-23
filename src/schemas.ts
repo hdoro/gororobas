@@ -27,21 +27,6 @@ import { Effect, pipe } from 'effect'
 import type { NoteType } from './edgedb.interfaces'
 import { FailedConvertingBlobError } from './types/errors'
 
-const SourceGororobasInForm = S.Struct({
-	id: S.UUID,
-	type: S.Literal('GOROROBAS' satisfies SourceType),
-	userIds: S.Array(S.UUID),
-})
-
-const SourceExternalInForm = S.Struct({
-	id: S.UUID,
-	type: S.Literal('EXTERNAL' satisfies SourceType),
-	credits: S.String.pipe(S.minLength(1)),
-	origin: S.optional(S.String),
-})
-
-export const SourceData = S.Union(SourceGororobasInForm, SourceExternalInForm)
-
 const isFile = (input: unknown): input is File => input instanceof File
 
 const FileSchema = S.declare(isFile)
@@ -54,6 +39,23 @@ const isTipTapJSON = (input: unknown): input is JSONContent & { version: 1 } =>
 	input.version === 1
 
 export const RichText = S.declare(isTipTapJSON)
+
+const SourceGororobasInForm = S.Struct({
+	id: S.UUID,
+	comments: S.optional(RichText),
+	type: S.Literal('GOROROBAS' satisfies SourceType),
+	userIds: S.Array(S.UUID),
+})
+
+const SourceExternalInForm = S.Struct({
+	id: S.UUID,
+	comments: S.optional(RichText),
+	type: S.Literal('EXTERNAL' satisfies SourceType),
+	credits: S.String.pipe(S.minLength(1)),
+	origin: S.optional(S.String),
+})
+
+export const SourceData = S.Union(SourceGororobasInForm, SourceExternalInForm)
 
 const NewImageInForm = S.Struct({
 	file: FileSchema,

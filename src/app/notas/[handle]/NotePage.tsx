@@ -33,7 +33,7 @@ export default function NotePage({ note }: { note: NotePageData }) {
 
 	return (
 		<main className="px-pageX py-10 h-full flex flex-col items-start gap-10 md:flex-row md:justify-center lg:gap-20">
-			<Card className="space-y-3 flex-[5] max-w-2xl">
+			<Card className="space-y-3 max-w-full md:flex-[5] md:max-w-2xl">
 				<CardHeader className={'flex flex-col-reverse gap-2'}>
 					<div className={textVariants({ level: 'h1' })}>
 						<TipTapRenderer content={titleAsHeading} />
@@ -71,7 +71,10 @@ export default function NotePage({ note }: { note: NotePageData }) {
 				</CardHeader>
 				{note.body ? (
 					<CardContent
-						className={textVariants({ level: 'h3', className: 'font-normal' })}
+						className={textVariants({
+							level: 'h3',
+							className: 'font-normal overflow-x-hidden',
+						})}
 					>
 						<TipTapRenderer content={note.body as TiptapNode} />
 					</CardContent>

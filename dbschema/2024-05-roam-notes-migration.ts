@@ -1,7 +1,9 @@
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { createNotes } from '@/actions/createNotes'
 import type { NoteType } from '@/edgedb.interfaces'
 import { NoteData, type NoteInForm } from '@/schemas'
 import { generateId } from '@/utils/ids'
+import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { getStandardHandle, pathToAbsUrl, paths } from '@/utils/urls'
 import { Schema } from '@effect/schema'
 import type { JSONContent } from '@tiptap/react'
@@ -9,9 +11,7 @@ import createClient from 'edgedb'
 import { Effect, pipe } from 'effect'
 import inquirer from 'inquirer'
 import { JSDOM } from 'jsdom'
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
-import { htmlToTiptap } from './richTextConversions'
-import { tiptapJSONtoPlainText } from '@/utils/tiptap'
+import { USER_ID_MAP, htmlToTiptap } from './migration.utils'
 
 const NOTES_FILE = 'dbschema/notes.json'
 
@@ -22,7 +22,7 @@ const TYPE_MAP: Record<string, NoteType> = {
 }
 
 // All notes from the Bitacora were sent by Henrique
-const HENRIQUES_ID = 'dbff3cfc-13b4-11ef-9aed-8fe52db2a859'
+const HENRIQUES_ID = USER_ID_MAP.henrique
 
 /** Scaping my own domain because the initial sketch was a mess
  * and I don't even have the proper JSON data anymore 😅 */

@@ -15,14 +15,14 @@ import { sanityServerClientRaw } from '@/utils/sanity.client'
 import { slugify } from '@/utils/strings'
 import * as S from '@effect/schema/Schema'
 import createClient from 'edgedb'
-import { Effect, LogLevel, Logger, pipe } from 'effect'
+import { Effect, pipe } from 'effect'
 import inquirer from 'inquirer'
 import type {
 	Q_VEGETABLES_RAW_INDEXResult,
 	SourceExternal,
 	SourceUser,
 } from './2024-05-sanity-migration.types'
-import ptToTiptap from './richTextConversions'
+import ptToTiptap, { USER_ID_MAP, htmlToTiptap } from './migration.utils'
 
 type SanityVegetable = Q_VEGETABLES_RAW_INDEXResult[number]
 
@@ -70,23 +70,27 @@ function sanitySourcesToEdgeDB(
 		if (!sourceType) return []
 
 		if (sourceType === 'GOROROBAS') {
-			// @TODO migrate users?
-			const userId = (
-				sources?.find((s) => s._type === 'source.user') as SourceUser
-			)?.user?._ref
+			const userId = source._type === 'source.user' && source.user?._ref
+			if (!userId) return []
+			const idInEdgeDB = USER_ID_MAP[userId as keyof typeof USER_ID_MAP]
+			if (!idInEdgeDB) {
+				throw new Error(`User doesn't exist in EdgeDB ${userId}`)
+			}
 			return {
 				id: S.is(S.UUID)(source._key) ? source._key : generateId(),
 				type: sourceType,
-				userIds: [],
-				// userIds: userId ? [userId] : undefined,
+				userIds: [idInEdgeDB],
+				comments: source.comment
+					? htmlToTiptap(`<p>${source.comment}</p>`)
+					: undefined,
 			} satisfies SourceForDB
 		}
 
 		return {
 			id: S.is(S.UUID)(source._key) ? source._key : generateId(),
 			type: sourceType,
-			credits: (sources?.[0] as SourceExternal | undefined)?.credits || '',
-			origin: (sources?.[0] as SourceExternal | undefined)?.source || '',
+			credits: (source._type === 'source.external' && source.credits) || '',
+			origin: (source._type === 'source.external' && source.source) || '',
 		} satisfies SourceForDB
 	})
 }
@@ -158,7 +162,7 @@ async function main() {
 		await Effect.runPromise(
 			pipe(
 				Effect.tryPromise({
-					try: () => edgeDBClient.query('DELETE Vegetable; DELETE Image;'),
+					try: () => edgeDBClient.query('DELETE Vegetable;'),
 					catch: (e) => {
 						console.error(e)
 						return Effect.succeed(undefined)
@@ -216,6 +220,7 @@ async function main() {
 				}
 			}),
 			friends: vegetable.friends || [],
+			sources: sanitySourcesToEdgeDB(vegetable.sources as any),
 		} satisfies VegetableForDB
 
 		return formatted

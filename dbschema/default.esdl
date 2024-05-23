@@ -14,6 +14,7 @@ module default {
   scalar type TipSubject extending enum<PLANTIO,CRESCIMENTO,COLHEITA>;
   scalar type NoteType extending enum<EXPERIMENTO,ENSINAMENTO,DESCOBERTA>;
   scalar type VegetableWishlistStatus extending enum<QUERO_CULTIVAR,SEM_INTERESSE,JA_CULTIVEI,ESTOU_CULTIVANDO>;
+  scalar type EditSuggestionStatus extending enum<PENDING_REVIEW,MERGED,UNAPPROVED>;
 
   global current_user := (
     assert_single((
@@ -117,7 +118,7 @@ module default {
       insert HistoryLog {
         action := HistoryAction.`INSERT`,
         target := __new__,
-        performed_by := global current_user_profile,
+        performed_by := __new__.created_by,
         new := <json>__new__
       }
     );
@@ -146,6 +147,7 @@ module default {
     required type: SourceType;
     credits: str;
     origin: str;
+    comments: json;
     multi users: UserProfile {
       on target delete delete source;
     };
@@ -173,7 +175,7 @@ module default {
     };
   }
 
-  type Image extending PublicRead, Auditable, AdminCanDoAnything {
+  type Image extending PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
     required sanity_id: str {
       constraint exclusive;
     };
@@ -309,5 +311,12 @@ module default {
     access policy owner_can_do_anything
       allow all
       using (global current_user_profile ?= .created_by);
+  }
+
+  type EditSuggestion extending Auditable, AdminCanDoAnything, UserCanInsert {
+    required target_object: Vegetable;
+    required diff: json;
+    required snapshot: json;
+    required status: EditSuggestionStatus;
   }
 }

@@ -11,6 +11,7 @@ export const insertSourcesMutation = e.params(
 				credits: e.cast(e.str, e.json_get(source, 'credits')),
 				type: e.cast(e.SourceType, e.json_get(source, 'type')),
 				origin: e.cast(e.str, e.json_get(source, 'origin')),
+				comments: e.cast(e.json, e.json_get(source, 'comments')),
 				users: e.select(e.UserProfile, (user) => ({
 					filter: e.op(
 						user.id,

@@ -1,4 +1,4 @@
-CREATE MIGRATION m1n2vlbb4f6y3stplzskxrpb5jorvxutyzbybfu3skg5skczqnetsa
+CREATE MIGRATION m1nd3ktvkia6rinlpdr3kvlic6xre476qnc4kvrunzoy23c7dqrb4q
     ONTO initial
 {
   CREATE EXTENSION pgcrypto VERSION '1.3';
@@ -38,10 +38,11 @@ CREATE MIGRATION m1n2vlbb4f6y3stplzskxrpb5jorvxutyzbybfu3skg5skczqnetsa
       CREATE ACCESS POLICY admin_can_do_anything
           ALLOW ALL USING (((GLOBAL default::current_user).userRole ?= default::Role.ADMIN));
   };
-  CREATE ABSTRACT TYPE default::PublicRead {
-      CREATE ACCESS POLICY public_read_only
-          ALLOW SELECT ;
+  CREATE ABSTRACT TYPE default::UserCanInsert {
+      CREATE ACCESS POLICY authenticated_user_can_insert
+          ALLOW INSERT USING (EXISTS (GLOBAL default::current_user));
   };
+  CREATE SCALAR TYPE default::EditSuggestionStatus EXTENDING enum<PENDING_REVIEW, MERGED, UNAPPROVED>;
   CREATE ABSTRACT TYPE default::Auditable {
       CREATE PROPERTY created_at: std::datetime {
           SET default := (std::datetime_of_transaction());
@@ -56,7 +57,16 @@ CREATE MIGRATION m1n2vlbb4f6y3stplzskxrpb5jorvxutyzbybfu3skg5skczqnetsa
               USING (std::datetime_of_statement());
       };
   };
-  CREATE TYPE default::Image EXTENDING default::PublicRead, default::Auditable, default::AdminCanDoAnything {
+  CREATE TYPE default::EditSuggestion EXTENDING default::Auditable, default::AdminCanDoAnything, default::UserCanInsert {
+      CREATE REQUIRED PROPERTY diff: std::json;
+      CREATE REQUIRED PROPERTY snapshot: std::json;
+      CREATE REQUIRED PROPERTY status: default::EditSuggestionStatus;
+  };
+  CREATE ABSTRACT TYPE default::PublicRead {
+      CREATE ACCESS POLICY public_read_only
+          ALLOW SELECT ;
+  };
+  CREATE TYPE default::Image EXTENDING default::PublicRead, default::Auditable, default::UserCanInsert, default::AdminCanDoAnything {
       CREATE PROPERTY crop: std::json;
       CREATE PROPERTY hotspot: std::json;
       CREATE PROPERTY label: std::str;
@@ -100,13 +110,10 @@ CREATE MIGRATION m1n2vlbb4f6y3stplzskxrpb5jorvxutyzbybfu3skg5skczqnetsa
       CREATE MULTI LINK users: default::UserProfile {
           ON TARGET DELETE DELETE SOURCE;
       };
+      CREATE PROPERTY comments: std::json;
       CREATE PROPERTY credits: std::str;
       CREATE PROPERTY origin: std::str;
       CREATE REQUIRED PROPERTY type: default::SourceType;
-  };
-  CREATE ABSTRACT TYPE default::UserCanInsert {
-      CREATE ACCESS POLICY authenticated_user_can_insert
-          ALLOW INSERT USING (EXISTS (GLOBAL default::current_user));
   };
   CREATE SCALAR TYPE default::NoteType EXTENDING enum<EXPERIMENTO, ENSINAMENTO, DESCOBERTA>;
   CREATE TYPE default::Note EXTENDING default::WithHandle, default::Auditable, default::AdminCanDoAnything {
@@ -243,7 +250,7 @@ CREATE MIGRATION m1n2vlbb4f6y3stplzskxrpb5jorvxutyzbybfu3skg5skczqnetsa
               {
                   action := default::HistoryAction.`INSERT`,
                   target := __new__,
-                  performed_by := GLOBAL default::current_user_profile,
+                  performed_by := __new__.created_by,
                   new := <std::json>__new__
               });
       CREATE TRIGGER log_update
@@ -257,6 +264,9 @@ CREATE MIGRATION m1n2vlbb4f6y3stplzskxrpb5jorvxutyzbybfu3skg5skczqnetsa
                   old := <std::json>__old__,
                   new := <std::json>__new__
               });
+  };
+  ALTER TYPE default::EditSuggestion {
+      CREATE REQUIRED LINK target_object: default::Vegetable;
   };
   ALTER TYPE default::Image {
       CREATE MULTI LINK sources: default::Source {
