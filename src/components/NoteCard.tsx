@@ -27,6 +27,9 @@ export default function NoteCard({
 	const { title } = note
 
 	const RootElement = note.body ? 'button' : 'div'
+	const published_at = note.published_at
+		? new Date(note.published_at)
+		: undefined
 	return (
 		<RootElement
 			id={`nota-${note.handle}`}
@@ -55,16 +58,18 @@ export default function NoteCard({
 					</div>
 
 					<div className="mb-3 flex items-center justify-between">
-						<time
-							dateTime={note.published_at.toISOString()}
-							className="text-yellow-800"
-						>
-							{note.published_at.toLocaleDateString('pt-BR', {
-								month: '2-digit',
-								day: '2-digit',
-								year: 'numeric',
-							})}
-						</time>
+						{published_at && (
+							<time
+								dateTime={published_at.toISOString()}
+								className="text-yellow-800"
+							>
+								{published_at.toLocaleDateString('pt-BR', {
+									month: '2-digit',
+									day: '2-digit',
+									year: 'numeric',
+								})}
+							</time>
+						)}
 						<div>
 							{note.types.map((type) => (
 								<Badge key={type} variant="note">

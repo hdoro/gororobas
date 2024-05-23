@@ -4,6 +4,7 @@ import type {
 	SanityImageHotspot,
 } from '@sanity/image-url/lib/types/types'
 import type { JSONContent } from '@tiptap/react'
+
 export type {
 	EdiblePart,
 	Gender,
@@ -33,3 +34,7 @@ export type ImageForRendering = Pick<Image, 'sanity_id' | 'label'> & {
 }
 
 export type TiptapNode = JSONContent
+
+export type NextSearchParams = {
+	[query: string]: string | string[]
+}

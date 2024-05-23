@@ -1,16 +1,14 @@
 import { auth } from '@/edgedb'
-import { vegetablesIndexQuery } from '@/queries'
+import { notesIndexQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { NextSearchParams } from '@/types'
 import { searchParamsToNextSearchParams } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
-import { nextSearchParamsToQueryParams } from './vegetablesFilterDefinition'
+import { nextSearchParamsToQueryParams } from './notesFilterDefinition'
 
-export type VegetablesIndexRouteData = Awaited<
-	ReturnType<typeof fetchVegetablesIndex>
->
+export type NotesIndexRouteData = Awaited<ReturnType<typeof fetchNotesIndex>>
 
-export default async function fetchVegetablesIndex(
+export default async function fetchNotesIndex(
 	searchParams: NextSearchParams | URLSearchParams,
 ) {
 	const queryParams = nextSearchParamsToQueryParams(
@@ -20,19 +18,19 @@ export default async function fetchVegetablesIndex(
 	)
 	const session = auth.getSession()
 
-	const vegetables = await runServerEffect(
+	const notes = await runServerEffect(
 		pipe(
 			Effect.tryPromise({
-				try: () => vegetablesIndexQuery.run(session.client, queryParams),
+				try: () => notesIndexQuery.run(session.client, queryParams),
 				catch: (error) => console.log(error),
 			}),
-			...buildTraceAndMetrics('vegetables_index', queryParams),
+			...buildTraceAndMetrics('notes_index', queryParams),
 			Effect.catchAll(() => Effect.succeed(null)),
 		),
 	)
 
 	return {
-		vegetables,
+		notes,
 		queryParams,
 	}
 }

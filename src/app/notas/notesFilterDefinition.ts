@@ -1,48 +1,19 @@
-import type {
-	VegetablesIndexFilterParams,
-	VegetablesIndexQueryParams,
-} from '@/queries'
+import type { NotesIndexFilterParams, NotesIndexQueryParams } from '@/queries'
 import type { NextSearchParams } from '@/types'
-import {
-	EDIBLE_PART_TO_LABEL,
-	PLANTING_METHOD_TO_LABEL,
-	STRATUM_TO_LABEL,
-	USAGE_TO_LABEL,
-	VEGETABLE_LIFECYCLE_TO_LABEL,
-} from '@/utils/labels'
+import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 
 const PAGE_INDEX_QUERY_KEY = 'pagina'
 const FILTER_DEFINITIONS = [
 	{
-		queryKey: 'estrato',
-		filterKey: 'strata',
-		values: Object.keys(STRATUM_TO_LABEL),
-	},
-	{
-		queryKey: 'usos',
-		filterKey: 'uses',
-		values: Object.keys(USAGE_TO_LABEL),
-	},
-	{
-		queryKey: 'comestivel',
-		filterKey: 'edible_parts',
-		values: Object.keys(EDIBLE_PART_TO_LABEL),
-	},
-	{
-		queryKey: 'plantio',
-		filterKey: 'planting_methods',
-		values: Object.keys(PLANTING_METHOD_TO_LABEL),
-	},
-	{
-		queryKey: 'ciclo',
-		filterKey: 'lifecycles',
-		values: Object.keys(VEGETABLE_LIFECYCLE_TO_LABEL),
+		queryKey: 'tipo',
+		filterKey: 'types',
+		values: Object.keys(NOTE_TYPE_TO_LABEL),
 	},
 ] as const
 
 export function nextSearchParamsToQueryParams(
 	searchParams: NextSearchParams,
-): VegetablesIndexQueryParams {
+): NotesIndexQueryParams {
 	const pageIndex = searchParams[PAGE_INDEX_QUERY_KEY]
 		? Number(searchParams[PAGE_INDEX_QUERY_KEY] as string)
 		: 0
@@ -68,11 +39,11 @@ export function nextSearchParamsToQueryParams(
 	return {
 		...filters,
 		pageIndex,
-	} as VegetablesIndexQueryParams
+	} as NotesIndexQueryParams
 }
 
 export function queryParamsToSearchParams(
-	filterParams: VegetablesIndexFilterParams,
+	filterParams: NotesIndexFilterParams,
 	pageIndex?: number,
 ): URLSearchParams {
 	const searchParams = new URLSearchParams()
@@ -99,11 +70,9 @@ export function queryParamsToSearchParams(
 	return searchParams
 }
 
-export function queryParamsToQueryKey(
-	filterParams: VegetablesIndexFilterParams,
-) {
+export function queryParamsToQueryKey(filterParams: NotesIndexFilterParams) {
 	return [
-		'vegetables',
+		'notes',
 		...Object.entries(filterParams)
 			.flatMap(([key, value]) => {
 				if (!value) return []

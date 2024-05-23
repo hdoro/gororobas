@@ -5,3 +5,4 @@ export const BRAND_COLOR = '#40794B'
 export const APP_NAME = 'Gororobas'
 
 export const VEGETABLES_PER_PAGE = 24
+export const NOTES_PER_PAGE = 24

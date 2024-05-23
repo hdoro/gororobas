@@ -1,52 +1,51 @@
 'use client'
 
-import VegetableCard from '@/components/VegetableCard'
+import NoteCard from '@/components/NoteCard'
+import { NotesGridWrapper } from '@/components/NotesGrid'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
 import Carrot from '@/components/icons/Carrot'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
-import type { VegetablesIndexFilterParams } from '@/queries'
-import { VEGETABLES_PER_PAGE } from '@/utils/config'
+import type { NotesIndexFilterParams } from '@/queries'
+import { NOTES_PER_PAGE } from '@/utils/config'
+import { getNoteCardTransform } from '@/utils/css'
+import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 import {
-	EDIBLE_PART_TO_LABEL,
-	PLANTING_METHOD_TO_LABEL,
-	STRATUM_TO_LABEL,
-	USAGE_TO_LABEL,
-	VEGETABLE_LIFECYCLE_TO_LABEL,
-} from '@/utils/labels'
-import { paths, persistParamsInUrl } from '@/utils/urls'
-import { searchParamsToNextSearchParams } from '@/utils/urls'
+	paths,
+	persistParamsInUrl,
+	searchParamsToNextSearchParams,
+} from '@/utils/urls'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { InView } from 'react-intersection-observer'
-import type { VegetablesIndexRouteData } from './fetchVegetablesIndex'
+import type { NotesIndexRouteData } from './fetchNotesIndex'
 import {
 	nextSearchParamsToQueryParams,
 	queryParamsToQueryKey,
 	queryParamsToSearchParams,
-} from './vegetablesFilterDefinition'
+} from './notesFilterDefinition'
 
-async function fetchVegetablesIndexFromClient(
-	filterParams: VegetablesIndexFilterParams,
+async function fetchNotesIndexFromClient(
+	filterParams: NotesIndexFilterParams,
 	pageIndex: number,
 ) {
 	const response = await fetch(
-		`/vegetais/api?${queryParamsToSearchParams(
+		`/notas/api?${queryParamsToSearchParams(
 			filterParams,
 			pageIndex,
 		).toString()}`,
 	)
-	return response.json() as unknown as VegetablesIndexRouteData
+	return response.json() as unknown as NotesIndexRouteData
 }
 
-export default function VegetablesIndex() {
+export default function NotesIndex() {
 	const initialSearchParams = useSearchParams()
-	const form = useForm<VegetablesIndexFilterParams>({
+	const form = useForm<NotesIndexFilterParams>({
 		defaultValues: nextSearchParamsToQueryParams(
 			searchParamsToNextSearchParams(initialSearchParams),
 		),
@@ -60,13 +59,10 @@ export default function VegetablesIndex() {
 		useInfiniteQuery({
 			queryKey,
 			queryFn: ({ pageParam }) =>
-				fetchVegetablesIndexFromClient(filterParams, pageParam),
+				fetchNotesIndexFromClient(filterParams, pageParam),
 			initialPageParam: 0,
 			getNextPageParam: (lastPage) => {
-				if (
-					!lastPage.vegetables ||
-					lastPage.vegetables.length < VEGETABLES_PER_PAGE
-				) {
+				if (!lastPage.notes || lastPage.notes.length < NOTES_PER_PAGE) {
 					return undefined
 				}
 
@@ -92,21 +88,22 @@ export default function VegetablesIndex() {
 		!isFetching &&
 		(!data?.pages ||
 			!data.pages[0] ||
-			!data.pages[0].vegetables ||
-			data.pages[0].vegetables.length === 0)
+			!data.pages[0].notes ||
+			data.pages[0].notes.length === 0)
 	return (
 		<main className="px-pageX py-10 flex flex-col lg:flex-row-reverse lg:items-start gap-x-8 gap-y-4">
 			<div className="space-y-4 flex-[5] sticky top-4">
-				<Text level="h1" as="h1">
-					Vegetais
-				</Text>
-				<div
-					className="grid gap-9 relative"
-					style={{
-						gridTemplateColumns:
-							'repeat(auto-fill, var(--vegetable-card-width))',
-					}}
+				<Text
+					level="h1"
+					as="h1"
+					className="flex items-center justify-between flex-wrap"
 				>
+					Notas
+					<Button asChild>
+						<Link href={paths.newNote()}>Enviar sua nota</Link>
+					</Button>
+				</Text>
+				<NotesGridWrapper className="relative justify-start px-0">
 					{isFetching && !isFetchingNextPage && (
 						<div className="absolute inset-0 bg-background bg-opacity-50 flex items-center justify-center gap-3">
 							<Carrot className="animate-spin h-6 w-6" />
@@ -115,8 +112,12 @@ export default function VegetablesIndex() {
 					)}
 					{data?.pages?.map((page) => (
 						<React.Fragment key={page.queryParams.pageIndex}>
-							{(page.vegetables || []).map((vegetable) => (
-								<VegetableCard key={vegetable.id} vegetable={vegetable} />
+							{(page.notes || []).map((note) => (
+								<NoteCard
+									key={note.handle}
+									note={note}
+									transform={getNoteCardTransform()}
+								/>
 							))}
 						</React.Fragment>
 					))}
@@ -126,20 +127,19 @@ export default function VegetablesIndex() {
 							Carregando...
 						</div>
 					)}
-				</div>
+				</NotesGridWrapper>
 				{/* EMPTY STATE */}
 				{isEmpty && (
 					<Card aria-live="polite">
 						<CardHeader>
-							<CardTitle>Nenhum vegetal encontrado</CardTitle>
+							<CardTitle>Nenhuma nota encontrada</CardTitle>
 							<Text>
-								Conhece algum que não está na Gororobas? Esse site é
-								colaborativo, você pode ajudar:
+								Tem algum experimento ou aprendizado pra compartilhar?
 							</Text>
 						</CardHeader>
 						<CardContent>
 							<Button asChild>
-								<Link href={paths.newVegetable()}>Enviar um vegetal</Link>
+								<Link href={paths.newNote()}>Enviar uma nota</Link>
 							</Button>
 						</CardContent>
 					</Card>
@@ -179,74 +179,16 @@ export default function VegetablesIndex() {
 						<CardContent className="space-y-6 lg:overflow-y-auto hide-scrollbar">
 							<Field
 								form={form}
-								name="strata"
-								label="Estrato"
+								name="types"
+								label="Tipo(s) de nota"
 								render={({ field }) => (
 									<CheckboxesInput
 										field={field}
-										options={Object.entries(STRATUM_TO_LABEL).map(
+										options={Object.entries(NOTE_TYPE_TO_LABEL).map(
 											([value, label]) => ({
 												value,
 												label,
 											}),
-										)}
-									/>
-								)}
-							/>
-							<Field
-								form={form}
-								name="lifecycles"
-								label="Ciclo de vida"
-								render={({ field }) => (
-									<CheckboxesInput
-										field={field}
-										options={Object.entries(VEGETABLE_LIFECYCLE_TO_LABEL).map(
-											([value, label]) => ({
-												value,
-												label,
-											}),
-										)}
-									/>
-								)}
-							/>
-							<Field
-								form={form}
-								name="uses"
-								label="Principais usos"
-								render={({ field }) => (
-									<CheckboxesInput
-										field={field}
-										options={Object.entries(USAGE_TO_LABEL).map(
-											([value, label]) => ({
-												value,
-												label,
-											}),
-										)}
-									/>
-								)}
-							/>
-							<Field
-								form={form}
-								name="planting_methods"
-								label="Plantio por"
-								render={({ field }) => (
-									<CheckboxesInput
-										field={field}
-										options={Object.entries(PLANTING_METHOD_TO_LABEL).map(
-											([value, label]) => ({ value, label }),
-										)}
-									/>
-								)}
-							/>
-							<Field
-								form={form}
-								name="edible_parts"
-								label="Partes comestíveis"
-								render={({ field }) => (
-									<CheckboxesInput
-										field={field}
-										options={Object.entries(EDIBLE_PART_TO_LABEL).map(
-											([value, label]) => ({ value, label }),
 										)}
 									/>
 								)}

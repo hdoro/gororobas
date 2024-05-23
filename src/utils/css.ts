@@ -20,3 +20,7 @@ export function getRandomTransform(
 		y: randomBetween(yRange[0], yRange[1]),
 	}
 }
+
+export function getNoteCardTransform() {
+	return getRandomTransform([-3, 3], [-7.5, 7.5], [-7.5, 7.5])
+}

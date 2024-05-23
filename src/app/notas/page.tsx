@@ -1,26 +1,25 @@
-import TanstackQueryProvider from '@/components/TanstackQueryProvider'
 import {
 	HydrationBoundary,
 	QueryClient,
 	dehydrate,
 } from '@tanstack/react-query'
 import type { Metadata } from 'next'
-import VegetablesIndex from './VegetablesIndex'
-import fetchVegetablesIndex, {
-	type VegetablesIndexRouteData,
-} from './fetchVegetablesIndex'
+import TanstackQueryProvider from '../../components/TanstackQueryProvider'
+import NotesIndex from './NotesIndex'
+import fetchNotesIndex, { type NotesIndexRouteData } from './fetchNotesIndex'
 import {
 	nextSearchParamsToQueryParams,
 	queryParamsToQueryKey,
-} from './vegetablesFilterDefinition'
+} from './notesFilterDefinition'
 
 export const metadata: Metadata = {
-	title: 'Todos os vegetais e suas propriedades agroecológicas | Gororobas',
+	title:
+		'Aprendizados e experimentos na cozinha, no plantio e no sacolão | Gororobas',
 	description:
-		'Descubra como plantar centenas de vegetais de forma agroecológica. O Gororobas é uma enciclopédia colaborativa, participe também :)',
+		'Notinhas compartilhadas por pessoas reais, em contextos reais. Escreva você também!',
 }
 
-export default async function VegetablesRoute({
+export default async function NotesRoute({
 	searchParams,
 }: {
 	searchParams: {
@@ -33,16 +32,16 @@ export default async function VegetablesRoute({
 		queryKey: queryParamsToQueryKey(
 			nextSearchParamsToQueryParams(searchParams),
 		),
-		queryFn: () => fetchVegetablesIndex(searchParams),
+		queryFn: () => fetchNotesIndex(searchParams),
 		initialPageParam: 0,
-		getNextPageParam: (lastPage: VegetablesIndexRouteData) =>
+		getNextPageParam: (lastPage: NotesIndexRouteData) =>
 			lastPage.queryParams.pageIndex + 1,
 	})
 
 	return (
 		<TanstackQueryProvider>
 			<HydrationBoundary state={dehydrate(queryClient)}>
-				<VegetablesIndex />
+				<NotesIndex />
 			</HydrationBoundary>
 		</TanstackQueryProvider>
 	)

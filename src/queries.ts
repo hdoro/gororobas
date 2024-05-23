@@ -1,14 +1,14 @@
 import e, { type $infer } from '@/edgeql'
-import Field from './components/forms/Field'
 import type {
 	EdiblePart,
+	NoteType,
 	PlantingMethod,
 	Stratum,
 	VegetableLifeCycle,
 	VegetableUsage,
 	VegetableWishlistStatus,
 } from './edgedb.interfaces'
-import { VEGETABLES_PER_PAGE } from './utils/config'
+import { NOTES_PER_PAGE, VEGETABLES_PER_PAGE } from './utils/config'
 
 const SOURCE_FIELDS = {
 	type: true,
@@ -63,7 +63,13 @@ const publicNotes = e.shape(e.Note, (note) => ({
 	filter: e.op(note.public, '=', true),
 }))
 
-export type NoteCardData = Exclude<$infer<typeof publicNotes>, null>[number]
+export type NoteCardData = Omit<
+	Exclude<$infer<typeof publicNotes>, null>[number],
+	'published_at'
+> & {
+	/** When sending over the wire via API routes, the Date gets serialized to an ISOString */
+	published_at: Date | string
+}
 
 export const vegetablePageQuery = e.params(
 	{
@@ -417,3 +423,57 @@ export type VegetablesIndexFilterParams = Omit<
 	VegetablesIndexQueryParams,
 	'pageIndex'
 >
+
+export const notesIndexQuery = e.params(
+	{
+		types: e.optional(e.array(e.str)),
+		pageIndex: e.int16,
+	},
+	(params) =>
+		e.select(e.Note, (note) => {
+			return {
+				...publicNotes(note),
+
+				filter: e.op(
+					e.op(note.public, '=', true),
+					'and',
+					e.op(
+						// Either the param doesn't exist
+						e.op('not', e.op('exists', params.types)),
+						'or',
+						// Or the note has at least one of the type values
+						e.op(
+							e.count(
+								e.op(
+									note.types,
+									'intersect',
+									e.array_unpack(e.cast(e.array(e.NoteType), params.types)),
+								),
+							),
+							'>',
+							0,
+						),
+					),
+				),
+
+				limit: NOTES_PER_PAGE,
+				offset: e.op(params.pageIndex, '*', NOTES_PER_PAGE),
+				order_by: {
+					expression: note.published_at,
+					direction: e.DESC,
+					empty: e.EMPTY_LAST,
+				},
+			}
+		}),
+)
+
+export type NotesIndexData = Exclude<$infer<typeof notesIndexQuery>, null>
+
+export type NotesIndexQueryParams = Pick<
+	Parameters<typeof notesIndexQuery.run>[1],
+	'pageIndex'
+> & {
+	types?: NoteType[] | null
+}
+
+export type NotesIndexFilterParams = Omit<NotesIndexQueryParams, 'pageIndex'>

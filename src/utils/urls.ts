@@ -1,3 +1,5 @@
+import type { NextSearchParams } from '@/types'
+import type { ReadonlyURLSearchParams } from 'next/navigation'
 import { BASE_URL, PRODUCTION_URL } from './config'
 import { slugify, truncate } from './strings'
 
@@ -112,4 +114,22 @@ export function persistParamsInUrl(searchParams: URLSearchParams) {
 		null,
 		url,
 	)
+}
+
+export function searchParamsToNextSearchParams(
+	searchParams: URLSearchParams | ReadonlyURLSearchParams,
+): NextSearchParams {
+	return Array.from(searchParams.entries()).reduce((acc, [key, value]) => {
+		const existing = acc[key]
+		if (existing) {
+			if (Array.isArray(existing)) {
+				acc[key] = [...existing, value]
+			} else {
+				acc[key] = [existing, value]
+			}
+		} else {
+			acc[key] = value
+		}
+		return acc
+	}, {} as NextSearchParams)
 }
