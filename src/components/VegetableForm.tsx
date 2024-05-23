@@ -123,7 +123,7 @@ export default function VegetableForm() {
 						</Button>
 					</div>
 					<div className="grid gap-4 md:grid-cols-[1fr_350px] lg:grid-cols-3 lg:gap-8 items-start relative">
-						<div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8 sticky top-4">
+						<div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8 md:sticky md:top-4">
 							<Card>
 								<CardHeader>
 									<CardTitle>Visão geral</CardTitle>
@@ -388,7 +388,7 @@ export default function VegetableForm() {
 								</CardContent>
 							</Card>
 						</div>
-						<div className="grid auto-rows-max items-start gap-4 lg:gap-8 sticky top-4">
+						<div className="grid auto-rows-max items-start gap-4 lg:gap-8 md:sticky md:top-4">
 							<Card className="overflow-hidden">
 								<CardHeader>
 									<CardTitle>Propriedades</CardTitle>

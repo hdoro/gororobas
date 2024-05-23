@@ -14,11 +14,11 @@ export default async function UserNav({ signedIn }: { signedIn: boolean }) {
 	if (!signedIn) {
 		return (
 			<>
-				<div className="flex items-center gap-2 pt-2">
-					<Button asChild mode="outline">
+				<div className="flex items-center gap-2">
+					<Button asChild mode="outline" size="sm">
 						<a href={auth.getBuiltinUIUrl()}>Entrar</a>
 					</Button>
-					<Button asChild>
+					<Button asChild size="sm">
 						<a href={auth.getBuiltinUISignUpUrl()}>Criar conta</a>
 					</Button>
 				</div>

@@ -68,7 +68,7 @@ export default function HomePage(data: Partial<HomePageData>) {
 					>
 						Aprendizados e experimentos
 					</SectionTitle>
-					<Text level="h3" className="px-pageX mx-10 font-normal">
+					<Text level="h3" className="px-pageX font-normal">
 						Na cozinha, no plantio e no sacolão
 					</Text>
 					<NotesGrid notes={notes} />
@@ -86,7 +86,7 @@ export default function HomePage(data: Partial<HomePageData>) {
 			{profiles && profiles.length > 0 && (
 				<section className="mt-36">
 					<SectionTitle Icon={RainbowIcon}>Quem se envolve</SectionTitle>
-					<ProfilesGrid profiles={profiles} />
+					<ProfilesGrid profiles={profiles} className="mt-8 px-pageX" />
 				</section>
 			)}
 

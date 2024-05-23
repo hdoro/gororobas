@@ -21,7 +21,7 @@ export default async function HeaderNav() {
 			className="w-full px-pageX pt-4 flex flex-wrap gap-3 justify-between items-center"
 		>
 			<Link href={paths.home()} rel="home" title="Página inicial">
-				<GororobasLogo />
+				<GororobasLogo className="h-[1em] md:h-[1.5em]" />
 			</Link>
 
 			<div className="flex flex-wrap items-center gap-x-10 gap-y-3">
@@ -29,7 +29,7 @@ export default async function HeaderNav() {
 					<Link
 						key={link.href}
 						href={link.href}
-						className="text-lg text-primary-800"
+						className="text-lg text-primary-800 hidden md:block"
 					>
 						{link.text}
 					</Link>

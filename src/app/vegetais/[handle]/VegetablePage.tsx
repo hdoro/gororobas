@@ -38,9 +38,19 @@ export default function VegetablePage({
 		),
 		...(vegetable.sources || []),
 	]
-	const externalSources = allSources.filter(
-		(source) => source?.type === 'EXTERNAL',
-	)
+	const externalSources = allSources.flatMap((source, index) => {
+		if (source?.type !== 'EXTERNAL') return []
+
+		return allSources
+			.slice(index + 1)
+			.some(
+				(s) =>
+					s.credits === source.credits ||
+					(source.origin && s.origin === source.origin),
+			)
+			? []
+			: source
+	})
 	const internalSources = allSources.flatMap((source, index) => {
 		if (source?.type !== 'GOROROBAS') return []
 
@@ -128,7 +138,7 @@ export default function VegetablePage({
 					<SectionTitle Icon={VegetableFriendsIcon}>
 						Amigues d{gender.suffix(vegetable.gender || 'NEUTRO')} {names[0]}
 					</SectionTitle>
-					<Text level="h3" className="px-pageX mx-10 font-normal">
+					<Text level="h3" className="px-pageX font-normal">
 						Plantas que gostam de serem plantadas e estarem próximas a
 						{gender.suffix(vegetable.gender || 'NEUTRO')} {names[0]}
 					</Text>
@@ -138,14 +148,11 @@ export default function VegetablePage({
 			{externalSources.length > 0 && (
 				<section className="my-36" id="fontes">
 					<SectionTitle Icon={QuoteIcon}>Fontes e recursos</SectionTitle>
-					<Text level="h3" className="px-pageX mx-10 font-normal">
+					<Text level="h3" className="px-pageX font-normal">
 						Materiais que embasaram essas informações e/ou fontes de algumas das
 						fotos mostradas aqui
 					</Text>
-					<SourcesGrid
-						sources={externalSources}
-						className="px-pageX mx-10 mt-10"
-					/>
+					<SourcesGrid sources={externalSources} className="px-pageX mt-10" />
 				</section>
 			)}
 			{internalSources.length > 0 && (
@@ -153,13 +160,10 @@ export default function VegetablePage({
 					<SectionTitle Icon={SparklesIcon}>
 						Pessoas que contribuiram
 					</SectionTitle>
-					<Text level="h3" className="px-pageX mx-10 font-normal">
+					<Text level="h3" className="px-pageX font-normal">
 						Quem aqui no Gororobas contribuiu com fotos e/ou dicas
 					</Text>
-					<SourcesGrid
-						sources={internalSources}
-						className="px-pageX mx-10 mt-10"
-					/>
+					<SourcesGrid sources={internalSources} className="px-pageX mt-10" />
 				</section>
 			)}
 			{/* @TODO */}

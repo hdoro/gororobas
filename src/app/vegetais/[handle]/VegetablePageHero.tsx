@@ -53,7 +53,7 @@ export function VegetablePageHero({
 		Math.round(MAIN_IMAGE_WIDTH / averageAspectRatio) * MAIN_IMAGE_SIZE_INCREASE
 	return (
 		<div className="flex-[5] max-w-[53.125rem]">
-			<div className="flex gap-5 items-end justify-between">
+			<div className="flex flex-col items-start gap-3 md:flex-row md:gap-5 md:items-end md:justify-between">
 				<div>
 					<Text level="h1" as="h1">
 						{names[0]}

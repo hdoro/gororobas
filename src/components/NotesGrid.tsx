@@ -16,7 +16,7 @@ export function NotesGridWrapper(
 	return (
 		<div
 			{...props}
-			className={cn('py-10 grid gap-12', props.className)}
+			className={cn('py-10 grid gap-12 overflow-x-hidden', props.className)}
 			style={{
 				...(props.style || {}),
 				gridTemplateColumns:

@@ -83,7 +83,7 @@ export default function UserProfilePage({
 					<Text
 						level="h3"
 						as="p"
-						className="mt-3 px-pageX mx-10 text-muted-foreground"
+						className="mt-3 px-pageX text-muted-foreground"
 					>
 						{profile.is_owner
 							? 'Compartilhe suas experiências e aprendizados com a comunidade'

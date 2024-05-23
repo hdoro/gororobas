@@ -97,7 +97,7 @@ export default function VegetablesIndex() {
 			data.pages[0].vegetables.length === 0)
 	return (
 		<main className="px-pageX py-10 flex flex-col lg:flex-row-reverse lg:items-start gap-x-8 gap-y-4">
-			<div className="space-y-4 flex-[5] sticky top-4">
+			<div className="space-y-4 flex-[5] lg:sticky lg:top-4">
 				<Text level="h1" as="h1">
 					Vegetais
 				</Text>
@@ -166,7 +166,7 @@ export default function VegetablesIndex() {
 					))}
 			</div>
 			<FormProvider {...form}>
-				<form className="max-w-xs sticky top-4">
+				<form className="max-w-xs lg:sticky lg:top-4">
 					<Card className="lg:max-h-[calc(100dvh_-_2rem)] lg:overflow-hidden lg:flex lg:flex-col">
 						<CardHeader>
 							<CardTitle>Filtre os resultados</CardTitle>

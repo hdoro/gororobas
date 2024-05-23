@@ -16,7 +16,7 @@ export default function VegetableTips({
 	if (!Array.isArray(tips) || tips.length === 0) return null
 
 	return (
-		<div className="px-pageX max-w-[73.125rem] box-content">
+		<div className="px-pageX lg:max-w-[73.125rem] box-content">
 			{Object.entries(TIP_SUBJECT_TO_LABEL).map(
 				([subject, label], idx, arr) => {
 					const subjectTips = tips.filter((tip) =>
@@ -29,7 +29,7 @@ export default function VegetableTips({
 						<div
 							key={subject}
 							className={cn(
-								'mt-10 pb-10 flex gap-10',
+								'mt-10 pb-10 flex flex-wrap gap-10',
 								idx + 1 < arr.length && 'border-b-2 border-b-secondary-50',
 							)}
 						>

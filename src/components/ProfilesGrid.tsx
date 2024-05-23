@@ -29,9 +29,8 @@ export default function ProfilesGrid({
 
 	return (
 		<ProfilesGridWrapper {...props}>
-			<div className="w-[var(--page-padding-x)]" />
 			{profiles.map((profile) => (
-				<ProfileAvatar key={profile.handle} profile={profile} />
+				<ProfileAvatar key={profile.handle} profile={profile} size="md" />
 			))}
 		</ProfilesGridWrapper>
 	)
