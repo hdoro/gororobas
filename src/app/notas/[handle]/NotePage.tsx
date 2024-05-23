@@ -1,4 +1,4 @@
-import UserAvatar from '@/components/UserAvatar'
+import ProfileCard from '@/components/ProfileCard'
 import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -86,7 +86,7 @@ export default function NotePage({ note }: { note: NotePageData }) {
 					<Text level="h2" as="h2" className="mb-2">
 						Enviada por:
 					</Text>
-					<UserAvatar size="md" user={note.created_by} />
+					<ProfileCard size="md" profile={note.created_by} />
 					{note.created_by.bio ? (
 						<div className="mt-8">
 							<Text level="h3" as="h3">

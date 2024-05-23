@@ -1,6 +1,6 @@
 import type { SourceCardData } from '@/queries'
 import { ExternalLinkIcon } from 'lucide-react'
-import UserAvatar from './UserAvatar'
+import ProfileCard from './ProfileCard'
 import { Badge } from './ui/badge'
 import { buttonVariants } from './ui/button'
 import { Text } from './ui/text'
@@ -10,7 +10,7 @@ export default function SourceCard({ source }: { source: SourceCardData }) {
 		return (
 			<>
 				{source.users.map((user) => (
-					<UserAvatar key={user.handle} user={user} size="md" />
+					<ProfileCard key={user.handle} profile={user} size="md" />
 				))}
 			</>
 		)

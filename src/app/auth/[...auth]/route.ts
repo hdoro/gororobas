@@ -1,9 +1,9 @@
 import { auth } from '@/edgedb'
-import { runServerEffect } from '@/services/runtime'
+import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { EmailNotVerifiedError, SigninFailedError } from '@/types/errors'
 import { paths } from '@/utils/urls'
 import { Effect } from 'effect'
-import { redirect } from 'next/navigation'
+import { RedirectType, redirect } from 'next/navigation'
 import createUserProfile from './createUserProfile'
 
 export const { GET, POST } = auth.createAuthRouteHandlers({
@@ -11,6 +11,7 @@ export const { GET, POST } = auth.createAuthRouteHandlers({
 		const response = await runServerEffect(
 			Effect.gen(function* (_) {
 				if (error) {
+					console.error('[onBuiltinUICallback] error:', error)
 					return yield* Effect.fail(new SigninFailedError(error))
 				}
 
@@ -27,9 +28,11 @@ export const { GET, POST } = auth.createAuthRouteHandlers({
 				}
 
 				return { success: true, redirect: paths.editProfile() } as const
-			}).pipe(
-				Effect.catchAll(() => Effect.succeed({ success: false } as const)),
-			),
+			})
+				.pipe(...buildTraceAndMetrics('auth.builtinUICallback'))
+				.pipe(
+					Effect.catchAll(() => Effect.succeed({ success: false } as const)),
+				),
 		)
 
 		if (response.success) {
@@ -41,6 +44,6 @@ export const { GET, POST } = auth.createAuthRouteHandlers({
 		redirect(paths.home())
 	},
 	onSignout() {
-		redirect(paths.home())
+		redirect(paths.home(), RedirectType.replace)
 	},
 })

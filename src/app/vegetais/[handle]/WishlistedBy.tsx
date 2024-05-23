@@ -1,8 +1,8 @@
-import UserAvatar from '@/components/UserAvatar'
+import ProfilesStrip from '@/components/ProfilesStrip'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import { Text } from '@/components/ui/text'
 import { client } from '@/edgedb'
-import { type WishlistedByData, wishlistedByQuery } from '@/queries'
+import { wishlistedByQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 
@@ -24,23 +24,6 @@ const fetchWishlistedBy = (vegetable_id: string) =>
 		...buildTraceAndMetrics('wishlisted_by', { vegetable_id }),
 		Effect.catchAll(() => Effect.succeed(null)),
 	)
-
-function AvatarsStrip({
-	users,
-}: { users: WishlistedByData['wishlisted_by'][number]['user_profile'][] }) {
-	return (
-		<div className="flex items-center gap-4 overflow-x-auto hide-scrollbar">
-			{users.map((user, index) => (
-				<UserAvatar
-					key={user.name}
-					user={user}
-					fallbackTone={index % 2 === 0 ? 'primary' : 'secondary'}
-					size="sm"
-				/>
-			))}
-		</div>
-	)
-}
 
 export default async function WishlistedBy(props: {
 	vegetable_id: string
@@ -68,7 +51,7 @@ export default async function WishlistedBy(props: {
 						<SeedlingIcon variant="color" className="w-[1.5em]" />
 						Quem já planta
 					</Text>
-					<AvatarsStrip users={plantedBy} />
+					<ProfilesStrip profiles={plantedBy} />
 				</div>
 			)}
 			{desiredBy.length > 0 && (
@@ -77,7 +60,7 @@ export default async function WishlistedBy(props: {
 						<SeedlingIcon variant="color" className="w-[1.5em]" />
 						Quem quer plantar
 					</Text>
-					<AvatarsStrip users={desiredBy} />
+					<ProfilesStrip profiles={desiredBy} />
 				</div>
 			)}
 		</>

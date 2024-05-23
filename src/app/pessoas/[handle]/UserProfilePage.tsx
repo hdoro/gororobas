@@ -1,6 +1,6 @@
 import NotesGrid from '@/components/NotesGrid'
+import { ProfilePhoto } from '@/components/ProfileCard'
 import SectionTitle from '@/components/SectionTitle'
-import { UserPhoto } from '@/components/UserAvatar'
 import VegetablesGrid from '@/components/VegetablesGrid'
 import NoteIcon from '@/components/icons/NoteIcon'
 import RainbowIcon from '@/components/icons/RainbowIcon'
@@ -30,7 +30,7 @@ export default function UserProfilePage({
 	return (
 		<main className="py-10">
 			<div className="flex items-start flex-wrap gap-6 px-pageX">
-				<UserPhoto user={profile} size="lg" />
+				<ProfilePhoto profile={profile} size="lg" />
 				<div className="self-center">
 					<div className="flex flex-wrap gap-5 items-center">
 						<Text level="h1" as="h1">

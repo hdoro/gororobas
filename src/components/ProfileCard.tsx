@@ -8,7 +8,7 @@ import { type VariantProps, tv } from 'tailwind-variants'
 import { SanityImage } from './SanityImage'
 import { Text } from './ui/text'
 
-const avatarVariants = tv({
+const profileCardVariants = tv({
 	slots: {
 		root: 'flex-shrink-0 flex items-center flex-wrap',
 		image: 'block object-cover rounded-full',
@@ -44,8 +44,8 @@ const avatarVariants = tv({
 	},
 })
 
-type UserAvatarProps = VariantProps<typeof avatarVariants> & {
-	user: {
+export type ProfileCardProps = VariantProps<typeof profileCardVariants> & {
+	profile: {
 		name?: string | undefined | null
 		handle?: string | undefined | null
 		location?: string | undefined | null
@@ -60,32 +60,37 @@ type UserAvatarProps = VariantProps<typeof avatarVariants> & {
 	linkToProfile?: boolean
 }
 
-export default function UserAvatar(props: UserAvatarProps) {
-	const { user, size = 'sm', includeName = true, linkToProfile = true } = props
+export default function ProfileCard(props: ProfileCardProps) {
+	const {
+		profile,
+		size = 'sm',
+		includeName = true,
+		linkToProfile = true,
+	} = props
 
-	if (includeName && !user.name) return null
+	if (includeName && !profile.name) return null
 
-	const classes = avatarVariants({ size, includeName })
+	const classes = profileCardVariants({ size, includeName })
 
-	const RootComponent = linkToProfile && user.handle ? Link : 'div'
+	const RootComponent = linkToProfile && profile.handle ? Link : 'div'
 	return (
 		<RootComponent
-			key={user.name}
+			key={profile.name}
 			className={classes.root()}
 			// @ts-expect-error href is only needed when using Link
 			href={
-				linkToProfile && user.handle
-					? paths.userProfile(user.handle)
+				linkToProfile && profile.handle
+					? paths.userProfile(profile.handle)
 					: undefined
 			}
 		>
-			<UserPhoto {...props} />
+			<ProfilePhoto {...props} />
 			{includeName && (
 				<div className="space-2">
-					<Text className={classes.name()}>{user.name}</Text>
-					{user.location && (
+					<Text className={classes.name()}>{profile.name}</Text>
+					{profile.location && (
 						<Text level="sm" className={classes.location()}>
-							{user.location}
+							{profile.location}
 						</Text>
 					)}
 				</div>
@@ -94,20 +99,20 @@ export default function UserAvatar(props: UserAvatarProps) {
 	)
 }
 
-const SIZE_MAP: Record<Exclude<UserAvatarProps['size'], undefined>, number> = {
+const SIZE_MAP: Record<Exclude<ProfileCardProps['size'], undefined>, number> = {
 	sm: 28,
 	md: 100,
 	lg: 160,
 }
 
-export function UserPhoto({
-	user,
+export function ProfilePhoto({
+	profile,
 	fallbackTone = 'primary',
 	size = 'sm',
 	includeName = true,
-}: UserAvatarProps) {
-	const { photo } = user
-	const classes = avatarVariants({ size, includeName })
+}: ProfileCardProps) {
+	const { photo } = profile
+	const classes = profileCardVariants({ size, includeName })
 
 	if (photo && 'file' in photo && photo.file instanceof File) {
 		return (

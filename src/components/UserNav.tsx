@@ -5,7 +5,7 @@ import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { paths } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
 import { redirect } from 'next/navigation'
-import UserAvatar from './UserAvatar'
+import ProfileCard from './ProfileCard'
 import { Button } from './ui/button'
 
 export default async function UserNav({ signedIn }: { signedIn: boolean }) {
@@ -43,10 +43,10 @@ export default async function UserNav({ signedIn }: { signedIn: boolean }) {
 	}
 
 	return (
-		<UserAvatar
+		<ProfileCard
 			size="sm"
 			fallbackTone={Math.random() > 0.5 ? 'primary' : 'secondary'}
-			user={profile}
+			profile={profile}
 			includeName={false}
 		/>
 	)

@@ -3,11 +3,13 @@ import { shuffleArray } from '@/utils/arrays'
 import { paths } from '@/utils/urls'
 import Link from 'next/link'
 import NotesGrid from './NotesGrid'
+import ProfilesGrid from './ProfilesGrid'
 import SectionTitle from './SectionTitle'
-import UserAvatar from './UserAvatar'
 import VegetablesStrip from './VegetablesStrip'
 import NoteIcon from './icons/NoteIcon'
 import RainbowIcon from './icons/RainbowIcon'
+import SeedlingIcon from './icons/SeedlingIcon'
+import SparklesIcon from './icons/SparklesIcon'
 import { Button } from './ui/button'
 import { Text } from './ui/text'
 
@@ -84,13 +86,35 @@ export default function HomePage(data: Partial<HomePageData>) {
 			{profiles && profiles.length > 0 && (
 				<section className="mt-36">
 					<SectionTitle Icon={RainbowIcon}>Quem se envolve</SectionTitle>
-					<div className="flex overflow-auto gap-12 mt-10 px-pageX hide-scrollbar">
-						{profiles.map((profile) => (
-							<UserAvatar key={profile.handle} user={profile} size="md" />
-						))}
-					</div>
+					<ProfilesGrid profiles={profiles} />
 				</section>
 			)}
+
+			<section className="my-36 px-pageX text-center md:max-w-lg mx-auto box-content">
+				<SparklesIcon variant="color" className="w-12 inline-block mb-3" />
+				<Text level="h2" as="h2">
+					Gororobas é um espaço colaborativo
+				</Text>
+				<Text>
+					Iríamos adorar receber suas notinhas ou conhecimento sobre plantas e
+					agroecologia{' '}
+				</Text>
+				<div className="flex items-center justify-center gap-3 mt-5">
+					<Button asChild tone="secondary" mode="outline">
+						<Link href={paths.newNote()}>
+							<NoteIcon variant="monochrome" className="w-[1.25em]" /> Enviar
+							sua nota
+						</Link>
+					</Button>
+					<span className="text-muted-foreground">ou</span>
+					<Button asChild>
+						<Link href={paths.newVegetable()}>
+							<SeedlingIcon variant="monochrome" className="w-[1.25em]" />{' '}
+							Enviar um novo vegetal
+						</Link>
+					</Button>
+				</div>
+			</section>
 		</>
 	)
 }

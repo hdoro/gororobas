@@ -1,7 +1,7 @@
 'use client'
 
 import { updateProfileAction } from '@/actions/updateProfile'
-import UserAvatar from '@/components/UserAvatar'
+import ProfileCard from '@/components/ProfileCard'
 import Field from '@/components/forms/Field'
 import HandleInput from '@/components/forms/HandleInput'
 import ImageInput from '@/components/forms/ImageInput'
@@ -193,8 +193,8 @@ function ProfilePreview() {
 					</Text>
 				</div>
 			)}
-			<UserAvatar
-				user={{
+			<ProfileCard
+				profile={{
 					name,
 					location,
 					photo,
