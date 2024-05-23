@@ -1,4 +1,4 @@
-CREATE MIGRATION m1nd3ktvkia6rinlpdr3kvlic6xre476qnc4kvrunzoy23c7dqrb4q
+CREATE MIGRATION m1u4pwqvai5iylfpxt5mw2ptmo7yloxpq2cerwoc7zwdyvdbxd6rbq
     ONTO initial
 {
   CREATE EXTENSION pgcrypto VERSION '1.3';
@@ -106,9 +106,10 @@ CREATE MIGRATION m1nd3ktvkia6rinlpdr3kvlic6xre476qnc4kvrunzoy23c7dqrb4q
       };
   };
   CREATE SCALAR TYPE default::SourceType EXTENDING enum<GOROROBAS, EXTERNAL>;
-  CREATE TYPE default::Source {
+  CREATE TYPE default::Source EXTENDING default::PublicRead, default::UserCanInsert, default::AdminCanDoAnything {
       CREATE MULTI LINK users: default::UserProfile {
-          ON TARGET DELETE DELETE SOURCE;
+          ON SOURCE DELETE ALLOW;
+          ON TARGET DELETE ALLOW;
       };
       CREATE PROPERTY comments: std::json;
       CREATE PROPERTY credits: std::str;
@@ -132,6 +133,7 @@ CREATE MIGRATION m1nd3ktvkia6rinlpdr3kvlic6xre476qnc4kvrunzoy23c7dqrb4q
   CREATE SCALAR TYPE default::TipSubject EXTENDING enum<PLANTIO, CRESCIMENTO, COLHEITA>;
   CREATE TYPE default::VegetableTip EXTENDING default::WithHandle, default::PublicRead, default::Auditable, default::AdminCanDoAnything {
       CREATE MULTI LINK sources: default::Source {
+          ON SOURCE DELETE ALLOW;
           ON TARGET DELETE ALLOW;
       };
       CREATE REQUIRED PROPERTY content: std::json;
@@ -139,6 +141,8 @@ CREATE MIGRATION m1nd3ktvkia6rinlpdr3kvlic6xre476qnc4kvrunzoy23c7dqrb4q
   };
   CREATE TYPE default::VegetableVariety EXTENDING default::WithHandle, default::PublicRead, default::Auditable, default::UserCanInsert, default::AdminCanDoAnything {
       CREATE MULTI LINK photos: default::Image {
+          ON SOURCE DELETE ALLOW;
+          ON TARGET DELETE ALLOW;
           CREATE PROPERTY order_index: std::int16;
       };
       CREATE REQUIRED PROPERTY names: array<std::str>;
@@ -152,9 +156,12 @@ CREATE MIGRATION m1nd3ktvkia6rinlpdr3kvlic6xre476qnc4kvrunzoy23c7dqrb4q
   CREATE SCALAR TYPE default::VegetableWishlistStatus EXTENDING enum<QUERO_CULTIVAR, SEM_INTERESSE, JA_CULTIVEI, ESTOU_CULTIVANDO>;
   CREATE TYPE default::Vegetable EXTENDING default::WithHandle, default::PublicRead, default::Auditable, default::UserCanInsert, default::AdminCanDoAnything {
       CREATE MULTI LINK photos: default::Image {
+          ON SOURCE DELETE ALLOW;
+          ON TARGET DELETE ALLOW;
           CREATE PROPERTY order_index: std::int16;
       };
       CREATE MULTI LINK sources: default::Source {
+          ON SOURCE DELETE ALLOW;
           ON TARGET DELETE ALLOW;
       };
       CREATE MULTI LINK tips: default::VegetableTip {
@@ -270,12 +277,19 @@ CREATE MIGRATION m1nd3ktvkia6rinlpdr3kvlic6xre476qnc4kvrunzoy23c7dqrb4q
   };
   ALTER TYPE default::Image {
       CREATE MULTI LINK sources: default::Source {
+          ON SOURCE DELETE ALLOW;
           ON TARGET DELETE ALLOW;
       };
   };
   ALTER TYPE default::Note {
-      CREATE MULTI LINK related_notes: default::Vegetable;
-      CREATE MULTI LINK related_vegetables: default::Vegetable;
+      CREATE MULTI LINK related_notes: default::Vegetable {
+          ON SOURCE DELETE ALLOW;
+          ON TARGET DELETE ALLOW;
+      };
+      CREATE MULTI LINK related_vegetables: default::Vegetable {
+          ON SOURCE DELETE ALLOW;
+          ON TARGET DELETE ALLOW;
+      };
   };
   ALTER TYPE default::Vegetable {
       CREATE MULTI LINK wishlisted_by := (WITH

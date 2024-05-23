@@ -95,7 +95,7 @@ This project is licensed under the Apache 2.0 License. You can read more about i
 - [x] Encode form value to EdgeDB schema
 - [ ] ~~OrderIndex for Tips, Varieties and Photos~~ - blocked by a bug with edgeql-js (see #stretch)
 - [x] Upload images to Sanity
-- [ ] Send to server, error handling, state management, etc.
+- [x] Send to server, error handling, state management, etc.
 
 ### Editing existing vegetable
 
@@ -112,10 +112,10 @@ This project is licensed under the Apache 2.0 License. You can read more about i
 - [x] Update wishlist
 - [x] Sidebar
 - [x] Query all users that have wishlisted to display on vegetable page
+- [x] Render sources
 - [ ] Photos carousel dialog
 - [ ] Tips carousel dialog
 - [ ] Render associated notes
-- [ ] Render sources
 
 ### Edit user profile
 
@@ -218,3 +218,5 @@ This project is licensed under the Apache 2.0 License. You can read more about i
 - Learn from Michael: https://github.com/mikearnaldi/next-effect/blob/main/app/page.tsx
 - [ ] NoteForm: Allow modifying `published_at`
 - [ ] Edit note - for now, it's a Twitter like thing where you can only send/delete, no edit 😝
+- [ ] RichTextEditor: internal links to other objects WithHandle
+- [ ] Form validation: can we validate the encoded schema instead of fully decoding it? It'd make it slightly faster with images not needing to be processed.

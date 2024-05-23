@@ -6,22 +6,26 @@ export const insertSourcesMutation = e.params(
 	},
 	(params) =>
 		e.for(e.array_unpack(params.sources), (source) =>
-			e.insert(e.Source, {
-				id: e.cast(e.uuid, e.json_get(source, 'id')),
-				credits: e.cast(e.str, e.json_get(source, 'credits')),
-				type: e.cast(e.SourceType, e.json_get(source, 'type')),
-				origin: e.cast(e.str, e.json_get(source, 'origin')),
-				comments: e.cast(e.json, e.json_get(source, 'comments')),
-				users: e.select(e.UserProfile, (user) => ({
-					filter: e.op(
-						user.id,
-						'in',
-						e.array_unpack(
-							e.cast(e.array(e.uuid), e.json_get(source, 'userIds')),
+			e
+				.insert(e.Source, {
+					id: e.cast(e.uuid, e.json_get(source, 'id')),
+					credits: e.cast(e.str, e.json_get(source, 'credits')),
+					type: e.cast(e.SourceType, e.json_get(source, 'type')),
+					origin: e.cast(e.str, e.json_get(source, 'origin')),
+					comments: e.cast(e.json, e.json_get(source, 'comments')),
+					users: e.select(e.UserProfile, (user) => ({
+						filter: e.op(
+							user.id,
+							'in',
+							e.array_unpack(
+								e.cast(e.array(e.uuid), e.json_get(source, 'userIds')),
+							),
 						),
-					),
+					})),
+				})
+				.unlessConflict((source) => ({
+					on: source.id,
 				})),
-			}),
 		),
 )
 

@@ -7,7 +7,7 @@ import VegetableCard from './VegetableCard'
  *
  * I'm worried about performance, so skipping the auto-scrolling as much as I'd like to see it happen.
  */
-export default function AutoScrollingStrip(
+export default function VegetablesStrip(
 	props: PropsWithChildren<{
 		vegetables: VegetableCardData[]
 		offset?: boolean
@@ -23,7 +23,11 @@ export default function AutoScrollingStrip(
 			}}
 		>
 			{props.vegetables.map((vegetable) => (
-				<VegetableCard key={vegetable.handle} vegetable={vegetable} />
+				<VegetableCard
+					key={vegetable.handle}
+					vegetable={vegetable}
+					fixedWidth
+				/>
 			))}
 		</div>
 	)

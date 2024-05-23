@@ -9,6 +9,7 @@ import Field from '@/components/forms/Field'
 import RichTextInput from '@/components/forms/RichTextInput'
 import Carrot from '@/components/icons/Carrot'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
 import { NoteData, type NoteForDB, type NoteInForm } from '@/schemas'
@@ -68,19 +69,17 @@ export default function NoteForm() {
 				className="h-full flex items-center justify-center text-center"
 				aria-live="polite"
 			>
-				<div className="space-y-4">
-					<Text level="h1" as="h1">
-						Nota criada com sucesso!
-					</Text>
-					<Text
-						level="h2"
-						as="p"
-						className="flex justify-center items-center gap-3"
-					>
-						<Carrot className="animate-spin h-6 w-6" /> Te levando pra página da
-						nota...
-					</Text>
-				</div>
+				<Card className="space-y-4 px-5 py-3">
+					<CardHeader>
+						<CardTitle>Nota criada com sucesso!</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<Text className="flex justify-center items-center gap-3">
+							<Carrot className="animate-spin h-6 w-6" /> Te levando pra página
+							da nota...
+						</Text>
+					</CardContent>
+				</Card>
 			</main>
 		)
 	}

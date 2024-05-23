@@ -37,7 +37,6 @@ export default async function UserNav({ signedIn }: { signedIn: boolean }) {
 		),
 	)
 
-	// @TODO auto-create User and UserProfile objects on middleware when logged-in but missing user and/or profile
 	if (!profile) {
 		await runServerEffect(createUserProfile(true))
 		redirect(paths.editProfile())

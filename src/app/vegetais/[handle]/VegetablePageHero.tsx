@@ -31,7 +31,9 @@ export function VegetablePageHero({
 	const mainImage = vegetable.photos?.[0]
 	const { names = [], scientific_names = [] } = vegetable
 
-	// @TODO render credits
+	// @TODO render sources
+	const mainImageAspectRatio =
+		mainImage && getImageDimensions(mainImage)?.aspectRatio
 	const carouselPhotos = [
 		...(vegetable.photos || []).slice(1),
 		...(vegetable.varieties || []).flatMap((v) => v.photos || []),
@@ -42,6 +44,13 @@ export function VegetablePageHero({
 	)
 	const averageAspectRatio = average(aspectRatios)
 
+	/** in pixels */
+	const MAIN_IMAGE_WIDTH = 320
+	// by forcing horizontal/square main image to grow a bit, we allow the carousel to be less horizontally stretched
+	const MAIN_IMAGE_SIZE_INCREASE =
+		mainImageAspectRatio && mainImageAspectRatio > 1 ? 1.3 : 1
+	const maxImageHeight =
+		Math.round(MAIN_IMAGE_WIDTH / averageAspectRatio) * MAIN_IMAGE_SIZE_INCREASE
 	return (
 		<div className="flex-[5] max-w-[53.125rem]">
 			<div className="flex gap-5 items-end justify-between">
@@ -64,14 +73,14 @@ export function VegetablePageHero({
 				<div
 					className="flex flex-col lg:flex-row gap-5 mt-5 overflow-hidden"
 					style={{
-						'--max-height': `${Math.round(20 / averageAspectRatio)}rem`,
+						'--max-height': `${maxImageHeight / 16}rem`,
 					}}
 				>
-					<div className="flex-1 max-w-80 rounded-2xl object-cover relative z-10 max-h-[var(--max-height)]">
+					<div className="flex-1 rounded-2xl object-cover relative z-10 max-h-[80dvh] lg:max-w-80 lg:max-h-[var(--max-height)]">
 						<SanityImage
 							image={mainImage}
 							maxWidth={320}
-							className="h-full w-full rounded-2xl object-cover relative z-10 max-h-[var(--max-height)]"
+							className="h-full w-full rounded-2xl object-cover relative z-10 max-h-[inherit]"
 							fetchPriority="high"
 							loading="eager"
 						/>
@@ -83,7 +92,7 @@ export function VegetablePageHero({
 					</div>
 					{carouselPhotos.length > 0 && (
 						<Carousel
-							className={'flex-1 max-h-[var(--max-height)]'}
+							className={'flex-1 max-h-[80dvh] lg:max-h-[var(--max-height)]'}
 							opts={{
 								loop: true,
 							}}
@@ -99,7 +108,7 @@ export function VegetablePageHero({
 												image={photo}
 												maxWidth={520}
 												className={
-													'h-full w-auto object-contain object-center max-h-[var(--max-height)]'
+													'h-full w-auto object-contain object-center max-h-[80dvh] lg:max-h-[var(--max-height)]'
 												}
 											/>
 											{photo.label && (

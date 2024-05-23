@@ -1,8 +1,8 @@
+import { SOURCE_CODE_URL } from '@/utils/config'
 import { paths } from '@/utils/urls'
+import { GithubIcon } from 'lucide-react'
 import Link from 'next/link'
 import GororobasLogo from './icons/GororobasLogo'
-import { SOURCE_CODE_URL } from '@/utils/config'
-import { GithubIcon } from 'lucide-react'
 
 const FOOTER_LINKS = [
 	{ href: paths.vegetablesIndex(), text: 'Vegetais' },

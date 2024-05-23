@@ -50,6 +50,10 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 		const allSources = [
 			...(input.tips || []).flatMap((tip) => tip?.sources || []),
 			...(input.photos || []).flatMap((photo) => photo?.sources || []),
+			...(input.varieties || []).flatMap(
+				(variety) =>
+					variety?.photos?.flatMap((photo) => photo?.sources || []) || [],
+			),
 			...(input.sources || []),
 		]
 		if (allSources.length > 0) {

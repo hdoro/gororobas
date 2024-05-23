@@ -2,12 +2,13 @@ import type { HomePageData } from '@/queries'
 import { shuffleArray } from '@/utils/arrays'
 import { paths } from '@/utils/urls'
 import Link from 'next/link'
-import AutoScrollingStrip from './AutoScrollingStrip'
 import NotesGrid from './NotesGrid'
 import SectionTitle from './SectionTitle'
 import UserAvatar from './UserAvatar'
+import VegetablesStrip from './VegetablesStrip'
 import NoteIcon from './icons/NoteIcon'
 import RainbowIcon from './icons/RainbowIcon'
+import { Button } from './ui/button'
 import { Text } from './ui/text'
 
 export default function HomePage(data: Partial<HomePageData>) {
@@ -35,9 +36,9 @@ export default function HomePage(data: Partial<HomePageData>) {
 			{featured_vegetables && featured_vegetables.length > 0 && (
 				<>
 					<section className="overflow-x-hidden space-y-9 -ml-[calc(var(--vegetable-card-width)_/_2)]">
-						<AutoScrollingStrip vegetables={featured_vegetables.slice(0, 6)} />
+						<VegetablesStrip vegetables={featured_vegetables.slice(0, 6)} />
 						{featured_vegetables.length > 6 && (
-							<AutoScrollingStrip
+							<VegetablesStrip
 								vegetables={featured_vegetables.slice(6)}
 								offset
 							/>
@@ -55,13 +56,29 @@ export default function HomePage(data: Partial<HomePageData>) {
 			)}
 			{notes && notes.length > 0 && (
 				<section className="mt-36">
-					<SectionTitle Icon={NoteIcon}>
+					<SectionTitle
+						Icon={NoteIcon}
+						CTA={
+							<Button asChild>
+								<Link href={paths.newNote()}>Enviar sua nota</Link>
+							</Button>
+						}
+					>
 						Aprendizados e experimentos
 					</SectionTitle>
 					<Text level="h3" className="px-pageX mx-10 font-normal">
 						Na cozinha, no plantio e no sacolão
 					</Text>
 					<NotesGrid notes={notes} />
+
+					<div className="mt-8 text-center">
+						<Link
+							href={paths.notesIndex()}
+							className="text-primary-700 underline font-medium text-xl"
+						>
+							Todas as notas
+						</Link>
+					</div>
 				</section>
 			)}
 			{profiles && profiles.length > 0 && (

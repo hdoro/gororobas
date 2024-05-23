@@ -62,9 +62,9 @@ const TIP_SUBJECT_MAP: Record<
 	plantio: 'PLANTIO',
 }
 
-function sanitySourcesToEdgeDB(
-	sources: Required<SanityVegetable>['photos'][number]['sources'],
-): SourceForDB[] {
+type SanitySources = Required<SanityVegetable>['photos'][number]['sources']
+
+function sanitySourcesToEdgeDB(sources: SanitySources): SourceForDB[] {
 	return (sources || []).flatMap((source) => {
 		const sourceType = SOURCE_MAP[source._type]
 		if (!sourceType) return []
@@ -220,7 +220,19 @@ async function main() {
 				}
 			}),
 			friends: vegetable.friends || [],
-			sources: sanitySourcesToEdgeDB(vegetable.sources as any),
+			sources: sanitySourcesToEdgeDB(
+				vegetable.sources?.map(
+					(source) =>
+						({
+							_key: source._key,
+							_type: 'source.external',
+							credits: [source.title, source.credits]
+								.filter(Boolean)
+								.join(' - '),
+							source: source.url as string,
+						}) satisfies Exclude<SanitySources, undefined>[number],
+				),
+			),
 		} satisfies VegetableForDB
 
 		return formatted

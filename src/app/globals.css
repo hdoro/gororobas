@@ -52,7 +52,7 @@
     --radius: 0.5rem;
 
     --page-padding-x: 1rem;
-    --page-padding-y: 2rem;
+    --page-padding-y: 1rem;
 
     --vegetable-card-width: 15.625rem;
     --note-card-width: 23.125rem;
@@ -78,21 +78,20 @@
 @media (min-width: 768px) {
   :root {
     --page-padding-x: 2rem;
-    --page-padding-y: 3rem;
+    --page-padding-y: 2rem;
   }
 }
 
 @media (min-width: 1280px) {
   :root {
     --page-padding-x: 5rem;
-    --page-padding-y: 5rem;
+    --page-padding-y: 3rem;
   }
 }
 
 @media (min-width: 1440px) {
   :root {
     --page-padding-x: 7rem;
-    --page-padding-y: 7rem;
   }
 }
 

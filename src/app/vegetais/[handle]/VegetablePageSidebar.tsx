@@ -12,8 +12,12 @@ import WishlistedBy from './WishlistedBy'
 
 export default function VegetablePageSidebar({
 	vegetable,
+	hasExternalSources,
+	hasInternalSources,
 }: {
 	vegetable: VegetablePageData
+	hasExternalSources: boolean
+	hasInternalSources: boolean
 }) {
 	const links = [
 		{
@@ -37,14 +41,22 @@ export default function VegetablePageSidebar({
 		},
 		vegetable.friends &&
 			vegetable.friends.length > 0 && {
-				label: 'Amizades',
+				label: 'Amizades e consórcios',
 				href: '#amizades',
 			},
+		hasExternalSources && {
+			label: 'Fontes e recursos',
+			href: '#fontes',
+		},
+		hasInternalSources && {
+			label: 'Quem contribuiu',
+			href: '#contribuintes',
+		},
 		// @TODO: notas
 	].flatMap((link) => link || [])
 
 	return (
-		<div className="flex-1">
+		<div className="flex-1 lg:sticky lg:top-2">
 			<nav aria-label="Tabela de conteúdo">
 				{links.map((link, index) => (
 					<AnchorLink

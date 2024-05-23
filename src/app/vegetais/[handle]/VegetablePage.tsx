@@ -1,11 +1,14 @@
 import { SanityImage } from '@/components/SanityImage'
 import SectionTitle from '@/components/SectionTitle'
-import VegetableCard from '@/components/VegetableCard'
+import SourcesGrid from '@/components/SourcesGrid'
+import VegetablesGrid from '@/components/VegetablesGrid'
 import BulbIcon from '@/components/icons/BulbIcon'
 import PotIcon from '@/components/icons/PotIcon'
+import QuoteIcon from '@/components/icons/QuoteIcon'
 import RainbowIcon from '@/components/icons/RainbowIcon'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import ShovelIcon from '@/components/icons/ShovelIcon'
+import SparklesIcon from '@/components/icons/SparklesIcon'
 import VegetableFriendsIcon from '@/components/icons/VegetableFriendsIcon'
 import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Text } from '@/components/ui/text'
@@ -25,11 +28,50 @@ export default function VegetablePage({
 	const { names = [] } = vegetable
 
 	const friends = vegetable.friends || []
+
+	const allSources = [
+		...(vegetable.tips || []).flatMap((tip) => tip?.sources || []),
+		...(vegetable.photos || []).flatMap((photo) => photo?.sources || []),
+		...(vegetable.varieties || []).flatMap(
+			(variety) =>
+				variety?.photos?.flatMap((photo) => photo?.sources || []) || [],
+		),
+		...(vegetable.sources || []),
+	]
+	const externalSources = allSources.filter(
+		(source) => source?.type === 'EXTERNAL',
+	)
+	const internalSources = allSources.flatMap((source, index) => {
+		if (source?.type !== 'GOROROBAS') return []
+
+		return {
+			...source,
+			// de-duplicate users that show up in multiple sources
+			users: source.users.filter(
+				(user) =>
+					!allSources
+						.slice(index + 1)
+						.some(
+							(s) =>
+								s.type === 'GOROROBAS' &&
+								s.users.some((u) => u.handle === user.handle),
+						),
+			),
+		}
+	})
+
 	return (
 		<main className="py-12">
-			<div className="flex gap-[4.5rem] px-pageX" id="visao-geral">
+			<div
+				className="flex flex-col lg:flex-row lg:items-start gap-[4.5rem] px-pageX relative"
+				id="visao-geral"
+			>
 				<VegetablePageHero vegetable={vegetable} />
-				<VegetablePageSidebar vegetable={vegetable} />
+				<VegetablePageSidebar
+					vegetable={vegetable}
+					hasExternalSources={externalSources.length > 0}
+					hasInternalSources={internalSources.length > 0}
+				/>
 			</div>
 			{vegetable.tips && vegetable.tips.length > 1 && (
 				<>
@@ -86,11 +128,38 @@ export default function VegetablePage({
 					<SectionTitle Icon={VegetableFriendsIcon}>
 						Amigues d{gender.suffix(vegetable.gender || 'NEUTRO')} {names[0]}
 					</SectionTitle>
-					<div className="overflow-x-auto flex gap-x-9 gap-y-7 mt-3 px-pageX hide-scrollbar">
-						{friends.map((friend) => (
-							<VegetableCard key={friend.handle} vegetable={friend} />
-						))}
-					</div>
+					<Text level="h3" className="px-pageX mx-10 font-normal">
+						Plantas que gostam de serem plantadas e estarem próximas a
+						{gender.suffix(vegetable.gender || 'NEUTRO')} {names[0]}
+					</Text>
+					<VegetablesGrid vegetables={friends} className="mt-6" />
+				</section>
+			)}
+			{externalSources.length > 0 && (
+				<section className="my-36" id="fontes">
+					<SectionTitle Icon={QuoteIcon}>Fontes e recursos</SectionTitle>
+					<Text level="h3" className="px-pageX mx-10 font-normal">
+						Materiais que embasaram essas informações e/ou fontes de algumas das
+						fotos mostradas aqui
+					</Text>
+					<SourcesGrid
+						sources={externalSources}
+						className="px-pageX mx-10 mt-10"
+					/>
+				</section>
+			)}
+			{internalSources.length > 0 && (
+				<section className="my-36" id="contribuintes">
+					<SectionTitle Icon={SparklesIcon}>
+						Pessoas que contribuiram
+					</SectionTitle>
+					<Text level="h3" className="px-pageX mx-10 font-normal">
+						Quem aqui no Gororobas contribuiu com fotos e/ou dicas
+					</Text>
+					<SourcesGrid
+						sources={internalSources}
+						className="px-pageX mx-10 mt-10"
+					/>
 				</section>
 			)}
 			{/* @TODO */}

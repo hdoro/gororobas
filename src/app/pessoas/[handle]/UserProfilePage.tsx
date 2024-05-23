@@ -1,7 +1,7 @@
 import NotesGrid from '@/components/NotesGrid'
 import SectionTitle from '@/components/SectionTitle'
 import { UserPhoto } from '@/components/UserAvatar'
-import VegetableCard from '@/components/VegetableCard'
+import VegetablesGrid from '@/components/VegetablesGrid'
 import NoteIcon from '@/components/icons/NoteIcon'
 import RainbowIcon from '@/components/icons/RainbowIcon'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
@@ -97,11 +97,10 @@ export default function UserProfilePage({
 					<SectionTitle Icon={RainbowIcon}>
 						{profile.is_owner ? 'Sua listinha de desejos' : 'Quer plantar'}
 					</SectionTitle>
-					<div className="overflow-x-auto flex gap-x-9 gap-y-7 mt-3 px-pageX">
-						{desiredVegetables.map((vegetable) => (
-							<VegetableCard key={vegetable.handle} vegetable={vegetable} />
-						))}
-					</div>
+					<VegetablesGrid
+						vegetables={desiredVegetables}
+						className="mt-3 px-pageX"
+					/>
 				</section>
 			)}
 
@@ -110,11 +109,10 @@ export default function UserProfilePage({
 					<SectionTitle Icon={SeedlingIcon}>
 						{profile.is_owner ? 'Você planta' : `${profile.name} planta`}
 					</SectionTitle>
-					<div className="overflow-x-auto flex gap-x-9 gap-y-7 mt-3 px-pageX">
-						{plantedVegetables.map((vegetable) => (
-							<VegetableCard key={vegetable.handle} vegetable={vegetable} />
-						))}
-					</div>
+					<VegetablesGrid
+						vegetables={plantedVegetables}
+						className="mt-3 px-pageX"
+					/>
 				</section>
 			)}
 		</main>

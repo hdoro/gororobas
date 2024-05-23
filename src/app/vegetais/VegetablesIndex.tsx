@@ -1,6 +1,7 @@
 'use client'
 
 import VegetableCard from '@/components/VegetableCard'
+import { VegetablesGridWrapper } from '@/components/VegetablesGrid'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
 import Carrot from '@/components/icons/Carrot'
@@ -100,13 +101,7 @@ export default function VegetablesIndex() {
 				<Text level="h1" as="h1">
 					Vegetais
 				</Text>
-				<div
-					className="grid gap-9 relative"
-					style={{
-						gridTemplateColumns:
-							'repeat(auto-fill, var(--vegetable-card-width))',
-					}}
-				>
+				<VegetablesGridWrapper>
 					{isFetching && !isFetchingNextPage && (
 						<div className="absolute inset-0 bg-background bg-opacity-50 flex items-center justify-center gap-3">
 							<Carrot className="animate-spin h-6 w-6" />
@@ -126,7 +121,7 @@ export default function VegetablesIndex() {
 							Carregando...
 						</div>
 					)}
-				</div>
+				</VegetablesGridWrapper>
 				{/* EMPTY STATE */}
 				{isEmpty && (
 					<Card aria-live="polite">

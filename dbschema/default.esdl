@@ -143,13 +143,14 @@ module default {
     );
   }
 
-  type Source {
+  type Source extending PublicRead, UserCanInsert, AdminCanDoAnything {
     required type: SourceType;
     credits: str;
     origin: str;
     comments: json;
     multi users: UserProfile {
-      on target delete delete source;
+      on target delete allow;
+      on source delete allow;
     };
   }
 
@@ -186,6 +187,7 @@ module default {
 
     multi sources: Source {
       on target delete allow;
+      on source delete allow;
     }
   }
 
@@ -193,6 +195,8 @@ module default {
     required names: array<str>;
     multi photos: Image {
       order_index: int16;
+      on target delete allow;
+      on source delete allow;
     };
   }
 
@@ -202,6 +206,7 @@ module default {
 
     multi sources: Source {
       on target delete allow;
+      on source delete allow;
     };
   }
 
@@ -223,6 +228,8 @@ module default {
 
     multi photos: Image {
       order_index: int16;
+      on target delete allow;
+      on source delete allow;
     };
 
     multi varieties: VegetableVariety {
@@ -245,6 +252,7 @@ module default {
 
     multi sources: Source {
       on target delete allow;
+      on source delete allow;
     };
 
     # Computed
@@ -301,8 +309,14 @@ module default {
     body: json;
 
     # Related with AI
-    multi related_vegetables: Vegetable;
-    multi related_notes: Vegetable;
+    multi related_vegetables: Vegetable {
+      on target delete allow;
+      on source delete allow;
+    };
+    multi related_notes: Vegetable {
+      on target delete allow;
+      on source delete allow;
+    };
 
     access policy visible_if_public
       allow select

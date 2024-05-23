@@ -10,20 +10,35 @@ import type {
 } from './edgedb.interfaces'
 import { NOTES_PER_PAGE, VEGETABLES_PER_PAGE } from './utils/config'
 
-const SOURCE_FIELDS = {
+const sourceForRendering = e.shape(e.Source, () => ({
+	id: true,
 	type: true,
 	origin: true,
 	credits: true,
-	users: true,
-} as const
+	users: {
+		name: true,
+		handle: true,
+		photo: {
+			sanity_id: true,
+			hotspot: true,
+			crop: true,
+		},
+		location: true,
+	},
+}))
 
-const imageFields = e.shape(e.Image, (image) => ({
+export type SourceCardData = Exclude<
+	$infer<typeof sourceForRendering>,
+	null
+>[number]
+
+const imageForRendering = e.shape(e.Image, (image) => ({
 	id: true,
 	sanity_id: true,
 	hotspot: true,
 	crop: true,
 	label: true,
-	sources: SOURCE_FIELDS,
+	sources: sourceForRendering,
 }))
 
 const vegetableForCard = e.shape(e.Vegetable, (vegetable) => ({
@@ -31,7 +46,7 @@ const vegetableForCard = e.shape(e.Vegetable, (vegetable) => ({
 	handle: true,
 	name: vegetable.names.index(0),
 	photos: (image) => ({
-		...imageFields(image),
+		...imageForRendering(image),
 
 		order_by: {
 			expression: image['@order_index'],
@@ -49,7 +64,7 @@ export type VegetableCardData = Exclude<
 const userProfileForAvatar = e.shape(e.UserProfile, () => ({
 	name: true,
 	handle: true,
-	photo: imageFields,
+	photo: imageForRendering,
 	location: true,
 }))
 
@@ -96,7 +111,7 @@ export const vegetablePageQuery = e.params(
 			temperature_max: true,
 			content: true,
 			photos: (image) => ({
-				...imageFields(image),
+				...imageForRendering(image),
 
 				order_by: {
 					expression: image['@order_index'],
@@ -108,7 +123,7 @@ export const vegetablePageQuery = e.params(
 				handle: true,
 				names: true,
 				photos: (image) => ({
-					...imageFields(image),
+					...imageForRendering(image),
 
 					order_by: {
 						expression: image['@order_index'],
@@ -127,7 +142,7 @@ export const vegetablePageQuery = e.params(
 				handle: true,
 				subjects: true,
 				content: true,
-				sources: SOURCE_FIELDS,
+				sources: sourceForRendering,
 
 				order_by: {
 					expression: tip['@order_index'],
@@ -136,7 +151,7 @@ export const vegetablePageQuery = e.params(
 				},
 			}),
 			friends: vegetableForCard,
-			sources: SOURCE_FIELDS,
+			sources: sourceForRendering,
 		})),
 )
 
@@ -203,7 +218,7 @@ export const vegetablesForReferenceQuery = e.select(
 		id: true,
 		label: vegetable.names.index(0),
 		photos: (image) => ({
-			...imageFields(image),
+			...imageForRendering(image),
 
 			limit: 1,
 			order_by: {
@@ -223,7 +238,7 @@ export const profilePageQuery = e.select(e.UserProfile, (profile) => ({
 	handle: true,
 	location: true,
 	bio: true,
-	photo: imageFields,
+	photo: imageForRendering,
 }))
 
 export type EditProfilePageData = Exclude<$infer<typeof profilePageQuery>, null>
@@ -232,7 +247,7 @@ export const profileForNavQuery = e.select(e.UserProfile, (profile) => ({
 	filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
 
 	handle: true,
-	photo: imageFields,
+	photo: imageForRendering,
 }))
 
 export const homePageQuery = e.select({

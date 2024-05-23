@@ -1,5 +1,4 @@
 'use client'
-import { cn } from '@/utils/cn'
 import { BubbleMenu, type Editor } from '@tiptap/react'
 import {
 	BoldIcon,
