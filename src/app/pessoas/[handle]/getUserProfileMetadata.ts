@@ -46,6 +46,9 @@ export default function getUserProfileMetadata(
 	return {
 		title: `${name} | Gororobas`,
 		description: truncate(description, 240),
+		alternates: {
+			canonical: pathToAbsUrl(paths.userProfile(profile.handle)),
+		},
 		// @ts-expect-error profile can have a non-image
 		openGraph: {
 			type: 'profile',

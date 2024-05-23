@@ -26,10 +26,10 @@ export default function UserProfilePage({
 			? userWishlist.vegetable
 			: [],
 	)
-	console.log(profile.wishlist)
+
 	return (
-		<main className="px-pageX py-10">
-			<div className="flex items-start flex-wrap gap-6">
+		<main className="py-10">
+			<div className="flex items-start flex-wrap gap-6 px-pageX">
 				<UserPhoto user={profile} size="lg" />
 				<div className="self-center">
 					<div className="flex flex-wrap gap-5 items-center">
@@ -63,16 +63,34 @@ export default function UserProfilePage({
 				</div>
 			</div>
 
-			{profile.notes && profile.notes.length > 0 && (
-				<section className="mt-16">
-					<SectionTitle Icon={NoteIcon}>
-						Notinhas que{' '}
-						{profile.is_owner ? 'você' : truncate(profile.name, 20)}{' '}
-						compartilhou
-					</SectionTitle>
+			<section className="mt-16">
+				<SectionTitle
+					Icon={NoteIcon}
+					CTA={
+						profile.is_owner ? (
+							<Button asChild>
+								<Link href={paths.newNote()}>Enviar mais uma nota</Link>
+							</Button>
+						) : null
+					}
+				>
+					Notinhas que {profile.is_owner ? 'você' : truncate(profile.name, 20)}{' '}
+					compartilhou
+				</SectionTitle>
+				{profile.notes && profile.notes.length > 0 ? (
 					<NotesGrid notes={profile.notes} />
-				</section>
-			)}
+				) : (
+					<Text
+						level="h3"
+						as="p"
+						className="mt-3 px-pageX mx-10 text-muted-foreground"
+					>
+						{profile.is_owner
+							? 'Compartilhe suas experiências e aprendizados com a comunidade'
+							: `${profile.name} ainda não compartilhou nenhuma notinha`}
+					</Text>
+				)}
+			</section>
 
 			{desiredVegetables.length > 0 && (
 				<section className="mt-24" id="amizades">

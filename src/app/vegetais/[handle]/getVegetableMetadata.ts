@@ -1,6 +1,7 @@
 import type { VegetablePageData } from '@/queries'
 import { imageBuilder } from '@/utils/imageBuilder'
 import { gender } from '@/utils/strings'
+import { pathToAbsUrl, paths } from '@/utils/urls'
 import type { Metadata } from 'next'
 
 export default function getVegetableMetadata(
@@ -24,6 +25,9 @@ export default function getVegetableMetadata(
 	return {
 		title: `${names[0]} na Agroecologia | Gororobas`,
 		description,
+		alternates: {
+			canonical: pathToAbsUrl(paths.vegetable(vegetable.handle)),
+		},
 		openGraph: {
 			images: mainImage && [
 				{
