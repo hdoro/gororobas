@@ -24,6 +24,9 @@
 			},
 			"suspicious": {
 				"noExplicitAny": "warn"
+			},
+			"correctness": {
+				"noUnusedImports": "error"
 			}
 		},
 		"ignore": ["src/playground/**/*"]

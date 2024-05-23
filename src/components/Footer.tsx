@@ -1,11 +1,12 @@
 import { paths } from '@/utils/urls'
 import Link from 'next/link'
 import GororobasLogo from './icons/GororobasLogo'
+import { SOURCE_CODE_URL } from '@/utils/config'
+import { GithubIcon } from 'lucide-react'
 
 const FOOTER_LINKS = [
 	{ href: paths.vegetablesIndex(), text: 'Vegetais' },
 	{ href: paths.notesIndex(), text: 'Notas' },
-	{ href: '/sobre', text: 'Sobre' },
 ]
 
 export default function Footer() {
@@ -17,7 +18,10 @@ export default function Footer() {
 			<Link href={paths.home()} rel="home" title="Página inicial">
 				<GororobasLogo />
 			</Link>
-			<nav aria-label="Rodapé" className="flex items-center gap-10">
+			<nav
+				aria-label="Rodapé"
+				className="flex flex-wrap justify-center items-center gap-10"
+			>
 				{FOOTER_LINKS.map((link) => (
 					<Link
 						key={link.href}
@@ -27,6 +31,15 @@ export default function Footer() {
 						{link.text}
 					</Link>
 				))}
+				<a
+					className="text-lg text-primary-800 inline-flex gap-2"
+					href={SOURCE_CODE_URL}
+					rel="noopener noreferrer"
+					target="_blank"
+				>
+					<GithubIcon />
+					Código fonte
+				</a>
 			</nav>
 		</footer>
 	)

@@ -6,10 +6,11 @@ import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
 import { Config, Effect, FiberRef, Layer, LogLevel, Secret } from 'effect'
 
+// `nested` means secrets are prefixed by `HONEYCOMB_`
 const HoneycombConfig = Config.nested('HONEYCOMB')(
 	Config.all({
-		apiKey: Config.secret('HONEYCOMB_API_KEY'),
-		serviceName: Config.secret('HONEYCOMB_DATASET'),
+		apiKey: Config.secret('API_KEY'),
+		serviceName: Config.secret('DATASET'),
 	}),
 )
 

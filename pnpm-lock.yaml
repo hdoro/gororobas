@@ -22,22 +22,22 @@ importers:
         version: 3.2.2(react@18.3.1)
       '@edgedb/auth-nextjs':
         specifier: ^0.3.1
-        version: 0.3.1(edgedb@1.6.0-canary.20240510T201054)(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        version: 0.3.1(edgedb@1.5.7)(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@effect/experimental':
-        specifier: ^0.16.12
-        version: 0.16.12(@effect/platform-node@0.49.12(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1))(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)(ws@8.17.0)
+        specifier: ^0.16.15
+        version: 0.16.15(@effect/platform-node@0.50.0(@effect/platform@0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4))(effect@3.2.4))(@effect/platform@0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4))(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4)(ws@8.17.0)
       '@effect/opentelemetry':
-        specifier: ^0.34.8
-        version: 0.34.8(@opentelemetry/api@1.8.0)(@opentelemetry/resources@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-metrics@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-node@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/semantic-conventions@1.24.1)(effect@3.2.1)
+        specifier: ^0.34.11
+        version: 0.34.11(@opentelemetry/api@1.8.0)(@opentelemetry/resources@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-metrics@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-node@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/semantic-conventions@1.24.1)(effect@3.2.4)
       '@effect/platform-node':
-        specifier: ^0.49.12
-        version: 0.49.12(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1)
+        specifier: ^0.50.0
+        version: 0.50.0(@effect/platform@0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4))(effect@3.2.4)
       '@effect/schema':
-        specifier: ^0.67.9
-        version: 0.67.9(effect@3.2.1)
+        specifier: ^0.67.12
+        version: 0.67.12(effect@3.2.4)
       '@hookform/resolvers':
-        specifier: ^3.4.0
-        version: 3.4.0(react-hook-form@7.51.4(react@18.3.1))
+        specifier: ^3.4.2
+        version: 3.4.2(react-hook-form@7.51.5(react@18.3.1))
       '@opentelemetry/exporter-metrics-otlp-http':
         specifier: ^0.51.1
         version: 0.51.1(@opentelemetry/api@1.8.0)
@@ -59,9 +59,6 @@ importers:
       '@opentelemetry/sdk-trace-node':
         specifier: ^1.24.1
         version: 1.24.1(@opentelemetry/api@1.8.0)
-      '@portabletext/to-html':
-        specifier: ^2.0.13
-        version: 2.0.13
       '@radix-ui/react-checkbox':
         specifier: ^1.0.4
         version: 1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -159,11 +156,11 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       edgedb:
-        specifier: 1.6.0-canary.20240510T201054
-        version: 1.6.0-canary.20240510T201054
+        specifier: ^1.5.7
+        version: 1.5.7
       effect:
-        specifier: ^3.2.1
-        version: 3.2.1
+        specifier: ^3.2.4
+        version: 3.2.4
       embla-carousel-autoplay:
         specifier: ^8.1.3
         version: 8.1.3(embla-carousel@8.1.3)
@@ -173,15 +170,12 @@ importers:
       embla-carousel-wheel-gestures:
         specifier: 8.0.0-rc05
         version: 8.0.0-rc05(embla-carousel@8.1.3)
-      jsdom:
-        specifier: ^24.0.0
-        version: 24.0.0
       json-diff-ts:
         specifier: ^4.0.1
         version: 4.0.1
       lucide-react:
-        specifier: ^0.378.0
-        version: 0.378.0(react@18.3.1)
+        specifier: ^0.379.0
+        version: 0.379.0(react@18.3.1)
       next:
         specifier: ^14.2.3
         version: 14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -195,8 +189,8 @@ importers:
         specifier: ^14.2.3
         version: 14.2.3(react@18.3.1)
       react-hook-form:
-        specifier: ^7.51.4
-        version: 7.51.4(react@18.3.1)
+        specifier: ^7.51.5
+        version: 7.51.5(react@18.3.1)
       react-intersection-observer:
         specifier: ^9.10.2
         version: 9.10.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -220,11 +214,14 @@ importers:
         specifier: ^1.7.3
         version: 1.7.3
       '@edgedb/generate':
-        specifier: 0.6.0-canary.20240510T202700
-        version: 0.6.0-canary.20240510T202700(edgedb@1.6.0-canary.20240510T201054)
+        specifier: 0.6.0-canary.20240521T175824
+        version: 0.6.0-canary.20240521T175824(edgedb@1.5.7)
+      '@portabletext/to-html':
+        specifier: ^2.0.13
+        version: 2.0.13
       '@sanity/types':
-        specifier: ^3.42.1
-        version: 3.42.1
+        specifier: ^3.43.0
+        version: 3.43.0
       '@types/inquirer':
         specifier: ^9.0.7
         version: 9.0.7
@@ -252,9 +249,12 @@ importers:
       inquirer:
         specifier: ^9.2.22
         version: 9.2.22
+      jsdom:
+        specifier: ^24.0.0
+        version: 24.0.0
       lint-staged:
-        specifier: ^15.2.2
-        version: 15.2.2
+        specifier: ^15.2.4
+        version: 15.2.4
       postcss:
         specifier: ^8.4.38
         version: 8.4.38
@@ -262,8 +262,8 @@ importers:
         specifier: ^3.4.3
         version: 3.4.3
       typescript:
-        specifier: 5.5.0-dev.20240514
-        version: 5.5.0-dev.20240514
+        specifier: 5.5.0-dev.20240523
+        version: 5.5.0-dev.20240523
 
 packages:
 
@@ -368,20 +368,20 @@ packages:
       next: '>=13.5.6 <15.0.0'
       react: ^18.2.0
 
-  '@edgedb/generate@0.6.0-canary.20240510T202700':
-    resolution: {integrity: sha512-PlaAIrtjqzdmv4cDf4vG9CcZhdc1HZI89HvwP2DXQS/g/T9dJaWe2W5cSCmvqxPcDi2ihObQPE93mAttjGlInw==}
+  '@edgedb/generate@0.6.0-canary.20240521T175824':
+    resolution: {integrity: sha512-VVNWQrkYUcc9Vl0dA8lZLbpURe5nkNFK2CgPbYVcVt1gQ4tm9zDBFaxmk36Aevycz6KPQYfNFT+8Iccs5bD9UA==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
       edgedb: ^1.5.0
 
-  '@effect/experimental@0.16.12':
-    resolution: {integrity: sha512-H0tPIDXk3T4hwwb2gUVoE0Ph0hAaKwP2g9qNUB5qx0NwR81K7t4FgMolriaT/Gk9Jt4ciNpSad2sT2WUQfbYSw==}
+  '@effect/experimental@0.16.15':
+    resolution: {integrity: sha512-WSJGGdLAzUrJHuBoWNEyyvhvNgQgBqS3SsrLE1Np+PrgAuWvGoGtsT1wLysBEimNwfdjcqUP84TtN41c5CEwPw==}
     peerDependencies:
-      '@effect/platform': ^0.53.12
-      '@effect/platform-node': ^0.49.12
-      '@effect/schema': ^0.67.9
-      effect: ^3.2.1
+      '@effect/platform': ^0.54.0
+      '@effect/platform-node': ^0.50.0
+      '@effect/schema': ^0.67.12
+      effect: ^3.2.4
       ioredis: ^5
       lmdb: ^3
       ws: ^8
@@ -395,8 +395,8 @@ packages:
       ws:
         optional: true
 
-  '@effect/opentelemetry@0.34.8':
-    resolution: {integrity: sha512-/tFAltkcUNvPfEkZ2LFraqMLhTZYMydPors2QRzqMaDdQtm80V+b4e9TxnuMSw/gq9kfkS4O2eQV6Bz617d06A==}
+  '@effect/opentelemetry@0.34.11':
+    resolution: {integrity: sha512-nMd4Rl5YfXm5I9ToqZGuhiRxoNp+3uEQM6DxX5FOHTps3kwlLiJYpKd2eYzVyj0ud328KkFHNxiBs/GCp2ogRw==}
     peerDependencies:
       '@opentelemetry/api': ^1.6
       '@opentelemetry/resources': ^1.22
@@ -405,7 +405,7 @@ packages:
       '@opentelemetry/sdk-trace-node': ^1.22
       '@opentelemetry/sdk-trace-web': ^1.22
       '@opentelemetry/semantic-conventions': ^1.24.1
-      effect: ^3.2.1
+      effect: ^3.2.4
     peerDependenciesMeta:
       '@opentelemetry/sdk-metrics':
         optional: true
@@ -416,17 +416,17 @@ packages:
       '@opentelemetry/sdk-trace-web':
         optional: true
 
-  '@effect/platform-node-shared@0.4.31':
-    resolution: {integrity: sha512-HTgI5gvhDUCbKVWdCJv6Gro//EH8ibvEqzMuj8Acno5CQPXAYRBaNKshcj3EuqiqAHjLlBrKM7Kv15wLaBuGRw==}
+  '@effect/platform-node-shared@0.5.0':
+    resolution: {integrity: sha512-vGyzZ7AE6jJhJUG98tQlfnG5qo2/f4LMqFdvEguh6azH6pjuqyeg5DCmMkMpzF2rVMPaQi1YyGHpeW8OEVyP9g==}
     peerDependencies:
-      '@effect/platform': ^0.53.12
-      effect: ^3.2.1
+      '@effect/platform': ^0.54.0
+      effect: ^3.2.4
 
-  '@effect/platform-node@0.49.12':
-    resolution: {integrity: sha512-W0XcIvrVpRGr3y3TrOJDUz4nWMEAM/rpVh2Z6k0UbrZ5yVyqkg/5NaY2pH4eFhT0cm5yk+XyY9zHMbhSGeaVhA==}
+  '@effect/platform-node@0.50.0':
+    resolution: {integrity: sha512-SUf2GgI+edLsc6cxhEFGrMWIm8tFLJc+kcKLPekPYbfayJssigse5OSOhU7e8dhKOB/psDU1m8zj7+UpTzEj6g==}
     peerDependencies:
-      '@effect/platform': ^0.53.12
-      effect: ^3.2.1
+      '@effect/platform': ^0.54.0
+      effect: ^3.2.4
 
   '@effect/platform@0.53.8':
     resolution: {integrity: sha512-TUn2oxFIOFH1ObdeCxtGA/8BYjUtdhppbw9IcYTHkAKXE8Y8DIjNCzgs+Z7k4Oj7ZD36uqTQvVQumlmTldHhfw==}
@@ -434,10 +434,10 @@ packages:
       '@effect/schema': ^0.67.5
       effect: ^3.1.5
 
-  '@effect/schema@0.67.9':
-    resolution: {integrity: sha512-bly2PIIZGA9lhahCu+RuLHIS04H9sTYaD7Rkb+Jz2lhEHVWtzDO0hNyfigGJ7M1MDlaC3LKA9BY1uLKQmBnyRg==}
+  '@effect/schema@0.67.12':
+    resolution: {integrity: sha512-kQ+VJi/oAqfV+R/UU8KbA/2NRhjOsqfIhVFQ4H4Xo7vgWxJ8w284OT9ujJ66/HpjGdooXrSemv3HHjATtJbzPg==}
     peerDependencies:
-      effect: ^3.2.1
+      effect: ^3.2.4
 
   '@floating-ui/core@1.6.1':
     resolution: {integrity: sha512-42UH54oPZHPdRHdw6BgoBD6cg/eVTmVrFcgeRDM3jbO7uxSoipVcmcIGFcA5jmOHO5apcyvBhkSKES3fQJnu7A==}
@@ -454,8 +454,8 @@ packages:
   '@floating-ui/utils@0.2.2':
     resolution: {integrity: sha512-J4yDIIthosAsRZ5CPYP/jQvUAQtlZTTD/4suA08/FEnlxqW3sKS9iAhgsa9VYLZ6vDHn/ixJgIqRQPotoBjxIw==}
 
-  '@hookform/resolvers@3.4.0':
-    resolution: {integrity: sha512-+oAqK3okmoEDnvUkJ3N/mvNMeeMv5Apgy1jkoRmlaaAF4vBgcJs9tHvtXU7VE4DvPosvAUUkPOaNFunzt1dbgA==}
+  '@hookform/resolvers@3.4.2':
+    resolution: {integrity: sha512-1m9uAVIO8wVf7VCDAGsuGA0t6Z3m6jVGAN50HkV9vYLl0yixKK/Z1lr01vaRvYCkIKGoy1noVRxMzQYb4y/j1Q==}
     peerDependencies:
       react-hook-form: ^7.0.0
 
@@ -1273,8 +1273,8 @@ packages:
     resolution: {integrity: sha512-C4+jb2ny3ZbMgEkLd7Z3C75DsxcTEoE+axXQJsQ75ou0AKWGdVsP351hqK6mJUUxn5HCSlu3vznoh7Yljye4cQ==}
     engines: {node: '>=10.0.0'}
 
-  '@sanity/types@3.42.1':
-    resolution: {integrity: sha512-iWiiEV4bDCU75MBkv696qqQiw58E7j41it2XCWtvz+TyuBylRHfFYnx8ZbLRGp4f2wQxswgjqTU74qMu890ipQ==}
+  '@sanity/types@3.43.0':
+    resolution: {integrity: sha512-xIwegRgzNnEqoqJ5QLJodHhsyyT1JuD/YZks6MrDgHpgxbT0kbnMW4fhIRLIaoWzY5+DIMAJjJXW6y/hnf2D8w==}
 
   '@swc/counter@0.1.3':
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
@@ -1580,6 +1580,10 @@ packages:
     resolution: {integrity: sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==}
     engines: {node: '>=8'}
 
+  braces@3.0.3:
+    resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
+    engines: {node: '>=8'}
+
   browserslist@4.23.0:
     resolution: {integrity: sha512-QW8HiM1shhT2GuzkvklfjcKDiWFXHOeFCIA/huJPwHsslwcydgk7X+z2zXpEijP98UCY7HbubZt5J2Zgvf0CaQ==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
@@ -1665,9 +1669,9 @@ packages:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
     engines: {node: '>= 0.8'}
 
-  commander@11.1.0:
-    resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
-    engines: {node: '>=16'}
+  commander@12.1.0:
+    resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
+    engines: {node: '>=18'}
 
   commander@4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
@@ -1747,13 +1751,13 @@ packages:
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
-  edgedb@1.6.0-canary.20240510T201054:
-    resolution: {integrity: sha512-IkGGUagZ3dO4rcuo/JVU3cuP5CR+Egs0Mg/lyGgh+hn94BqrtdC3GpzPur6ysSVXjfsRvGKnM5kHUN6KojdREA==}
+  edgedb@1.5.7:
+    resolution: {integrity: sha512-PlINnSnjPUaRxFKUaq+vfIIirdtN8RO3WrYwDEE9qz58MaX9ZlFnrX23AmJExZSKAsHnJUI33GofZWn9qN2G5Q==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
 
-  effect@3.2.1:
-    resolution: {integrity: sha512-WnM7QyHekA+oWkJyD1g99BDqD3atAXKjarcDnUX9alIKLd8EFXdY333wpgcNJkSqtvXDsx8qYWOMbuivdwoN2w==}
+  effect@3.2.4:
+    resolution: {integrity: sha512-w7MvlKBKs0oHeoe+S+xyXVzFpR+g3abY5KmjZksTAMgTTpJx8XZ0Tz0Pv+LWlGyD9R1dJNAsSc+RE0+NMl9JSw==}
 
   electron-to-chromium@1.4.727:
     resolution: {integrity: sha512-brpv4KTeC4g0Fx2FeIKytLd4UGn1zBQq5Lauy7zEWT9oqkaj5mgsxblEZIAOf1HHLlXxzr6adGViiBy5Z39/CA==}
@@ -1856,6 +1860,10 @@ packages:
 
   fill-range@7.0.1:
     resolution: {integrity: sha512-qOo9F+dMUmC2Lcb4BbVvnKJxTPjCm+RRpe4gDuGrzkL7mEVl/djYSu2OdQ2Pa302N4oqkSg9ir6jaLWJ2USVpQ==}
+    engines: {node: '>=8'}
+
+  fill-range@7.1.1:
+    resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
     engines: {node: '>=8'}
 
   find-my-way-ts@0.1.2:
@@ -2094,10 +2102,6 @@ packages:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
     engines: {node: '>=10'}
 
-  lilconfig@3.0.0:
-    resolution: {integrity: sha512-K2U4W2Ff5ibV7j7ydLr+zLAkIg5JJ4lPn1Ltsdt+Tz/IjQ8buJ55pZAxoP34lqIiwtF9iAvtLv3JGv7CAyAg+g==}
-    engines: {node: '>=14'}
-
   lilconfig@3.1.1:
     resolution: {integrity: sha512-O18pf7nyvHTckunPWCV1XUNXU1piu01y2b7ATJ0ppkUkk8ocqVWBrYjJBCwHDjD/ZWcfyrA0P4gKhzWGi5EINQ==}
     engines: {node: '>=14'}
@@ -2111,13 +2115,13 @@ packages:
   linkifyjs@4.1.3:
     resolution: {integrity: sha512-auMesunaJ8yfkHvK4gfg1K0SaKX/6Wn9g2Aac/NwX+l5VdmFZzo/hdPGxEOETj+ryRa4/fiOPjeeKURSAJx1sg==}
 
-  lint-staged@15.2.2:
-    resolution: {integrity: sha512-TiTt93OPh1OZOsb5B7k96A/ATl2AjIZo+vnzFZ6oHK5FuTk63ByDtxGQpHm+kFETjEWqgkF95M8FRXKR/LEBcw==}
+  lint-staged@15.2.4:
+    resolution: {integrity: sha512-3F9KRQIS2fVDGtCkBp4Bx0jswjX7zUcKx6OF0ZeY1prksUyKPRIIUqZhIUYAstJfvj6i48VFs4dwVIbCYwvTYQ==}
     engines: {node: '>=18.12.0'}
     hasBin: true
 
-  listr2@8.0.1:
-    resolution: {integrity: sha512-ovJXBXkKGfq+CwmKTjluEqFi3p4h8xvkxGQQAQan22YCgef4KZ1mKGjzfGh6PL6AW5Csw0QiQPNuQyH+6Xk3hA==}
+  listr2@8.2.1:
+    resolution: {integrity: sha512-irTfvpib/rNiD637xeevjO2l3Z5loZmuaRi0L0YE5LfijwVY96oyVn0DFD3o/teAok7nfobMG1THvvcHh/BP6g==}
     engines: {node: '>=18.0.0'}
 
   lodash.merge@4.6.2:
@@ -2149,8 +2153,8 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
-  lucide-react@0.378.0:
-    resolution: {integrity: sha512-u6EPU8juLUk9ytRcyapkWI18epAv3RU+6+TC23ivjR0e+glWKBobFeSgRwOIJihzktILQuy6E0E80P2jVTDR5g==}
+  lucide-react@0.379.0:
+    resolution: {integrity: sha512-KcdeVPqmhRldldAAgptb8FjIunM2x2Zy26ZBh1RsEUcdLIvsEmbcw7KpzFYUy5BbpGeWhPu9Z9J5YXfStiXwhg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
 
@@ -2170,6 +2174,10 @@ packages:
 
   micromatch@4.0.5:
     resolution: {integrity: sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==}
+    engines: {node: '>=8.6'}
+
+  micromatch@4.0.6:
+    resolution: {integrity: sha512-Y4Ypn3oujJYxJcMacVgcs92wofTHxp9FzfDpQON4msDefoC0lb3ETvQLOdLcbhSwU1bz8HrL/1sygfBIHudrkQ==}
     engines: {node: '>=8.6'}
 
   mime-db@1.52.0:
@@ -2337,6 +2345,10 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
 
+  picomatch@4.0.2:
+    resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
+    engines: {node: '>=12'}
+
   pidtree@0.6.0:
     resolution: {integrity: sha512-eG2dWTVw5bzqGRztnHExczNxt5VGsE6OwTeCG3fdUf9KBsZzO3R5OIIIzWR+iZA0NtZ+RDVdaoE2dK1cn6jH4g==}
     engines: {node: '>=0.10'}
@@ -2497,8 +2509,8 @@ packages:
     peerDependencies:
       react: '>= 16.8 || 18.0.0'
 
-  react-hook-form@7.51.4:
-    resolution: {integrity: sha512-V14i8SEkh+V1gs6YtD0hdHYnoL4tp/HX/A45wWQN15CYr9bFRmmRdYStSO5L65lCCZRF+kYiSKhm9alqbcdiVA==}
+  react-hook-form@7.51.5:
+    resolution: {integrity: sha512-J2ILT5gWx1XUIJRETiA7M19iXHlG74+6O3KApzvqB/w8S5NQR7AbU8HVZrMALdmDgWpRPYiZJl0zx8Z4L2mP6Q==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
@@ -2790,8 +2802,8 @@ packages:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
 
-  typescript@5.5.0-dev.20240514:
-    resolution: {integrity: sha512-NccALPZlTF/kDNV2Q071Or2T5CcoAHodWjsKseA4LZKfdqufQzebaQlPuZatC8AgHY2cnQJBcKMCHNFWW9ubpA==}
+  typescript@5.5.0-dev.20240523:
+    resolution: {integrity: sha512-YOB70i/IXEmSACEQ87NIPif84AGq4mjufwmoAp4HCOpgTjq6KFZe51OtNGvZbi+kMwlmQiKSrKlkfRGMndmsRA==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -2801,8 +2813,8 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
-  undici@6.17.0:
-    resolution: {integrity: sha512-fs13QiDjPIzJ7gFAOal9CSG0c92rT2xw6MuMUJ4H30Eg5GCauLWYCCZA1tInjd6M4y+JZjVCCFr9pFpbhcC64w==}
+  undici@6.18.1:
+    resolution: {integrity: sha512-/0BWqR8rJNRysS5lqVmfc7eeOErcOP4tZpATVjJOojjHZ71gSYVAtFhEmadcIjwMIUehh5NFyKGsXCnXIajtbA==}
     engines: {node: '>=18.17'}
 
   universalify@0.2.0:
@@ -2927,12 +2939,13 @@ packages:
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
 
-  yaml@2.3.4:
-    resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
-    engines: {node: '>= 14'}
-
   yaml@2.4.1:
     resolution: {integrity: sha512-pIXzoImaqmfOrL7teGUBt/T7ZDnyeGBWyXQBvOVhLkWLN37GXv8NMLK406UY6dS51JfcQHsmcW5cJ441bHg6Lg==}
+    engines: {node: '>= 14'}
+    hasBin: true
+
+  yaml@2.4.2:
+    resolution: {integrity: sha512-B3VqDZ+JAg1nZpaEmWtTXUlBneoGx6CPM9b0TENK6aoSu5t73dItudwdgmi6tHlIZZId4dZ9skcAQ2UbcyAeVA==}
     engines: {node: '>= 14'}
     hasBin: true
 
@@ -3015,74 +3028,74 @@ snapshots:
       react: 18.3.1
       tslib: 2.6.2
 
-  '@edgedb/auth-core@0.2.1(edgedb@1.6.0-canary.20240510T201054)':
+  '@edgedb/auth-core@0.2.1(edgedb@1.5.7)':
     dependencies:
-      edgedb: 1.6.0-canary.20240510T201054
+      edgedb: 1.5.7
       jwt-decode: 3.1.2
 
-  '@edgedb/auth-nextjs@0.3.1(edgedb@1.6.0-canary.20240510T201054)(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+  '@edgedb/auth-nextjs@0.3.1(edgedb@1.5.7)(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@edgedb/auth-core': 0.2.1(edgedb@1.6.0-canary.20240510T201054)
-      edgedb: 1.6.0-canary.20240510T201054
+      '@edgedb/auth-core': 0.2.1(edgedb@1.5.7)
+      edgedb: 1.5.7
       next: 14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
 
-  '@edgedb/generate@0.6.0-canary.20240510T202700(edgedb@1.6.0-canary.20240510T201054)':
+  '@edgedb/generate@0.6.0-canary.20240521T175824(edgedb@1.5.7)':
     dependencies:
       '@iarna/toml': 2.2.5
-      edgedb: 1.6.0-canary.20240510T201054
+      edgedb: 1.5.7
 
-  '@effect/experimental@0.16.12(@effect/platform-node@0.49.12(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1))(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)(ws@8.17.0)':
+  '@effect/experimental@0.16.15(@effect/platform-node@0.50.0(@effect/platform@0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4))(effect@3.2.4))(@effect/platform@0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4))(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4)(ws@8.17.0)':
     dependencies:
-      '@effect/platform': 0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)
-      '@effect/schema': 0.67.9(effect@3.2.1)
-      effect: 3.2.1
+      '@effect/platform': 0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4)
+      '@effect/schema': 0.67.12(effect@3.2.4)
+      effect: 3.2.4
       msgpackr: 1.10.2
     optionalDependencies:
-      '@effect/platform-node': 0.49.12(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1)
+      '@effect/platform-node': 0.50.0(@effect/platform@0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4))(effect@3.2.4)
       ws: 8.17.0
 
-  '@effect/opentelemetry@0.34.8(@opentelemetry/api@1.8.0)(@opentelemetry/resources@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-metrics@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-node@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/semantic-conventions@1.24.1)(effect@3.2.1)':
+  '@effect/opentelemetry@0.34.11(@opentelemetry/api@1.8.0)(@opentelemetry/resources@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-metrics@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-node@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/semantic-conventions@1.24.1)(effect@3.2.4)':
     dependencies:
       '@opentelemetry/api': 1.8.0
       '@opentelemetry/resources': 1.24.1(@opentelemetry/api@1.8.0)
       '@opentelemetry/semantic-conventions': 1.24.1
-      effect: 3.2.1
+      effect: 3.2.4
     optionalDependencies:
       '@opentelemetry/sdk-metrics': 1.24.1(@opentelemetry/api@1.8.0)
       '@opentelemetry/sdk-trace-base': 1.24.1(@opentelemetry/api@1.8.0)
       '@opentelemetry/sdk-trace-node': 1.24.1(@opentelemetry/api@1.8.0)
 
-  '@effect/platform-node-shared@0.4.31(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1)':
+  '@effect/platform-node-shared@0.5.0(@effect/platform@0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4))(effect@3.2.4)':
     dependencies:
-      '@effect/platform': 0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)
+      '@effect/platform': 0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4)
       '@parcel/watcher': 2.4.1
-      effect: 3.2.1
+      effect: 3.2.4
       multipasta: 0.2.1
 
-  '@effect/platform-node@0.49.12(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1)':
+  '@effect/platform-node@0.50.0(@effect/platform@0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4))(effect@3.2.4)':
     dependencies:
-      '@effect/platform': 0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)
-      '@effect/platform-node-shared': 0.4.31(@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1))(effect@3.2.1)
-      effect: 3.2.1
+      '@effect/platform': 0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4)
+      '@effect/platform-node-shared': 0.5.0(@effect/platform@0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4))(effect@3.2.4)
+      effect: 3.2.4
       mime: 3.0.0
-      undici: 6.17.0
+      undici: 6.18.1
       ws: 8.17.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@effect/platform@0.53.8(@effect/schema@0.67.9(effect@3.2.1))(effect@3.2.1)':
+  '@effect/platform@0.53.8(@effect/schema@0.67.12(effect@3.2.4))(effect@3.2.4)':
     dependencies:
-      '@effect/schema': 0.67.9(effect@3.2.1)
-      effect: 3.2.1
+      '@effect/schema': 0.67.12(effect@3.2.4)
+      effect: 3.2.4
       find-my-way-ts: 0.1.2
       multipasta: 0.2.1
       path-browserify: 1.0.1
 
-  '@effect/schema@0.67.9(effect@3.2.1)':
+  '@effect/schema@0.67.12(effect@3.2.4)':
     dependencies:
-      effect: 3.2.1
+      effect: 3.2.4
       fast-check: 3.18.0
 
   '@floating-ui/core@1.6.1':
@@ -3102,9 +3115,9 @@ snapshots:
 
   '@floating-ui/utils@0.2.2': {}
 
-  '@hookform/resolvers@3.4.0(react-hook-form@7.51.4(react@18.3.1))':
+  '@hookform/resolvers@3.4.2(react-hook-form@7.51.5(react@18.3.1))':
     dependencies:
-      react-hook-form: 7.51.4(react@18.3.1)
+      react-hook-form: 7.51.5(react@18.3.1)
 
   '@iarna/toml@2.2.5': {}
 
@@ -3924,7 +3937,7 @@ snapshots:
 
   '@sanity/image-url@1.0.2': {}
 
-  '@sanity/types@3.42.1':
+  '@sanity/types@3.43.0':
     dependencies:
       '@sanity/client': 6.18.2
       '@types/react': 18.3.2
@@ -4247,6 +4260,10 @@ snapshots:
     dependencies:
       fill-range: 7.0.1
 
+  braces@3.0.3:
+    dependencies:
+      fill-range: 7.1.1
+
   browserslist@4.23.0:
     dependencies:
       caniuse-lite: 1.0.30001605
@@ -4339,7 +4356,7 @@ snapshots:
     dependencies:
       delayed-stream: 1.0.0
 
-  commander@11.1.0: {}
+  commander@12.1.0: {}
 
   commander@4.1.1: {}
 
@@ -4400,7 +4417,7 @@ snapshots:
 
   eastasianwidth@0.2.0: {}
 
-  edgedb@1.6.0-canary.20240510T201054:
+  edgedb@1.5.7:
     dependencies:
       debug: 4.3.4
       env-paths: 3.0.0
@@ -4410,7 +4427,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  effect@3.2.1: {}
+  effect@3.2.4: {}
 
   electron-to-chromium@1.4.727: {}
 
@@ -4506,6 +4523,10 @@ snapshots:
       tslib: 2.6.2
 
   fill-range@7.0.1:
+    dependencies:
+      to-regex-range: 5.0.1
+
+  fill-range@7.1.1:
     dependencies:
       to-regex-range: 5.0.1
 
@@ -4761,8 +4782,6 @@ snapshots:
 
   lilconfig@2.1.0: {}
 
-  lilconfig@3.0.0: {}
-
   lilconfig@3.1.1: {}
 
   lines-and-columns@1.2.4: {}
@@ -4773,22 +4792,22 @@ snapshots:
 
   linkifyjs@4.1.3: {}
 
-  lint-staged@15.2.2:
+  lint-staged@15.2.4:
     dependencies:
       chalk: 5.3.0
-      commander: 11.1.0
+      commander: 12.1.0
       debug: 4.3.4
       execa: 8.0.1
-      lilconfig: 3.0.0
-      listr2: 8.0.1
-      micromatch: 4.0.5
+      lilconfig: 3.1.1
+      listr2: 8.2.1
+      micromatch: 4.0.6
       pidtree: 0.6.0
       string-argv: 0.3.2
-      yaml: 2.3.4
+      yaml: 2.4.2
     transitivePeerDependencies:
       - supports-color
 
-  listr2@8.0.1:
+  listr2@8.2.1:
     dependencies:
       cli-truncate: 4.0.0
       colorette: 2.0.20
@@ -4826,7 +4845,7 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
-  lucide-react@0.378.0(react@18.3.1):
+  lucide-react@0.379.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
@@ -4849,6 +4868,11 @@ snapshots:
     dependencies:
       braces: 3.0.2
       picomatch: 2.3.1
+
+  micromatch@4.0.6:
+    dependencies:
+      braces: 3.0.3
+      picomatch: 4.0.2
 
   mime-db@1.52.0: {}
 
@@ -4995,6 +5019,8 @@ snapshots:
   picocolors@1.0.0: {}
 
   picomatch@2.3.1: {}
+
+  picomatch@4.0.2: {}
 
   pidtree@0.6.0: {}
 
@@ -5200,7 +5226,7 @@ snapshots:
       prop-types: 15.8.1
       react: 18.3.1
 
-  react-hook-form@7.51.4(react@18.3.1):
+  react-hook-form@7.51.5(react@18.3.1):
     dependencies:
       react: 18.3.1
 
@@ -5508,13 +5534,13 @@ snapshots:
 
   type-fest@0.21.3: {}
 
-  typescript@5.5.0-dev.20240514: {}
+  typescript@5.5.0-dev.20240523: {}
 
   uc.micro@2.1.0: {}
 
   undici-types@5.26.5: {}
 
-  undici@6.17.0: {}
+  undici@6.18.1: {}
 
   universalify@0.2.0: {}
 
@@ -5615,9 +5641,9 @@ snapshots:
 
   yallist@4.0.0: {}
 
-  yaml@2.3.4: {}
-
   yaml@2.4.1: {}
+
+  yaml@2.4.2: {}
 
   zeed-dom@0.10.11:
     dependencies:
