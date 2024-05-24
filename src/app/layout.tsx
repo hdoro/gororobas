@@ -6,6 +6,7 @@ import { pathToAbsUrl } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
+import HackathonBanner from '@/components/HackathonBanner'
 
 const fontFamily = Plus_Jakarta_Sans({
 	subsets: ['latin'],
@@ -55,6 +56,7 @@ export default function RootLayout({
 	return (
 		<html lang="pt-BR">
 			<body className={cn(fontFamily.className, 'flex flex-col min-h-dvh')}>
+				<HackathonBanner />
 				<HeaderNav />
 				<div className="flex-1">{children}</div>
 				<Footer />
