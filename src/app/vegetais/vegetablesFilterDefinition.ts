@@ -3,6 +3,7 @@ import type {
 	VegetablesIndexQueryParams,
 } from '@/queries'
 import type { NextSearchParams } from '@/types'
+import { VEGETABLES_PER_PAGE } from '@/utils/config'
 import {
 	EDIBLE_PART_TO_LABEL,
 	PLANTING_METHOD_TO_LABEL,
@@ -67,7 +68,7 @@ export function nextSearchParamsToQueryParams(
 
 	return {
 		...filters,
-		pageIndex,
+		offset: pageIndex * VEGETABLES_PER_PAGE,
 	} as VegetablesIndexQueryParams
 }
 

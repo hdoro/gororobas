@@ -63,7 +63,7 @@ export default function VegetablesIndex() {
 			queryFn: ({ pageParam }) =>
 				fetchVegetablesIndexFromClient(filterParams, pageParam),
 			initialPageParam: 0,
-			getNextPageParam: (lastPage) => {
+			getNextPageParam: (lastPage, allPages, lastPageParam) => {
 				if (
 					!lastPage.vegetables ||
 					lastPage.vegetables.length < VEGETABLES_PER_PAGE
@@ -71,7 +71,7 @@ export default function VegetablesIndex() {
 					return undefined
 				}
 
-				return lastPage.queryParams.pageIndex + 1
+				return lastPageParam + 1
 			},
 		})
 
@@ -109,7 +109,7 @@ export default function VegetablesIndex() {
 						</div>
 					)}
 					{data?.pages?.map((page) => (
-						<React.Fragment key={page.queryParams.pageIndex}>
+						<React.Fragment key={page.queryParams.offset}>
 							{(page.vegetables || []).map((vegetable) => (
 								<VegetableCard key={vegetable.id} vegetable={vegetable} />
 							))}

@@ -90,7 +90,7 @@ export default function ProfileForm({
 				title: 'Perfil editado com sucesso ✨',
 				description: 'Te enviando pra sua página...',
 			})
-			router.push(paths.userProfile(data.handle))
+			router.push(`${paths.userProfile(data.handle)}?atualizado`)
 		} else {
 			toast.toast({
 				variant: 'destructive',

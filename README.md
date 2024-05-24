@@ -77,6 +77,7 @@ This project is licensed under the Apache 2.0 License. You can read more about i
     - Update createVegetables to insert sources
     - Update migration to insert sources
     - Update migration to include root vegetable sources
+- [ ] Fix validation (sources, photo)
 
 ### User Authentication
 
@@ -113,9 +114,9 @@ This project is licensed under the Apache 2.0 License. You can read more about i
 - [x] Sidebar
 - [x] Query all users that have wishlisted to display on vegetable page
 - [x] Render sources
+- [x] Render associated notes
 - [ ] Photos carousel dialog
 - [ ] Tips carousel dialog
-- [ ] Render associated notes
 
 ### Edit user profile
 
@@ -133,7 +134,7 @@ This project is licensed under the Apache 2.0 License. You can read more about i
 - [x] Vegetables grid
 - [x] People strip
 - [x] Notes grid
-- [ ] CTA to join & contribute
+- [x] CTA to join & contribute
 
 ### Unstructured
 
@@ -153,7 +154,7 @@ This project is licensed under the Apache 2.0 License. You can read more about i
 - [x] Move Shadcn components to tailwind-variants
 - [x] Empty state in UserProfile to submit their notes
 - [ ] Fix bug with hiding footer after loading NoteForm (CSS file doesn't get unloaded by Next) 
-- [ ] Section inviting users to contribute
+- [x] Section inviting users to contribute
 
 ### Notes
 
@@ -165,6 +166,8 @@ This project is licensed under the Apache 2.0 License. You can read more about i
   - [x] Rich text editor
 - [x] Delete note
 - [x] Notes index
+- [x] Query and render related notes
+- [x] Query and render related vegetables
 
 ## AI
 
@@ -177,11 +180,11 @@ This project is licensed under the Apache 2.0 License. You can read more about i
 - [x] Honeycomb
 - [x] Create EdgeDB Cloud instance
 - [x] Set-up backups - automatically provided by EdgeDB Cloud
-- [ ] Migrate schemas to cloud instance
-- [ ] Migrate data
+- [x] Migrate schemas to cloud instance
+- [x] Migrate data
   - Couve, Café e Cupuaçu tavam falhando
-- [ ] Publish on Vercel
-- [ ] Documentation
+- [x] Publish on Vercel
+- [x] Documentation
 
 ## Stretch
 

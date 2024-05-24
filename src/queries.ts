@@ -432,7 +432,7 @@ export const vegetablesIndexQuery = e.params(
 		edible_parts: e.optional(e.array(e.str)),
 		lifecycles: e.optional(e.array(e.str)),
 		uses: e.optional(e.array(e.str)),
-		pageIndex: e.int16,
+		offset: e.int32,
 	},
 	(params) =>
 		e.select(e.Vegetable, (vegetable) => {
@@ -491,12 +491,18 @@ export const vegetablesIndexQuery = e.params(
 				filter: finalFilter,
 
 				limit: VEGETABLES_PER_PAGE,
-				offset: e.op(params.pageIndex, '*', VEGETABLES_PER_PAGE),
-				order_by: {
-					expression: e.count(vegetable.photos),
-					direction: e.DESC,
-					empty: e.EMPTY_LAST,
-				},
+				offset: params.offset,
+				order_by: [
+					{
+						expression: e.count(vegetable.photos),
+						direction: e.DESC,
+						empty: e.EMPTY_LAST,
+					},
+					{
+						expression: vegetable.handle,
+						direction: e.ASC,
+					},
+				],
 			}
 		}),
 )
@@ -508,7 +514,7 @@ export type VegetablesIndexData = Exclude<
 
 export type VegetablesIndexQueryParams = Pick<
 	Parameters<typeof vegetablesIndexQuery.run>[1],
-	'pageIndex'
+	'offset'
 > & {
 	strata?: Stratum[] | null
 	planting_methods?: PlantingMethod[] | null
@@ -519,13 +525,13 @@ export type VegetablesIndexQueryParams = Pick<
 
 export type VegetablesIndexFilterParams = Omit<
 	VegetablesIndexQueryParams,
-	'pageIndex'
+	'offset'
 >
 
 export const notesIndexQuery = e.params(
 	{
 		types: e.optional(e.array(e.str)),
-		pageIndex: e.int16,
+		offset: e.int32,
 	},
 	(params) =>
 		e.select(e.Note, (note) => {
@@ -555,7 +561,7 @@ export const notesIndexQuery = e.params(
 				),
 
 				limit: NOTES_PER_PAGE,
-				offset: e.op(params.pageIndex, '*', NOTES_PER_PAGE),
+				offset: params.offset,
 				order_by: {
 					expression: note.published_at,
 					direction: e.DESC,
@@ -569,9 +575,9 @@ export type NotesIndexData = Exclude<$infer<typeof notesIndexQuery>, null>
 
 export type NotesIndexQueryParams = Pick<
 	Parameters<typeof notesIndexQuery.run>[1],
-	'pageIndex'
+	'offset'
 > & {
 	types?: NoteType[] | null
 }
 
-export type NotesIndexFilterParams = Omit<NotesIndexQueryParams, 'pageIndex'>
+export type NotesIndexFilterParams = Omit<NotesIndexQueryParams, 'offset'>

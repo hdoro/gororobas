@@ -1,5 +1,6 @@
 import type { NotesIndexFilterParams, NotesIndexQueryParams } from '@/queries'
 import type { NextSearchParams } from '@/types'
+import { NOTES_PER_PAGE } from '@/utils/config'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 
 const PAGE_INDEX_QUERY_KEY = 'pagina'
@@ -38,7 +39,7 @@ export function nextSearchParamsToQueryParams(
 
 	return {
 		...filters,
-		pageIndex,
+		offset: pageIndex * NOTES_PER_PAGE,
 	} as NotesIndexQueryParams
 }
 

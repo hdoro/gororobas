@@ -61,12 +61,12 @@ export default function NotesIndex() {
 			queryFn: ({ pageParam }) =>
 				fetchNotesIndexFromClient(filterParams, pageParam),
 			initialPageParam: 0,
-			getNextPageParam: (lastPage) => {
+			getNextPageParam: (lastPage, _allPages, lastPageParam) => {
 				if (!lastPage.notes || lastPage.notes.length < NOTES_PER_PAGE) {
 					return undefined
 				}
 
-				return lastPage.queryParams.pageIndex + 1
+				return lastPageParam + 1
 			},
 		})
 
@@ -111,7 +111,7 @@ export default function NotesIndex() {
 						</div>
 					)}
 					{data?.pages?.map((page) => (
-						<React.Fragment key={page.queryParams.pageIndex}>
+						<React.Fragment key={page.queryParams.offset}>
 							{(page.notes || []).map((note) => (
 								<NoteCard
 									key={note.handle}

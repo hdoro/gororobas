@@ -1,14 +1,14 @@
 import { auth } from '@/edgedb'
 import {
-	vegetableEditingQuery,
 	type ImageForRenderingData,
 	type SourceCardData,
+	vegetableEditingQuery,
 } from '@/queries'
 import {
-	VegetableData,
 	type RichTextValue,
 	type SourceForDB,
 	type StoredImageData,
+	VegetableData,
 	type VegetableForDB,
 	type VegetableTipForDB,
 	type VegetableVarietyForDB,
@@ -17,11 +17,11 @@ import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { ImageForRendering } from '@/types'
 import { InvalidInputError } from '@/types/errors'
 import { paths } from '@/utils/urls'
+import { Schema } from '@effect/schema'
 import { Effect, pipe } from 'effect'
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import EditVegetableForm from './EditVegetableForm'
-import { Schema } from '@effect/schema'
 
 function getRouteData(handle: string) {
 	const session = auth.getSession()
