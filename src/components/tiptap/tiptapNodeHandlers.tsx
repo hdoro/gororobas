@@ -7,6 +7,14 @@ const TextRender: NodeHandler = (props: NodeProps) => {
 		return <></>
 	}
 
+	// Hacky way of hiding invalid content 😅
+	if (
+		URL.canParse(props.node.text.trim()) &&
+		new URL(props.node.text.trim()).host === 'photos.google.com'
+	) {
+		return <></>
+	}
+
 	const payload: string = props.node.text
 
 	// biome-ignore lint: we're modifying `style`

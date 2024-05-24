@@ -1,5 +1,5 @@
 import { auth } from '@/edgedb'
-import { profilePageQuery } from '@/queries'
+import { editProfileQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { getAuthRedirect } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
@@ -21,7 +21,7 @@ export default async function ProfileRoute() {
 	const profile = await runServerEffect(
 		pipe(
 			Effect.tryPromise({
-				try: () => profilePageQuery.run(session.client),
+				try: () => editProfileQuery.run(session.client),
 				catch: (error) => console.log(error),
 			}),
 			...buildTraceAndMetrics('profile_page'),

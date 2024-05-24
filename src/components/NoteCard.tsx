@@ -10,6 +10,7 @@ import { paths } from '@/utils/urls'
 import { Share2Icon } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
+import ProfileCard from './ProfileCard'
 import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
 import { Badge } from './ui/badge'
 
@@ -34,7 +35,7 @@ export default function NoteCard({
 		<RootElement
 			id={`nota-${note.handle}`}
 			className={cn(
-				'text-left note-card--root relative aspect-[1.35] h-auto',
+				'text-left note-card--root relative aspect-[1.35] h-auto group',
 				variant === 'page'
 					? 'flex-[0_0_var(--card-width)] w-[var(--card-width)]'
 					: 'flex-1 min-w-[calc(var(--card-width)_*_0.75)] max-w-[var(--card-width)]',
@@ -80,16 +81,29 @@ export default function NoteCard({
 					</div>
 
 					{variant === 'grid' && note.handle && (
-						<Link
-							href={paths.note(note.handle)}
-							className="absolute left-0 bottom-0 text-yellow-600 z-50 p-2 bg-yellow-100 rounded-full"
-							onClick={(e) => {
-								// Prevent the card from flipping
-								e.stopPropagation()
-							}}
+						<div
+							className={cn(
+								'order-2 flex items-center',
+								note.created_by?.name ? 'justify-between' : 'justify-end',
+							)}
 						>
-							<Share2Icon className="stroke-current" />
-						</Link>
+							{note.created_by?.name && (
+								<ProfileCard profile={note.created_by} />
+							)}
+							<Link
+								href={paths.note(note.handle)}
+								className="text-yellow-800 z-50 p-2 bg-yellow-100 rounded-full flex items-center gap-2"
+								onClick={(e) => {
+									// Prevent the card from flipping
+									e.stopPropagation()
+								}}
+							>
+								<span className="opacity-0 group-hover:opacity-100 transition-opacity">
+									Compartilhar
+								</span>
+								<Share2Icon className="stroke-yellow-600" />
+							</Link>
+						</div>
 					)}
 				</div>
 				{note.body ? (

@@ -79,6 +79,10 @@ const noteForCard = e.shape(e.Note, (note) => ({
 	handle: true,
 	published_at: true,
 	types: true,
+	created_by: (userProfile) => ({
+		...userProfileForAvatar(userProfile),
+		location: false,
+	}),
 
 	filter: e.op(note.public, '=', true),
 }))
@@ -310,7 +314,7 @@ export const profilesForReferenceQuery = e.select(e.UserProfile, (profile) => ({
 	photo: imageForRendering,
 }))
 
-export const profilePageQuery = e.select(e.UserProfile, (profile) => ({
+export const editProfileQuery = e.select(e.UserProfile, (profile) => ({
 	filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
 
 	name: true,
@@ -321,7 +325,7 @@ export const profilePageQuery = e.select(e.UserProfile, (profile) => ({
 	photo: imageForRendering,
 }))
 
-export type EditProfilePageData = Exclude<$infer<typeof profilePageQuery>, null>
+export type EditProfilePageData = Exclude<$infer<typeof editProfileQuery>, null>
 
 export const profileForNavQuery = e.select(e.UserProfile, (profile) => ({
 	filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
@@ -394,6 +398,7 @@ export const userProfilePageQuery = e.params(
 
 			notes: e.select(e.Note, (note) => ({
 				...noteForCard(note),
+				created_by: false,
 
 				filter: e.op(
 					e.op(note.created_by, '=', profile),
