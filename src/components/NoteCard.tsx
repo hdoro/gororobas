@@ -13,7 +13,7 @@ import { useState } from 'react'
 import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
 import { Badge } from './ui/badge'
 
-// @TODO: make button a checkbox so I can style on/off without JS
+// @TODO: make button a checkbox so I can style on/off without JS (server component)
 export default function NoteCard({
 	note,
 	transform,

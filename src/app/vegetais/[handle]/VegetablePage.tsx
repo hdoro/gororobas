@@ -1,9 +1,11 @@
+import { ContributionCTA } from '@/components/ContributionCTA'
+import NotesGrid from '@/components/NotesGrid'
 import { SanityImage } from '@/components/SanityImage'
 import SectionTitle from '@/components/SectionTitle'
 import SourcesGrid from '@/components/SourcesGrid'
 import VegetablesGrid from '@/components/VegetablesGrid'
 import BulbIcon from '@/components/icons/BulbIcon'
-import PotIcon from '@/components/icons/PotIcon'
+import NoteIcon from '@/components/icons/NoteIcon'
 import QuoteIcon from '@/components/icons/QuoteIcon'
 import RainbowIcon from '@/components/icons/RainbowIcon'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
@@ -11,11 +13,15 @@ import ShovelIcon from '@/components/icons/ShovelIcon'
 import SparklesIcon from '@/components/icons/SparklesIcon'
 import VegetableFriendsIcon from '@/components/icons/VegetableFriendsIcon'
 import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
+import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
 import type { VegetablePageData } from '@/queries'
 import { RichText } from '@/schemas'
 import { gender } from '@/utils/strings'
+import { paths } from '@/utils/urls'
 import * as S from '@effect/schema/Schema'
+import { MessageSquarePlus } from 'lucide-react'
+import Link from 'next/link'
 import { VegetablePageHero } from './VegetablePageHero'
 import VegetablePageSidebar from './VegetablePageSidebar'
 import VegetableTips from './VegetableTips'
@@ -86,7 +92,18 @@ export default function VegetablePage({
 			{vegetable.tips && vegetable.tips.length > 1 && (
 				<>
 					<section className="my-36" id="sugestoes">
-						<SectionTitle Icon={ShovelIcon}>Sugestões e dicas</SectionTitle>
+						<SectionTitle
+							Icon={ShovelIcon}
+							CTA={
+								<Button asChild mode="outline">
+									<Link href={paths.editVegetable(vegetable.handle)}>
+										<MessageSquarePlus className="w-[1.25em]" /> Envie uma dica
+									</Link>
+								</Button>
+							}
+						>
+							Sugestões e dicas
+						</SectionTitle>
 						<VegetableTips vegetable={vegetable} />
 					</section>
 				</>
@@ -94,7 +111,7 @@ export default function VegetablePage({
 			{Array.isArray(vegetable.varieties) && vegetable.varieties.length > 0 && (
 				<section className="my-36" id="variedades">
 					<SectionTitle Icon={RainbowIcon}>Variedades</SectionTitle>
-					<div className="overflow-x-auto flex gap-20 mt-3 px-pageX">
+					<div className="overflow-x-auto flex gap-20 mt-3 px-pageX hide-scrollbar">
 						{vegetable.varieties.map((variety) => {
 							if (!variety.names || variety.names.length === 0) return null
 
@@ -108,7 +125,11 @@ export default function VegetablePage({
 												className="w-auto flex-0 max-h-[12.5rem] max-w-[12.5rem] object-cover rounded-lg"
 											/>
 										)}
-									<div>
+									<div
+										style={{
+											minWidth: `${variety.names[0].length / 2}ch`,
+										}}
+									>
 										<Text level="h3" weight="normal">
 											{variety.names[0]}
 										</Text>
@@ -142,7 +163,7 @@ export default function VegetablePage({
 						Plantas que gostam de serem plantadas e estarem próximas a
 						{gender.suffix(vegetable.gender || 'NEUTRO')} {names[0]}
 					</Text>
-					<VegetablesGrid vegetables={friends} className="mt-6" />
+					<VegetablesGrid vegetables={friends} className="mt-6 px-pageX" />
 				</section>
 			)}
 			{externalSources.length > 0 && (
@@ -166,19 +187,32 @@ export default function VegetablePage({
 					<SourcesGrid sources={internalSources} className="px-pageX mt-10" />
 				</section>
 			)}
-			{/* @TODO */}
-			{false && (
-				<>
-					<section className="my-36">
-						<SectionTitle Icon={SeedlingIcon}>Quem já planta</SectionTitle>
-					</section>
-					<section className="my-36">
-						<SectionTitle Icon={PotIcon}>
-							Aprendizados e experimentos
-						</SectionTitle>
-					</section>
-				</>
-			)}
+			<section className="my-36" id="notas">
+				<SectionTitle
+					Icon={NoteIcon}
+					CTA={
+						vegetable.related_notes.length > 0 ? (
+							<Button asChild>
+								<Link href={paths.newNote()}>Enviar sua nota</Link>
+							</Button>
+						) : null
+					}
+				>
+					Aprendizados e experimentos
+				</SectionTitle>
+				{vegetable.related_notes.length > 0 ? (
+					<NotesGrid notes={vegetable.related_notes} />
+				) : (
+					<Text level="p" className="px-pageX">
+						Ainda não temos notas sobre esse vegetal. Que tal{' '}
+						<Link href={paths.newNote()} className="link">
+							enviar uma
+						</Link>
+						?
+					</Text>
+				)}
+			</section>
+			<ContributionCTA />
 		</main>
 	)
 }

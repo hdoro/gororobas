@@ -10,7 +10,7 @@ import type {
 } from './edgedb.interfaces'
 import { NOTES_PER_PAGE, VEGETABLES_PER_PAGE } from './utils/config'
 
-const sourceForRendering = e.shape(e.Source, () => ({
+const sourceForCard = e.shape(e.Source, () => ({
 	id: true,
 	type: true,
 	origin: true,
@@ -27,10 +27,7 @@ const sourceForRendering = e.shape(e.Source, () => ({
 	},
 }))
 
-export type SourceCardData = Exclude<
-	$infer<typeof sourceForRendering>,
-	null
->[number]
+export type SourceCardData = Exclude<$infer<typeof sourceForCard>, null>[number]
 
 const imageForRendering = e.shape(e.Image, (image) => ({
 	id: true,
@@ -38,7 +35,7 @@ const imageForRendering = e.shape(e.Image, (image) => ({
 	hotspot: true,
 	crop: true,
 	label: true,
-	sources: sourceForRendering,
+	sources: sourceForCard,
 }))
 
 const vegetableForCard = e.shape(e.Vegetable, (vegetable) => ({
@@ -68,7 +65,8 @@ const userProfileForAvatar = e.shape(e.UserProfile, () => ({
 	location: true,
 }))
 
-const publicNotes = e.shape(e.Note, (note) => ({
+/** Returns only public notes, by default */
+const noteForCard = e.shape(e.Note, (note) => ({
 	title: true,
 	body: true,
 	handle: true,
@@ -79,7 +77,7 @@ const publicNotes = e.shape(e.Note, (note) => ({
 }))
 
 export type NoteCardData = Omit<
-	Exclude<$infer<typeof publicNotes>, null>[number],
+	Exclude<$infer<typeof noteForCard>, null>[number],
 	'published_at'
 > & {
 	/** When sending over the wire via API routes, the Date gets serialized to an ISOString */
@@ -142,7 +140,7 @@ export const vegetablePageQuery = e.params(
 				handle: true,
 				subjects: true,
 				content: true,
-				sources: sourceForRendering,
+				sources: sourceForCard,
 
 				order_by: {
 					expression: tip['@order_index'],
@@ -151,7 +149,12 @@ export const vegetablePageQuery = e.params(
 				},
 			}),
 			friends: vegetableForCard,
-			sources: sourceForRendering,
+			sources: sourceForCard,
+			related_notes: (note) => ({
+				...noteForCard(note),
+
+				limit: 12,
+			}),
 		})),
 )
 
@@ -265,7 +268,7 @@ export const homePageQuery = e.select({
 	})),
 
 	notes: e.select(e.Note, (note) => ({
-		...publicNotes(note),
+		...noteForCard(note),
 
 		limit: 12,
 	})),
@@ -279,7 +282,7 @@ export const notePageQuery = e.params(
 	},
 	(params) =>
 		e.select(e.Note, (note) => ({
-			...publicNotes(note),
+			...noteForCard(note),
 			id: true,
 			created_by: (userProfile) => ({
 				...userProfileForAvatar(userProfile),
@@ -288,6 +291,13 @@ export const notePageQuery = e.params(
 			is_owner: e.op(note.created_by, '=', e.global.current_user_profile),
 
 			filter_single: e.op(note.handle, '=', params.handle),
+
+			related_notes: (note) => ({
+				...noteForCard(note),
+
+				limit: 12,
+			}),
+			related_to_vegetables: vegetableForCard,
 		})),
 )
 
@@ -306,7 +316,7 @@ export const userProfilePageQuery = e.params(
 			is_owner: e.op(profile.id, '=', e.global.current_user_profile.id),
 
 			notes: e.select(e.Note, (note) => ({
-				...publicNotes(note),
+				...noteForCard(note),
 
 				filter: e.op(
 					e.op(note.created_by, '=', profile),
@@ -447,7 +457,7 @@ export const notesIndexQuery = e.params(
 	(params) =>
 		e.select(e.Note, (note) => {
 			return {
-				...publicNotes(note),
+				...noteForCard(note),
 
 				filter: e.op(
 					e.op(note.public, '=', true),

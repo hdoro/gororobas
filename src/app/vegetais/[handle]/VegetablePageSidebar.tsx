@@ -52,7 +52,10 @@ export default function VegetablePageSidebar({
 			label: 'Quem contribuiu',
 			href: '#contribuintes',
 		},
-		// @TODO: notas
+		vegetable.related_notes.length > 0 && {
+			label: 'Aprendizados e experimentos',
+			href: '#notas',
+		},
 	].flatMap((link) => link || [])
 
 	return (

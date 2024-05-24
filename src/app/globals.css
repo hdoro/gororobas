@@ -224,3 +224,7 @@ body {
 .note-card--root :global(img) {
   max-width: 100%;
 }
+
+.link {
+  @apply text-primary-700 underline;
+}

@@ -174,6 +174,7 @@ module default {
       # slugs-can-only-contain-numbers-letters-and-dashes
       constraint regexp(r'^[a-z0-9-]+$');
     };
+    index on (.handle);
   }
 
   type Image extending PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
@@ -200,7 +201,7 @@ module default {
     };
   }
 
-  type VegetableTip extending WithHandle, PublicRead, Auditable, AdminCanDoAnything {
+  type VegetableTip extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
     required multi subjects: TipSubject;
     required content: json;
 
@@ -266,9 +267,10 @@ module default {
       select .<vegetable[is UserWishlist]
           filter .status != <VegetableWishlistStatus>'SEM_INTERESSE'
     );
+    related_notes := .<related_to_vegetables[is Note];
   }
 
-  type VegetableFriendship extending Auditable, PublicRead, AdminCanDoAnything {
+  type VegetableFriendship extending Auditable, PublicRead, UserCanInsert, AdminCanDoAnything {
     required multi vegetables: Vegetable {
       # Can't modify a friendship after it's created
       readonly := true;
@@ -309,14 +311,20 @@ module default {
     body: json;
 
     # Related with AI
-    multi related_vegetables: Vegetable {
+    multi related_to_vegetables: Vegetable {
       on target delete allow;
       on source delete allow;
     };
-    multi related_notes: Vegetable {
+    multi related_to_notes: Note {
       on target delete allow;
       on source delete allow;
     };
+
+    related_notes := (
+      .related_to_notes
+      union
+      .<related_to_notes[is Note]
+    );
 
     access policy visible_if_public
       allow select

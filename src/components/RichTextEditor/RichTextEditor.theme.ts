@@ -11,7 +11,7 @@ export const richTextEditorTheme = tv({
 		tiptapBold: '',
 		tiptapListUl: 'list-disc pl-[1em] space-y-[0.25em]',
 		tiptapListOl: 'list-decimal pl-[1em] space-y-[0.25em]',
-		tiptapLink: 'text-primary-600 underline',
+		tiptapLink: 'link',
 	},
 	variants: {
 		type: {
