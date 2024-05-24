@@ -6,7 +6,7 @@ import {
 import type { Metadata } from 'next'
 import TanstackQueryProvider from '../../components/TanstackQueryProvider'
 import NotesIndex from './NotesIndex'
-import fetchNotesIndex, { type NotesIndexRouteData } from './fetchNotesIndex'
+import fetchNotesIndex from './fetchNotesIndex'
 import {
 	nextSearchParamsToQueryParams,
 	queryParamsToQueryKey,
@@ -34,8 +34,6 @@ export default async function NotesRoute({
 		),
 		queryFn: () => fetchNotesIndex(searchParams),
 		initialPageParam: 0,
-		getNextPageParam: (lastPage: NotesIndexRouteData) =>
-			lastPage.queryParams.pageIndex + 1,
 	})
 
 	return (

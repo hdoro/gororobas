@@ -14,7 +14,7 @@ module default {
   scalar type TipSubject extending enum<PLANTIO,CRESCIMENTO,COLHEITA>;
   scalar type NoteType extending enum<EXPERIMENTO,ENSINAMENTO,DESCOBERTA>;
   scalar type VegetableWishlistStatus extending enum<QUERO_CULTIVAR,SEM_INTERESSE,JA_CULTIVEI,ESTOU_CULTIVANDO>;
-  scalar type EditSuggestionStatus extending enum<PENDING_REVIEW,MERGED,UNAPPROVED>;
+  scalar type EditSuggestionStatus extending enum<PENDING_REVIEW,MERGED,REJECTED>;
 
   global current_user := (
     assert_single((
@@ -36,10 +36,22 @@ module default {
       using (exists global current_user);
   }
 
+  abstract type UserCanSelect {
+    access policy authenticated_user_can_select
+      allow select
+      using (exists global current_user);
+  }
+
   abstract type AdminCanDoAnything {
     access policy admin_can_do_anything
       allow all
       using (global current_user.userRole ?= Role.ADMIN);
+  }
+
+  abstract type ModeratorCanUpdate {
+    access policy moderator_can_update
+      allow update
+      using (global current_user.userRole ?= Role.MODERATOR);
   }
 
   # 🚧 WARNING: **access policy is deactivated**, any session can access User
@@ -310,7 +322,7 @@ module default {
     required title: json;
     body: json;
 
-    # Related with AI
+    # @TODO relate with AI
     multi related_to_vegetables: Vegetable {
       on target delete allow;
       on source delete allow;
@@ -335,7 +347,7 @@ module default {
       using (global current_user_profile ?= .created_by);
   }
 
-  type EditSuggestion extending Auditable, AdminCanDoAnything, UserCanInsert {
+  type EditSuggestion extending Auditable, AdminCanDoAnything, UserCanInsert, UserCanSelect, ModeratorCanUpdate {
     required target_object: Vegetable;
     required diff: json;
     required snapshot: json;

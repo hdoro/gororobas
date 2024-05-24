@@ -1,5 +1,6 @@
 import type {
 	EdiblePart,
+	EditSuggestionStatus,
 	Gender,
 	NoteType,
 	PlantingMethod,
@@ -113,3 +114,9 @@ export const NOTE_TYPE_TO_LABEL = {
 	ENSINAMENTO: 'Me ensinaram',
 	EXPERIMENTO: 'Experimento',
 } as const satisfies Record<NoteType, string>
+
+export const EDIT_SUGGESTION_STATUS_TO_LABEL = {
+	PENDING_REVIEW: 'Em revisão',
+	MERGED: 'Aprovada',
+	REJECTED: 'Rejeitada',
+} as const satisfies Record<EditSuggestionStatus, string>

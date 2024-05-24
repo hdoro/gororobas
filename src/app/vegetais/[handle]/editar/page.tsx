@@ -7,7 +7,7 @@ import {
 import {
 	type RichTextValue,
 	type SourceForDB,
-	type StoredImageData,
+	type StoredImageDataType,
 	VegetableData,
 	type VegetableForDB,
 	type VegetableTipForDB,
@@ -102,7 +102,7 @@ function formatQueriedSource(source: SourceCardData): SourceForDB {
 	}
 }
 
-function formatQueriedImage(image: ImageForRenderingData): StoredImageData {
+function formatQueriedImage(image: ImageForRenderingData): StoredImageDataType {
 	return {
 		id: image.id,
 		label: image.label,

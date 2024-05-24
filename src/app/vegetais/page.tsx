@@ -6,9 +6,7 @@ import {
 } from '@tanstack/react-query'
 import type { Metadata } from 'next'
 import VegetablesIndex from './VegetablesIndex'
-import fetchVegetablesIndex, {
-	type VegetablesIndexRouteData,
-} from './fetchVegetablesIndex'
+import fetchVegetablesIndex from './fetchVegetablesIndex'
 import {
 	nextSearchParamsToQueryParams,
 	queryParamsToQueryKey,
@@ -35,8 +33,6 @@ export default async function VegetablesRoute({
 		),
 		queryFn: () => fetchVegetablesIndex(searchParams),
 		initialPageParam: 0,
-		getNextPageParam: (lastPage: VegetablesIndexRouteData) =>
-			lastPage.queryParams.pageIndex + 1,
 	})
 
 	return (

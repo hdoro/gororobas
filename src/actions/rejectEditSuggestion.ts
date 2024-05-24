@@ -1,34 +1,33 @@
 'use server'
 
 import { auth } from '@/edgedb'
-import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
-import { updateWishlistStatusMutation } from '@/mutations'
+import { rejectSuggestionMutation } from '@/mutations'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { Schema } from '@effect/schema'
 import { Effect, pipe } from 'effect'
 
-export async function addToWishlist(
-	vegetable_id: string,
-	wishlist_status: VegetableWishlistStatus,
-) {
+export async function rejectEditSuggestionAction({
+	suggestion_id,
+}: { suggestion_id: string }) {
+	if (!Schema.is(Schema.UUID)(suggestion_id)) {
+		return false
+	}
+
 	const session = auth.getSession()
 
 	return runServerEffect(
 		pipe(
 			Effect.tryPromise({
 				try: () =>
-					updateWishlistStatusMutation.run(session.client, {
-						vegetable_id,
-						status: wishlist_status,
-					}),
+					rejectSuggestionMutation.run(session.client, { suggestion_id }),
 				catch: (error) => {
 					console.log(error)
 					return error
 				},
 			}),
 			Effect.map(() => true),
-			...buildTraceAndMetrics('add_to_wishlist', {
-				vegetable_id,
-				wishlist_status,
+			...buildTraceAndMetrics('reject_suggestion', {
+				suggestion_id,
 			}),
 		).pipe(Effect.catchAll(() => Effect.succeed(false))),
 	)

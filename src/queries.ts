@@ -131,6 +131,44 @@ const coreVegetableData = e.shape(e.Vegetable, () => ({
 	content: true,
 }))
 
+const vegetablePageShape = e.shape(e.Vegetable, (vegetable) => ({
+	...coreVegetableData(vegetable),
+	photos: (image) => ({
+		...imageForRendering(image),
+
+		order_by: {
+			expression: image['@order_index'],
+			direction: 'ASC',
+			empty: e.EMPTY_LAST,
+		},
+	}),
+	varieties: (variety) => ({
+		...vegetableVarietyForCard(variety),
+
+		order_by: {
+			expression: variety['@order_index'],
+			direction: 'ASC',
+			empty: e.EMPTY_LAST,
+		},
+	}),
+	tips: (tip) => ({
+		...vegetableTipForCard(tip),
+
+		order_by: {
+			expression: tip['@order_index'],
+			direction: 'ASC',
+			empty: e.EMPTY_LAST,
+		},
+	}),
+	friends: vegetableForCard,
+	sources: sourceForCard,
+	related_notes: (note) => ({
+		...noteForCard(note),
+
+		limit: 12,
+	}),
+}))
+
 export const vegetablePageQuery = e.params(
 	{
 		handle: e.str,
@@ -139,41 +177,7 @@ export const vegetablePageQuery = e.params(
 		e.select(e.Vegetable, (vegetable) => ({
 			filter_single: e.op(vegetable.handle, '=', params.handle),
 
-			...coreVegetableData(vegetable),
-			photos: (image) => ({
-				...imageForRendering(image),
-
-				order_by: {
-					expression: image['@order_index'],
-					direction: 'ASC',
-					empty: e.EMPTY_LAST,
-				},
-			}),
-			varieties: (variety) => ({
-				...vegetableVarietyForCard(variety),
-
-				order_by: {
-					expression: variety['@order_index'],
-					direction: 'ASC',
-					empty: e.EMPTY_LAST,
-				},
-			}),
-			tips: (tip) => ({
-				...vegetableTipForCard(tip),
-
-				order_by: {
-					expression: tip['@order_index'],
-					direction: 'ASC',
-					empty: e.EMPTY_LAST,
-				},
-			}),
-			friends: vegetableForCard,
-			sources: sourceForCard,
-			related_notes: (note) => ({
-				...noteForCard(note),
-
-				limit: 12,
-			}),
+			...vegetablePageShape(vegetable),
 		})),
 )
 
@@ -581,3 +585,21 @@ export type NotesIndexQueryParams = Pick<
 }
 
 export type NotesIndexFilterParams = Omit<NotesIndexQueryParams, 'offset'>
+
+export const editSuggestionPreviewQuery = e.params(
+	{
+		suggestion_id: e.uuid,
+	},
+	(params) =>
+		e.select(e.EditSuggestion, (suggestion) => ({
+			filter_single: e.op(suggestion.id, '=', params.suggestion_id),
+
+			id: true,
+			diff: true,
+			status: true,
+			target_object: (vegetable) => ({
+				...vegetablePageShape(vegetable),
+			}),
+			can_approve: e.op(e.global.current_user.userRole, '!=', e.Role.USER),
+		})),
+)

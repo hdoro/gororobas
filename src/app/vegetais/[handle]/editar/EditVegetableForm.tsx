@@ -1,5 +1,6 @@
 'use client'
 
+import { createEditSuggestionAction } from '@/actions/createEditSuggestion'
 import type { VegetableForDB, VegetableInForm } from '@/schemas'
 import { getChangedObjectSubset } from '@/utils/diffs'
 import { paths } from '@/utils/urls'
@@ -16,16 +17,10 @@ export default function EditVegetableForm(props: {
 }) {
 	return (
 		<VegetableForm
-			onSubmit={async (vegetable) => {
+			onSubmit={async (updatedVegetable) => {
 				const dataThatChanged = getChangedObjectSubset({
 					prev: props.vegetableForDB,
-					next: vegetable,
-				})
-
-				console.log({
-					initial: props.vegetableForDB,
-					final: vegetable,
-					dataThatChanged,
+					next: updatedVegetable,
 				})
 				if (Object.keys(dataThatChanged).length === 0) {
 					return {
@@ -37,10 +32,10 @@ export default function EditVegetableForm(props: {
 						redirectTo: paths.vegetable(props.vegetableForDB.handle),
 					}
 				}
-				return {
-					success: false,
-					error: 'test',
-				}
+				return await createEditSuggestionAction({
+					current: props.vegetableForDB,
+					updated: updatedVegetable,
+				})
 			}}
 			initialValue={props.vegetableInForm}
 		/>

@@ -122,9 +122,15 @@ export type NewImageData = Omit<typeof ImageData.Type, 'data'> & {
 	data: typeof NewImage.Type
 }
 
-export type StoredImageData = Omit<typeof ImageData.Type, 'data'> & {
-	data: typeof StoredImage.Type
-}
+export const StoredImageData = ImageData.pipe(
+	S.omit('data'),
+	S.extend(
+		S.Struct({
+			data: StoredImage,
+		}),
+	),
+)
+export type StoredImageDataType = typeof StoredImageData.Type
 
 /** What gets stored as an `Image` Object in EdgeDB */
 const ImageObjectInDB = ImageData.pipe(S.omit('data'), S.extend(StoredImage))
@@ -161,13 +167,13 @@ export const StringInArray = S.transform(
 	},
 )
 
-const VegetableVariety = S.Struct({
+export const VegetableVarietyData = S.Struct({
 	id: S.UUID,
 	names: S.NonEmptyArray(StringInArray),
 	photos: Optional(S.Array(ImageData)),
 })
 
-const VegetableTip = S.Struct({
+const VegetableTipData = S.Struct({
 	id: S.UUID,
 	subjects: S.Array(
 		S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
@@ -255,8 +261,8 @@ export const VegetableData = S.Struct({
 		),
 	),
 
-	varieties: Optional(S.Array(VegetableVariety)),
-	tips: Optional(S.Array(VegetableTip)),
+	varieties: Optional(S.Array(VegetableVarietyData)),
+	tips: Optional(S.Array(VegetableTipData)),
 	photos: Optional(S.Array(ImageData)),
 	content: Optional(RichText),
 	friends: Optional(S.Array(S.UUID)),
@@ -280,11 +286,11 @@ export const VegetableData = S.Struct({
 	}),
 )
 
-export type VegetableVarietyForDB = typeof VegetableVariety.Type
-export type VegetableVarietyInForm = typeof VegetableVariety.Encoded
+export type VegetableVarietyForDB = typeof VegetableVarietyData.Type
+export type VegetableVarietyInForm = typeof VegetableVarietyData.Encoded
 
-export type VegetableTipForDB = typeof VegetableTip.Type
-export type VegetableTipInForm = typeof VegetableTip.Encoded
+export type VegetableTipForDB = typeof VegetableTipData.Type
+export type VegetableTipInForm = typeof VegetableTipData.Encoded
 
 export type VegetableForDB = typeof VegetableData.Type
 export type VegetableInForm = typeof VegetableData.Encoded

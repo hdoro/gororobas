@@ -329,3 +329,33 @@ export const deleteNotesMutation = e.params(
 			filter: e.op(note.id, 'in', e.array_unpack(params.noteIds)),
 		})),
 )
+
+export const insertEditSuggestionMutation = e.params(
+	{
+		snapshot: e.json,
+		target_id: e.uuid,
+		diff: e.json,
+	},
+	(params) =>
+		e.insert(e.EditSuggestion, {
+			status: e.EditSuggestionStatus.PENDING_REVIEW,
+			target_object: e.select(e.Vegetable, (v) => ({
+				filter_single: e.op(v.id, '=', params.target_id),
+			})),
+			diff: params.diff,
+			snapshot: params.snapshot,
+		}),
+)
+
+export const rejectSuggestionMutation = e.params(
+	{
+		suggestion_id: e.uuid,
+	},
+	(params) =>
+		e.update(e.EditSuggestion, (suggestion) => ({
+			filter_single: e.op(suggestion.id, '=', params.suggestion_id),
+			set: {
+				status: e.EditSuggestionStatus.REJECTED,
+			},
+		})),
+)
