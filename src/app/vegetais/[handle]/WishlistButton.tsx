@@ -23,6 +23,7 @@ import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
 import { WISHLIST_STATUS_TO_LABEL } from '@/utils/labels'
 import { paths } from '@/utils/urls'
 import { ChevronDownIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export type WishlistInfo =
@@ -34,6 +35,7 @@ export default function WishlistButton(
 		vegetable_id: string
 	} & WishlistInfo,
 ) {
+	const router = useRouter()
 	const { toast } = useToast()
 	const [optimisticStatus, setOptimisticStatus] =
 		useState<VegetableWishlistStatus>(
@@ -54,6 +56,7 @@ export default function WishlistButton(
 			toast({
 				title: 'Interesse atualizado!',
 			})
+			router.refresh()
 		}
 	}
 

@@ -27,7 +27,6 @@ export async function addToWishlist(
 				vegetable_id,
 				wishlist_status,
 			}),
-			Effect.catchAll(() => Effect.succeed(false)),
-		),
+		).pipe(Effect.catchAll(() => Effect.succeed(false))),
 	)
 }
