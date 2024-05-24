@@ -51,10 +51,13 @@ import { Text } from './ui/text'
 import { useToast } from './ui/use-toast'
 
 export default function VegetableForm(props: {
-	onSubmit: (
-		vegetable: VegetableForDB,
-	) => Promise<
-		{ success: true; redirectTo: string } | { success: false; error: string }
+	onSubmit: (vegetable: VegetableForDB) => Promise<
+		| {
+				success: true
+				redirectTo: string
+				message?: { title?: string; description?: string }
+		  }
+		| { success: false; error: string }
 	>
 	initialValue?: VegetableInForm
 }) {
@@ -78,12 +81,20 @@ export default function VegetableForm(props: {
 
 	const onSubmit: SubmitHandler<VegetableInForm> = async (data) => {
 		setStatus('submitting')
-		const result = await props.onSubmit(data as unknown as VegetableForDB)
+		const dataWithoutEmptyKeys = Object.fromEntries(
+			Object.entries(data).filter(([key, value]) => {
+				if (value === undefined || value === null) return false
+
+				return true
+			}),
+		) as VegetableForDB
+		const result = await props.onSubmit(dataWithoutEmptyKeys)
 		if (result.success) {
 			toast.toast({
 				variant: 'default',
-				title: 'Vegetal criado com sucesso ✨',
-				description: 'Te enviando pra página dele...',
+				title: result.message?.title || 'Vegetal criado com sucesso ✨',
+				description:
+					result.message?.description || 'Te enviando pra página dele...',
 			})
 			router.push(result.redirectTo)
 			setStatus('success')
@@ -128,7 +139,9 @@ export default function VegetableForm(props: {
 					<div className="flex items-center gap-4">
 						<h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
 							{props.initialValue
-								? `Editar ${props.initialValue.names?.[0]?.value || 'vegetal'}`
+								? `Sugerir edição para ${
+										props.initialValue.names?.[0]?.value || 'vegetal'
+									}`
 								: 'Criar vegetal'}
 						</h1>
 						<Button type="submit" disabled={form.formState.disabled}>

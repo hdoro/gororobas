@@ -17,12 +17,12 @@ import {
 	type FieldValues,
 	useFormContext,
 } from 'react-hook-form'
+import { SanityImage } from '../SanityImage'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import ArrayInput from './ArrayInput'
 import Field from './Field'
 import ImageInput from './ImageInput'
-import { SanityImage } from '../SanityImage'
 
 export default function VegetableVarietyInput<
 	TFieldValues extends FieldValues = FieldValues,

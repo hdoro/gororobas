@@ -22,7 +22,7 @@ export default function SectionTitle({
 		>
 			{Icon && <Icon variant="color" className="w-8" />}
 			{children}
-			{CTA && <div className="flex-1 text-right">{CTA}</div>}
+			{CTA && <div className="flex-1 xl:text-right">{CTA}</div>}
 		</Text>
 	)
 }

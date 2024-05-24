@@ -17,11 +17,11 @@ import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { ImageForRendering } from '@/types'
 import { InvalidInputError } from '@/types/errors'
 import { paths } from '@/utils/urls'
-import { Schema } from '@effect/schema'
 import { Effect, pipe } from 'effect'
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import EditVegetableForm from './EditVegetableForm'
+import { Schema } from '@effect/schema'
 
 function getRouteData(handle: string) {
 	const session = auth.getSession()
@@ -77,9 +77,6 @@ function getRouteData(handle: string) {
 				}
 				return Effect.succeed(vegetableForDB)
 			}),
-			Effect.flatMap((vegetableForDB) =>
-				Schema.encode(VegetableData)(vegetableForDB),
-			),
 			...buildTraceAndMetrics('vegetable_page', { handle }),
 			Effect.catchAll(() => Effect.succeed(null)),
 		),
@@ -130,7 +127,7 @@ export async function generateMetadata({
 	}
 
 	return {
-		title: `Editar ${vegetable.names[0]?.value || 'Vegetal'} | Gororobas`,
+		title: `Editar ${vegetable.names[0] || 'Vegetal'} | Gororobas`,
 	}
 }
 
@@ -145,9 +142,19 @@ export default async function EditVegetableRoute({
 		redirect(paths.signinNotice())
 	}
 
-	const vegetable = await getRouteData(handle)
+	const vegetableForDB = await getRouteData(handle)
 
-	if (!vegetable) return notFound()
+	if (!vegetableForDB) return notFound()
 
-	return <EditVegetableForm vegetable={vegetable} />
+	const vegetableInForm = await pipe(
+		Schema.encode(VegetableData)(vegetableForDB),
+		Effect.runPromise,
+	)
+
+	return (
+		<EditVegetableForm
+			vegetableForDB={vegetableForDB}
+			vegetableInForm={vegetableInForm}
+		/>
+	)
 }

@@ -50,6 +50,10 @@ export default function WishlistButton(
 				variant: 'destructive',
 				title: 'Erro ao atualizar seu interesse',
 			})
+		} else {
+			toast({
+				title: 'Interesse atualizado!',
+			})
 		}
 	}
 
