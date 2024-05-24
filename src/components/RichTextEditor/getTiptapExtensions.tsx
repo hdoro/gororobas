@@ -1,10 +1,8 @@
 import { cn } from '@/utils/cn'
 import Link from '@tiptap/extension-link'
-import Mention from '@tiptap/extension-mention'
 import Placeholder from '@tiptap/extension-placeholder'
-import { type Extensions, mergeAttributes } from '@tiptap/react'
+import type { Extensions } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import MentionSuggestions from './MentionSuggestions'
 import type { richTextEditorTheme } from './RichTextEditor.theme'
 
 /**
@@ -53,19 +51,6 @@ export function getTiptapExtensions({
 				'tiptap-placeholder',
 				classes.placeholder(),
 			) as string,
-		}),
-		Mention.configure({
-			suggestion: MentionSuggestions,
-			renderHTML: ({ options, node }) => {
-				return [
-					'span',
-					mergeAttributes(
-						{ className: 'font-semibold' },
-						options.HTMLAttributes,
-					),
-					`${options.suggestion.char}${node.attrs.label}`,
-				]
-			},
 		}),
 		Link.configure({
 			openOnClick: false,

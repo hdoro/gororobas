@@ -13,6 +13,7 @@ import { useState } from 'react'
 import ProfileCard from './ProfileCard'
 import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
 import { Badge } from './ui/badge'
+import { Button } from './ui/button'
 
 // @TODO: make button a checkbox so I can style on/off without JS (server component)
 export default function NoteCard({
@@ -90,19 +91,26 @@ export default function NoteCard({
 							{note.created_by?.name && (
 								<ProfileCard profile={note.created_by} />
 							)}
-							<Link
-								href={paths.note(note.handle)}
-								className="text-yellow-800 z-50 p-2 bg-yellow-100 rounded-full flex items-center gap-2"
-								onClick={(e) => {
-									// Prevent the card from flipping
-									e.stopPropagation()
-								}}
+							<Button
+								size="sm"
+								asChild
+								tone="secondary"
+								mode="bleed"
+								className="cursor-pointer"
 							>
-								<span className="opacity-0 group-hover:opacity-100 transition-opacity">
-									Compartilhar
-								</span>
-								<Share2Icon className="stroke-yellow-600" />
-							</Link>
+								<Link
+									href={paths.note(note.handle)}
+									onClick={(e) => {
+										// Prevent the card from flipping
+										e.stopPropagation()
+									}}
+								>
+									<span className="opacity-0 group-hover:opacity-100 transition-opacity select-none">
+										Compartilhar
+									</span>
+									<Share2Icon className="stroke-current" />
+								</Link>
+							</Button>
 						</div>
 					)}
 				</div>
