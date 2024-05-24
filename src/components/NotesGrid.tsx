@@ -16,11 +16,11 @@ export function NotesGridWrapper(
 	return (
 		<div
 			{...props}
-			className={cn('py-10 grid gap-12 overflow-x-hidden', props.className)}
+			className={cn('py-10 grid gap-12', props.className)}
 			style={{
 				...(props.style || {}),
 				gridTemplateColumns:
-					'repeat(auto-fit, minmax(calc(var(--note-card-width) * 0.75), 1fr))',
+					'repeat(auto-fill, minmax(calc(var(--note-card-width) * 0.75), var(--note-card-width)))',
 			}}
 		>
 			{props.children}

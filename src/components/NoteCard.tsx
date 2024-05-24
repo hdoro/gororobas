@@ -72,8 +72,8 @@ export default function NoteCard({
 								})}
 							</time>
 						)}
-						<div>
-							{note.types.map((type) => (
+						<div className="space-x-1">
+							{note.types.slice(0, 2).map((type) => (
 								<Badge key={type} variant="note">
 									{NOTE_TYPE_TO_LABEL[type]}
 								</Badge>

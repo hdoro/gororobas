@@ -103,7 +103,7 @@ export default function NotesIndex() {
 						<Link href={paths.newNote()}>Enviar sua nota</Link>
 					</Button>
 				</Text>
-				<NotesGridWrapper className="relative justify-start px-0">
+				<NotesGridWrapper className="relative justify-start py-4">
 					{isFetching && !isFetchingNextPage && (
 						<div className="absolute inset-0 bg-background bg-opacity-50 flex items-center justify-center gap-3">
 							<Carrot className="animate-spin h-6 w-6" />
