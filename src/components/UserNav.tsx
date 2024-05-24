@@ -2,9 +2,7 @@ import createUserProfile from '@/app/auth/[...auth]/createUserProfile'
 import { auth } from '@/edgedb'
 import { profileForNavQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { paths } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
-import { redirect } from 'next/navigation'
 import ProfileCard from './ProfileCard'
 import { Button } from './ui/button'
 
@@ -39,7 +37,7 @@ export default async function UserNav({ signedIn }: { signedIn: boolean }) {
 
 	if (!profile) {
 		await runServerEffect(createUserProfile(true))
-		redirect(paths.editProfile())
+		return null
 	}
 
 	return (

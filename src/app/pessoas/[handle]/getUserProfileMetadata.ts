@@ -10,10 +10,16 @@ export default function getUserProfileMetadata(
 ): Metadata {
 	const name = profile?.name
 
-	if (!profile || !name)
+	if (!profile)
 		return {
 			title: 'Perfil não encontrado no Gororobas',
 		}
+
+	if (!name) {
+		return {
+			title: 'Pessoa sem nome | Gororobas',
+		}
+	}
 
 	const wishlistStatusCount = profile.wishlist.reduce(
 		(acc, w) => {
