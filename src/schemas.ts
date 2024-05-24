@@ -27,6 +27,14 @@ import { Effect, pipe } from 'effect'
 import type { NoteType } from './edgedb.interfaces'
 import { FailedConvertingBlobError } from './types/errors'
 
+/**
+ * Custom optional schema to handle both EdgeDB and client-side forms:
+ * - EdgeDB returns `null` instead of `undefined` for missing values
+ * - Client-side forms return `undefined` for missing values
+ */
+const Optional = <A, I, R>(schema: S.Schema<A, I, R>) =>
+	S.optional(S.NullishOr(schema))
+
 const isFile = (input: unknown): input is File => input instanceof File
 
 const FileSchema = S.declare(isFile)
@@ -40,19 +48,21 @@ const isTipTapJSON = (input: unknown): input is JSONContent & { version: 1 } =>
 
 export const RichText = S.declare(isTipTapJSON)
 
+export type RichTextValue = typeof RichText.Type
+
 const SourceGororobasInForm = S.Struct({
 	id: S.UUID,
-	comments: S.optional(RichText),
+	comments: Optional(RichText),
 	type: S.Literal('GOROROBAS' satisfies SourceType),
 	userIds: S.Array(S.UUID),
 })
 
 const SourceExternalInForm = S.Struct({
 	id: S.UUID,
-	comments: S.optional(RichText),
+	comments: Optional(RichText),
 	type: S.Literal('EXTERNAL' satisfies SourceType),
 	credits: S.String.pipe(S.minLength(1)),
-	origin: S.optional(S.String),
+	origin: Optional(S.String),
 })
 
 export const SourceData = S.Union(SourceGororobasInForm, SourceExternalInForm)
@@ -97,19 +107,23 @@ export const NewImage = S.transformOrFail(NewImageInForm, NewImageForDB, {
 
 export const StoredImage = S.Struct({
 	sanity_id: S.String,
-	hotspot: S.optional(S.Object, { nullable: true }),
-	crop: S.optional(S.Object, { nullable: true }),
+	hotspot: Optional(S.Object),
+	crop: Optional(S.Object),
 })
 
 export const ImageData = S.Struct({
 	id: S.UUID,
-	label: S.optional(S.String, { nullable: true }),
+	label: Optional(S.String),
 	data: S.Union(NewImage, StoredImage),
-	sources: S.optional(S.Array(SourceData)),
+	sources: Optional(S.Array(SourceData)),
 })
 
 export type NewImageData = Omit<typeof ImageData.Type, 'data'> & {
 	data: typeof NewImage.Type
+}
+
+export type StoredImageData = Omit<typeof ImageData.Type, 'data'> & {
+	data: typeof StoredImage.Type
 }
 
 /** What gets stored as an `Image` Object in EdgeDB */
@@ -150,7 +164,7 @@ export const StringInArray = S.transform(
 const VegetableVariety = S.Struct({
 	id: S.UUID,
 	names: S.NonEmptyArray(StringInArray),
-	photos: S.optional(S.Array(ImageData)),
+	photos: Optional(S.Array(ImageData)),
 })
 
 const VegetableTip = S.Struct({
@@ -159,7 +173,7 @@ const VegetableTip = S.Struct({
 		S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
 	),
 	content: RichText,
-	sources: S.optional(S.Array(SourceData)),
+	sources: Optional(S.Array(SourceData)),
 })
 
 const Handle = S.String.pipe(
@@ -175,36 +189,36 @@ const Handle = S.String.pipe(
 	}),
 )
 
-export const Vegetable = S.Struct({
+export const VegetableData = S.Struct({
 	id: S.UUID,
 	names: S.NonEmptyArray(StringInArray),
 	handle: Handle,
-	scientific_names: S.optional(S.Array(StringInArray)),
-	origin: S.optional(S.String),
-	gender: S.optional(S.Literal(...(Object.keys(GENDER_TO_LABEL) as Gender[]))),
+	scientific_names: Optional(S.Array(StringInArray)),
+	origin: Optional(S.String),
+	gender: Optional(S.Literal(...(Object.keys(GENDER_TO_LABEL) as Gender[]))),
 
-	uses: S.optional(
+	uses: Optional(
 		S.Array(S.Literal(...(Object.keys(USAGE_TO_LABEL) as VegetableUsage[]))),
 	),
-	edible_parts: S.optional(
+	edible_parts: Optional(
 		S.Array(S.Literal(...(Object.keys(EDIBLE_PART_TO_LABEL) as EdiblePart[]))),
 	),
-	lifecycles: S.optional(
+	lifecycles: Optional(
 		S.Array(
 			S.Literal(
 				...(Object.keys(VEGETABLE_LIFECYCLE_TO_LABEL) as VegetableLifeCycle[]),
 			),
 		),
 	),
-	strata: S.optional(
+	strata: Optional(
 		S.Array(S.Literal(...(Object.keys(STRATUM_TO_LABEL) as Stratum[]))),
 	),
-	planting_methods: S.optional(
+	planting_methods: Optional(
 		S.Array(
 			S.Literal(...(Object.keys(PLANTING_METHOD_TO_LABEL) as PlantingMethod[])),
 		),
 	),
-	height_min: S.optional(
+	height_min: Optional(
 		S.Int.pipe(
 			S.positive({ message: () => 'Altura deve ser um número positivo' }),
 			S.lessThan(MAX_ACCEPTED_HEIGHT, {
@@ -212,7 +226,7 @@ export const Vegetable = S.Struct({
 			}),
 		),
 	),
-	height_max: S.optional(
+	height_max: Optional(
 		S.Int.pipe(
 			S.positive({ message: () => 'Altura deve ser um número positivo' }),
 			S.lessThan(MAX_ACCEPTED_HEIGHT, {
@@ -220,7 +234,7 @@ export const Vegetable = S.Struct({
 			}),
 		),
 	),
-	temperature_min: S.optional(
+	temperature_min: Optional(
 		S.Int.pipe(
 			S.greaterThan(-50, {
 				message: () => 'Que inverno gelado é esse que cê tá plantando?!',
@@ -230,7 +244,7 @@ export const Vegetable = S.Struct({
 			}),
 		),
 	),
-	temperature_max: S.optional(
+	temperature_max: Optional(
 		S.Int.pipe(
 			S.greaterThan(-50, {
 				message: () => 'Que inverno gelado é esse que cê tá plantando?!',
@@ -241,12 +255,12 @@ export const Vegetable = S.Struct({
 		),
 	),
 
-	varieties: S.optional(S.Array(VegetableVariety)),
-	tips: S.optional(S.Array(VegetableTip)),
-	photos: S.optional(S.Array(ImageData)),
-	content: S.optional(RichText),
-	friends: S.optional(S.Array(S.UUID)),
-	sources: S.optional(S.Array(SourceData)),
+	varieties: Optional(S.Array(VegetableVariety)),
+	tips: Optional(S.Array(VegetableTip)),
+	photos: Optional(S.Array(ImageData)),
+	content: Optional(RichText),
+	friends: Optional(S.Array(S.UUID)),
+	sources: Optional(S.Array(SourceData)),
 }).pipe(
 	S.filter((vegetable, _, ast) => {
 		if (
@@ -266,11 +280,14 @@ export const Vegetable = S.Struct({
 	}),
 )
 
+export type VegetableVarietyForDB = typeof VegetableVariety.Type
 export type VegetableVarietyInForm = typeof VegetableVariety.Encoded
+
+export type VegetableTipForDB = typeof VegetableTip.Type
 export type VegetableTipInForm = typeof VegetableTip.Encoded
 
-export type VegetableForDB = typeof Vegetable.Type
-export type VegetableInForm = typeof Vegetable.Encoded
+export type VegetableForDB = typeof VegetableData.Type
+export type VegetableInForm = typeof VegetableData.Encoded
 
 export type SourceForDB = typeof SourceData.Type
 
@@ -291,8 +308,8 @@ export const ProfileData = S.Struct({
 		encode: () => Effect.succeed({}),
 		strict: false,
 	}),
-	location: S.optional(S.String),
-	bio: S.optional(RichText),
+	location: Optional(S.String),
+	bio: Optional(RichText),
 })
 
 export type ProfileDataForDB = typeof ProfileData.Type
@@ -302,13 +319,13 @@ export const NoteData = S.Struct({
 	id: S.UUID,
 	published_at: S.Union(S.Date, S.DateFromSelf),
 	title: RichText,
-	body: S.optional(RichText),
+	body: Optional(RichText),
 	public: S.Boolean,
 	types: S.NonEmptyArray(
 		S.Literal(...(Object.keys(NOTE_TYPE_TO_LABEL) as NoteType[])),
 	),
-	handle: S.optional(Handle),
-	created_by: S.optional(S.UUID),
+	handle: Optional(Handle),
+	created_by: Optional(S.UUID),
 })
 
 export type NoteForDB = typeof NoteData.Type

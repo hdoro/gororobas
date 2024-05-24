@@ -1,7 +1,7 @@
-import VegetableForm from '@/components/VegetableForm'
 import { auth } from '@/edgedb'
 import { paths } from '@/utils/urls'
 import { redirect } from 'next/navigation'
+import NewVegetableForm from './NewVegetableForm'
 
 export default async function NewVegetableRoute() {
 	const session = auth.getSession()
@@ -10,5 +10,5 @@ export default async function NewVegetableRoute() {
 		redirect(paths.signinNotice())
 	}
 
-	return <VegetableForm />
+	return <NewVegetableForm />
 }

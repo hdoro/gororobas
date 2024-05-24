@@ -9,6 +9,7 @@ import {
 import { Input } from '../ui/input'
 import Field from './Field'
 import RadioGroupInput from './RadioGroupInput'
+import ReferenceListInput from './ReferenceListInput'
 
 export default function SourceInput<
 	TFieldValues extends FieldValues = FieldValues,
@@ -19,13 +20,13 @@ export default function SourceInput<
 }: { field: ControllerRenderProps<TFieldValues, TName>; label: string }) {
 	const form = useFormContext()
 
-	const sourceType = form.watch(`${field.name}.sourceType`) as SourceType
+	const type = form.watch(`${field.name}.type`) as SourceType
 	return (
 		<div className="space-y-4">
 			<Field
 				form={form}
 				label={`Origem da ${label}`}
-				name={`${field.name}.sourceType`}
+				name={`${field.name}.type`}
 				render={({ field: sourceTypeField }) => (
 					<RadioGroupInput
 						field={sourceTypeField}
@@ -43,7 +44,7 @@ export default function SourceInput<
 				)}
 			/>
 			{/* @TODO: Gororobas source (needs access to EdgeDB users) */}
-			{sourceType === 'EXTERNAL' && (
+			{type === 'EXTERNAL' && (
 				<>
 					<Field
 						form={form}
@@ -62,17 +63,27 @@ export default function SourceInput<
 						form={form}
 						label="Fonte"
 						description="De preferência um link our URL"
-						name={`${field.name}.source`}
-						render={({ field: sourceField }) => (
+						name={`${field.name}.origin`}
+						render={({ field: originField }) => (
 							<Input
-								{...sourceField}
-								value={sourceField.value || ''}
+								{...originField}
+								value={originField.value || ''}
 								type="text"
 								placeholder={`Ex: https://site.br/pagina-da-${label}`}
 							/>
 						)}
 					/>
 				</>
+			)}
+			{type === 'GOROROBAS' && (
+				<Field
+					form={form}
+					label="Pessoas"
+					name={`${field.name}.userIds`}
+					render={({ field: userIdsField }) => (
+						<ReferenceListInput field={userIdsField} objectType="UserProfile" />
+					)}
+				/>
 			)}
 		</div>
 	)

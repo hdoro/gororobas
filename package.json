@@ -109,7 +109,7 @@
 		"dev": "next dev --turbo",
 		"build": "next build",
 		"prebuild": "npm run generate:all",
-		"start": "next start",
+		"start": "EDGEDB_CLIENT_SECURITY=insecure_dev_mode next start",
 		"buildAndTest": "bun run build && bun run start",
 		"format": "prettier src --write",
 		"lint": "biome check src --apply --diagnostic-level=error",

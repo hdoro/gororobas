@@ -25,7 +25,7 @@ export type FormOption = {
 export type ReferenceOption = {
 	id: string
 	label: string
-	image?: ImageForRendering
+	image?: ImageForRendering | null
 }
 
 export type ImageForRendering = Pick<Image, 'sanity_id' | 'label'> & {

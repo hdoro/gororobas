@@ -17,6 +17,7 @@ function getRouteData(handle: string) {
 				catch: (error) => console.log(error),
 			}),
 			...buildTraceAndMetrics('user_profile_page', { handle }),
+		).pipe(
 			Effect.catchAll(() => Effect.succeed(null)),
 		),
 	)

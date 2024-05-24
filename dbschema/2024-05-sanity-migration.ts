@@ -97,7 +97,7 @@ function sanitySourcesToEdgeDB(sources: SanitySources): SourceForDB[] {
 
 function sanityPhotoToEdgeDB(
 	photo: Required<SanityVegetable>['photos'][number],
-): Exclude<VegetableForDB['photos'], undefined>[number] {
+): Exclude<VegetableForDB['photos'], undefined | null>[number] {
 	return {
 		id: generateId(),
 		label: photo.label || '',

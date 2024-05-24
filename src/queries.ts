@@ -15,7 +15,9 @@ const sourceForCard = e.shape(e.Source, () => ({
 	type: true,
 	origin: true,
 	credits: true,
+	comments: true,
 	users: {
+		id: true,
 		name: true,
 		handle: true,
 		photo: {
@@ -29,7 +31,7 @@ const sourceForCard = e.shape(e.Source, () => ({
 
 export type SourceCardData = Exclude<$infer<typeof sourceForCard>, null>[number]
 
-const imageForRendering = e.shape(e.Image, (image) => ({
+const imageForRendering = e.shape(e.Image, () => ({
 	id: true,
 	sanity_id: true,
 	hotspot: true,
@@ -37,6 +39,11 @@ const imageForRendering = e.shape(e.Image, (image) => ({
 	label: true,
 	sources: sourceForCard,
 }))
+
+export type ImageForRenderingData = Exclude<
+	$infer<typeof imageForRendering>,
+	null
+>[number]
 
 const vegetableForCard = e.shape(e.Vegetable, (vegetable) => ({
 	id: true,
@@ -84,6 +91,46 @@ export type NoteCardData = Omit<
 	published_at: Date | string
 }
 
+const vegetableVarietyForCard = e.shape(e.VegetableVariety, (variety) => ({
+	handle: true,
+	names: true,
+	photos: (image) => ({
+		...imageForRendering(image),
+
+		order_by: {
+			expression: image['@order_index'],
+			direction: 'ASC',
+			empty: e.EMPTY_LAST,
+		},
+	}),
+}))
+
+const vegetableTipForCard = e.shape(e.VegetableTip, (tip) => ({
+	handle: true,
+	subjects: true,
+	content: true,
+	sources: sourceForCard,
+}))
+
+const coreVegetableData = e.shape(e.Vegetable, () => ({
+	id: true,
+	names: true,
+	scientific_names: true,
+	handle: true,
+	gender: true,
+	strata: true,
+	planting_methods: true,
+	edible_parts: true,
+	lifecycles: true,
+	uses: true,
+	origin: true,
+	height_min: true,
+	height_max: true,
+	temperature_min: true,
+	temperature_max: true,
+	content: true,
+}))
+
 export const vegetablePageQuery = e.params(
 	{
 		handle: e.str,
@@ -92,22 +139,7 @@ export const vegetablePageQuery = e.params(
 		e.select(e.Vegetable, (vegetable) => ({
 			filter_single: e.op(vegetable.handle, '=', params.handle),
 
-			id: true,
-			names: true,
-			scientific_names: true,
-			handle: true,
-			gender: true,
-			strata: true,
-			planting_methods: true,
-			edible_parts: true,
-			lifecycles: true,
-			uses: true,
-			origin: true,
-			height_min: true,
-			height_max: true,
-			temperature_min: true,
-			temperature_max: true,
-			content: true,
+			...coreVegetableData(vegetable),
 			photos: (image) => ({
 				...imageForRendering(image),
 
@@ -118,17 +150,7 @@ export const vegetablePageQuery = e.params(
 				},
 			}),
 			varieties: (variety) => ({
-				handle: true,
-				names: true,
-				photos: (image) => ({
-					...imageForRendering(image),
-
-					order_by: {
-						expression: image['@order_index'],
-						direction: 'ASC',
-						empty: e.EMPTY_LAST,
-					},
-				}),
+				...vegetableVarietyForCard(variety),
 
 				order_by: {
 					expression: variety['@order_index'],
@@ -137,10 +159,7 @@ export const vegetablePageQuery = e.params(
 				},
 			}),
 			tips: (tip) => ({
-				handle: true,
-				subjects: true,
-				content: true,
-				sources: sourceForCard,
+				...vegetableTipForCard(tip),
 
 				order_by: {
 					expression: tip['@order_index'],
@@ -159,6 +178,54 @@ export const vegetablePageQuery = e.params(
 )
 
 export type VegetablePageData = Exclude<$infer<typeof vegetablePageQuery>, null>
+
+export const vegetableEditingQuery = e.params(
+	{
+		handle: e.str,
+	},
+	(params) =>
+		e.select(e.Vegetable, (vegetable) => ({
+			filter_single: e.op(vegetable.handle, '=', params.handle),
+
+			...coreVegetableData(vegetable),
+			photos: (image) => ({
+				...imageForRendering(image),
+
+				order_by: {
+					expression: image['@order_index'],
+					direction: 'ASC',
+					empty: e.EMPTY_LAST,
+				},
+			}),
+			varieties: (variety) => ({
+				...vegetableVarietyForCard(variety),
+				id: true,
+
+				order_by: {
+					expression: variety['@order_index'],
+					direction: 'ASC',
+					empty: e.EMPTY_LAST,
+				},
+			}),
+			tips: (tip) => ({
+				...vegetableTipForCard(tip),
+				id: true,
+
+				order_by: {
+					expression: tip['@order_index'],
+					direction: 'ASC',
+					empty: e.EMPTY_LAST,
+				},
+			}),
+			friends: vegetableForCard,
+			sources: sourceForCard,
+			related_notes: (note) => ({
+				...noteForCard(note),
+
+				limit: 12,
+			}),
+		})),
+)
 
 export const wishlistedByQuery = e.params({ vegetable_id: e.uuid }, (params) =>
 	e.select(e.Vegetable, (vegetable) => ({
@@ -232,6 +299,12 @@ export const vegetablesForReferenceQuery = e.select(
 		}),
 	}),
 )
+
+export const profilesForReferenceQuery = e.select(e.UserProfile, (profile) => ({
+	id: true,
+	label: profile.name,
+	photo: imageForRendering,
+}))
 
 export const profilePageQuery = e.select(e.UserProfile, (profile) => ({
 	filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),

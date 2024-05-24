@@ -17,8 +17,7 @@ function getRouteData(handle: string) {
 				catch: (error) => console.log(error),
 			}),
 			...buildTraceAndMetrics('vegetable_page', { handle }),
-			Effect.catchAll(() => Effect.succeed(null)),
-		),
+		).pipe(Effect.catchAll(() => Effect.succeed(null))),
 	)
 }
 

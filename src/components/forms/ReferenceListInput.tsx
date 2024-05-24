@@ -1,8 +1,8 @@
 import {
-	type ReferenceObjectType,
 	listReferenceOptions,
+	type ReferenceObjectType,
 } from '@/actions/listReferenceOptions'
-import type { ImageForRendering, ReferenceOption } from '@/types'
+import type { ReferenceOption } from '@/types'
 import { cn } from '@/utils/cn'
 import { CommandLoading } from 'cmdk'
 import { CheckIcon, XIcon } from 'lucide-react'
@@ -49,6 +49,7 @@ export default function ReferenceListInput<
 
 	const selectedOptions = selected.flatMap((id) => optionsMap[id] || [])
 
+	const label = objectType === 'Vegetable' ? 'vegetais' : 'pessoas'
 	return (
 		<FormItem className={'border rounded-md'}>
 			<Command
@@ -57,13 +58,13 @@ export default function ReferenceListInput<
 				className="relative overflow-visible p-0"
 			>
 				<FormLabel className="font-normal sr-only">
-					Busque por vegetais no Gororobas
+					Busque por {label} no Gororobas
 				</FormLabel>
 				<FormControl>
 					<CommandInput
 						value={searchQuery}
 						onValueChange={setSearchQuery}
-						placeholder="Busque por vegetais no Gororobas"
+						placeholder={`Busque por ${label} no Gororobas`}
 						className="border-none p-0"
 						disabled={field.disabled}
 					/>
@@ -145,9 +146,7 @@ export default function ReferenceListInput<
 
 function useReferenceOptions(objectType: ReferenceObjectType) {
 	const [error, setError] = useState<string | null>(null)
-	const [options, setOptions] = useState<
-		{ id: string; label: string; image?: ImageForRendering }[] | null
-	>(null)
+	const [options, setOptions] = useState<ReferenceOption[] | null>(null)
 
 	const optionsMap = useMemo(() => {
 		return (options || []).reduce(

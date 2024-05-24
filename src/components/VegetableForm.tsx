@@ -1,6 +1,5 @@
 'use client'
 
-import { createVegetableAction } from '@/actions/createVegetable.action'
 import {
 	Card,
 	CardContent,
@@ -8,7 +7,11 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import { Vegetable, type VegetableForDB, type VegetableInForm } from '@/schemas'
+import {
+	VegetableData,
+	type VegetableForDB,
+	type VegetableInForm,
+} from '@/schemas'
 import type { VegetableUsage } from '@/types'
 import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
 import { generateId } from '@/utils/ids'
@@ -20,7 +23,6 @@ import {
 	USAGE_TO_LABEL,
 	VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
-import { paths } from '@/utils/urls'
 import { SendIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -48,33 +50,42 @@ import { Input } from './ui/input'
 import { Text } from './ui/text'
 import { useToast } from './ui/use-toast'
 
-export default function VegetableForm() {
+export default function VegetableForm(props: {
+	onSubmit: (
+		vegetable: VegetableForDB,
+	) => Promise<
+		{ success: true; redirectTo: string } | { success: false; error: string }
+	>
+	initialValue?: VegetableInForm
+}) {
 	const router = useRouter()
 	const toast = useToast()
 	const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>(
 		'idle',
 	)
 	const form = useForm<VegetableInForm>({
-		resolver: effectSchemaResolverResolver(Vegetable),
+		resolver: effectSchemaResolverResolver(VegetableData),
 		criteriaMode: 'all',
-		defaultValues: {
-			id: generateId(),
-		},
+		defaultValues:
+			'initialValue' in props
+				? props.initialValue
+				: {
+						id: generateId(),
+					},
 		mode: 'onBlur',
+		disabled: status !== 'idle',
 	})
 
-	const onSubmit: SubmitHandler<VegetableInForm> = async (data, event) => {
+	const onSubmit: SubmitHandler<VegetableInForm> = async (data) => {
 		setStatus('submitting')
-		const result = await createVegetableAction(
-			data as unknown as VegetableForDB,
-		)
-		if (result) {
+		const result = await props.onSubmit(data as unknown as VegetableForDB)
+		if (result.success) {
 			toast.toast({
 				variant: 'default',
 				title: 'Vegetal criado com sucesso ✨',
 				description: 'Te enviando pra página dele...',
 			})
-			router.push(paths.vegetable(data.handle))
+			router.push(result.redirectTo)
 			setStatus('success')
 		} else {
 			toast.toast({
@@ -116,7 +127,9 @@ export default function VegetableForm() {
 				>
 					<div className="flex items-center gap-4">
 						<h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-							Criar vegetal
+							{props.initialValue
+								? `Editar ${props.initialValue.names?.[0]?.value || 'vegetal'}`
+								: 'Criar vegetal'}
 						</h1>
 						<Button type="submit" disabled={form.formState.disabled}>
 							<SendIcon className="w-[1.25em]" /> Enviar

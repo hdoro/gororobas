@@ -6,12 +6,13 @@ import {
 	insertVegetableFriendshipsMutation,
 	insertVegetableMutation,
 } from '@/mutations'
-import { StoredImage, Vegetable, type VegetableForDB } from '@/schemas'
+import { StoredImage, VegetableData, type VegetableForDB } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { InvalidInputError } from '@/types/errors'
 import { generateId } from '@/utils/ids'
 import { slugify } from '@/utils/strings'
 import { uploadImagesToSanity } from '@/utils/uploadImagesToSanity'
+import { paths } from '@/utils/urls'
 import { Schema } from '@effect/schema'
 import * as S from '@effect/schema/Schema'
 import type { Client } from 'edgedb'
@@ -21,8 +22,8 @@ import { formatVegetableFriendForDB } from './formatVegetableFriendForDB'
 export function createVegetable(input: VegetableForDB, client: Client) {
 	return runServerEffect(
 		Effect.gen(function* (_) {
-			if (!Schema.is(Vegetable)(input)) {
-				return yield* Effect.fail(new InvalidInputError(input, Vegetable))
+			if (!Schema.is(VegetableData)(input)) {
+				return yield* Effect.fail(new InvalidInputError(input, VegetableData))
 			}
 
 			return yield* pipe(
@@ -30,13 +31,27 @@ export function createVegetable(input: VegetableForDB, client: Client) {
 					try: () => getTransaction(input, client),
 					catch: (error) => {
 						console.log('Failed creating vegetable', error)
+						return error
 					},
 				}),
+				Effect.map(
+					() =>
+						({
+							success: true,
+							redirectTo: paths.vegetable(input.handle),
+						}) as const,
+				),
 				...buildTraceAndMetrics('create_vegetable', {
 					vegetable_id: input.id,
 				}),
-				Effect.map(() => true),
-				Effect.catchAll(() => Effect.succeed(false)),
+			).pipe(
+				Effect.catchAll(() =>
+					Effect.succeed({
+						success: false,
+						// @TODO better handle error so users know what went wrong
+						error: 'erro-desconhecido',
+					} as const),
+				),
 			)
 		}),
 	)

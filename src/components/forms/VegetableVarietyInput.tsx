@@ -22,6 +22,7 @@ import { Input } from '../ui/input'
 import ArrayInput from './ArrayInput'
 import Field from './Field'
 import ImageInput from './ImageInput'
+import { SanityImage } from '../SanityImage'
 
 export default function VegetableVarietyInput<
 	TFieldValues extends FieldValues = FieldValues,
@@ -39,11 +40,7 @@ export default function VegetableVarietyInput<
 	const { names = [] } = value
 
 	const renderablePhoto =
-		value.photos?.[0] &&
-		'data' in value.photos[0] &&
-		'file' in value.photos[0].data
-			? value.photos[0]
-			: undefined
+		value.photos?.[0] && 'data' in value.photos[0] ? value.photos[0] : undefined
 	return (
 		<Dialog>
 			<DialogTrigger
@@ -53,10 +50,8 @@ export default function VegetableVarietyInput<
 				<div className="flex items-center gap-3">
 					<div
 						className={cn(
-							'flex-[0_0_6.25rem] w-[6.25rem] rounded-lg overflow-hidden text-primary-700',
-							renderablePhoto
-								? 'h-auto'
-								: 'flex items-center justify-center h-[6.25rem] bg-card-foreground/5',
+							'flex-[0_0_6.25rem] w-[6.25rem] h-[6.25rem] rounded-lg overflow-hidden text-primary-700  bg-card-foreground/5',
+							renderablePhoto ? '' : 'flex items-center justify-center',
 						)}
 					>
 						{renderablePhoto &&
@@ -65,7 +60,14 @@ export default function VegetableVarietyInput<
 							<img
 								src={URL.createObjectURL(renderablePhoto.data.file)}
 								alt={renderablePhoto.label || ''}
-								className="w-full h-auto max-h-[6.25rem] object-cover"
+								className="w-full h-full object-contain"
+							/>
+						) : renderablePhoto && 'sanity_id' in renderablePhoto.data ? (
+							<SanityImage
+								image={renderablePhoto.data}
+								maxWidth={150}
+								alt={renderablePhoto.label || ''}
+								className="w-full h-full object-contain"
 							/>
 						) : (
 							<ImageOffIcon />
