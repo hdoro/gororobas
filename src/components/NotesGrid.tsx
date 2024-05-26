@@ -20,7 +20,7 @@ export function NotesGridWrapper(
 			style={{
 				...(props.style || {}),
 				gridTemplateColumns:
-					'repeat(auto-fill, minmax(calc(var(--note-card-width) * 0.75), var(--note-card-width)))',
+					'repeat(auto-fill, minmax(calc(var(--note-card-width) * 0.75), 1fr))',
 			}}
 		>
 			{props.children}

@@ -37,13 +37,18 @@ export default function HomePage(data: Partial<HomePageData>) {
 			{featured_vegetables && featured_vegetables.length > 0 && (
 				<>
 					<section className="overflow-x-hidden space-y-9 -ml-[calc(var(--vegetable-card-width)_/_2)]">
-						<VegetablesStrip vegetables={featured_vegetables.slice(0, 6)} />
-						{featured_vegetables.length > 6 && (
-							<VegetablesStrip
-								vegetables={featured_vegetables.slice(6)}
-								offset
-							/>
-						)}
+						<VegetablesStrip
+							vegetables={featured_vegetables.slice(
+								0,
+								Math.min(featured_vegetables.length / 2),
+							)}
+						/>
+						<VegetablesStrip
+							vegetables={featured_vegetables.slice(
+								Math.min(featured_vegetables.length / 2),
+							)}
+							offset
+						/>
 					</section>
 					<div className="mt-8 text-center">
 						<Link

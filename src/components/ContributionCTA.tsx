@@ -17,17 +17,17 @@ export function ContributionCTA() {
 				Iríamos adorar receber suas notinhas ou conhecimento sobre plantas e
 				agroecologia{' '}
 			</Text>
-			<div className="flex items-center justify-center gap-3 mt-5">
+			<div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-5">
 				<Button asChild tone="secondary" mode="outline">
 					<Link href={paths.newNote()}>
-						<NoteIcon variant="monochrome" className="w-[1.25em]" /> Enviar sua
+						<NoteIcon variant="monochrome" className="w-[1.25em]" /> Envie sua
 						nota
 					</Link>
 				</Button>
 				<span className="text-muted-foreground">ou</span>
 				<Button asChild>
 					<Link href={paths.newVegetable()}>
-						<SeedlingIcon variant="monochrome" className="w-[1.25em]" /> Enviar
+						<SeedlingIcon variant="monochrome" className="w-[1.25em]" /> Envie
 						um novo vegetal
 					</Link>
 				</Button>

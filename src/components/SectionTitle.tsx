@@ -18,7 +18,7 @@ export default function SectionTitle({
 			level="h2"
 			as="h2"
 			// This `px` is to align the text with the page padding, leaving the icon to the left of it
-			className="px-pageX xl:px-[calc(var(--page-padding-x)_-_2.625rem)] flex gap-2.5 flex-col xl:flex-row xl:items-center"
+			className="px-pageX xl:px-[calc(var(--page-padding-x)_-_2.625rem)] flex gap-1 flex-col xl:flex-row xl:items-center xl:gap-2.5"
 		>
 			{Icon && <Icon variant="color" className="w-8" />}
 			{children}

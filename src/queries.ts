@@ -337,9 +337,19 @@ export const profileForNavQuery = e.select(e.UserProfile, (profile) => ({
 export const homePageQuery = e.select({
 	featured_vegetables: e.select(e.Vegetable, (vegetable) => ({
 		...vegetableForCard(vegetable),
+		photos: (image) => ({
+			...imageForRendering(image),
+
+			order_by: {
+				expression: image['@order_index'],
+				direction: 'ASC',
+				empty: e.EMPTY_LAST,
+			},
+			limit: 1,
+		}),
 
 		filter: e.op('exists', vegetable.photos),
-		limit: 12,
+		limit: 16,
 	})),
 
 	profiles: e.select(e.UserProfile, (profile) => ({

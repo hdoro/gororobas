@@ -36,7 +36,7 @@ export default function NoteCard({
 		<RootElement
 			id={`nota-${note.handle}`}
 			className={cn(
-				'text-left note-card--root relative aspect-[1.35] h-auto group',
+				'text-left note-card--root relative aspect-[1.15] h-auto group @container',
 				variant === 'page'
 					? 'flex-[0_0_var(--card-width)] w-[var(--card-width)]'
 					: 'flex-1 min-w-[calc(var(--card-width)_*_0.75)] max-w-[var(--card-width)]',
@@ -55,7 +55,7 @@ export default function NoteCard({
 		>
 			<div className="note-card" data-flipped={flipped}>
 				<div className="note-card--front flex flex-col relative rounded-md bg-yellow-100 border-2 border-yellow-200 shadow-sm py-2 px-3">
-					<div className="note-card--content text-xl leading-relaxed order-1 flex-1 text-yellow-950 opacity-90">
+					<div className="note-card--content @xs:text-xl leading-relaxed order-1 flex-1 text-yellow-950 opacity-90">
 						<DefaultTipTapRenderer content={title as any} />
 					</div>
 
