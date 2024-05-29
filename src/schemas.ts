@@ -167,21 +167,6 @@ export const StringInArray = S.transform(
 	},
 )
 
-export const VegetableVarietyData = S.Struct({
-	id: S.UUID,
-	names: S.NonEmptyArray(StringInArray),
-	photos: Optional(S.Array(ImageData)),
-})
-
-const VegetableTipData = S.Struct({
-	id: S.UUID,
-	subjects: S.Array(
-		S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
-	),
-	content: RichText,
-	sources: Optional(S.Array(SourceData)),
-})
-
 const Handle = S.String.pipe(
 	S.minLength(1, {
 		message: () => 'Obrigatório',
@@ -194,6 +179,23 @@ const Handle = S.String.pipe(
 			'O endereço não pode conter caracteres especiais, letras maiúsculas, espaços ou acentos',
 	}),
 )
+
+export const VegetableVarietyData = S.Struct({
+	id: S.UUID,
+	handle: Optional(Handle),
+	names: S.NonEmptyArray(StringInArray),
+	photos: Optional(S.Array(ImageData)),
+})
+
+const VegetableTipData = S.Struct({
+	id: S.UUID,
+	handle: Optional(Handle),
+	subjects: S.Array(
+		S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
+	),
+	content: RichText,
+	sources: Optional(S.Array(SourceData)),
+})
 
 export const VegetableData = S.Struct({
 	id: S.UUID,

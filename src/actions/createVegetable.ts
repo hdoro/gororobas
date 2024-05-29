@@ -1,23 +1,22 @@
 import {
-	insertImagesMutation,
-	insertSourcesMutation,
-	insertTipsMutation,
-	insertVarietiesMutation,
-	insertVegetableFriendshipsMutation,
-	insertVegetableMutation,
+	insertVegetableMutationV2,
+	type PhotosMutationInput,
+	type SourcesMutationInput,
 } from '@/mutations'
-import { StoredImage, VegetableData, type VegetableForDB } from '@/schemas'
+import {
+	StoredImageData,
+	VegetableData,
+	type SourceForDB,
+	type VegetableForDB,
+} from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { InvalidInputError } from '@/types/errors'
-import { generateId } from '@/utils/ids'
-import { slugify } from '@/utils/strings'
-import { uploadImagesToSanity } from '@/utils/uploadImagesToSanity'
-import { paths } from '@/utils/urls'
+import { tiptapJSONtoPlainText } from '@/utils/tiptap'
+import { getStandardHandle, paths } from '@/utils/urls'
 import { Schema } from '@effect/schema'
-import * as S from '@effect/schema/Schema'
 import type { Client } from 'edgedb'
 import { Effect, pipe } from 'effect'
-import { formatVegetableFriendForDB } from './formatVegetableFriendForDB'
+import { writeFileSync } from 'node:fs'
 
 export function createVegetable(input: VegetableForDB, client: Client) {
 	return runServerEffect(
@@ -57,165 +56,104 @@ export function createVegetable(input: VegetableForDB, client: Client) {
 	)
 }
 
+function sourcesToParam(
+	sources: readonly SourceForDB[] | undefined | null,
+): SourcesMutationInput {
+	return (sources || []).map((source, sourceIndex) => ({
+		id: source.id,
+		type: source.type,
+		order_index: sourceIndex,
+		optional_properties: {
+			comments: source.comments,
+			credits: 'credits' in source ? source.credits : null,
+			origin: 'origin' in source ? source.origin : null,
+			users: 'userIds' in source ? source.userIds : null,
+		},
+	}))
+}
+
+function photosToParam(
+	photos: readonly (typeof StoredImageData.Type)[] | undefined | null,
+): PhotosMutationInput {
+	return (photos || []).map((photo, photoIndex) => ({
+		id: photo.id,
+		order_index: photoIndex,
+		sanity_id: photo.data.sanity_id,
+		sources: sourcesToParam(photo.sources),
+		optional_properties: {
+			label: photo.label,
+			hotspot: photo.data.hotspot,
+			crop: photo.data.crop,
+		},
+	}))
+}
+
 function getTransaction(input: VegetableForDB, inputClient: Client) {
 	const client = inputClient.withConfig({ allow_user_specified_id: true })
 
-	return client.transaction(async (tx) => {
-		// #1 CREATE ALL SOURCES
-		const allSources = [
-			...(input.tips || []).flatMap((tip) => tip?.sources || []),
-			...(input.photos || []).flatMap((photo) => photo?.sources || []),
-			...(input.varieties || []).flatMap(
-				(variety) =>
-					variety?.photos?.flatMap((photo) => photo?.sources || []) || [],
-			),
-			...(input.sources || []),
-		]
-		if (allSources.length > 0) {
-			await insertSourcesMutation.run(tx, {
-				sources: allSources,
-			})
-		}
+	writeFileSync('query.edgeql', insertVegetableMutationV2.toEdgeQL())
+	return insertVegetableMutationV2.run(client, {
+		id: input.id,
+		names: input.names,
+		handle: input.handle,
+		scientific_names: input.scientific_names ?? null,
+		gender: input.gender ?? null,
+		strata: input.strata ?? null,
+		temperature_max: input.temperature_max ?? null,
+		temperature_min: input.temperature_min ?? null,
+		height_max: input.height_max ?? null,
+		height_min: input.height_min ?? null,
+		origin: input.origin ?? null,
+		uses: input.uses ?? null,
+		planting_methods: input.planting_methods ?? null,
+		edible_parts: input.edible_parts ?? null,
+		lifecycles: input.lifecycles ?? null,
+		content: input.content ?? null,
+		sources: sourcesToParam(input.sources),
+		photos: photosToParam(
+			(input.photos || []).flatMap((photo) => {
+				if (Schema.is(StoredImageData)(photo)) return photo
 
-		// #2 CREATE ALL PHOTOS
-		const allPhotos = [
-			...(input.varieties || []).flatMap((v) => v?.photos || []),
-			...(input.photos || []),
-		]
-		let photosWithIds: {
-			id: string
-			label: string
-			sanity_id: string
-			sources: string[]
-		}[] = []
-		if (allPhotos.length > 0) {
-			const uploaded = await uploadImagesToSanity(allPhotos)
-			const allPhotosFormatted = [
-				...(input.varieties || []).flatMap((v) => v?.photos || []),
-				...(input.photos || []),
-			].flatMap((photo) => {
-				if (S.is(StoredImage)(photo.data)) {
-					return {
-						id: photo.id,
-						label: photo.label || '',
-						sanity_id: photo.data.sanity_id,
-						sources: photo.sources?.map((s) => s.id) || [],
-					}
-				}
-
-				const result = uploaded[photo.id]
-				const sanity_id =
-					result && 'sanity_id' in result ? result.sanity_id : null
-				if (!sanity_id) return [] // @TODO better handle image errors
-
-				return {
-					id: photo.id,
-					label: photo.label || '',
-					sanity_id,
-					sources: photo.sources?.map((s) => s.id) || [],
-				}
-			})
-
-			if (allPhotosFormatted.length > 0) {
-				await insertImagesMutation.run(tx, {
-					images: allPhotosFormatted,
-				})
-			}
-
-			photosWithIds = allPhotosFormatted
-		}
-
-		// #3 CREATE ALL VARIETIES
-		const varieties = (input.varieties || []).map((v) => {
-			return {
-				id: v.id,
-				names: v.names,
-				handle: `${input.handle}-${slugify(v.names[0])}`,
-				photosSanityId: (v.photos || []).flatMap((photo) => {
-					const photoSanityId = photosWithIds.find(
-						(p) => p.id === photo.id,
-					)?.sanity_id
-					if (!photoSanityId) return []
-
-					return photoSanityId
-				}),
-			}
-		})
-
-		if (varieties.length > 0) {
-			await insertVarietiesMutation.run(tx, {
-				varieties,
-			})
-		}
-
-		// #4 CREATE ALL TIPS
-		const tips = (input.tips || []).map(
-			({ subjects, content, sources, id }) => {
-				return {
-					id,
-					content,
-					subjects,
-					handle: `${input.handle}-${generateId()}`,
-					sources: sources?.map((s) => s.id) || [],
-				}
-			},
-		)
-		if (tips.length > 0) {
-			await insertTipsMutation.run(tx, {
-				tips,
-			})
-		}
-
-		// #5 VEGETABLE
-		await insertVegetableMutation.run(tx, {
-			id: input.id,
-			names: input.names,
-			handle: input.handle,
-			scientific_names: input.scientific_names ?? null,
-			gender: input.gender ?? null,
-			strata: input.strata ?? null,
-			temperature_max: input.temperature_max ?? null,
-			temperature_min: input.temperature_min ?? null,
-			height_max: input.height_max ?? null,
-			height_min: input.height_min ?? null,
-			origin: input.origin ?? null,
-			uses: input.uses ?? null,
-			planting_methods: input.planting_methods ?? null,
-			edible_parts: input.edible_parts ?? null,
-			lifecycles: input.lifecycles ?? null,
-			content: input.content ?? null,
-			photos: (input.photos || [])
-				.flatMap((photo) => {
-					const photoSanityId = photosWithIds.find(
-						(p) => p.id === photo.id,
-					)?.sanity_id
-					if (!photoSanityId) return []
-
-					return photoSanityId
-				})
-				.map((sanity_id, order_index) => ({
-					sanity_id,
-					order_index,
-				})),
-			varieties: varieties.map((variety, order_index) => ({
-				id: variety.id,
-				order_index,
-			})),
-			tips: tips.map((tip, order_index) => ({
-				id: tip.id,
-				order_index,
-			})),
-			sources: input.sources?.map((s) => s.id) || [],
-		})
-
-		// #6 FRIENDSHIPS
-		if (input.friends && input.friends.length > 0) {
-			await insertVegetableFriendshipsMutation.run(tx, {
-				friends: input.friends.map((friend_id) =>
-					formatVegetableFriendForDB(friend_id, input.id),
+				return []
+			}),
+		),
+		tips: (input.tips || []).map((tip, tipIndex) => ({
+			id: tip.id,
+			order_index: tipIndex,
+			handle:
+				tip.handle ||
+				getStandardHandle(
+					tiptapJSONtoPlainText(tip.content) || String(tipIndex),
+					tip.id,
 				),
-				vegetable_id: input.id,
-			})
-		}
+			subjects: tip.subjects,
+			content: tip.content,
+			sources: (tip.sources || []).map((source, sourceIndex) => ({
+				id: source.id,
+				type: source.type,
+				order_index: sourceIndex,
+				optional_properties: {
+					comments: source.comments,
+					credits: 'credits' in source ? source.credits : null,
+					origin: 'origin' in source ? source.origin : null,
+					users: 'userIds' in source ? source.userIds : null,
+				},
+			})),
+		})),
+		varieties: (input.varieties || []).map((variety, varietyIndex) => ({
+			id: variety.id,
+			order_index: varietyIndex,
+			names: variety.names,
+			handle:
+				variety.handle ||
+				getStandardHandle(variety.names.join('-'), variety.id),
+			photos: photosToParam(
+				(variety.photos || []).flatMap((photo) => {
+					if (Schema.is(StoredImageData)(photo)) return photo
+
+					return []
+				}),
+			),
+		})),
 	})
 }

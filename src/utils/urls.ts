@@ -99,7 +99,7 @@ export function getAuthRedirect(isSignedIn: boolean) {
 }
 
 export function getStandardHandle(textContent: string, id: string) {
-	return slugify(`${truncate(textContent, 20)} ${id.slice(0, 6)}`)
+	return slugify(`${truncate(textContent, 20)}-${id.slice(0, 6)}`)
 }
 
 /**

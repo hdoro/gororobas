@@ -36,7 +36,8 @@ You can learn about the project's motivation, tech stack, approach and learnings
     - 💡 You can still authenticate with Google oAuth without it
 1. To connect to a local database, [install EdgeDB](https://docs.edgedb.com/get-started/quickstart#installation) to your machine
 1. Run `pnpm install` to install the dependencies
-1. In a separate terminal, run `edgedb ui` to open the EdgeDB Studio
+1. In a separate terminal, run `edgedb project init` to start an EdgeDB instance for the current config
+1. Run `edgedb ui` to open the EdgeDB Studio
 1. Then, in the same EdgeDB terminal, run `edgedb watch` to have it watch changes to your schema
 1. After EdgeDB has applied the necessary migrations, run `bun run generate:all` to have the types and our custom EdgeQL SDK generated. This is necessary to interact with the database and the project won't run without it.
 1. After generating types, run `bun run auth:setup` to configure EdgeDB with the proper authentication settings

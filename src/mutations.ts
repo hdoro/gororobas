@@ -1,4 +1,6 @@
 import e from '@/edgeql'
+import type { $expr_Param } from './edgeql/params'
+import type { BaseTypeToTsType } from './edgeql/reflection'
 
 export const insertSourcesMutation = e.params(
 	{
@@ -23,8 +25,9 @@ export const insertSourcesMutation = e.params(
 						),
 					})),
 				})
-				.unlessConflict((source) => ({
-					on: source.id,
+				.unlessConflict((existingSource) => ({
+					on: existingSource.id,
+					else: existingSource,
 				})),
 		),
 )
@@ -59,58 +62,6 @@ export const insertImagesMutation = e.params(
 				})),
 		),
 )
-export const insertVarietiesMutation = e.params(
-	{
-		varieties: e.array(
-			e.tuple({
-				id: e.uuid,
-				names: e.array(e.str),
-				handle: e.str,
-				photosSanityId: e.array(e.str),
-			}),
-		),
-	},
-	(params) =>
-		e.for(e.array_unpack(params.varieties), (variety) =>
-			e.insert(e.VegetableVariety, {
-				id: variety.id,
-				names: variety.names,
-				handle: variety.handle,
-				photos: e.select(e.Image, (image) => ({
-					filter: e.op(
-						image.sanity_id,
-						'in',
-						e.array_unpack(variety.photosSanityId),
-					),
-				})),
-			}),
-		),
-)
-export const insertTipsMutation = e.params(
-	{
-		tips: e.array(
-			e.tuple({
-				id: e.uuid,
-				handle: e.str,
-				subjects: e.array(e.str),
-				content: e.json,
-				sources: e.array(e.uuid),
-			}),
-		),
-	},
-	(params) =>
-		e.for(e.array_unpack(params.tips), (tip) =>
-			e.insert(e.VegetableTip, {
-				id: tip.id,
-				subjects: e.array_unpack(e.cast(e.array(e.TipSubject), tip.subjects)),
-				content: tip.content,
-				handle: tip.handle,
-				sources: e.select(e.Source, (source) => ({
-					filter: e.op(source.id, 'in', e.array_unpack(tip.sources)),
-				})),
-			}),
-		),
-)
 
 export const insertVegetableFriendshipsMutation = e.params(
 	{
@@ -137,79 +88,6 @@ export const insertVegetableFriendshipsMutation = e.params(
 					else: friendship,
 				})),
 		),
-)
-
-export const insertVegetableMutation = e.params(
-	{
-		id: e.uuid,
-		names: e.array(e.str),
-		scientific_names: e.optional(e.array(e.str)),
-		handle: e.str,
-		gender: e.optional(e.Gender),
-		origin: e.optional(e.str),
-		strata: e.optional(e.array(e.str)),
-		uses: e.optional(e.array(e.str)),
-		edible_parts: e.optional(e.array(e.str)),
-		lifecycles: e.optional(e.array(e.str)),
-		planting_methods: e.optional(e.array(e.str)),
-		height_min: e.optional(e.float32),
-		height_max: e.optional(e.float32),
-		temperature_min: e.optional(e.float32),
-		temperature_max: e.optional(e.float32),
-		content: e.optional(e.json),
-
-		// Refs
-		photos: e.optional(
-			e.array(e.tuple({ sanity_id: e.str, order_index: e.int16 })),
-		),
-		varieties: e.optional(
-			e.array(e.tuple({ id: e.uuid, order_index: e.int16 })),
-		),
-		tips: e.optional(e.array(e.tuple({ id: e.uuid, order_index: e.int16 }))),
-		sources: e.array(e.uuid),
-	},
-	(params) =>
-		e.insert(e.Vegetable, {
-			...params,
-			strata: e.array_unpack(e.cast(e.array(e.Stratum), params.strata)),
-			uses: e.array_unpack(e.cast(e.array(e.VegetableUsage), params.uses)),
-			edible_parts: e.array_unpack(
-				e.cast(e.array(e.EdiblePart), params.edible_parts),
-			),
-			lifecycles: e.array_unpack(
-				e.cast(e.array(e.VegetableLifeCycle), params.lifecycles),
-			),
-			planting_methods: e.array_unpack(
-				e.cast(e.array(e.PlantingMethod), params.planting_methods),
-			),
-			photos: e.assert_distinct(
-				e.for(e.array_unpack(params.photos), (photo) =>
-					e.select(e.Image, (v) => ({
-						filter_single: e.op(v.sanity_id, '=', photo.sanity_id),
-						// '@order_index': photo.order_index,
-					})),
-				),
-			),
-			varieties: e.assert_distinct(
-				e.for(e.array_unpack(params.varieties), (variety) =>
-					e.select(e.VegetableVariety, (v) => ({
-						filter_single: e.op(v.id, '=', variety.id),
-						// '@order_index': variety.order_index,
-					})),
-				),
-			),
-			tips: e.assert_distinct(
-				e.for(e.array_unpack(params.tips), (tip) =>
-					e.select(e.VegetableTip, (v) => ({
-						filter_single: e.op(v.id, '=', tip.id),
-						// '@order_index': tip.order_index,
-					})),
-				),
-			),
-			sources: e.select(e.Source, (source) => ({
-				filter: e.op(source.id, 'in', e.array_unpack(params.sources)),
-			})),
-		}),
 )
 
 export const updateWishlistStatusMutation = e.params(
@@ -358,4 +236,258 @@ export const rejectSuggestionMutation = e.params(
 				status: e.EditSuggestionStatus.REJECTED,
 			},
 		})),
+)
+
+const SOURCES_PARAM = e.array(
+	e.tuple({
+		id: e.uuid,
+		type: e.SourceType,
+		order_index: e.int16,
+		/** { credits?: e.str, origin?: e.str, comments?: e.json, users?: e.array(e.uuid) } */
+		optional_properties: e.json,
+	}),
+)
+
+export type SourcesMutationInput = Readonly<
+	BaseTypeToTsType<typeof SOURCES_PARAM, true>
+>
+
+const insertOrUpdateSources = (
+	sources: $expr_Param<'sources', typeof SOURCES_PARAM, false>,
+) =>
+	e.assert_distinct(
+		e.for(e.array_unpack(sources), (source) => {
+			const updated = e.update(e.Source, (existingSource) => ({
+				filter: e.op(existingSource.id, '=', source.id),
+
+				set: {
+					credits: e.op(
+						e.cast(e.str, e.json_get(source.optional_properties, 'credits')),
+						'??',
+						existingSource.credits,
+					),
+					origin: e.op(
+						e.cast(e.str, e.json_get(source.optional_properties, 'origin')),
+						'??',
+						existingSource.origin,
+					),
+					comments: e.op(
+						e.cast(e.json, e.json_get(source.optional_properties, 'comments')),
+						'??',
+						existingSource.comments,
+					),
+					users: e.op(
+						e.select(e.UserProfile, (user) => ({
+							filter: e.op(
+								user.id,
+								'in',
+								e.array_unpack(
+									e.cast(
+										e.array(e.uuid),
+										e.json_get(source.optional_properties, 'userIds'),
+									),
+								),
+							),
+						})),
+						'??',
+						existingSource.users,
+					),
+				},
+			}))
+			const inserted = e
+				.insert(e.Source, {
+					id: source.id,
+					type: source.type,
+					credits: e.cast(
+						e.str,
+						e.json_get(source.optional_properties, 'credits'),
+					),
+					origin: e.cast(
+						e.str,
+						e.json_get(source.optional_properties, 'origin'),
+					),
+					comments: e.cast(
+						e.json,
+						e.json_get(source.optional_properties, 'comments'),
+					),
+					users: e.select(e.UserProfile, (user) => ({
+						filter: e.op(
+							user.id,
+							'in',
+							e.array_unpack(
+								e.cast(
+									e.array(e.uuid),
+									e.json_get(source.optional_properties, 'userIds'),
+								),
+							),
+						),
+					})),
+				})
+				.unlessConflict()
+
+			const final_object = e.op(inserted, '??', updated)
+
+			return e.with(
+				[inserted, updated, final_object],
+				e.select(final_object, () => ({
+					id: true,
+				})),
+			)
+		}),
+	)
+
+const PHOTOS_PARAM = e.array(
+	e.tuple({
+		id: e.uuid,
+		sanity_id: e.str,
+		sources: SOURCES_PARAM,
+		order_index: e.int16,
+		/** { label?: e.str, hotspot?: e.json, crop?: e.json } */
+		optional_properties: e.json,
+	}),
+)
+
+export type PhotosMutationInput = Readonly<
+	BaseTypeToTsType<typeof PHOTOS_PARAM, true>
+>
+
+const insertOrUpdateImages = (
+	images: $expr_Param<'photos', typeof PHOTOS_PARAM, false>,
+) =>
+	e.for(e.array_unpack(images), (photo) =>
+		e
+			.insert(e.Image, {
+				id: photo.id,
+				sanity_id: photo.sanity_id,
+				label: e.cast(e.str, e.json_get(photo.optional_properties, 'label')),
+				hotspot: e.cast(
+					e.json,
+					e.json_get(photo.optional_properties, 'hotspot'),
+				),
+				crop: e.cast(e.json, e.json_get(photo.optional_properties, 'crop')),
+				// sources: insertOrUpdateSources(photo.sources),
+			})
+			.unlessConflict((existingImage) => ({
+				on: existingImage.sanity_id,
+				else: e.update(existingImage, () => ({
+					set: {
+						label: e.cast(
+							e.str,
+							e.json_get(photo.optional_properties, 'label'),
+						),
+						hotspot: e.cast(
+							e.json,
+							e.json_get(photo.optional_properties, 'hotspot'),
+						),
+						crop: e.cast(e.json, e.json_get(photo.optional_properties, 'crop')),
+						// sources: insertOrUpdateSources(photo.sources),
+					},
+				})),
+			})),
+	)
+
+export const insertVegetableMutationV2 = e.params(
+	{
+		id: e.uuid,
+		names: e.array(e.str),
+		scientific_names: e.optional(e.array(e.str)),
+		handle: e.str,
+		gender: e.optional(e.Gender),
+		origin: e.optional(e.str),
+		strata: e.optional(e.array(e.str)),
+		uses: e.optional(e.array(e.str)),
+		edible_parts: e.optional(e.array(e.str)),
+		lifecycles: e.optional(e.array(e.str)),
+		planting_methods: e.optional(e.array(e.str)),
+		height_min: e.optional(e.float32),
+		height_max: e.optional(e.float32),
+		temperature_min: e.optional(e.float32),
+		temperature_max: e.optional(e.float32),
+		content: e.optional(e.json),
+		photos: PHOTOS_PARAM,
+		sources: SOURCES_PARAM,
+		varieties: e.array(
+			e.tuple({
+				id: e.uuid,
+				names: e.array(e.str),
+				handle: e.str,
+				photos: PHOTOS_PARAM,
+				order_index: e.int16,
+			}),
+		),
+		tips: e.array(
+			e.tuple({
+				id: e.uuid,
+				handle: e.str,
+				subjects: e.array(e.str),
+				content: e.json,
+				sources: SOURCES_PARAM,
+				order_index: e.int16,
+			}),
+		),
+	},
+	(params) =>
+		e.insert(e.Vegetable, {
+			// Primitive, root values
+			...params,
+			strata: e.array_unpack(e.cast(e.array(e.Stratum), params.strata)),
+			uses: e.array_unpack(e.cast(e.array(e.VegetableUsage), params.uses)),
+			edible_parts: e.array_unpack(
+				e.cast(e.array(e.EdiblePart), params.edible_parts),
+			),
+			lifecycles: e.array_unpack(
+				e.cast(e.array(e.VegetableLifeCycle), params.lifecycles),
+			),
+			planting_methods: e.array_unpack(
+				e.cast(e.array(e.PlantingMethod), params.planting_methods),
+			),
+
+			// References
+			sources: insertOrUpdateSources(params.sources),
+			photos: insertOrUpdateImages(params.photos),
+			varieties: e.for(e.array_unpack(params.varieties), (variety) =>
+				e
+					.insert(e.VegetableVariety, {
+						id: variety.id,
+						handle: variety.handle,
+						names: variety.names,
+						photos: insertOrUpdateImages(params.photos),
+					})
+					.unlessConflict((existingVariety) => ({
+						on: existingVariety.handle,
+						else: e.update(existingVariety, () => ({
+							set: {
+								handle: variety.handle,
+								names: variety.names,
+								photos: insertOrUpdateImages(params.photos),
+							},
+						})),
+					})),
+			),
+			tips: e.for(e.array_unpack(params.tips), (tip) =>
+				e
+					.insert(e.VegetableTip, {
+						id: tip.id,
+						handle: tip.handle,
+						subjects: e.array_unpack(
+							e.cast(e.array(e.TipSubject), tip.subjects),
+						),
+						content: tip.content,
+						// sources: insertOrUpdateSources(tip.sources),
+					})
+					.unlessConflict((existingTip) => ({
+						on: existingTip.handle,
+						else: e.update(existingTip, () => ({
+							set: {
+								handle: tip.handle,
+								subjects: e.array_unpack(
+									e.cast(e.array(e.TipSubject), tip.subjects),
+								),
+								content: tip.content,
+								// sources: insertOrUpdateSources(tip.sources),
+							},
+						})),
+					})),
+			),
+		}),
 )
