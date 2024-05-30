@@ -9,6 +9,7 @@ import {
 	VegetableVarietyData,
 } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { UnknownEdgeDBError } from '@/types/errors'
 import { uploadImagesToSanity } from '@/utils/uploadImagesToSanity'
 import { paths } from '@/utils/urls'
 import { Schema } from '@effect/schema'
@@ -146,10 +147,7 @@ export async function createEditSuggestionAction({
 						target_id: current.id,
 						snapshot: current,
 					}),
-				catch: (error) => {
-					console.log(error)
-					return error
-				},
+				catch: (error) => new UnknownEdgeDBError(error),
 			}),
 			Effect.map(
 				(createdObject) =>

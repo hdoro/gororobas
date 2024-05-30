@@ -43,7 +43,6 @@ export default function SourceInput<
 					/>
 				)}
 			/>
-			{/* @TODO: Gororobas source (needs access to EdgeDB users) */}
 			{type === 'EXTERNAL' && (
 				<>
 					<Field

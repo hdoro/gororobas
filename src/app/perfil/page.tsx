@@ -29,7 +29,6 @@ export default async function ProfileRoute() {
 		),
 	)
 
-	// @TODO: this shouldn't happen - auto-create profile on middleware when logged-in but missing user and/or profile
 	if (!profile) return notFound()
 
 	return <ProfileForm profile={profile} />

@@ -3,7 +3,6 @@
 import type { ImageData } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { CircleXIcon } from 'lucide-react'
-import { useCallback } from 'react'
 import {
 	type ControllerRenderProps,
 	type FieldPath,
@@ -20,6 +19,9 @@ import Field from './Field'
 import ImageDropzone from './ImageDropzone'
 import SourceInput from './SourceInput'
 
+/**
+ * Includes the image field itself and its metadata fields (optional) - sources and label.
+ */
 export default function ImageInput<
 	TFieldValues extends FieldValues = FieldValues,
 	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -31,76 +33,15 @@ export default function ImageInput<
 	includeMetadata?: boolean
 }) {
 	const form = useFormContext()
-	const dataFieldName = `${rootField.name}.data`
-	const imageData = useWatch({
-		control: form.control,
-		name: dataFieldName,
-	}) as (typeof ImageData.Encoded)['data'] | null | undefined
-
-	function clearValue() {
-		rootField.onChange({
-			...rootField.value,
-			data: undefined,
-			// As we're changing images, we need to generate a new ID for EdgeDB
-			id: generateId(),
-		})
-	}
-
-	// @TODO separate component?
-	// biome-ignore lint: no need to memoize on form
-	const ImageField = useCallback(() => {
-		if (imageData && 'sanity_id' in imageData && imageData.sanity_id) {
-			return (
-				<Field
-					form={form}
-					label="Imagem"
-					hideLabel
-					name={dataFieldName}
-					render={({ field }) => (
-						<div className="relative aspect-square border-2 border-border bg-card w-[12.5rem] flex-[0_0_max-content] flex items-center justify-center rounded-lg">
-							{!field.disabled && (
-								<FormControl>
-									<Button
-										onClick={clearValue}
-										className="absolute top-2 right-2 rounded-full"
-										aria-label="Remover imagem"
-										tone="destructive"
-										mode="outline"
-										size="icon"
-										disabled={field.disabled}
-									>
-										<CircleXIcon className="stroke-current" />
-									</Button>
-								</FormControl>
-							)}
-							<SanityImage image={imageData} maxWidth={200} />
-						</div>
-					)}
-				/>
-			)
-		}
-
-		return (
-			<Field
-				form={form}
-				label="Imagem"
-				hideLabel
-				name={`${dataFieldName}.file`}
-				render={({ field }) => (
-					<ImageDropzone field={field} clearValue={clearValue} />
-				)}
-			/>
-		)
-	}, [dataFieldName, imageData])
 
 	if (!includeMetadata) {
-		return <ImageField />
+		return <ImageField field={rootField} />
 	}
 
 	return (
 		<div className="flex gap-6 items-start flex-wrap">
 			<div className="flex-[0_0_12.5rem]">
-				<ImageField />
+				<ImageField field={rootField} />
 			</div>
 			<div className="space-y-4 flex-1">
 				<Field
@@ -142,5 +83,73 @@ export default function ImageInput<
 				/>
 			</div>
 		</div>
+	)
+}
+
+function ImageField<
+	TFieldValues extends FieldValues = FieldValues,
+	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
+	field: rootField,
+}: {
+	field: ControllerRenderProps<TFieldValues, TName>
+}) {
+	const form = useFormContext()
+	const dataFieldName = `${rootField.name}.data`
+	const imageData = useWatch({
+		control: form.control,
+		name: dataFieldName,
+	}) as (typeof ImageData.Encoded)['data'] | null | undefined
+
+	function clearValue() {
+		rootField.onChange({
+			...rootField.value,
+			data: undefined,
+			// As we're changing images, we need to generate a new ID for EdgeDB
+			id: generateId(),
+		})
+	}
+
+	if (imageData && 'sanity_id' in imageData && imageData.sanity_id) {
+		return (
+			<Field
+				form={form}
+				label="Imagem"
+				hideLabel
+				name={dataFieldName}
+				render={({ field }) => (
+					<div className="relative aspect-square border-2 border-border bg-card w-[12.5rem] flex-[0_0_max-content] flex items-center justify-center rounded-lg">
+						{!field.disabled && (
+							<FormControl>
+								<Button
+									onClick={clearValue}
+									className="absolute top-2 right-2 rounded-full"
+									aria-label="Remover imagem"
+									tone="destructive"
+									mode="outline"
+									size="icon"
+									disabled={field.disabled}
+								>
+									<CircleXIcon className="stroke-current" />
+								</Button>
+							</FormControl>
+						)}
+						<SanityImage image={imageData} maxWidth={200} />
+					</div>
+				)}
+			/>
+		)
+	}
+
+	return (
+		<Field
+			form={form}
+			label="Imagem"
+			hideLabel
+			name={`${dataFieldName}.file`}
+			render={({ field }) => (
+				<ImageDropzone field={field} clearValue={clearValue} />
+			)}
+		/>
 	)
 }

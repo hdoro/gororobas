@@ -5,8 +5,6 @@ import { diff as jsonDiff } from 'json-diff-ts'
  *
  * If a property is an object, it will be compared recursively, but the returned
  * value includes the entire root-level property.
- *
- * @TODO consider using effect/Differ (API unclear when I tried)
  */
 export function getChangedObjectSubset<A extends object>(data: {
 	prev: A

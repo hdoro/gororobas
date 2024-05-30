@@ -1,11 +1,9 @@
 import { auth } from '@/edgedb'
 import { paths } from '@/utils/urls'
-import { Edit2Icon } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import UserNav from './UserNav'
 import GororobasLogo from './icons/GororobasLogo'
-import { Button } from './ui/button'
 
 const HEADER_LINKS = [
 	{ href: paths.vegetablesIndex(), text: 'Vegetais' },
@@ -42,13 +40,6 @@ export default async function HeaderNav() {
 					</Suspense>
 				</div>
 			</nav>
-			{signedIn && (
-				<Button size="sm" asChild className="fixed left-4 bottom-4 z-50">
-					<Link href={paths.newNote()}>
-						<Edit2Icon className="w-[1.25em]" /> Enviar nota
-					</Link>
-				</Button>
-			)}
 		</>
 	)
 }

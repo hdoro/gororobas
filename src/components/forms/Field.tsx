@@ -36,7 +36,6 @@ export default function Field<
 	label: string
 	name: TName
 	render: ControllerProps<TFieldValues, TName>['render']
-	// @TODO: improve this component API - perhaps tailwind-variants + slots?
 	hideLabel?: boolean
 	classNames?: FieldClassnames
 }) {

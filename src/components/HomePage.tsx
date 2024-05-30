@@ -1,6 +1,8 @@
+import { auth } from '@/edgedb'
 import type { HomePageData } from '@/queries'
 import { shuffleArray } from '@/utils/arrays'
 import { paths } from '@/utils/urls'
+import { Edit2Icon } from 'lucide-react'
 import Link from 'next/link'
 import { ContributionCTA } from './ContributionCTA'
 import NotesGrid from './NotesGrid'
@@ -12,10 +14,13 @@ import RainbowIcon from './icons/RainbowIcon'
 import { Button } from './ui/button'
 import { Text } from './ui/text'
 
-export default function HomePage(data: Partial<HomePageData>) {
+export default async function HomePage(data: Partial<HomePageData>) {
 	const featured_vegetables = shuffleArray(data.featured_vegetables || [])
 	const profiles = shuffleArray(data.profiles || [])
 	const notes = shuffleArray(data.notes || [])
+
+	const session = auth.getSession()
+	const signedIn = await session.isSignedIn()
 
 	return (
 		<>
@@ -95,6 +100,13 @@ export default function HomePage(data: Partial<HomePageData>) {
 			)}
 
 			<ContributionCTA />
+			{signedIn && (
+				<Button size="sm" asChild className="fixed left-4 bottom-4 z-50">
+					<Link href={paths.newNote()}>
+						<Edit2Icon className="w-[1.25em]" /> Enviar nota
+					</Link>
+				</Button>
+			)}
 		</>
 	)
 }
