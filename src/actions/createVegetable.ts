@@ -2,8 +2,8 @@ import { writeFileSync } from 'node:fs'
 import {
 	type PhotosMutationInput,
 	type SourcesMutationInput,
+	insertVegetableMutation,
 	upsertVegetableFriendshipsMutation,
-	upsertVegetableMutation,
 } from '@/mutations'
 import {
 	type SourceForDB,
@@ -27,6 +27,7 @@ export function createVegetable(input: VegetableForDB, client: Client) {
 				return yield* Effect.fail(new InvalidInputError(input, VegetableData))
 			}
 
+			console.log('RUNNING')
 			return yield* pipe(
 				Effect.tryPromise({
 					try: () => getTransaction(input, client),
@@ -94,7 +95,7 @@ function photosToParam(
 function getTransaction(input: VegetableForDB, inputClient: Client) {
 	const client = inputClient.withConfig({ allow_user_specified_id: true })
 
-	writeFileSync('query.edgeql', upsertVegetableMutation.toEdgeQL())
+	writeFileSync('query.edgeql', insertVegetableMutation.toEdgeQL())
 	const formattedInput = {
 		id: input.id,
 		names: input.names,
@@ -158,19 +159,27 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 				}),
 			),
 		})),
-	} satisfies Parameters<typeof upsertVegetableMutation.run>[1]
+	} satisfies Parameters<typeof insertVegetableMutation.run>[1]
 	writeFileSync(
 		'formattedInput-auto.json',
 		JSON.stringify(formattedInput, null, 2),
 	)
 
 	return client.transaction(async (tx) => {
-		await upsertVegetableMutation.run(tx, formattedInput)
-		await upsertVegetableFriendshipsMutation.run(tx, {
+		const createdVegetable = await insertVegetableMutation.run(
+			tx,
+			formattedInput,
+		)
+		const friendships = await upsertVegetableFriendshipsMutation.run(tx, {
 			vegetable_id: input.id,
 			friends: (input.friends || []).map((friend_id) =>
 				formatVegetableFriendForDB(friend_id, input.id),
 			),
 		})
+
+		return {
+			vegetable_id: createdVegetable.id,
+			friendships,
+		}
 	})
 }

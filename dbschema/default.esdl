@@ -36,6 +36,12 @@ module default {
       using (exists global current_user);
   }
 
+  abstract type UserCanUpdate {
+    access policy authenticated_user_can_update
+      allow update
+      using (exists global current_user);
+  }
+
   abstract type UserCanSelect {
     access policy authenticated_user_can_select
       allow select
@@ -155,7 +161,7 @@ module default {
     );
   }
 
-  type Source extending PublicRead, UserCanInsert, AdminCanDoAnything {
+  type Source extending PublicRead, UserCanInsert, AdminCanDoAnything, UserCanUpdate {
     required type: SourceType;
     credits: str;
     origin: str;
