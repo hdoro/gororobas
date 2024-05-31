@@ -63,7 +63,7 @@ export const insertImagesMutation = e.params(
 		),
 )
 
-export const insertVegetableFriendshipsMutation = e.params(
+export const upsertVegetableFriendshipsMutation = e.params(
 	{
 		vegetable_id: e.uuid,
 		friends: e.array(
@@ -83,10 +83,7 @@ export const insertVegetableFriendshipsMutation = e.params(
 					})),
 				})
 				// If the friendship already exists, do nothing
-				.unlessConflict((friendship) => ({
-					on: friendship.unique_key,
-					else: friendship,
-				})),
+				.unlessConflict(),
 		),
 )
 
@@ -252,7 +249,7 @@ export type SourcesMutationInput = Readonly<
 	BaseTypeToTsType<typeof SOURCES_PARAM, true>
 >
 
-const insertOrUpdateSources = (
+const upsertSourcesFragment = (
 	sources: $expr_Param<'sources', typeof SOURCES_PARAM, false>,
 ) =>
 	e.assert_distinct(
@@ -325,14 +322,7 @@ const insertOrUpdateSources = (
 				})
 				.unlessConflict()
 
-			const final_object = e.op(inserted, '??', updated)
-
-			return e.with(
-				[inserted, updated, final_object],
-				e.select(final_object, () => ({
-					id: true,
-				})),
-			)
+			return e.op(inserted, '??', updated)
 		}),
 	)
 
@@ -351,47 +341,68 @@ export type PhotosMutationInput = Readonly<
 	BaseTypeToTsType<typeof PHOTOS_PARAM, true>
 >
 
-const insertOrUpdateImages = (
+const upsertImagesFragment = (
 	images: $expr_Param<'photos', typeof PHOTOS_PARAM, false>,
 ) =>
-	e.for(e.array_unpack(images), (photo) =>
-		e
-			.insert(e.Image, {
-				id: photo.id,
-				sanity_id: photo.sanity_id,
-				label: e.cast(e.str, e.json_get(photo.optional_properties, 'label')),
-				hotspot: e.cast(
-					e.json,
-					e.json_get(photo.optional_properties, 'hotspot'),
+	e.assert_distinct(
+		e.for(e.array_unpack(images), (image) => {
+			const inserted = e
+				.insert(e.Image, {
+					id: image.id,
+					sanity_id: image.sanity_id,
+					label: e.cast(e.str, e.json_get(image.optional_properties, 'label')),
+					hotspot: e.cast(
+						e.json,
+						e.json_get(image.optional_properties, 'hotspot'),
+					),
+					crop: e.cast(e.json, e.json_get(image.optional_properties, 'crop')),
+					sources: upsertSourcesFragment(
+						// @ts-expect-error the query works, but the builder treats nested params as a different thing
+						image.sources,
+					),
+				})
+				.unlessConflict()
+			const updated = e.update(e.Image, (existingImage) => ({
+				filter: e.op(
+					e.op(existingImage.id, '=', image.id),
+					'or',
+					e.op(existingImage.sanity_id, '=', image.sanity_id),
 				),
-				crop: e.cast(e.json, e.json_get(photo.optional_properties, 'crop')),
-				// sources: insertOrUpdateSources(photo.sources),
-			})
-			.unlessConflict((existingImage) => ({
-				on: existingImage.sanity_id,
-				else: e.update(existingImage, () => ({
-					set: {
-						label: e.cast(
-							e.str,
-							e.json_get(photo.optional_properties, 'label'),
-						),
-						hotspot: e.cast(
-							e.json,
-							e.json_get(photo.optional_properties, 'hotspot'),
-						),
-						crop: e.cast(e.json, e.json_get(photo.optional_properties, 'crop')),
-						// sources: insertOrUpdateSources(photo.sources),
-					},
-				})),
-			})),
+
+				set: {
+					sanity_id: e.op(image.sanity_id, '??', existingImage.sanity_id),
+					label: e.op(
+						e.cast(e.str, e.json_get(image.optional_properties, 'label')),
+						'??',
+						existingImage.label,
+					),
+					hotspot: e.op(
+						e.cast(e.json, e.json_get(image.optional_properties, 'hotspot')),
+						'??',
+						existingImage.hotspot,
+					),
+					crop: e.op(
+						e.cast(e.json, e.json_get(image.optional_properties, 'crop')),
+						'??',
+						existingImage.crop,
+					),
+					sources: upsertSourcesFragment(
+						// @ts-expect-error the query works, but the builder treats nested params as a different thing
+						image.sources,
+					),
+				},
+			}))
+
+			return e.op(inserted, '??', updated)
+		}),
 	)
 
-export const insertVegetableMutationV2 = e.params(
+export const upsertVegetableMutation = e.params(
 	{
 		id: e.uuid,
-		names: e.array(e.str),
+		names: e.optional(e.array(e.str)),
 		scientific_names: e.optional(e.array(e.str)),
-		handle: e.str,
+		handle: e.optional(e.str),
 		gender: e.optional(e.Gender),
 		origin: e.optional(e.str),
 		strata: e.optional(e.array(e.str)),
@@ -426,68 +437,195 @@ export const insertVegetableMutationV2 = e.params(
 			}),
 		),
 	},
-	(params) =>
-		e.insert(e.Vegetable, {
-			// Primitive, root values
-			...params,
-			strata: e.array_unpack(e.cast(e.array(e.Stratum), params.strata)),
-			uses: e.array_unpack(e.cast(e.array(e.VegetableUsage), params.uses)),
-			edible_parts: e.array_unpack(
-				e.cast(e.array(e.EdiblePart), params.edible_parts),
-			),
-			lifecycles: e.array_unpack(
-				e.cast(e.array(e.VegetableLifeCycle), params.lifecycles),
-			),
-			planting_methods: e.array_unpack(
-				e.cast(e.array(e.PlantingMethod), params.planting_methods),
-			),
+	(params) => {
+		const inserted = e
+			.insert(e.Vegetable, {
+				id: params.id,
+				names: params.names,
+				scientific_names: params.scientific_names,
+				handle: params.handle,
+				gender: params.gender,
+				origin: params.origin,
+				content: params.content,
+				height_min: params.height_min,
+				height_max: params.height_max,
+				temperature_min: params.temperature_min,
+				temperature_max: params.temperature_max,
+				strata: e.array_unpack(e.cast(e.array(e.Stratum), params.strata)),
+				uses: e.array_unpack(e.cast(e.array(e.VegetableUsage), params.uses)),
+				edible_parts: e.array_unpack(
+					e.cast(e.array(e.EdiblePart), params.edible_parts),
+				),
+				lifecycles: e.array_unpack(
+					e.cast(e.array(e.VegetableLifeCycle), params.lifecycles),
+				),
+				planting_methods: e.array_unpack(
+					e.cast(e.array(e.PlantingMethod), params.planting_methods),
+				),
 
-			// References
-			sources: insertOrUpdateSources(params.sources),
-			photos: insertOrUpdateImages(params.photos),
-			varieties: e.for(e.array_unpack(params.varieties), (variety) =>
-				e
-					.insert(e.VegetableVariety, {
-						id: variety.id,
-						handle: variety.handle,
-						names: variety.names,
-						photos: insertOrUpdateImages(params.photos),
-					})
-					.unlessConflict((existingVariety) => ({
-						on: existingVariety.handle,
-						else: e.update(existingVariety, () => ({
+				// References
+				sources: upsertSourcesFragment(params.sources),
+				photos: upsertImagesFragment(params.photos),
+				varieties: e.assert_distinct(
+					e.for(e.array_unpack(params.varieties), (variety) => {
+						const inserted = e
+							.insert(e.VegetableVariety, {
+								id: variety.id,
+								handle: variety.handle,
+								names: variety.names,
+								photos: upsertImagesFragment(params.photos),
+							})
+							.unlessConflict()
+						const updated = e.update(e.VegetableVariety, (existingVariety) => ({
+							filter_single: e.op(existingVariety.id, '=', variety.id),
 							set: {
 								handle: variety.handle,
 								names: variety.names,
-								photos: insertOrUpdateImages(params.photos),
+								photos: upsertImagesFragment(params.photos),
 							},
-						})),
-					})),
-			),
-			tips: e.for(e.array_unpack(params.tips), (tip) =>
-				e
-					.insert(e.VegetableTip, {
-						id: tip.id,
-						handle: tip.handle,
-						subjects: e.array_unpack(
-							e.cast(e.array(e.TipSubject), tip.subjects),
-						),
-						content: tip.content,
-						// sources: insertOrUpdateSources(tip.sources),
-					})
-					.unlessConflict((existingTip) => ({
-						on: existingTip.handle,
-						else: e.update(existingTip, () => ({
+						}))
+
+						return e.op(inserted, '??', updated)
+					}),
+				),
+				tips: e.assert_distinct(
+					e.for(e.array_unpack(params.tips), (tip) => {
+						const inserted = e
+							.insert(e.VegetableTip, {
+								id: tip.id,
+								handle: tip.handle,
+								subjects: e.array_unpack(
+									e.cast(e.array(e.TipSubject), tip.subjects),
+								),
+								content: tip.content,
+								sources: upsertSourcesFragment(
+									// @ts-expect-error the query works, but the builder treats nested params as a different thing
+									tip.sources,
+								),
+							})
+							.unlessConflict()
+						const updated = e.update(e.VegetableTip, (existingTip) => ({
+							filter_single: e.op(existingTip.id, '=', tip.id),
 							set: {
 								handle: tip.handle,
 								subjects: e.array_unpack(
 									e.cast(e.array(e.TipSubject), tip.subjects),
 								),
 								content: tip.content,
-								// sources: insertOrUpdateSources(tip.sources),
+								sources: upsertSourcesFragment(
+									// @ts-expect-error the query works, but the builder treats nested params as a different thing
+									tip.sources,
+								),
 							},
-						})),
-					})),
-			),
-		}),
+						}))
+
+						return e.op(inserted, '??', updated)
+					}),
+				),
+			})
+			.unlessConflict()
+		const updated = e.update(e.Vegetable, (existingVegetable) => ({
+			filter_single: e.op(existingVegetable.id, '=', params.id),
+			set: {
+				// @ts-expect-error builder is parsing `params.names` as the wrong type in this scope
+				names: e.op(params.names, '??', existingVegetable.names),
+				// @ts-expect-error builder is parsing `params.scientific_names` as the wrong type in this scope
+				scientific_names: e.op(
+					// @ts-expect-error builder is parsing `params.scientific_names` as the wrong type in this scope
+					params.scientific_names,
+					'??',
+					existingVegetable.scientific_names,
+				),
+				handle: e.op(params.handle, '??', existingVegetable.handle),
+				gender: e.op(params.gender, '??', existingVegetable.gender),
+				origin: e.op(params.origin, '??', existingVegetable.origin),
+				content: e.op(params.content, '??', existingVegetable.content),
+				height_min: e.op(params.height_min, '??', existingVegetable.height_min),
+				height_max: e.op(params.height_max, '??', existingVegetable.height_min),
+				temperature_min: e.op(
+					params.temperature_min,
+					'??',
+					existingVegetable.temperature_min,
+				),
+				temperature_max: e.op(
+					params.temperature_max,
+					'??',
+					existingVegetable.temperature_min,
+				),
+				strata: e.array_unpack(e.cast(e.array(e.Stratum), params.strata)),
+				uses: e.array_unpack(e.cast(e.array(e.VegetableUsage), params.uses)),
+				edible_parts: e.array_unpack(
+					e.cast(e.array(e.EdiblePart), params.edible_parts),
+				),
+				lifecycles: e.array_unpack(
+					e.cast(e.array(e.VegetableLifeCycle), params.lifecycles),
+				),
+				planting_methods: e.array_unpack(
+					e.cast(e.array(e.PlantingMethod), params.planting_methods),
+				),
+
+				// References
+				sources: upsertSourcesFragment(params.sources),
+				photos: upsertImagesFragment(params.photos),
+				varieties: e.assert_distinct(
+					e.for(e.array_unpack(params.varieties), (variety) => {
+						const inserted = e
+							.insert(e.VegetableVariety, {
+								id: variety.id,
+								handle: variety.handle,
+								names: variety.names,
+								photos: upsertImagesFragment(params.photos),
+							})
+							.unlessConflict()
+						const updated = e.update(e.VegetableVariety, (existingVariety) => ({
+							filter_single: e.op(existingVariety.id, '=', variety.id),
+							set: {
+								handle: variety.handle,
+								names: variety.names,
+								photos: upsertImagesFragment(params.photos),
+							},
+						}))
+
+						return e.op(inserted, '??', updated)
+					}),
+				),
+				tips: e.assert_distinct(
+					e.for(e.array_unpack(params.tips), (tip) => {
+						const inserted = e
+							.insert(e.VegetableTip, {
+								id: tip.id,
+								handle: tip.handle,
+								subjects: e.array_unpack(
+									e.cast(e.array(e.TipSubject), tip.subjects),
+								),
+								content: tip.content,
+								sources: upsertSourcesFragment(
+									// @ts-expect-error the query works, but the builder treats nested params as a different thing
+									tip.sources,
+								),
+							})
+							.unlessConflict()
+						const updated = e.update(e.VegetableTip, (existingTip) => ({
+							filter_single: e.op(existingTip.id, '=', tip.id),
+							set: {
+								handle: tip.handle,
+								subjects: e.array_unpack(
+									e.cast(e.array(e.TipSubject), tip.subjects),
+								),
+								content: tip.content,
+								sources: upsertSourcesFragment(
+									// @ts-expect-error the query works, but the builder treats nested params as a different thing
+									tip.sources,
+								),
+							},
+						}))
+
+						return e.op(inserted, '??', updated)
+					}),
+				),
+			},
+		}))
+
+		return e.op(inserted, '??', updated)
+	},
 )

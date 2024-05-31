@@ -1,22 +1,24 @@
+import { writeFileSync } from 'node:fs'
 import {
-	insertVegetableMutationV2,
 	type PhotosMutationInput,
 	type SourcesMutationInput,
+	upsertVegetableFriendshipsMutation,
+	upsertVegetableMutation,
 } from '@/mutations'
 import {
+	type SourceForDB,
 	StoredImageData,
 	VegetableData,
-	type SourceForDB,
 	type VegetableForDB,
 } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { InvalidInputError } from '@/types/errors'
+import { InvalidInputError, UnknownEdgeDBError } from '@/types/errors'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { getStandardHandle, paths } from '@/utils/urls'
 import { Schema } from '@effect/schema'
 import type { Client } from 'edgedb'
 import { Effect, pipe } from 'effect'
-import { writeFileSync } from 'node:fs'
+import { formatVegetableFriendForDB } from './formatVegetableFriendForDB'
 
 export function createVegetable(input: VegetableForDB, client: Client) {
 	return runServerEffect(
@@ -30,9 +32,10 @@ export function createVegetable(input: VegetableForDB, client: Client) {
 					try: () => getTransaction(input, client),
 					catch: (error) => {
 						console.log('Failed creating vegetable', error)
-						return error
+						return new UnknownEdgeDBError(error)
 					},
 				}),
+				Effect.tap(Effect.logInfo),
 				Effect.map(
 					() =>
 						({
@@ -91,8 +94,8 @@ function photosToParam(
 function getTransaction(input: VegetableForDB, inputClient: Client) {
 	const client = inputClient.withConfig({ allow_user_specified_id: true })
 
-	writeFileSync('query.edgeql', insertVegetableMutationV2.toEdgeQL())
-	return insertVegetableMutationV2.run(client, {
+	writeFileSync('query.edgeql', upsertVegetableMutation.toEdgeQL())
+	const formattedInput = {
 		id: input.id,
 		names: input.names,
 		handle: input.handle,
@@ -155,5 +158,19 @@ function getTransaction(input: VegetableForDB, inputClient: Client) {
 				}),
 			),
 		})),
+	} satisfies Parameters<typeof upsertVegetableMutation.run>[1]
+	writeFileSync(
+		'formattedInput-auto.json',
+		JSON.stringify(formattedInput, null, 2),
+	)
+
+	return client.transaction(async (tx) => {
+		await upsertVegetableMutation.run(tx, formattedInput)
+		await upsertVegetableFriendshipsMutation.run(tx, {
+			vegetable_id: input.id,
+			friends: (input.friends || []).map((friend_id) =>
+				formatVegetableFriendForDB(friend_id, input.id),
+			),
+		})
 	})
 }
