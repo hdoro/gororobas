@@ -1,4 +1,3 @@
-import { generateId } from '@/utils/ids'
 import {
 	DndContext,
 	type DragEndEvent,
@@ -41,7 +40,9 @@ export default function ArrayInput<
 }: {
 	field: ControllerRenderProps<TFieldValues, TName>
 	newItemLabel?: string
-	newItemValue: FieldArray<FieldValues, TName>
+	newItemValue?:
+		| FieldArray<FieldValues, TName>
+		| (() => FieldArray<FieldValues, TName>)
 	renderItem: (index: number) => JSX.Element
 	inputType?: 'regular' | 'dialog'
 }) {
@@ -86,10 +87,9 @@ export default function ArrayInput<
 				<Button
 					onClick={() => {
 						fieldArray.append(
-							{ id: generateId(), ...(newItemValue || {}) } as FieldArray<
-								FieldValues,
-								TName
-							>,
+							((typeof newItemValue === 'function'
+								? (newItemValue as () => FieldArray<FieldValues, TName>)()
+								: newItemValue) || {}) as FieldArray<FieldValues, TName>,
 							{
 								shouldFocus: inputType === 'regular',
 							},

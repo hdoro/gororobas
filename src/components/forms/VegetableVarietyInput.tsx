@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import type { VegetableVarietyInForm } from '@/schemas'
 import { cn } from '@/utils/cn'
+import { generateId } from '@/utils/ids'
 import { truncate } from '@/utils/strings'
 import { ImageOffIcon } from 'lucide-react'
 import {
@@ -135,7 +136,7 @@ export default function VegetableVarietyInput<
 								<ArrayInput
 									field={photosField}
 									// @ts-expect-error no way for TS to know the type of `newItemValue`
-									newItemValue={{}}
+									newItemValue={() => ({ id: generateId() })}
 									newItemLabel="Nova foto"
 									renderItem={(index) => (
 										<Field

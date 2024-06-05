@@ -25,16 +25,16 @@ importers:
         version: 0.3.1(edgedb@1.5.7)(next@14.2.3(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@effect/experimental':
         specifier: ^0.16.16
-        version: 0.16.16(@effect/platform-node@0.51.0(@effect/platform@0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5))(effect@3.2.5))(@effect/platform@0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5))(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5)(ws@8.17.0)
+        version: 0.16.16(@effect/platform-node@0.51.0(@effect/platform@0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5))(effect@3.2.5))(@effect/platform@0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5))(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5)(ws@8.17.0)
       '@effect/opentelemetry':
         specifier: ^0.34.12
         version: 0.34.12(@opentelemetry/api@1.8.0)(@opentelemetry/resources@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-metrics@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-node@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/semantic-conventions@1.24.1)(effect@3.2.5)
       '@effect/platform-node':
         specifier: ^0.51.0
-        version: 0.51.0(@effect/platform@0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5))(effect@3.2.5)
+        version: 0.51.0(@effect/platform@0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5))(effect@3.2.5)
       '@effect/schema':
-        specifier: ^0.67.13
-        version: 0.67.13(effect@3.2.5)
+        specifier: ^0.67.19
+        version: 0.67.19(effect@3.2.5)
       '@hookform/resolvers':
         specifier: ^3.4.2
         version: 3.4.2(react-hook-form@7.51.5(react@18.3.1))
@@ -434,10 +434,10 @@ packages:
       '@effect/schema': ^0.67.5
       effect: ^3.1.5
 
-  '@effect/schema@0.67.13':
-    resolution: {integrity: sha512-MVd/50CKM18vpOA1dF9fMUdwP0HKH3hISFzS0LB7gsBZ+381V1PmxIJia/1VLmh4S6RKf4pFaQz27VtRUbh1Zg==}
+  '@effect/schema@0.67.19':
+    resolution: {integrity: sha512-44WXOeCucrXFTih5V6MXPcB9lunilPR8HlXXpacd9UbflJtXQOuN6OB+dsA/fXI7hSgeJvnTQse58/VVkGotAA==}
     peerDependencies:
-      effect: ^3.2.5
+      effect: ^3.2.9
 
   '@floating-ui/core@1.6.1':
     resolution: {integrity: sha512-42UH54oPZHPdRHdw6BgoBD6cg/eVTmVrFcgeRDM3jbO7uxSoipVcmcIGFcA5jmOHO5apcyvBhkSKES3fQJnu7A==}
@@ -3022,14 +3022,14 @@ snapshots:
       '@iarna/toml': 2.2.5
       edgedb: 1.5.7
 
-  '@effect/experimental@0.16.16(@effect/platform-node@0.51.0(@effect/platform@0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5))(effect@3.2.5))(@effect/platform@0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5))(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5)(ws@8.17.0)':
+  '@effect/experimental@0.16.16(@effect/platform-node@0.51.0(@effect/platform@0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5))(effect@3.2.5))(@effect/platform@0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5))(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5)(ws@8.17.0)':
     dependencies:
-      '@effect/platform': 0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5)
-      '@effect/schema': 0.67.13(effect@3.2.5)
+      '@effect/platform': 0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5)
+      '@effect/schema': 0.67.19(effect@3.2.5)
       effect: 3.2.5
       msgpackr: 1.10.2
     optionalDependencies:
-      '@effect/platform-node': 0.51.0(@effect/platform@0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5))(effect@3.2.5)
+      '@effect/platform-node': 0.51.0(@effect/platform@0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5))(effect@3.2.5)
       ws: 8.17.0
 
   '@effect/opentelemetry@0.34.12(@opentelemetry/api@1.8.0)(@opentelemetry/resources@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-metrics@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-base@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/sdk-trace-node@1.24.1(@opentelemetry/api@1.8.0))(@opentelemetry/semantic-conventions@1.24.1)(effect@3.2.5)':
@@ -3043,17 +3043,17 @@ snapshots:
       '@opentelemetry/sdk-trace-base': 1.24.1(@opentelemetry/api@1.8.0)
       '@opentelemetry/sdk-trace-node': 1.24.1(@opentelemetry/api@1.8.0)
 
-  '@effect/platform-node-shared@0.6.0(@effect/platform@0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5))(effect@3.2.5)':
+  '@effect/platform-node-shared@0.6.0(@effect/platform@0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5))(effect@3.2.5)':
     dependencies:
-      '@effect/platform': 0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5)
+      '@effect/platform': 0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5)
       '@parcel/watcher': 2.4.1
       effect: 3.2.5
       multipasta: 0.2.1
 
-  '@effect/platform-node@0.51.0(@effect/platform@0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5))(effect@3.2.5)':
+  '@effect/platform-node@0.51.0(@effect/platform@0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5))(effect@3.2.5)':
     dependencies:
-      '@effect/platform': 0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5)
-      '@effect/platform-node-shared': 0.6.0(@effect/platform@0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5))(effect@3.2.5)
+      '@effect/platform': 0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5)
+      '@effect/platform-node-shared': 0.6.0(@effect/platform@0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5))(effect@3.2.5)
       effect: 3.2.5
       mime: 3.0.0
       undici: 6.18.1
@@ -3062,15 +3062,15 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@effect/platform@0.53.8(@effect/schema@0.67.13(effect@3.2.5))(effect@3.2.5)':
+  '@effect/platform@0.53.8(@effect/schema@0.67.19(effect@3.2.5))(effect@3.2.5)':
     dependencies:
-      '@effect/schema': 0.67.13(effect@3.2.5)
+      '@effect/schema': 0.67.19(effect@3.2.5)
       effect: 3.2.5
       find-my-way-ts: 0.1.2
       multipasta: 0.2.1
       path-browserify: 1.0.1
 
-  '@effect/schema@0.67.13(effect@3.2.5)':
+  '@effect/schema@0.67.19(effect@3.2.5)':
     dependencies:
       effect: 3.2.5
       fast-check: 3.18.0

@@ -16,16 +16,16 @@ import type { EditProfilePageData } from '@/queries'
 import {
 	ImageDBToFormTransformer,
 	ProfileData,
-	type ProfileDataForDB,
 	type ProfileDataInForm,
+	ProfileDataToUpdate,
 	RichText,
 } from '@/schemas'
 import { getChangedObjectSubset } from '@/utils/diffs'
-import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
 import { generateId } from '@/utils/ids'
 import { paths } from '@/utils/urls'
 import { Schema } from '@effect/schema'
-import { Either } from 'effect'
+import { effectTsResolver } from '@hookform/resolvers/effect-ts'
+import { Effect, Either, pipe } from 'effect'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import {
@@ -61,7 +61,7 @@ export default function ProfileForm({
 	}, [profileInDb])
 
 	const form = useForm<ProfileDataInForm>({
-		resolver: effectSchemaResolverResolver(ProfileData),
+		resolver: effectTsResolver(Schema.encodedBoundSchema(ProfileData)),
 		criteriaMode: 'all',
 		defaultValues: initialValue,
 		mode: 'onBlur',
@@ -69,11 +69,9 @@ export default function ProfileForm({
 	})
 
 	const onSubmit: SubmitHandler<ProfileDataInForm> = async (data, event) => {
-		const decodedData = data as unknown as ProfileDataForDB
-
 		const dataThatChanged = getChangedObjectSubset({
 			prev: initialValue,
-			next: decodedData,
+			next: data,
 		})
 		if (Object.keys(dataThatChanged).length === 0) {
 			toast.toast({
@@ -83,7 +81,14 @@ export default function ProfileForm({
 		}
 
 		setStatus('submitting')
-		const response = await updateProfileAction(dataThatChanged)
+		const dataToUpdate = await pipe(
+			Schema.decode(ProfileDataToUpdate)({
+				...dataThatChanged,
+				id: initialValue.id,
+			}),
+			Effect.runPromise,
+		)
+		const response = await updateProfileAction(dataToUpdate)
 		if (response === true) {
 			toast.toast({
 				variant: 'default',

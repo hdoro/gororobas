@@ -12,11 +12,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
-import { NoteData, type NoteForDB, type NoteInForm } from '@/schemas'
-import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
+import { NoteData, type NoteInForm } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 import { paths } from '@/utils/urls'
+import { Schema } from '@effect/schema'
+import { effectTsResolver } from '@hookform/resolvers/effect-ts'
+import { Effect } from 'effect'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
@@ -29,7 +31,7 @@ export default function NoteForm() {
 	)
 
 	const form = useForm<NoteInForm>({
-		resolver: effectSchemaResolverResolver(NoteData),
+		resolver: effectTsResolver(Schema.encodedSchema(NoteData)),
 		criteriaMode: 'all',
 		defaultValues: {
 			id: generateId(),
@@ -41,10 +43,10 @@ export default function NoteForm() {
 	})
 
 	const onSubmit: SubmitHandler<NoteInForm> = async (data, event) => {
-		const decodedData = data as unknown as NoteForDB
+		const noteForDB = await Effect.runPromise(Schema.decode(NoteData)(data))
 
 		setStatus('submitting')
-		const response = await createNotesAction([decodedData])
+		const response = await createNotesAction([noteForDB])
 		if (response.success === true && response.result[0]?.handle) {
 			toast.toast({
 				variant: 'default',

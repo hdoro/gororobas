@@ -1,6 +1,6 @@
 'use client'
 
-import type { ImageData } from '@/schemas'
+import type { ImageInForm } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { CircleXIcon } from 'lucide-react'
 import {
@@ -99,7 +99,7 @@ function ImageField<
 	const imageData = useWatch({
 		control: form.control,
 		name: dataFieldName,
-	}) as (typeof ImageData.Encoded)['data'] | null | undefined
+	}) as (typeof ImageInForm.Encoded)['data'] | null | undefined
 
 	function clearValue() {
 		rootField.onChange({

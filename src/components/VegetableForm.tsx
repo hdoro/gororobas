@@ -13,7 +13,6 @@ import {
 	type VegetableInForm,
 } from '@/schemas'
 import type { VegetableUsage } from '@/types'
-import { effectSchemaResolverResolver } from '@/utils/effectSchemaResolver'
 import { generateId } from '@/utils/ids'
 import {
 	EDIBLE_PART_TO_LABEL,
@@ -23,14 +22,17 @@ import {
 	USAGE_TO_LABEL,
 	VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
+import { Schema } from '@effect/schema'
+import { effectTsResolver } from '@hookform/resolvers/effect-ts'
+import { Effect } from 'effect'
 import { SendIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {
 	FormProvider,
-	type SubmitHandler,
 	useForm,
 	useFormContext,
+	type SubmitHandler,
 } from 'react-hook-form'
 import ArrayInput from './forms/ArrayInput'
 import CheckboxesInput from './forms/CheckboxesInput'
@@ -67,28 +69,29 @@ export default function VegetableForm(props: {
 		'idle',
 	)
 	const form = useForm<VegetableInForm>({
-		resolver: effectSchemaResolverResolver(VegetableData),
-		criteriaMode: 'all',
+		resolver: effectTsResolver(Schema.encodedBoundSchema(VegetableData)),
 		defaultValues:
 			'initialValue' in props
 				? props.initialValue
 				: {
 						id: generateId(),
 					},
-		mode: 'onBlur',
 		disabled: status !== 'idle',
 	})
 
 	const onSubmit: SubmitHandler<VegetableInForm> = async (data) => {
 		setStatus('submitting')
 		const dataWithoutEmptyKeys = Object.fromEntries(
-			Object.entries(data).filter(([key, value]) => {
+			Object.entries(data).filter(([, value]) => {
 				if (value === undefined || value === null) return false
 
 				return true
 			}),
-		) as VegetableForDB
-		const result = await props.onSubmit(dataWithoutEmptyKeys)
+		) as typeof data
+		const decoded = await Schema.decode(VegetableData)(
+			dataWithoutEmptyKeys,
+		).pipe(Effect.runPromise)
+		const result = await props.onSubmit(decoded)
 		if (result.success) {
 			toast.toast({
 				variant: 'default',
@@ -283,7 +286,6 @@ export default function VegetableForm(props: {
 										render={({ field: sourcesField }) => (
 											<ArrayInput
 												field={sourcesField}
-												newItemValue={{}}
 												newItemLabel="Nova fonte"
 												renderItem={(index) => (
 													<Field
@@ -318,7 +320,7 @@ export default function VegetableForm(props: {
 											return (
 												<ArrayInput
 													field={field}
-													newItemValue={{}}
+													newItemValue={() => ({ id: generateId() })}
 													newItemLabel="Nova foto"
 													renderItem={(index) => (
 														<Field

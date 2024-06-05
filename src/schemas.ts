@@ -1,3 +1,12 @@
+/**
+ * Schema suffix naming conventions:
+ *
+ * - `InForm`: data as it comes from the form, with all optional fields
+ * - `ForDB`: data as it is stored in the database, with all required fields
+ * - `Data`: isomorphic, either the same shape of the form and the database or a transformed schema (encoded in Form / decoded in DB)
+ * - `Type`: TS type
+ */
+
 import type {
 	EdiblePart,
 	Gender,
@@ -8,7 +17,6 @@ import type {
 	VegetableLifeCycle,
 	VegetableUsage,
 } from '@/types'
-import { base64ToFile, fileToBase64 } from '@/utils/files'
 import {
 	EDIBLE_PART_TO_LABEL,
 	GENDER_TO_LABEL,
@@ -25,7 +33,7 @@ import * as S from '@effect/schema/Schema'
 import type { JSONContent } from '@tiptap/react'
 import { Effect, pipe } from 'effect'
 import type { NoteType } from './edgedb.interfaces'
-import { FailedConvertingBlobError } from './types/errors'
+import { FailedUploadingImageError } from './types/errors'
 
 /**
  * Custom optional schema to handle both EdgeDB and client-side forms:
@@ -39,26 +47,44 @@ const isFile = (input: unknown): input is File => input instanceof File
 
 const FileSchema = S.declare(isFile)
 
-const isTipTapJSON = (input: unknown): input is JSONContent & { version: 1 } =>
+export type RichTextValue = JSONContent & { version: 1 }
+const isTipTapJSON = (input: unknown): input is RichTextValue =>
 	typeof input === 'object' &&
 	!!input &&
 	'type' in input &&
 	'version' in input &&
 	input.version === 1
 
-export const RichText = S.declare(isTipTapJSON)
-
-export type RichTextValue = typeof RichText.Type
+/**
+ * When sending to DB via server actions, we need to stringify the object to ensure
+ * classes don't break React server actions. Tiptap's `editor.getJSON()` includes some classes
+ * in its structure, such as the value of the Link extension which holds its `href` value as an `URL` instance.
+ *
+ * This has no other effective change, no data is modified or lost.
+ * 💡 When using schemas with RichText in `useForm`, give preference to passing `Schema.encodedBoundSchema` and only
+ * decoding before sending to the server to save compute in form validations. This JSON clone is expensive.
+ */
+export const RichText = S.transform(
+	S.declare(isTipTapJSON),
+	S.declare(isTipTapJSON),
+	{
+		strict: true,
+		encode: (richTextInDB) => richTextInDB,
+		decode: (richTextInForm) => JSON.parse(JSON.stringify(richTextInForm)),
+	},
+)
 
 const SourceGororobasInForm = S.Struct({
-	id: S.UUID,
+	/** Exists only if Source's already in DB */
+	id: Optional(S.UUID),
 	comments: Optional(RichText),
 	type: S.Literal('GOROROBAS' satisfies SourceType),
 	userIds: S.Array(S.UUID),
 })
 
 const SourceExternalInForm = S.Struct({
-	id: S.UUID,
+	/** Exists only if Source's already in DB */
+	id: Optional(S.UUID),
 	comments: Optional(RichText),
 	type: S.Literal('EXTERNAL' satisfies SourceType),
 	credits: S.String.pipe(S.minLength(1)),
@@ -67,100 +93,159 @@ const SourceExternalInForm = S.Struct({
 
 export const SourceData = S.Union(SourceGororobasInForm, SourceExternalInForm)
 
-const NewImageInForm = S.Struct({
+export const NewImageDataInForm = S.Struct({
 	file: FileSchema,
 })
 
-const NewImageForDB = S.Struct({
-	base64: S.String,
-	fileName: S.String,
-	mimeType: S.String,
-})
-
-export const NewImage = S.transformOrFail(NewImageInForm, NewImageForDB, {
-	encode: (photoForDB) =>
-		ParseResult.succeed({
-			file: base64ToFile(
-				photoForDB.base64,
-				photoForDB.fileName,
-				photoForDB.mimeType,
-			),
-		}),
-	decode: (photoInForm, _, ast) =>
-		Effect.mapBoth(
-			Effect.tryPromise({
-				try: () => fileToBase64(photoInForm.file),
-				catch: (error) =>
-					new FailedConvertingBlobError(error, photoInForm.file),
-			}),
-			{
-				onSuccess: (base64) => ({
-					base64,
-					fileName: photoInForm.file.name,
-					mimeType: photoInForm.file.type,
-				}),
-				onFailure: (e) =>
-					new ParseResult.Type(ast, photoInForm, '@TODO type error'),
-			},
-		),
-})
-
-export const StoredImage = S.Struct({
+export const StoredImageDataInForm = S.Struct({
 	sanity_id: S.String,
 	hotspot: Optional(S.Object),
 	crop: Optional(S.Object),
 })
 
-export const ImageData = S.Struct({
+export const ImageInForm = S.Struct({
 	id: S.UUID,
 	label: Optional(S.String),
-	data: S.Union(NewImage, StoredImage),
+	data: S.Union(NewImageDataInForm, StoredImageDataInForm),
 	sources: Optional(S.Array(SourceData)),
 })
 
-export type NewImageData = Omit<typeof ImageData.Type, 'data'> & {
-	data: typeof NewImage.Type
+export type NewImageData = Omit<typeof ImageInForm.Type, 'data'> & {
+	data: typeof NewImageDataInForm.Type
 }
 
-export const StoredImageData = ImageData.pipe(
+/** What gets stored as an `Image` Object in EdgeDB */
+export const StoredImageInForm = ImageInForm.pipe(
 	S.omit('data'),
 	S.extend(
 		S.Struct({
-			data: StoredImage,
+			data: StoredImageDataInForm,
 		}),
 	),
 )
-export type StoredImageDataType = typeof StoredImageData.Type
+export type StoredImageInFormType = typeof StoredImageInForm.Type
 
-/** What gets stored as an `Image` Object in EdgeDB */
-const ImageObjectInDB = ImageData.pipe(S.omit('data'), S.extend(StoredImage))
+const ImageObjectInDB = ImageInForm.pipe(
+	S.omit('data'),
+	S.extend(StoredImageDataInForm),
+)
 
-type ImageObjectInDB = typeof ImageObjectInDB.Type
+export type ImageObjectInDB = typeof ImageObjectInDB.Type
 
-export const ImageDBToFormTransformer = S.transform(
+/**
+ * encoded: form;
+ * decoded: DB;
+ */
+export const ImageFormToDBTransformer = S.transformOrFail(
+	ImageInForm,
 	ImageObjectInDB,
-	ImageData,
 	{
-		encode: (imageInForm) =>
-			({
-				...imageInForm,
-				...imageInForm.data,
-				// @TODO fail if not a stored image
-			}) as any,
-		decode: (imageInDb) => ({
-			...imageInDb,
-			data: S.decodeSync(StoredImage)(imageInDb),
-		}),
+		strict: true,
+		encode: (imageInDB) =>
+			ParseResult.succeed({
+				...imageInDB,
+				data: {
+					sanity_id: imageInDB.sanity_id,
+					hotspot: imageInDB.hotspot,
+					crop: imageInDB.crop,
+				},
+			}),
+		decode: (imageInForm, _, ast) =>
+			Effect.gen(function* (_) {
+				const { data } = imageInForm
+				if (S.is(StoredImageDataInForm)(data)) {
+					return ParseResult.succeed({
+						id: imageInForm.id,
+						label: imageInForm.label,
+						sources: imageInForm.sources,
+						sanity_id: data.sanity_id,
+						hotspot: data.hotspot,
+						crop: data.crop,
+					} satisfies typeof ImageObjectInDB.Type)
+				}
+
+				const formData = new FormData()
+				formData.append('file', data.file)
+				const result = yield* _(
+					Effect.tryPromise({
+						try: () =>
+							fetch('/api/images', {
+								method: 'POST',
+								body: formData,
+							}).then((response) => response.json()),
+						catch: (error) => new FailedUploadingImageError(error, data.file),
+					}),
+				)
+
+				if (
+					!result ||
+					'error' in result ||
+					!('sanity_id' in result) ||
+					typeof result.sanity_id !== 'string'
+				) {
+					return yield* Effect.fail(
+						new FailedUploadingImageError(result.error, data.file),
+					)
+				}
+
+				return ParseResult.succeed({
+					id: imageInForm.id,
+					sanity_id: result.sanity_id,
+					label: imageInForm.label,
+					sources: imageInForm.sources,
+					hotspot: undefined,
+					crop: undefined,
+				} satisfies typeof ImageObjectInDB.Type) as any // not sure why typings aren't working here
+			}).pipe(
+				Effect.catchAll(() =>
+					ParseResult.fail(new ParseResult.Type(ast, imageInForm, 'blabla')),
+				),
+			),
 	},
 )
 
-export const StringInArray = S.transform(
-	S.Struct({
-		value: S.String.pipe(S.minLength(1)).annotations({
-			message: () => 'Ao menos 3 caracteres',
-		}),
+export const ImageDBToFormTransformer = S.transformOrFail(
+	ImageObjectInDB,
+	ImageInForm,
+	{
+		encode: (imageInForm, _, ast) => {
+			if (S.is(StoredImageDataInForm)(imageInForm)) {
+				const { data: _data, ...encoded } = {
+					...imageInForm,
+					...imageInForm.data,
+				}
+				return Effect.succeed(encoded)
+			}
+
+			// can't encode a `NewImage`; they won't be in the DB anyways
+			return Effect.fail(new ParseResult.Forbidden(ast, imageInForm))
+		},
+		decode: (imageInDb) =>
+			ParseResult.succeed({
+				...imageInDb,
+				data: {
+					sanity_id: imageInDb.sanity_id,
+					hotspot: imageInDb.hotspot,
+					crop: imageInDb.crop,
+				},
+			}),
+	},
+)
+
+const Name = S.String.pipe(
+	S.minLength(3, {
+		message: () => 'Nomes precisam de ao menos 3 caracteres',
 	}),
-	S.String,
+	S.maxLength(40, {
+		message: () => 'Nomes não podem ir além de 40 caracteres',
+	}),
+)
+
+export const NameInArray = S.transform(
+	S.Struct({
+		value: Name,
+	}),
+	Name,
 	{
 		encode: (name) => ({ value: name }),
 		decode: (nameInForm) => nameInForm.value,
@@ -181,14 +266,16 @@ const Handle = S.String.pipe(
 )
 
 export const VegetableVarietyData = S.Struct({
-	id: S.UUID,
+	/** Exists only if VegetableVariety's already in DB */
+	id: Optional(S.UUID),
 	handle: Optional(Handle),
-	names: S.NonEmptyArray(StringInArray),
-	photos: Optional(S.Array(ImageData)),
+	names: S.NonEmptyArray(NameInArray),
+	photos: Optional(S.Array(ImageInForm)),
 })
 
 const VegetableTipData = S.Struct({
-	id: S.UUID,
+	/** Exists only if VegetableTip's already in DB */
+	id: Optional(S.UUID),
 	handle: Optional(Handle),
 	subjects: S.Array(
 		S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
@@ -198,13 +285,19 @@ const VegetableTipData = S.Struct({
 })
 
 export const VegetableData = S.Struct({
-	id: S.UUID,
-	names: S.NonEmptyArray(StringInArray),
+	/** Exists only if Vegetable's already in DB */
+	id: Optional(S.UUID),
+	names: S.NonEmptyArray(NameInArray),
 	handle: Handle,
-	scientific_names: Optional(S.Array(StringInArray)),
-	origin: Optional(S.String),
+	scientific_names: Optional(S.Array(NameInArray)),
+	origin: Optional(
+		S.String.pipe(
+			S.maxLength(40, {
+				message: () => 'A origem tem de ser menor que 40 caracteres',
+			}),
+		),
+	),
 	gender: Optional(S.Literal(...(Object.keys(GENDER_TO_LABEL) as Gender[]))),
-
 	uses: Optional(
 		S.Array(S.Literal(...(Object.keys(USAGE_TO_LABEL) as VegetableUsage[]))),
 	),
@@ -262,12 +355,11 @@ export const VegetableData = S.Struct({
 			}),
 		),
 	),
-
-	varieties: Optional(S.Array(VegetableVarietyData)),
-	tips: Optional(S.Array(VegetableTipData)),
-	photos: Optional(S.Array(ImageData)),
 	content: Optional(RichText),
 	friends: Optional(S.Array(S.UUID)),
+	varieties: Optional(S.Array(VegetableVarietyData)),
+	tips: Optional(S.Array(VegetableTipData)),
+	photos: Optional(S.Array(ImageInForm)),
 	sources: Optional(S.Array(SourceData)),
 }).pipe(
 	S.filter((vegetable, _, ast) => {
@@ -302,12 +394,14 @@ export type SourceForDB = typeof SourceData.Type
 export const ProfileData = S.Struct({
 	id: S.UUID,
 	handle: Handle,
-	name: S.String.pipe(S.minLength(1)),
-	photo: S.transformOrFail(S.Any, S.Union(S.Undefined, ImageData), {
+	name: Name,
+	photo: S.transformOrFail(S.Any, S.Union(S.Undefined, ImageInForm), {
 		decode: (value) =>
 			pipe(
 				// We can validate only the data field
-				S.validate(S.Union(NewImageInForm, StoredImage))(value?.data),
+				S.validate(S.Union(NewImageDataInForm, StoredImageDataInForm))(
+					value?.data,
+				),
 				// If it's valid, return the full `value` - Schema will decode it with ImageData after the transformation
 				Effect.map(() => value),
 				// Otherwise, return undefined
@@ -323,8 +417,13 @@ export const ProfileData = S.Struct({
 export type ProfileDataForDB = typeof ProfileData.Type
 export type ProfileDataInForm = typeof ProfileData.Encoded
 
+export const ProfileDataToUpdate = S.partial(
+	ProfileData.pipe(S.omit('id')),
+).pipe(S.extend(ProfileData.pipe(S.pick('id'))))
+
 export const NoteData = S.Struct({
-	id: S.UUID,
+	/** Exists only if Note's already in DB */
+	id: Optional(S.UUID),
 	published_at: S.Union(S.Date, S.DateFromSelf),
 	title: RichText,
 	body: Optional(RichText),
