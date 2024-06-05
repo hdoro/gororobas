@@ -26,6 +26,12 @@ export class InvalidInputError {
 	) {}
 }
 
+export class UnkownActionError {
+	readonly _tag = 'UnkownAction'
+
+	constructor(readonly error: unknown) {}
+}
+
 export class FailedConvertingBlobError {
 	readonly _tag = 'FailedConvertingBlob'
 

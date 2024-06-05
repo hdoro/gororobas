@@ -20,6 +20,7 @@ import {
 	ProfileDataToUpdate,
 	RichText,
 } from '@/schemas'
+import { UnkownActionError } from '@/types/errors'
 import { getChangedObjectSubset } from '@/utils/diffs'
 import { generateId } from '@/utils/ids'
 import { paths } from '@/utils/urls'
@@ -67,6 +68,7 @@ export default function ProfileForm({
 		mode: 'onBlur',
 		disabled: status === 'submitting',
 	})
+	console.log({ formValue: form.getValues() })
 
 	const onSubmit: SubmitHandler<ProfileDataInForm> = async (data, event) => {
 		const dataThatChanged = getChangedObjectSubset({
@@ -81,15 +83,36 @@ export default function ProfileForm({
 		}
 
 		setStatus('submitting')
-		const dataToUpdate = await pipe(
+		const program = pipe(
 			Schema.decode(ProfileDataToUpdate)({
 				...dataThatChanged,
 				id: initialValue.id,
 			}),
-			Effect.runPromise,
+			Effect.tap((decoded) => {
+				if (decoded.photo) {
+					// Before proceeding with the profile update, save the uploaded photo to the form in case we need to re-send it on errors
+					return pipe(
+						Schema.decode(ImageDBToFormTransformer)(decoded.photo),
+						Effect.tap((storedPhotoInForm) =>
+							form.setValue('photo', storedPhotoInForm),
+						),
+					)
+				}
+			}),
+			Effect.flatMap((dataToUpdate) =>
+				Effect.tryPromise({
+					try: () => updateProfileAction(dataToUpdate),
+					catch: (error) => new UnkownActionError(error),
+				}),
+			),
+			Effect.catchTags({
+				ParseError: () =>
+					Effect.succeed({ error: 'failed-uploading-images' } as const),
+				UnkownAction: () => Effect.succeed({ error: 'unknown-error' } as const),
+			}),
 		)
-		const response = await updateProfileAction(dataToUpdate)
-		if (response === true) {
+		const result = await Effect.runPromise(program)
+		if (result === true) {
 			toast.toast({
 				variant: 'default',
 				title: 'Perfil editado com sucesso ✨',

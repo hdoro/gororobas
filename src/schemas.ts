@@ -154,14 +154,14 @@ export const ImageFormToDBTransformer = S.transformOrFail(
 			Effect.gen(function* (_) {
 				const { data } = imageInForm
 				if (S.is(StoredImageDataInForm)(data)) {
-					return ParseResult.succeed({
+					return {
 						id: imageInForm.id,
 						label: imageInForm.label,
 						sources: imageInForm.sources,
 						sanity_id: data.sanity_id,
 						hotspot: data.hotspot,
 						crop: data.crop,
-					} satisfies typeof ImageObjectInDB.Type)
+					} satisfies typeof ImageObjectInDB.Type
 				}
 
 				const formData = new FormData()
@@ -188,17 +188,19 @@ export const ImageFormToDBTransformer = S.transformOrFail(
 					)
 				}
 
-				return ParseResult.succeed({
+				return {
 					id: imageInForm.id,
 					sanity_id: result.sanity_id,
 					label: imageInForm.label,
 					sources: imageInForm.sources,
 					hotspot: undefined,
 					crop: undefined,
-				} satisfies typeof ImageObjectInDB.Type) as any // not sure why typings aren't working here
+				} satisfies typeof ImageObjectInDB.Type
 			}).pipe(
 				Effect.catchAll(() =>
-					ParseResult.fail(new ParseResult.Type(ast, imageInForm, 'blabla')),
+					ParseResult.fail(
+						new ParseResult.Type(ast, imageInForm, 'failed-uploading-images'),
+					),
 				),
 			),
 	},
@@ -417,9 +419,17 @@ export const ProfileData = S.Struct({
 export type ProfileDataForDB = typeof ProfileData.Type
 export type ProfileDataInForm = typeof ProfileData.Encoded
 
+/** Profiles can be partially updated. Photo should be sent to the DB first. */
 export const ProfileDataToUpdate = S.partial(
-	ProfileData.pipe(S.omit('id')),
-).pipe(S.extend(ProfileData.pipe(S.pick('id'))))
+	ProfileData.pipe(S.omit('id', 'photo')),
+).pipe(
+	S.extend(ProfileData.pipe(S.pick('id'))),
+	S.extend(
+		S.Struct({
+			photo: Optional(ImageFormToDBTransformer),
+		}),
+	),
+)
 
 export const NoteData = S.Struct({
 	/** Exists only if Note's already in DB */
