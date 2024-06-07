@@ -1,3 +1,4 @@
+import { generateId } from '@/utils/ids'
 import {
 	DndContext,
 	type DragEndEvent,
@@ -40,9 +41,7 @@ export default function ArrayInput<
 }: {
 	field: ControllerRenderProps<TFieldValues, TName>
 	newItemLabel?: string
-	newItemValue?:
-		| FieldArray<FieldValues, TName>
-		| (() => FieldArray<FieldValues, TName>)
+	newItemValue?: FieldArray<FieldValues, TName>
 	renderItem: (index: number) => JSX.Element
 	inputType?: 'regular' | 'dialog'
 }) {
@@ -87,9 +86,10 @@ export default function ArrayInput<
 				<Button
 					onClick={() => {
 						fieldArray.append(
-							((typeof newItemValue === 'function'
-								? (newItemValue as () => FieldArray<FieldValues, TName>)()
-								: newItemValue) || {}) as FieldArray<FieldValues, TName>,
+							{
+								id: generateId(),
+								...(newItemValue || {}),
+							} as FieldArray<FieldValues, TName>,
 							{
 								shouldFocus: inputType === 'regular',
 							},
@@ -157,7 +157,7 @@ export function SortableItem(
 	}
 
 	return (
-		<div ref={setNodeRef} style={style} className="flex items-start gap-4">
+		<div ref={setNodeRef} style={style} className="flex items-start gap-1">
 			<Button
 				mode="bleed"
 				size="icon"
@@ -166,8 +166,9 @@ export function SortableItem(
 				disabled={props.disabled}
 				{...attributes}
 				{...listeners}
+				className="group w-8 h-10"
 			>
-				<GripVerticalIcon />
+				<GripVerticalIcon className="stroke-muted-foreground group-hover:stroke-foreground size-5" />
 			</Button>
 			<div className="flex-1">{props.children}</div>
 			<Button
@@ -177,8 +178,9 @@ export function SortableItem(
 				title={`Deletar item #${props.index + 1}`}
 				onClick={props.removeItem}
 				disabled={props.disabled}
+				className="group w-8 h-10"
 			>
-				<TrashIcon className="stroke-current" />
+				<TrashIcon className="stroke-muted-foreground group-hover:stroke-current size-5" />
 			</Button>
 		</div>
 	)

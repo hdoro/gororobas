@@ -16,12 +16,12 @@ import { NoteData, type NoteInForm } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 import { paths } from '@/utils/urls'
+import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Schema } from '@effect/schema'
-import { effectTsResolver } from '@hookform/resolvers/effect-ts'
-import { Effect } from 'effect'
+import { Effect, pipe } from 'effect'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
+import { FormProvider, type SubmitHandler } from 'react-hook-form'
 
 export default function NoteForm() {
 	const router = useRouter()
@@ -30,23 +30,32 @@ export default function NoteForm() {
 		'idle',
 	)
 
-	const form = useForm<NoteInForm>({
-		resolver: effectTsResolver(Schema.encodedSchema(NoteData)),
-		criteriaMode: 'all',
+	const form = useFormWithSchema({
+		schema: Schema.encodedSchema(NoteData),
 		defaultValues: {
 			id: generateId(),
 			public: true,
 			published_at: new Date().toISOString(),
 		},
-		mode: 'onBlur',
 		disabled: status === 'submitting',
 	})
 
-	const onSubmit: SubmitHandler<NoteInForm> = async (data, event) => {
-		const noteForDB = await Effect.runPromise(Schema.decode(NoteData)(data))
-
+	const onSubmit: SubmitHandler<NoteInForm> = async (data) => {
 		setStatus('submitting')
-		const response = await createNotesAction([noteForDB])
+
+		const program = pipe(
+			Schema.decode(NoteData)(data),
+			Effect.flatMap((noteForDB) =>
+				Effect.tryPromise(() => createNotesAction([noteForDB])),
+			),
+			Effect.catchAll(() =>
+				Effect.succeed({
+					success: false,
+					error: 'unknown-error',
+				} as const),
+			),
+		)
+		const response = await Effect.runPromise(program)
 		if (response.success === true && response.result[0]?.handle) {
 			toast.toast({
 				variant: 'default',

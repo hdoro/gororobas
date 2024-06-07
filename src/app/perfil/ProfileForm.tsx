@@ -24,15 +24,14 @@ import { UnkownActionError } from '@/types/errors'
 import { getChangedObjectSubset } from '@/utils/diffs'
 import { generateId } from '@/utils/ids'
 import { paths } from '@/utils/urls'
+import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Schema } from '@effect/schema'
-import { effectTsResolver } from '@hookform/resolvers/effect-ts'
 import { Effect, Either, pipe } from 'effect'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import {
 	FormProvider,
 	type SubmitHandler,
-	useForm,
 	useFormContext,
 } from 'react-hook-form'
 
@@ -61,14 +60,11 @@ export default function ProfileForm({
 		} as ProfileDataInForm
 	}, [profileInDb])
 
-	const form = useForm<ProfileDataInForm>({
-		resolver: effectTsResolver(Schema.encodedBoundSchema(ProfileData)),
-		criteriaMode: 'all',
+	const form = useFormWithSchema({
+		schema: Schema.encodedBoundSchema(ProfileData),
 		defaultValues: initialValue,
-		mode: 'onBlur',
 		disabled: status === 'submitting',
 	})
-	console.log({ formValue: form.getValues() })
 
 	const onSubmit: SubmitHandler<ProfileDataInForm> = async (data, event) => {
 		const dataThatChanged = getChangedObjectSubset({

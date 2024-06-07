@@ -112,8 +112,6 @@ export default function VegetableTipInput<
 							render={({ field: sourcesField }) => (
 								<ArrayInput
 									field={sourcesField}
-									// @ts-expect-error no way for TS to know the type of `newItemValue`
-									newItemValue={{}}
 									newItemLabel="Nova fonte"
 									renderItem={(index) => (
 										<Field

@@ -68,7 +68,7 @@ export type VegetableCardData = Exclude<
 const userProfileForAvatar = e.shape(e.UserProfile, () => ({
 	name: true,
 	handle: true,
-	photo: imageForRendering,
+	photo: (image) => ({ ...imageForRendering(image), sources: false }),
 	location: true,
 }))
 

@@ -75,23 +75,21 @@ export const RichText = S.transform(
 )
 
 const SourceGororobasInForm = S.Struct({
-	/** Exists only if Source's already in DB */
-	id: Optional(S.UUID),
+	id: S.UUID,
 	comments: Optional(RichText),
 	type: S.Literal('GOROROBAS' satisfies SourceType),
 	userIds: S.Array(S.UUID),
 })
 
 const SourceExternalInForm = S.Struct({
-	/** Exists only if Source's already in DB */
-	id: Optional(S.UUID),
+	id: S.UUID,
 	comments: Optional(RichText),
 	type: S.Literal('EXTERNAL' satisfies SourceType),
 	credits: S.String.pipe(S.minLength(1)),
 	origin: Optional(S.String),
 })
 
-export const SourceData = S.Union(SourceGororobasInForm, SourceExternalInForm)
+export const SourceInForm = S.Union(SourceGororobasInForm, SourceExternalInForm)
 
 export const NewImageDataInForm = S.Struct({
 	file: FileSchema,
@@ -107,7 +105,7 @@ export const ImageInForm = S.Struct({
 	id: S.UUID,
 	label: Optional(S.String),
 	data: S.Union(NewImageDataInForm, StoredImageDataInForm),
-	sources: Optional(S.Array(SourceData)),
+	sources: Optional(S.Array(SourceInForm)),
 })
 
 export type NewImageData = Omit<typeof ImageInForm.Type, 'data'> & {
@@ -125,12 +123,10 @@ export const StoredImageInForm = ImageInForm.pipe(
 )
 export type StoredImageInFormType = typeof StoredImageInForm.Type
 
-const ImageObjectInDB = ImageInForm.pipe(
+export const ImageObjectInDB = ImageInForm.pipe(
 	S.omit('data'),
 	S.extend(StoredImageDataInForm),
 )
-
-export type ImageObjectInDB = typeof ImageObjectInDB.Type
 
 /**
  * encoded: form;
@@ -268,23 +264,26 @@ const Handle = S.String.pipe(
 )
 
 export const VegetableVarietyData = S.Struct({
-	/** Exists only if VegetableVariety's already in DB */
-	id: Optional(S.UUID),
+	id: S.UUID,
 	handle: Optional(Handle),
 	names: S.NonEmptyArray(NameInArray),
 	photos: Optional(S.Array(ImageInForm)),
 })
 
+export type VegetableVarietyInForm = typeof VegetableVarietyData.Encoded
+
 const VegetableTipData = S.Struct({
-	/** Exists only if VegetableTip's already in DB */
-	id: Optional(S.UUID),
+	id: S.UUID,
 	handle: Optional(Handle),
 	subjects: S.Array(
 		S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
 	),
 	content: RichText,
-	sources: Optional(S.Array(SourceData)),
+	sources: Optional(S.Array(SourceInForm)),
 })
+
+export type VegetableTipForDB = typeof VegetableTipData.Type
+export type VegetableTipInForm = typeof VegetableTipData.Encoded
 
 export const VegetableData = S.Struct({
 	/** Exists only if Vegetable's already in DB */
@@ -362,7 +361,7 @@ export const VegetableData = S.Struct({
 	varieties: Optional(S.Array(VegetableVarietyData)),
 	tips: Optional(S.Array(VegetableTipData)),
 	photos: Optional(S.Array(ImageInForm)),
-	sources: Optional(S.Array(SourceData)),
+	sources: Optional(S.Array(SourceInForm)),
 }).pipe(
 	S.filter((vegetable, _, ast) => {
 		if (
@@ -382,21 +381,42 @@ export const VegetableData = S.Struct({
 	}),
 )
 
-export type VegetableVarietyForDB = typeof VegetableVarietyData.Type
-export type VegetableVarietyInForm = typeof VegetableVarietyData.Encoded
-
-export type VegetableTipForDB = typeof VegetableTipData.Type
-export type VegetableTipInForm = typeof VegetableTipData.Encoded
-
-export type VegetableForDB = typeof VegetableData.Type
 export type VegetableInForm = typeof VegetableData.Encoded
 
-export type SourceForDB = typeof SourceData.Type
+export const VegetableWithUploadedImages = VegetableData.pipe(
+	S.omit('photos', 'varieties'),
+	S.extend(
+		S.Struct({
+			photos: Optional(S.Array(ImageFormToDBTransformer)),
+			varieties: Optional(
+				S.Array(
+					VegetableVarietyData.pipe(
+						S.omit('photos'),
+						S.extend(
+							S.Struct({
+								photos: Optional(S.Array(ImageFormToDBTransformer)),
+							}),
+						),
+					),
+				),
+			),
+		}),
+	),
+)
+
+export type VegetableForDB = typeof VegetableWithUploadedImages.Type
+export type VegetableVarietyForDB = Exclude<
+	VegetableForDB['varieties'],
+	null | undefined
+>[number]
+
+export type SourceForDB = typeof SourceInForm.Type
 
 export const ProfileData = S.Struct({
 	id: S.UUID,
 	handle: Handle,
 	name: Name,
+	// @TODO make less messy
 	photo: S.transformOrFail(S.Any, S.Union(S.Undefined, ImageInForm), {
 		decode: (value) =>
 			pipe(

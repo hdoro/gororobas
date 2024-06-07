@@ -8,9 +8,11 @@ import {
 	CardTitle,
 } from '@/components/ui/card'
 import {
+	ImageDBToFormTransformer,
 	VegetableData,
 	type VegetableForDB,
 	type VegetableInForm,
+	VegetableWithUploadedImages,
 } from '@/schemas'
 import type { VegetableUsage } from '@/types'
 import { generateId } from '@/utils/ids'
@@ -22,17 +24,16 @@ import {
 	USAGE_TO_LABEL,
 	VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
+import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Schema } from '@effect/schema'
-import { effectTsResolver } from '@hookform/resolvers/effect-ts'
-import { Effect } from 'effect'
+import { Effect, pipe } from 'effect'
 import { SendIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import {
 	FormProvider,
-	useForm,
-	useFormContext,
 	type SubmitHandler,
+	useFormContext,
 } from 'react-hook-form'
 import ArrayInput from './forms/ArrayInput'
 import CheckboxesInput from './forms/CheckboxesInput'
@@ -64,12 +65,12 @@ export default function VegetableForm(props: {
 	initialValue?: VegetableInForm
 }) {
 	const router = useRouter()
-	const toast = useToast()
+	const { toast } = useToast()
 	const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>(
 		'idle',
 	)
-	const form = useForm<VegetableInForm>({
-		resolver: effectTsResolver(Schema.encodedBoundSchema(VegetableData)),
+	const form = useFormWithSchema({
+		schema: Schema.encodedBoundSchema(VegetableData),
 		defaultValues:
 			'initialValue' in props
 				? props.initialValue
@@ -78,38 +79,75 @@ export default function VegetableForm(props: {
 					},
 		disabled: status !== 'idle',
 	})
+	const { setValue } = form
 
-	const onSubmit: SubmitHandler<VegetableInForm> = async (data) => {
-		setStatus('submitting')
-		const dataWithoutEmptyKeys = Object.fromEntries(
-			Object.entries(data).filter(([, value]) => {
-				if (value === undefined || value === null) return false
+	const onSubmit: SubmitHandler<VegetableInForm> = useCallback(
+		async (data) => {
+			setStatus('submitting')
+			const dataWithoutEmptyKeys = Object.fromEntries(
+				Object.entries(data).filter(([, value]) => {
+					if (value === undefined || value === null) return false
 
-				return true
-			}),
-		) as typeof data
-		const decoded = await Schema.decode(VegetableData)(
-			dataWithoutEmptyKeys,
-		).pipe(Effect.runPromise)
-		const result = await props.onSubmit(decoded)
-		if (result.success) {
-			toast.toast({
-				variant: 'default',
-				title: result.message?.title || 'Vegetal criado com sucesso ✨',
-				description:
-					result.message?.description || 'Te enviando pra página dele...',
-			})
-			router.push(result.redirectTo)
-			setStatus('success')
-		} else {
-			toast.toast({
-				variant: 'destructive',
-				title: 'Erro ao adicionar vegetal',
-				description: 'Por favor, tente novamente.',
-			})
-			setStatus('idle')
-		}
-	}
+					return true
+				}),
+			) as typeof data
+			const program = pipe(
+				Schema.decode(VegetableWithUploadedImages)(dataWithoutEmptyKeys),
+				// Before proceeding with the mutation, save the uploaded photos to the form in case we need to re-send it on errors
+				Effect.tap((decoded) => {
+					if (decoded.photos) {
+						setValue(
+							'photos',
+							decoded.photos.map((photo) =>
+								Schema.decodeSync(ImageDBToFormTransformer)(photo),
+							),
+						)
+					}
+
+					if (decoded.varieties) {
+						decoded.varieties.forEach((variety, index) => {
+							if (variety.photos) {
+								setValue(
+									`varieties.${index}.photos`,
+									variety.photos.map((photo) =>
+										Schema.decodeSync(ImageDBToFormTransformer)(photo),
+									),
+								)
+							}
+						})
+					}
+				}),
+				Effect.flatMap((decoded) =>
+					Effect.tryPromise(() => props.onSubmit(decoded)),
+				),
+				Effect.catchAll(() =>
+					Effect.succeed({
+						success: false,
+						error: 'unknown-error',
+					} as const),
+				),
+			)
+			const result = await Effect.runPromise(program)
+			if (result.success) {
+				toast({
+					variant: 'default',
+					title: result.message?.title || 'Vegetal criado com sucesso ✨',
+					description:
+						result.message?.description || 'Te enviando pra página dele...',
+				})
+				router.push(result.redirectTo)
+				setStatus('success')
+			} else {
+				toast({
+					variant: 'destructive',
+					title: 'Erro ao adicionar vegetal',
+					description: 'Por favor, tente novamente.',
+				})
+				setStatus('idle')
+			}
+		},
+		[router, toast, setValue, props.onSubmit],
+	)
 
 	if (status === 'success') {
 		return (
@@ -320,7 +358,6 @@ export default function VegetableForm(props: {
 											return (
 												<ArrayInput
 													field={field}
-													newItemValue={() => ({ id: generateId() })}
 													newItemLabel="Nova foto"
 													renderItem={(index) => (
 														<Field
@@ -392,7 +429,6 @@ export default function VegetableForm(props: {
 											return (
 												<ArrayInput
 													field={field}
-													newItemValue={{}}
 													newItemLabel="Nova dica"
 													inputType="dialog"
 													renderItem={(index) => (

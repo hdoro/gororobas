@@ -7,7 +7,7 @@ import type {
 	TipSubject,
 	VegetableUsage,
 } from '@/edgedb.interfaces'
-import { insertVegetableFriendshipsMutation } from '@/mutations'
+import { upsertVegetableFriendshipsMutation } from '@/mutations'
 import type { SourceForDB, VegetableForDB } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { PLANTING_METHOD_TO_LABEL } from '@/utils/labels'
@@ -269,7 +269,7 @@ async function main() {
 					pipe(
 						Effect.tryPromise({
 							try: () =>
-								insertVegetableFriendshipsMutation.run(edgeDBClient, {
+								upsertVegetableFriendshipsMutation.run(edgeDBClient, {
 									friends: vegetable.friends.map((friend_id) =>
 										formatVegetableFriendForDB(friend_id, vegetable.id),
 									),
@@ -285,7 +285,7 @@ async function main() {
 										),
 										vegetable_id: vegetable.id,
 									},
-									insertVegetableFriendshipsMutation.toEdgeQL(),
+									upsertVegetableFriendshipsMutation.toEdgeQL(),
 									'\n\n\n',
 									error,
 								)

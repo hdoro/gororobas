@@ -161,7 +161,7 @@ module default {
     );
   }
 
-  type Source extending PublicRead, UserCanInsert, AdminCanDoAnything, UserCanUpdate {
+  type Source extending Auditable, PublicRead, UserCanInsert, AdminCanDoAnything, UserCanUpdate {
     required type: SourceType;
     credits: str;
     origin: str;
@@ -182,7 +182,7 @@ module default {
       annotation title := 'An unique (per-type) URL-friendly handle';
       
       # Can't be modified after creation for URL integrity
-      # @TODO can we have a `past_handles` array that keeps track of previous handles automatically?
+      # @TODO can we make readonly false for `UserProfile` but true for all the rest?
       # readonly := true;
 
       # exclusive among the current object type
@@ -195,9 +195,10 @@ module default {
     index on (.handle);
   }
 
-  type Image extending PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
+  type Image extending PublicRead, Auditable, UserCanInsert, UserCanUpdate, AdminCanDoAnything {
     required sanity_id: str {
       constraint exclusive;
+      readonly := true;
     };
     label: str;
     # Sanity-compliant values

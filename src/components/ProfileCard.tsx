@@ -1,4 +1,4 @@
-import type { NewImage, StoredImage } from '@/schemas'
+import type { NewImageDataInForm, StoredImageDataInForm } from '@/schemas'
 import type { ImageForRendering } from '@/types'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
@@ -11,7 +11,8 @@ import { Text } from './ui/text'
 const profileCardVariants = tv({
 	slots: {
 		root: 'flex-shrink-0 flex items-center flex-wrap',
-		image: 'block object-cover rounded-full',
+		image:
+			'block object-cover rounded-full bg-background-card text-xs overflow-hidden',
 		name: 'max-w-[16ch] truncate',
 		location: '',
 	},
@@ -51,8 +52,8 @@ export type ProfileCardProps = VariantProps<typeof profileCardVariants> & {
 		location?: string | undefined | null
 		photo?:
 			| ImageForRendering
-			| typeof NewImage.Encoded
-			| typeof StoredImage.Encoded
+			| typeof NewImageDataInForm.Encoded
+			| typeof StoredImageDataInForm.Encoded
 			| null
 			| undefined
 	}
@@ -128,7 +129,7 @@ export function ProfilePhoto({
 		return (
 			<SanityImage
 				image={photo}
-				alt={'Foto de perfil'}
+				alt={`Foto de perfil ${profile.name ? ` de ${profile.name}` : ''}`}
 				maxWidth={SIZE_MAP[size]}
 				className={classes.image()}
 			/>
