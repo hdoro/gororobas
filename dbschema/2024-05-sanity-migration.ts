@@ -8,7 +8,7 @@ import type {
 	VegetableUsage,
 } from '@/edgedb.interfaces'
 import { upsertVegetableFriendshipsMutation } from '@/mutations'
-import type { SourceForDB, VegetableForDB } from '@/schemas'
+import type { SourceForDB, VegetableForDBWithImages } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { PLANTING_METHOD_TO_LABEL } from '@/utils/labels'
 import { sanityServerClientRaw } from '@/utils/sanity.client'
@@ -97,15 +97,13 @@ function sanitySourcesToEdgeDB(sources: SanitySources): SourceForDB[] {
 
 function sanityPhotoToEdgeDB(
 	photo: Required<SanityVegetable>['photos'][number],
-): Exclude<VegetableForDB['photos'], undefined | null>[number] {
+): Exclude<VegetableForDBWithImages['photos'], undefined | null>[number] {
 	return {
 		id: generateId(),
 		label: photo.label || '',
-		data: {
-			sanity_id: photo.media?.asset?._ref as string,
-			hotspot: photo.media?.hotspot,
-			crop: photo.media?.crop,
-		},
+		sanity_id: photo.media?.asset?._ref as string,
+		hotspot: photo.media?.hotspot,
+		crop: photo.media?.crop,
 		sources: sanitySourcesToEdgeDB(photo.sources),
 	}
 }
@@ -179,7 +177,7 @@ async function main() {
 
 		const formatted = {
 			id: vegetable._id,
-			names: vegetable.names as unknown as VegetableForDB['names'],
+			names: vegetable.names as unknown as VegetableForDBWithImages['names'],
 			gender: vegetable.gender ? GENDER_MAP[vegetable.gender] : undefined,
 			handle: vegetable.slug?.current
 				? slugify(vegetable.slug.current)
@@ -203,7 +201,9 @@ async function main() {
 			photos: vegetable.photos?.map(sanityPhotoToEdgeDB),
 			varieties: (vegetable.varieties || []).map((variety) => {
 				return {
-					names: (variety.names as unknown as VegetableForDB['names']) || [],
+					names:
+						(variety.names as unknown as VegetableForDBWithImages['names']) ||
+						[],
 					photos: variety.photos?.map(sanityPhotoToEdgeDB),
 					id: S.is(S.UUID)(variety._key) ? variety._key : generateId(),
 				}
@@ -233,7 +233,7 @@ async function main() {
 						}) satisfies Exclude<SanitySources, undefined>[number],
 				),
 			),
-		} satisfies VegetableForDB
+		} satisfies VegetableForDBWithImages
 
 		return formatted
 	})

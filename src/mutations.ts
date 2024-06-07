@@ -1,67 +1,6 @@
 import e from '@/edgeql'
 import type { BaseTypeToTsType } from './edgeql/reflection'
 
-export const insertSourcesMutation = e.params(
-	{
-		sources: e.array(e.json),
-	},
-	(params) =>
-		e.for(e.array_unpack(params.sources), (source) =>
-			e
-				.insert(e.Source, {
-					id: e.cast(e.uuid, e.json_get(source, 'id')),
-					credits: e.cast(e.str, e.json_get(source, 'credits')),
-					type: e.cast(e.SourceType, e.json_get(source, 'type')),
-					origin: e.cast(e.str, e.json_get(source, 'origin')),
-					comments: e.cast(e.json, e.json_get(source, 'comments')),
-					users: e.select(e.UserProfile, (user) => ({
-						filter: e.op(
-							user.id,
-							'in',
-							e.array_unpack(
-								e.cast(e.array(e.uuid), e.json_get(source, 'userIds')),
-							),
-						),
-					})),
-				})
-				.unlessConflict((existingSource) => ({
-					on: existingSource.id,
-					else: existingSource,
-				})),
-		),
-)
-
-export const insertImagesMutation = e.params(
-	{
-		images: e.array(
-			e.tuple({
-				id: e.uuid,
-				sanity_id: e.str,
-				label: e.str,
-				sources: e.array(e.uuid),
-			}),
-		),
-	},
-	(params) =>
-		e.for(e.array_unpack(params.images), (photo) =>
-			e
-				.insert(e.Image, {
-					id: photo.id,
-					sanity_id: photo.sanity_id,
-					label: photo.label,
-					sources: e.select(e.Source, (source) => ({
-						filter: e.op(source.id, 'in', e.array_unpack(photo.sources)),
-					})),
-				})
-				// Sanity de-duplicates images if they're uploaded multiple times,
-				// so we can safely ignore conflicts
-				.unlessConflict((existingImage) => ({
-					on: existingImage.sanity_id,
-					else: existingImage,
-				})),
-		),
-)
-
 export const upsertVegetableFriendshipsMutation = e.params(
 	{
 		vegetable_id: e.uuid,
@@ -136,7 +75,9 @@ export const updateProfileMutation = e.params(
 					e.select(e.Image, (image) => ({
 						filter_single: e.op(image.id, '=', params.photo),
 					})),
-					'??',
+					'if',
+					e.op('exists', params.photo),
+					'else',
 					userProfile.photo,
 				),
 			},
@@ -527,6 +468,7 @@ export const upsertVegetableVarietiesMutation = e.params(
 )
 
 const COMMON_VEGETABLE_PARAMS = {
+	id: e.uuid,
 	scientific_names: e.optional(e.array(e.str)),
 	gender: e.optional(e.Gender),
 	origin: e.optional(e.str),
@@ -554,6 +496,7 @@ export const insertVegetableMutation = e.params(
 	},
 	(params) =>
 		e.insert(e.Vegetable, {
+			id: params.id,
 			names: params.names,
 			scientific_names: params.scientific_names,
 			handle: params.handle,
@@ -614,7 +557,6 @@ export const insertVegetableMutation = e.params(
 
 export const updateVegetableMutation = e.params(
 	{
-		id: e.uuid,
 		names: e.optional(e.array(e.str)),
 		handle: e.optional(e.str),
 		...COMMON_VEGETABLE_PARAMS,

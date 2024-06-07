@@ -8,9 +8,8 @@ import {
 	CardTitle,
 } from '@/components/ui/card'
 import {
-	ImageDBToFormTransformer,
 	VegetableData,
-	type VegetableForDB,
+	type VegetableForDBWithImages,
 	type VegetableInForm,
 	VegetableWithUploadedImages,
 } from '@/schemas'
@@ -54,7 +53,7 @@ import { Text } from './ui/text'
 import { useToast } from './ui/use-toast'
 
 export default function VegetableForm(props: {
-	onSubmit: (vegetable: VegetableForDB) => Promise<
+	onSubmit: (vegetable: VegetableForDBWithImages) => Promise<
 		| {
 				success: true
 				redirectTo: string
@@ -96,23 +95,13 @@ export default function VegetableForm(props: {
 				// Before proceeding with the mutation, save the uploaded photos to the form in case we need to re-send it on errors
 				Effect.tap((decoded) => {
 					if (decoded.photos) {
-						setValue(
-							'photos',
-							decoded.photos.map((photo) =>
-								Schema.decodeSync(ImageDBToFormTransformer)(photo),
-							),
-						)
+						setValue('photos', decoded.photos)
 					}
 
 					if (decoded.varieties) {
 						decoded.varieties.forEach((variety, index) => {
 							if (variety.photos) {
-								setValue(
-									`varieties.${index}.photos`,
-									variety.photos.map((photo) =>
-										Schema.decodeSync(ImageDBToFormTransformer)(photo),
-									),
-								)
+								setValue(`varieties.${index}.photos`, variety.photos)
 							}
 						})
 					}

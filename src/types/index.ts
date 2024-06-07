@@ -28,9 +28,10 @@ export type ReferenceOption = {
 	image?: ImageForRendering | null
 }
 
-export type ImageForRendering = Pick<Image, 'sanity_id' | 'label'> & {
+export type ImageForRendering = Pick<Image, 'sanity_id'> & {
 	hotspot?: SanityImageHotspot | unknown
 	crop?: SanityImageCrop | unknown
+	label?: Image['label'] | undefined
 }
 
 export type TiptapNode = JSONContent

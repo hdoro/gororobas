@@ -117,7 +117,7 @@
 		"jsdom": "^24.1.0",
 		"postcss": "^8.4.38",
 		"tailwindcss": "^3.4.4",
-		"typescript": "5.5.0-dev.20240523"
+		"typescript": "5.5.0-beta"
 	},
 	"lint-staged": {
 		"*.{js,ts,tsx,css}": "biome check --staged --diagnostic-level=error"

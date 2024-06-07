@@ -5,13 +5,12 @@ import {
 	vegetableEditingQuery,
 } from '@/queries'
 import {
+	type ImageObjectInDB,
 	type RichTextValue,
 	type SourceForDB,
-	type StoredImageInFormType,
 	VegetableData,
-	type VegetableForDB,
+	type VegetableForDBWithImages,
 	type VegetableTipForDB,
-	type VegetableVarietyForDB,
 } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { ImageForRendering } from '@/types'
@@ -36,10 +35,11 @@ function getRouteData(handle: string) {
 				if (!vegetable)
 					return Effect.fail(new InvalidInputError(vegetable, VegetableData))
 
-				const vegetableForDB: VegetableForDB = {
+				const vegetableForDBWithImages: VegetableForDBWithImages = {
 					id: vegetable.id,
 					handle: vegetable.handle,
-					names: vegetable.names as unknown as VegetableForDB['names'],
+					names:
+						vegetable.names as unknown as VegetableForDBWithImages['names'],
 					scientific_names: vegetable.scientific_names,
 					content: (vegetable.content as RichTextValue) || undefined,
 					friends: vegetable.friends.map((friend) => friend.id),
@@ -64,18 +64,15 @@ function getRouteData(handle: string) {
 							sources: tip.sources.map(formatQueriedSource),
 						}
 					}),
-					varieties: vegetable.varieties.map(
-						(variety): VegetableVarietyForDB => {
-							return {
-								id: variety.id,
-								names:
-									variety.names as unknown as VegetableVarietyForDB['names'],
-								photos: variety.photos.map(formatQueriedImage),
-							}
-						},
-					),
+					varieties: vegetable.varieties.map((variety) => ({
+						id: variety.id,
+						names:
+							variety.names as unknown as VegetableForDBWithImages['names'], // casting to non-empty array
+						photos: variety.photos.map(formatQueriedImage),
+					})),
 				}
-				return Effect.succeed(vegetableForDB)
+
+				return Effect.succeed(vegetableForDBWithImages)
 			}),
 			...buildTraceAndMetrics('vegetable_page', { handle }),
 			Effect.catchAll(() => Effect.succeed(null)),
@@ -104,16 +101,14 @@ function formatQueriedSource(source: SourceCardData): SourceForDB {
 
 function formatQueriedImage(
 	image: ImageForRenderingData,
-): StoredImageInFormType {
+): typeof ImageObjectInDB.Type {
 	return {
 		id: image.id,
 		label: image.label,
 		sources: image.sources.map(formatQueriedSource),
-		data: {
-			sanity_id: image.sanity_id,
-			crop: image.crop as Exclude<ImageForRendering['crop'], unknown>,
-			hotspot: image.hotspot as Exclude<ImageForRendering['hotspot'], unknown>,
-		},
+		sanity_id: image.sanity_id,
+		crop: image.crop as Exclude<ImageForRendering['crop'], unknown>,
+		hotspot: image.hotspot as Exclude<ImageForRendering['hotspot'], unknown>,
 	}
 }
 
@@ -144,18 +139,18 @@ export default async function EditVegetableRoute({
 		redirect(paths.signinNotice())
 	}
 
-	const vegetableForDB = await getRouteData(handle)
+	const vegetableForDBWithImages = await getRouteData(handle)
 
-	if (!vegetableForDB) return notFound()
+	if (!vegetableForDBWithImages) return notFound()
 
 	const vegetableInForm = await pipe(
-		Schema.encode(VegetableData)(vegetableForDB),
+		Schema.encode(VegetableData)(vegetableForDBWithImages),
 		Effect.runPromise,
 	)
 
 	return (
 		<EditVegetableForm
-			vegetableForDB={vegetableForDB}
+			vegetableForDBWithImages={vegetableForDBWithImages}
 			vegetableInForm={vegetableInForm}
 		/>
 	)

@@ -1,4 +1,4 @@
-import type { NewImageDataInForm, StoredImageDataInForm } from '@/schemas'
+import type { ProfileData, StoredImageDataInForm } from '@/schemas'
 import type { ImageForRendering } from '@/types'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
@@ -52,8 +52,8 @@ export type ProfileCardProps = VariantProps<typeof profileCardVariants> & {
 		location?: string | undefined | null
 		photo?:
 			| ImageForRendering
-			| typeof NewImageDataInForm.Encoded
-			| typeof StoredImageDataInForm.Encoded
+			| (typeof ProfileData.Type)['photo']
+			| Partial<typeof StoredImageDataInForm.Encoded>
 			| null
 			| undefined
 	}
@@ -125,10 +125,12 @@ export function ProfilePhoto({
 		)
 	}
 
-	if (photo && 'sanity_id' in photo) {
+	if (photo && 'sanity_id' in photo && photo.sanity_id) {
 		return (
 			<SanityImage
-				image={photo}
+				image={{
+					sanity_id: photo.sanity_id,
+				}}
 				alt={`Foto de perfil ${profile.name ? ` de ${profile.name}` : ''}`}
 				maxWidth={SIZE_MAP[size]}
 				className={classes.image()}

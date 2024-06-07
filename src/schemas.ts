@@ -31,7 +31,7 @@ import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
 import { ParseResult } from '@effect/schema'
 import * as S from '@effect/schema/Schema'
 import type { JSONContent } from '@tiptap/react'
-import { Effect, pipe } from 'effect'
+import { Effect } from 'effect'
 import type { NoteType } from './edgedb.interfaces'
 import { FailedUploadingImageError } from './types/errors'
 
@@ -101,32 +101,25 @@ export const StoredImageDataInForm = S.Struct({
 	crop: Optional(S.Object),
 })
 
-export const ImageInForm = S.Struct({
+const ImageMetadata = S.Struct({
 	id: S.UUID,
 	label: Optional(S.String),
-	data: S.Union(NewImageDataInForm, StoredImageDataInForm),
 	sources: Optional(S.Array(SourceInForm)),
 })
 
-export type NewImageData = Omit<typeof ImageInForm.Type, 'data'> & {
-	data: typeof NewImageDataInForm.Type
-}
-
-/** What gets stored as an `Image` Object in EdgeDB */
-export const StoredImageInForm = ImageInForm.pipe(
-	S.omit('data'),
-	S.extend(
-		S.Struct({
-			data: StoredImageDataInForm,
-		}),
-	),
+export const ImageInForm = ImageMetadata.pipe(
+	S.extend(S.Union(NewImageDataInForm, StoredImageDataInForm)),
 )
-export type StoredImageInFormType = typeof StoredImageInForm.Type
 
-export const ImageObjectInDB = ImageInForm.pipe(
-	S.omit('data'),
+export const NewImageInForm = ImageMetadata.pipe(S.extend(NewImageDataInForm))
+export type NewImageData = typeof NewImageInForm.Type
+
+export const StoredImageInForm = ImageMetadata.pipe(
 	S.extend(StoredImageDataInForm),
 )
+/** What gets stored as an `Image` Object in EdgeDB */
+export const ImageObjectInDB = StoredImageInForm
+export type StoredImageInFormType = typeof StoredImageInForm.Type
 
 /**
  * encoded: form;
@@ -137,31 +130,15 @@ export const ImageFormToDBTransformer = S.transformOrFail(
 	ImageObjectInDB,
 	{
 		strict: true,
-		encode: (imageInDB) =>
-			ParseResult.succeed({
-				...imageInDB,
-				data: {
-					sanity_id: imageInDB.sanity_id,
-					hotspot: imageInDB.hotspot,
-					crop: imageInDB.crop,
-				},
-			}),
+		encode: (imageInDB) => ParseResult.succeed(imageInDB),
 		decode: (imageInForm, _, ast) =>
 			Effect.gen(function* (_) {
-				const { data } = imageInForm
-				if (S.is(StoredImageDataInForm)(data)) {
-					return {
-						id: imageInForm.id,
-						label: imageInForm.label,
-						sources: imageInForm.sources,
-						sanity_id: data.sanity_id,
-						hotspot: data.hotspot,
-						crop: data.crop,
-					} satisfies typeof ImageObjectInDB.Type
+				if (S.is(StoredImageInForm)(imageInForm)) {
+					return imageInForm
 				}
 
 				const formData = new FormData()
-				formData.append('file', data.file)
+				formData.append('file', imageInForm.file)
 				const result = yield* _(
 					Effect.tryPromise({
 						try: () =>
@@ -169,7 +146,8 @@ export const ImageFormToDBTransformer = S.transformOrFail(
 								method: 'POST',
 								body: formData,
 							}).then((response) => response.json()),
-						catch: (error) => new FailedUploadingImageError(error, data.file),
+						catch: (error) =>
+							new FailedUploadingImageError(error, imageInForm.file),
 					}),
 				)
 
@@ -180,7 +158,7 @@ export const ImageFormToDBTransformer = S.transformOrFail(
 					typeof result.sanity_id !== 'string'
 				) {
 					return yield* Effect.fail(
-						new FailedUploadingImageError(result.error, data.file),
+						new FailedUploadingImageError(result.error, imageInForm.file),
 					)
 				}
 
@@ -199,34 +177,6 @@ export const ImageFormToDBTransformer = S.transformOrFail(
 					),
 				),
 			),
-	},
-)
-
-export const ImageDBToFormTransformer = S.transformOrFail(
-	ImageObjectInDB,
-	ImageInForm,
-	{
-		encode: (imageInForm, _, ast) => {
-			if (S.is(StoredImageDataInForm)(imageInForm)) {
-				const { data: _data, ...encoded } = {
-					...imageInForm,
-					...imageInForm.data,
-				}
-				return Effect.succeed(encoded)
-			}
-
-			// can't encode a `NewImage`; they won't be in the DB anyways
-			return Effect.fail(new ParseResult.Forbidden(ast, imageInForm))
-		},
-		decode: (imageInDb) =>
-			ParseResult.succeed({
-				...imageInDb,
-				data: {
-					sanity_id: imageInDb.sanity_id,
-					hotspot: imageInDb.hotspot,
-					crop: imageInDb.crop,
-				},
-			}),
 	},
 )
 
@@ -286,8 +236,7 @@ export type VegetableTipForDB = typeof VegetableTipData.Type
 export type VegetableTipInForm = typeof VegetableTipData.Encoded
 
 export const VegetableData = S.Struct({
-	/** Exists only if Vegetable's already in DB */
-	id: Optional(S.UUID),
+	id: S.UUID,
 	names: S.NonEmptyArray(NameInArray),
 	handle: Handle,
 	scientific_names: Optional(S.Array(NameInArray)),
@@ -381,6 +330,7 @@ export const VegetableData = S.Struct({
 	}),
 )
 
+export type VegetableForDB = typeof VegetableData.Type
 export type VegetableInForm = typeof VegetableData.Encoded
 
 export const VegetableWithUploadedImages = VegetableData.pipe(
@@ -404,9 +354,9 @@ export const VegetableWithUploadedImages = VegetableData.pipe(
 	),
 )
 
-export type VegetableForDB = typeof VegetableWithUploadedImages.Type
-export type VegetableVarietyForDB = Exclude<
-	VegetableForDB['varieties'],
+export type VegetableForDBWithImages = typeof VegetableWithUploadedImages.Type
+export type VegetableVarietyForDBWithImages = Exclude<
+	VegetableForDBWithImages['varieties'],
 	null | undefined
 >[number]
 
@@ -416,22 +366,7 @@ export const ProfileData = S.Struct({
 	id: S.UUID,
 	handle: Handle,
 	name: Name,
-	// @TODO make less messy
-	photo: S.transformOrFail(S.Any, S.Union(S.Undefined, ImageInForm), {
-		decode: (value) =>
-			pipe(
-				// We can validate only the data field
-				S.validate(S.Union(NewImageDataInForm, StoredImageDataInForm))(
-					value?.data,
-				),
-				// If it's valid, return the full `value` - Schema will decode it with ImageData after the transformation
-				Effect.map(() => value),
-				// Otherwise, return undefined
-				Effect.catchAll(() => Effect.succeed(undefined)),
-			),
-		encode: () => Effect.succeed({}),
-		strict: false,
-	}),
+	photo: Optional(S.partial(ImageInForm)),
 	location: Optional(S.String),
 	bio: Optional(RichText),
 })
@@ -440,7 +375,7 @@ export type ProfileDataForDB = typeof ProfileData.Type
 export type ProfileDataInForm = typeof ProfileData.Encoded
 
 /** Profiles can be partially updated. Photo should be sent to the DB first. */
-export const ProfileDataToUpdate = S.partial(
+export const ProfileDataWithImage = S.partial(
 	ProfileData.pipe(S.omit('id', 'photo')),
 ).pipe(
 	S.extend(ProfileData.pipe(S.pick('id'))),
@@ -452,8 +387,7 @@ export const ProfileDataToUpdate = S.partial(
 )
 
 export const NoteData = S.Struct({
-	/** Exists only if Note's already in DB */
-	id: Optional(S.UUID),
+	id: S.UUID,
 	published_at: S.Union(S.Date, S.DateFromSelf),
 	title: RichText,
 	body: Optional(RichText),

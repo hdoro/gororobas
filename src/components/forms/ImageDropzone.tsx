@@ -19,9 +19,11 @@ export default function ImageDropzone<
 	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
 	field,
+	value,
 	clearValue,
 }: {
 	field: ControllerRenderProps<TFieldValues, TName>
+	value: File | null | undefined
 	clearValue: () => void
 }) {
 	const { toast } = useToast()
@@ -93,11 +95,11 @@ export default function ImageDropzone<
 				/>
 			</FormControl>
 
-			{field.value ? (
+			{value ? (
 				<>
-					{(field.value as File) instanceof File && (
+					{value instanceof File && (
 						<img
-							src={URL.createObjectURL(field.value)}
+							src={URL.createObjectURL(value)}
 							alt="Imagem selecionada"
 							className="block object-contain w-full h-full"
 						/>

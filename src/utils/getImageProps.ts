@@ -15,7 +15,7 @@ export function getImageDimensions(
 	// example asset._ref:
 	// image-7558c4a4d73dac0398c18b7fa2c69825882e6210-366x96-png
 	// When splitting by '-' we can extract the dimensions, id and extension
-	const dimensions = image.sanity_id.split('-')[2]
+	const dimensions = image.sanity_id.split('-')[2] || ''
 	const [width, height] = dimensions.split('x').map(Number)
 
 	if (!width || !height || Number.isNaN(width) || Number.isNaN(height)) {

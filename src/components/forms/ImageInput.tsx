@@ -93,16 +93,15 @@ function ImageField<
 	field: ControllerRenderProps<TFieldValues, TName>
 }) {
 	const form = useFormContext()
-	const dataFieldName = `${rootField.name}.data`
 	const imageData = useWatch({
 		control: form.control,
-		name: dataFieldName,
-	}) as (typeof ImageInForm.Encoded)['data'] | null | undefined
+		name: rootField.name,
+	}) as typeof ImageInForm.Encoded | null | undefined
 
 	function clearValue() {
 		rootField.onChange({
-			...rootField.value,
-			data: undefined,
+			label: imageData?.label,
+			sources: imageData?.sources,
 			// As we're changing images, we need to generate a new ID for EdgeDB
 			id: generateId(),
 		})
@@ -114,7 +113,7 @@ function ImageField<
 				form={form}
 				label="Imagem"
 				hideLabel
-				name={dataFieldName}
+				name={rootField.name}
 				render={({ field }) => (
 					<div className="relative aspect-square border-2 border-border bg-card w-[12.5rem] flex-[0_0_max-content] flex items-center justify-center rounded-lg">
 						{!field.disabled && (
@@ -144,9 +143,15 @@ function ImageField<
 			form={form}
 			label="Imagem"
 			hideLabel
-			name={`${dataFieldName}.file`}
-			render={({ field }) => (
-				<ImageDropzone field={field} clearValue={clearValue} />
+			name={`${rootField.name}.file`}
+			render={({ field: fileField }) => (
+				<ImageDropzone
+					field={fileField}
+					/** For some arcane reason with react-hook-form, this `fileField.value` is stale.
+					 * Passing the fresh `imageData` solves the issue. */
+					value={imageData && 'file' in imageData ? imageData.file : null}
+					clearValue={clearValue}
+				/>
 			)}
 		/>
 	)

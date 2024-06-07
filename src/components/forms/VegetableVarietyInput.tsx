@@ -39,8 +39,7 @@ export default function VegetableVarietyInput<
 	const value = (freshValue || {}) as Partial<VegetableVarietyInForm>
 	const { names = [] } = value
 
-	const renderablePhoto =
-		value.photos?.[0] && 'data' in value.photos[0] ? value.photos[0] : undefined
+	const renderablePhoto = value.photos?.[0]
 	return (
 		<Dialog>
 			<DialogTrigger
@@ -55,16 +54,16 @@ export default function VegetableVarietyInput<
 						)}
 					>
 						{renderablePhoto &&
-						'file' in renderablePhoto.data &&
-						renderablePhoto.data.file instanceof File ? (
+						'file' in renderablePhoto &&
+						renderablePhoto.file instanceof File ? (
 							<img
-								src={URL.createObjectURL(renderablePhoto.data.file)}
+								src={URL.createObjectURL(renderablePhoto.file)}
 								alt={renderablePhoto.label || ''}
 								className="w-full h-full object-contain"
 							/>
-						) : renderablePhoto && 'sanity_id' in renderablePhoto.data ? (
+						) : renderablePhoto && 'sanity_id' in renderablePhoto ? (
 							<SanityImage
-								image={renderablePhoto.data}
+								image={renderablePhoto}
 								maxWidth={150}
 								alt={renderablePhoto.label || ''}
 								className="w-full h-full object-contain"

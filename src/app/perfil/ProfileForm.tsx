@@ -14,10 +14,10 @@ import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
 import type { EditProfilePageData } from '@/queries'
 import {
-	ImageDBToFormTransformer,
+	ImageInForm,
 	ProfileData,
 	type ProfileDataInForm,
-	ProfileDataToUpdate,
+	ProfileDataWithImage,
 	RichText,
 } from '@/schemas'
 import { UnkownActionError } from '@/types/errors'
@@ -43,9 +43,6 @@ export default function ProfileForm({
 	const [status, setStatus] = useState<'idle' | 'submitting'>('idle')
 
 	const initialValue = useMemo(() => {
-		const photoForForm = Schema.decodeUnknownEither(ImageDBToFormTransformer)(
-			profileInDb.photo,
-		)
 		const bioInDB = Schema.encodeUnknownEither(RichText)(profileInDb.bio)
 
 		return {
@@ -53,9 +50,7 @@ export default function ProfileForm({
 			name: profileInDb.name,
 			handle: profileInDb.handle,
 			location: profileInDb.location || undefined,
-			photo: Either.isRight(photoForForm)
-				? photoForForm.right
-				: { id: generateId() },
+			photo: profileInDb.photo || { id: generateId() },
 			bio: Either.isRight(bioInDB) ? bioInDB.right : undefined,
 		} as ProfileDataInForm
 	}, [profileInDb])
@@ -80,19 +75,17 @@ export default function ProfileForm({
 
 		setStatus('submitting')
 		const program = pipe(
-			Schema.decode(ProfileDataToUpdate)({
+			Schema.decode(ProfileDataWithImage)({
 				...dataThatChanged,
+				photo: Schema.is(ImageInForm)(dataThatChanged.photo)
+					? dataThatChanged.photo
+					: undefined,
 				id: initialValue.id,
 			}),
 			Effect.tap((decoded) => {
 				if (decoded.photo) {
 					// Before proceeding with the profile update, save the uploaded photo to the form in case we need to re-send it on errors
-					return pipe(
-						Schema.decode(ImageDBToFormTransformer)(decoded.photo),
-						Effect.tap((storedPhotoInForm) =>
-							form.setValue('photo', storedPhotoInForm),
-						),
-					)
+					form.setValue('photo', decoded.photo)
 				}
 			}),
 			Effect.flatMap((dataToUpdate) =>
@@ -206,7 +199,7 @@ function ProfilePreview() {
 		name.length % 2 === 0 ? ('primary' as const) : ('secondary' as const),
 	)
 	const location = form.watch('location')
-	const photo = form.watch('photo.data')
+	const photo = form.watch('photo')
 
 	return (
 		<div className="sticky top-0 space-y-2 pt-6">

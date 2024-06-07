@@ -3,18 +3,15 @@
 import { auth } from '@/edgedb'
 import { insertEditSuggestionMutation } from '@/mutations'
 import {
-	type ImageData,
-	NewImage,
-	type VegetableForDB,
-	VegetableVarietyData,
+	type VegetableForDBWithImages,
+	VegetableWithUploadedImages,
 } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { UnknownEdgeDBError } from '@/types/errors'
-import { uploadImagesToSanity } from '@/utils/uploadImagesToSanity'
 import { paths } from '@/utils/urls'
 import { Schema } from '@effect/schema'
 import { Effect, pipe } from 'effect'
-import { Operation, atomizeChangeset, diff as jsonDiff } from 'json-diff-ts'
+import { diff as jsonDiff } from 'json-diff-ts'
 
 /**
  * Thinking through editing vegetables:
@@ -27,22 +24,11 @@ import { Operation, atomizeChangeset, diff as jsonDiff } from 'json-diff-ts'
  * - When approved, the diff is applied to the vegetable
  *
  * Complications:
- * 1. We can't just send the base64 of the images inside of the diff, it'd be too heavy for the DB
- *   	- then we need to upload the images to Sanity first
- * 2. Applying the diff is not trivial
- * 3. Ideally users should be able to see their own edit suggestions
- * 4. Ideally users would be notified when their suggestion is approved or rejected
+ * 1. Applying the diff is not trivial
+ * 2. Ideally users should be able to see their own edit suggestions
+ * 3. Ideally users would be notified when their suggestion is approved or rejected
  *
- * For now, skipping 3. and 4.
- *
- * Implementation:
- * 1. ✅ server action to createEditSuggestion
- * 		1. diffs the current and updated objects
- * 		2. uploads new images in the diff to Sanity
- * 		3. replaces photos with data of `NewImage` with `StoredImage` based on the uploaded data
- * 2. use this routeHandler to replace each photo in the uploaded object with a StoredImage instead
- * 3. diff the objects and create the EditSuggestion
- * 4. find out how to apply EditSuggestion
+ * For now, skipping 2. and 3.
  *
  *
  * LEARNINGS WITH DIFFS
@@ -55,85 +41,26 @@ import { Operation, atomizeChangeset, diff as jsonDiff } from 'json-diff-ts'
  * - Deleting a photo and uploading another on top changes the ID (via ImageInput), and leads to an ADD
  * - atomizeChangeset will flatten changes
  */
-
-/**
- * 1. diffs the current and updated objects
- * 2. uploads new images in the diff to Sanity
- * 3. replaces photos with data of `NewImage` with `StoredImage` based on the uploaded data
- * 4. diffs the updated vegetable with these `StoredImage`s applied
- * 5. stores the diff in the database
- *
- * This workflow for images avoids us having to store the entire base_64 in the database.
- * As a result, diffs are lighter and actually usable.
- */
 export async function createEditSuggestionAction({
 	current,
 	updated,
 }: {
-	current: VegetableForDB
-	updated: VegetableForDB
+	current: VegetableForDBWithImages
+	updated: VegetableForDBWithImages
 }) {
-	const diffBeforeImages = diffVegetableForDB({ current, updated })
-	const atomicChangesBeforeImages = atomizeChangeset(diffBeforeImages)
-
-	const newImagesToUpload = atomicChangesBeforeImages.flatMap((change) => {
-		if (change.type !== Operation.ADD) return []
-
-		const data = change.value?.data
-		if (Schema.is(NewImage)(data)) {
-			return { id: change.value.id as string, data }
-		}
-
-		// When adding new varieties, include all of their photos
-		if (Schema.is(VegetableVarietyData)(data)) {
-			return (data.photos || []).flatMap((photo) => {
-				if (!Schema.is(NewImage)(photo.data)) return []
-
-				return {
-					id: photo.id,
-					data: photo.data,
-				}
-			})
-		}
-
-		return []
-	})
-
-	const uploaded = await uploadImagesToSanity(newImagesToUpload)
-
-	function includeStoredImageInPhoto(
-		photo: typeof ImageData.Type,
-	): typeof ImageData.Type | [] {
-		if (!Schema.is(NewImage)(photo.data)) return photo
-
-		const uploadedData = uploaded[photo.id]
-		// @TODO: better handle image errors instead of simply ignoring them
-		if (!uploadedData || !('sanity_id' in uploadedData)) return []
-
+	if (
+		!Schema.is(VegetableWithUploadedImages)(current) ||
+		!Schema.is(VegetableWithUploadedImages)(updated)
+	) {
 		return {
-			...photo,
-			data: {
-				sanity_id: uploadedData.sanity_id,
-			},
-		}
+			success: false,
+			error: 'invalid-input',
+		} as const
 	}
 
-	const withStoredImages = {
-		...updated,
-		photos: updated.photos
-			? updated.photos.flatMap(includeStoredImageInPhoto)
-			: updated.photos,
-		varieties: updated.varieties
-			? updated.varieties.map((v) => ({
-					...v,
-					photos: (v.photos || []).flatMap(includeStoredImageInPhoto),
-				}))
-			: updated.varieties,
-	}
-
-	const diffAfterImages = diffVegetableForDB({
+	const diff = diffVegetableForDB({
 		current,
-		updated: withStoredImages,
+		updated,
 	})
 
 	const session = auth.getSession()
@@ -143,7 +70,7 @@ export async function createEditSuggestionAction({
 			Effect.tryPromise({
 				try: () =>
 					insertEditSuggestionMutation.run(session.client, {
-						diff: diffAfterImages,
+						diff: diff,
 						target_id: current.id,
 						snapshot: current,
 					}),
@@ -177,8 +104,8 @@ function diffVegetableForDB({
 	current,
 	updated,
 }: {
-	current: VegetableForDB
-	updated: VegetableForDB
+	current: VegetableForDBWithImages
+	updated: VegetableForDBWithImages
 }) {
 	return jsonDiff(current, updated, {
 		embeddedObjKeys: {
