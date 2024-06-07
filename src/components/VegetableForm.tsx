@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/card'
 import {
 	VegetableData,
+	VegetableWithUploadedImages,
 	type VegetableForDBWithImages,
 	type VegetableInForm,
-	VegetableWithUploadedImages,
 } from '@/schemas'
 import type { VegetableUsage } from '@/types'
 import { generateId } from '@/utils/ids'
@@ -31,8 +31,8 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import {
 	FormProvider,
-	type SubmitHandler,
 	useFormContext,
+	type SubmitHandler,
 } from 'react-hook-form'
 import ArrayInput from './forms/ArrayInput'
 import CheckboxesInput from './forms/CheckboxesInput'
@@ -44,7 +44,6 @@ import RadioGroupInput from './forms/RadioGroupInput'
 import ReferenceListInput from './forms/ReferenceListInput'
 import RichTextInput from './forms/RichTextInput'
 import SourceInput from './forms/SourceInput'
-import VegetableTipInput from './forms/VegetableTipInput'
 import VegetableVarietyInput from './forms/VegetableVarietyInput'
 import Carrot from './icons/Carrot'
 import { Button } from './ui/button'
@@ -392,42 +391,6 @@ export default function VegetableForm(props: {
 															hideLabel
 															render={({ field: subField }) => (
 																<VegetableVarietyInput
-																	index={index}
-																	field={subField}
-																/>
-															)}
-														/>
-													)}
-												/>
-											)
-										}}
-									/>
-								</CardContent>
-							</Card>
-							<Card>
-								<CardHeader>
-									<CardTitle>Dicas</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<Field
-										form={form}
-										name="tips"
-										label="Dicas"
-										hideLabel
-										render={({ field }) => {
-											return (
-												<ArrayInput
-													field={field}
-													newItemLabel="Nova dica"
-													inputType="dialog"
-													renderItem={(index) => (
-														<Field
-															form={form}
-															name={`${field.name}.${index}`}
-															label={`Dica #${index + 1}`}
-															hideLabel
-															render={({ field: subField }) => (
-																<VegetableTipInput
 																	index={index}
 																	field={subField}
 																/>

@@ -78,7 +78,6 @@ function getTransaction(input: VegetableForDBWithImages, inputClient: Client) {
 	return client.transaction(async (tx) => {
 		// #1 CREATE ALL SOURCES
 		const allSources = [
-			...(input.tips || []).flatMap((tip) => tip?.sources || []),
 			...(input.photos || []).flatMap((photo) => photo?.sources || []),
 			...(input.varieties || []).flatMap(
 				(variety) =>
@@ -97,12 +96,7 @@ function getTransaction(input: VegetableForDBWithImages, inputClient: Client) {
 		]
 		const photosIdMap = await upsertImagesInTransaction(allPhotos, tx)
 
-		// #3 CREATE ALL TIPS
-		if (input.tips && input.tips.length > 0) {
-			await upsertVegetableTipsMutation.run(tx, tipsToParam(input.tips))
-		}
-
-		// #4 CREATE ALL VARIETIES
+		// #3 CREATE ALL VARIETIES
 		if (input.varieties && input.varieties.length > 0) {
 			await upsertVegetableVarietiesMutation.run(
 				tx,
@@ -110,7 +104,7 @@ function getTransaction(input: VegetableForDBWithImages, inputClient: Client) {
 			)
 		}
 
-		// #5 CREATE THE VEGETABLE
+		// #4 CREATE THE VEGETABLE
 		const createdVegetable = await insertVegetableMutation.run(tx, {
 			id: input.id,
 			names: input.names,
@@ -130,11 +124,10 @@ function getTransaction(input: VegetableForDBWithImages, inputClient: Client) {
 			content: input.content ?? null,
 			photos: photosToReferences(input.photos || [], photosIdMap),
 			sources: referencesInFormToParam(input.sources),
-			tips: referencesInFormToParam(input.tips),
 			varieties: referencesInFormToParam(input.varieties),
 		})
 
-		// #6 CREATE FRIENDSHIPS
+		// #5 CREATE FRIENDSHIPS
 		const friendships =
 			input.friends && input.friends.length > 0
 				? await upsertVegetableFriendshipsMutation.run(tx, {

@@ -308,7 +308,6 @@ export const VegetableData = S.Struct({
 	content: Optional(RichText),
 	friends: Optional(S.Array(S.UUID)),
 	varieties: Optional(S.Array(VegetableVarietyData)),
-	tips: Optional(S.Array(VegetableTipData)),
 	photos: Optional(S.Array(ImageInForm)),
 	sources: Optional(S.Array(SourceInForm)),
 }).pipe(

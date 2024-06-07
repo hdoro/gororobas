@@ -485,7 +485,6 @@ const COMMON_VEGETABLE_PARAMS = {
 	photos: REFERENCES_PARAM,
 	sources: REFERENCES_PARAM,
 	varieties: REFERENCES_PARAM,
-	tips: REFERENCES_PARAM,
 } as const
 
 export const insertVegetableMutation = e.params(
@@ -540,14 +539,6 @@ export const insertVegetableMutation = e.params(
 				e.for(e.array_unpack(params.varieties), (variety) =>
 					e.select(e.VegetableVariety, (v) => ({
 						filter_single: e.op(v.id, '=', variety.id),
-						// '@order_index': variety.order_index,
-					})),
-				),
-			),
-			tips: e.assert_distinct(
-				e.for(e.array_unpack(params.tips), (tip) =>
-					e.select(e.VegetableTip, (v) => ({
-						filter_single: e.op(v.id, '=', tip.id),
 						// '@order_index': variety.order_index,
 					})),
 				),
@@ -642,14 +633,6 @@ export const updateVegetableMutation = e.params(
 					e.for(e.array_unpack(params.varieties), (variety) =>
 						e.select(e.VegetableVariety, (v) => ({
 							filter_single: e.op(v.id, '=', variety.id),
-							// '@order_index': variety.order_index,
-						})),
-					),
-				),
-				tips: e.assert_distinct(
-					e.for(e.array_unpack(params.tips), (tip) =>
-						e.select(e.VegetableTip, (v) => ({
-							filter_single: e.op(v.id, '=', tip.id),
 							// '@order_index': variety.order_index,
 						})),
 					),
