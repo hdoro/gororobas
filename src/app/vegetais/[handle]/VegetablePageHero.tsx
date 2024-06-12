@@ -20,7 +20,7 @@ import {
 } from '@/utils/labels'
 import { average } from '@/utils/numbers'
 import { gender } from '@/utils/strings'
-import { Fragment, Suspense } from 'react'
+import React, { Fragment, Suspense } from 'react'
 import WishlistButtonData from './WishlistButtonData'
 
 export function VegetablePageHero({
@@ -31,7 +31,6 @@ export function VegetablePageHero({
 	const mainImage = vegetable.photos?.[0]
 	const { names = [], scientific_names = [] } = vegetable
 
-	// @TODO render sources
 	const mainImageAspectRatio =
 		mainImage && getImageDimensions(mainImage)?.aspectRatio
 	const carouselPhotos = [
@@ -51,6 +50,7 @@ export function VegetablePageHero({
 		mainImageAspectRatio && mainImageAspectRatio > 1 ? 1.3 : 1
 	const maxImageHeight =
 		Math.round(MAIN_IMAGE_WIDTH / averageAspectRatio) * MAIN_IMAGE_SIZE_INCREASE
+
 	return (
 		<div className="flex-[5] max-w-[53.125rem]">
 			<div className="flex flex-col items-start gap-3 md:flex-row md:gap-5 md:items-end md:justify-between">
@@ -113,10 +113,49 @@ export function VegetablePageHero({
 											/>
 											{photo.label && (
 												<Badge
-													className="absolute left-4 bottom-4"
+													className="absolute left-4 bottom-4 max-w-[75%] flex-col !items-start"
 													variant="outline"
 												>
-													{photo.label}
+													<div className="max-w-full overflow-hidden text-ellipsis">
+														{photo.label}
+													</div>
+													{photo.sources && photo.sources.length > 0 && (
+														<div className="text-xs font-normal text-muted-foreground max-w-full overflow-hidden text-ellipsis">
+															Por{' '}
+															{photo.sources.map((source) => {
+																if (source.type === 'GOROROBAS') {
+																	return (
+																		<React.Fragment key={source.id}>
+																			{source.users
+																				.map((u) => u.name)
+																				.join(', ')}
+																		</React.Fragment>
+																	)
+																}
+																if (
+																	source.origin &&
+																	URL.canParse(source.origin)
+																) {
+																	return (
+																		<a
+																			key={source.id}
+																			href={source.origin}
+																			target="_blank"
+																			rel="noopener noreferrer"
+																			className="link"
+																		>
+																			{source.credits}
+																		</a>
+																	)
+																}
+																return (
+																	<React.Fragment key={source.id}>
+																		{source.credits}
+																	</React.Fragment>
+																)
+															})}
+														</div>
+													)}
 												</Badge>
 											)}
 										</CarouselItem>

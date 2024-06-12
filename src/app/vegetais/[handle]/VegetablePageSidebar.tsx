@@ -25,11 +25,10 @@ export default function VegetablePageSidebar({
 			href: '#visao-geral',
 			active: true,
 		},
-		vegetable.tips &&
-			vegetable.tips.length > 0 && {
-				label: 'Sugestões e dicas',
-				href: '#sugestoes',
-			},
+		{
+			label: 'Sugestões e dicas',
+			href: '#sugestoes',
+		},
 		vegetable.varieties &&
 			vegetable.varieties.length > 0 && {
 				label: 'Variedades',
