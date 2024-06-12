@@ -6,7 +6,6 @@ import { generateId } from '@/utils/ids'
 import { gender } from '@/utils/strings'
 import { MessageSquarePlus } from 'lucide-react'
 import { useState } from 'react'
-import { VegetableTipForm } from './VegetableTipForm'
 import SparklesIcon from './icons/SparklesIcon'
 import { Button } from './ui/button'
 import {
@@ -18,6 +17,17 @@ import {
 	DialogTrigger,
 } from './ui/dialog'
 import { Text } from './ui/text'
+import dynamic from 'next/dynamic'
+import Carrot from './icons/Carrot'
+
+const VegetableTipForm = dynamic(() => import('./VegetableTipForm'), {
+	loading: () => (
+		<div className="p-3 flex items-center justify-center gap-3">
+			<Carrot className="animate-spin h-6 w-6" />
+			Carregando...
+		</div>
+	),
+})
 
 export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
 	const [rerenderFormKey, setRerenderFormKey] = useState<null | string>(null)

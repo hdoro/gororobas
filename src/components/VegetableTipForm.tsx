@@ -21,7 +21,7 @@ import { Button } from './ui/button'
 import { DialogBody, DialogClose, DialogFooter } from './ui/dialog'
 import { useToast } from './ui/use-toast'
 
-export function VegetableTipForm(props: {
+export default function VegetableTipForm(props: {
 	onSubmit: (tip: VegetableTipForDB) => Promise<
 		| {
 				success: true
