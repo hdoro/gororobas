@@ -114,6 +114,7 @@ export const NOTE_TYPE_TO_LABEL = {
 	DESCOBERTA: 'Descoberta',
 	ENSINAMENTO: 'Me ensinaram',
 	EXPERIMENTO: 'Experimento',
+	PERGUNTA: 'Pergunta',
 } as const satisfies Record<NoteType, string>
 
 export const EDIT_SUGGESTION_STATUS_TO_LABEL = {

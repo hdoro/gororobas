@@ -12,7 +12,7 @@ module default {
   scalar type Stratum extending enum<EMERGENTE,ALTO,MEDIO,BAIXO,RASTEIRO>;
   scalar type PlantingMethod extending enum<BROTO,ENXERTO,ESTACA,RIZOMA,SEMENTE,TUBERCULO>;
   scalar type TipSubject extending enum<PLANTIO,CRESCIMENTO,COLHEITA>;
-  scalar type NoteType extending enum<EXPERIMENTO,ENSINAMENTO,DESCOBERTA>;
+  scalar type NoteType extending enum<EXPERIMENTO,ENSINAMENTO,DESCOBERTA,PERGUNTA>;
   scalar type VegetableWishlistStatus extending enum<QUERO_CULTIVAR,SEM_INTERESSE,JA_CULTIVEI,ESTOU_CULTIVANDO>;
   scalar type EditSuggestionStatus extending enum<PENDING_REVIEW,MERGED,REJECTED>;
 
@@ -230,7 +230,7 @@ module default {
     };
   }
 
-  type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
+  type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything, ModeratorCanUpdate {
     required names: array<str>;
     scientific_names: array<str>;
     gender: Gender;
@@ -359,5 +359,6 @@ module default {
     required diff: json;
     required snapshot: json;
     required status: EditSuggestionStatus;
+    reviewed_by: UserProfile;
   }
 }
