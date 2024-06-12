@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/card'
 import {
 	VegetableData,
-	VegetableWithUploadedImages,
 	type VegetableForDBWithImages,
 	type VegetableInForm,
+	VegetableWithUploadedImages,
 } from '@/schemas'
 import type { VegetableUsage } from '@/types'
 import { generateId } from '@/utils/ids'
@@ -31,8 +31,8 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import {
 	FormProvider,
-	useFormContext,
 	type SubmitHandler,
+	useFormContext,
 } from 'react-hook-form'
 import ArrayInput from './forms/ArrayInput'
 import CheckboxesInput from './forms/CheckboxesInput'

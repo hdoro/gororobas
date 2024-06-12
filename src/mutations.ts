@@ -363,9 +363,19 @@ export const upsertImagesMutation = e.params(
 
 export const upsertVegetableTipsMutation = e.params(
 	{
-		tips: e.array(
+		existing_tips: e.array(
 			e.tuple({
 				id: e.uuid,
+				/**
+				 * subjects?: e.array(e.str)
+				 * content?: e.json
+				 * sources?: REFERENCES_PARAM
+				 */
+				optional_properties: e.json,
+			}),
+		),
+		new_tips: e.array(
+			e.tuple({
 				handle: e.str,
 				subjects: e.array(e.str),
 				content: e.json,
@@ -373,51 +383,71 @@ export const upsertVegetableTipsMutation = e.params(
 			}),
 		),
 	},
-	({ tips }) =>
-		e.assert_distinct(
-			e.for(e.array_unpack(tips), (tip) => {
-				const inserted = e
-					.insert(e.VegetableTip, {
-						id: tip.id,
-
-						handle: tip.handle,
-						subjects: e.array_unpack(
-							e.cast(e.array(e.TipSubject), tip.subjects),
+	({ existing_tips, new_tips }) => {
+		const newlyInserted = e.assert_distinct(
+			e.for(e.array_unpack(new_tips), (tip) =>
+				e.insert(e.VegetableTip, {
+					handle: tip.handle,
+					subjects: e.array_unpack(e.cast(e.array(e.TipSubject), tip.subjects)),
+					content: tip.content,
+					sources: e.assert_distinct(
+						e.for(e.array_unpack(tip.sources), (source) =>
+							e.select(e.Source, (v) => ({
+								filter_single: e.op(v.id, '=', source.id),
+								// '@order_index': variety.order_index,
+							})),
 						),
-						content: tip.content,
-						sources: e.assert_distinct(
-							e.for(e.array_unpack(tip.sources), (source) =>
-								e.select(e.Source, (v) => ({
-									filter_single: e.op(v.id, '=', source.id),
-									// '@order_index': variety.order_index,
-								})),
-							),
-						),
-					})
-					.unlessConflict()
-
-				const updated = e.update(e.VegetableTip, (existingTip) => ({
+					),
+				}),
+			),
+		)
+		const updated = e.assert_distinct(
+			e.for(e.array_unpack(existing_tips), (tip) =>
+				e.update(e.VegetableTip, (existingTip) => ({
 					filter_single: e.op(existingTip.id, '=', tip.id),
 
 					set: {
-						subjects: e.array_unpack(
-							e.cast(e.array(e.TipSubject), tip.subjects),
-						),
-						content: tip.content,
-						sources: e.assert_distinct(
-							e.for(e.array_unpack(tip.sources), (source) =>
-								e.select(e.Source, (v) => ({
-									filter_single: e.op(v.id, '=', source.id),
-									// '@order_index': variety.order_index,
-								})),
+						subjects: e.op(
+							e.array_unpack(
+								e.cast(
+									e.array(e.TipSubject),
+									e.json_get(tip.optional_properties, 'subjects'),
+								),
 							),
+							'??',
+							existingTip.subjects,
+						),
+						content: e.op(
+							e.json_get(tip.optional_properties, 'content'),
+							'??',
+							existingTip.content,
+						),
+						sources: e.op(
+							e.assert_distinct(
+								e.for(
+									e.array_unpack(
+										e.cast(
+											REFERENCES_PARAM,
+											e.json_get(tip.optional_properties, 'sources'),
+										),
+									),
+									(source) =>
+										e.select(e.Source, (v) => ({
+											filter_single: e.op(v.id, '=', source.id),
+											// '@order_index': variety.order_index,
+										})),
+								),
+							),
+							'??',
+							existingTip.sources,
 						),
 					},
-				}))
+				})),
+			),
+		)
 
-				return e.op(inserted, '??', updated)
-			}),
-		),
+		return e.op(newlyInserted, 'union', e.select(updated))
+	},
 )
 
 export const upsertVegetableVarietiesMutation = e.params(
@@ -637,6 +667,25 @@ export const updateVegetableMutation = e.params(
 						})),
 					),
 				),
+			},
+		})),
+)
+
+export const addTipsToVegetableMutation = e.params(
+	{
+		vegetable_id: e.uuid,
+		tips: e.array(e.uuid),
+	},
+	(params) =>
+		e.update(e.Vegetable, (vegetable) => ({
+			filter_single: e.op(vegetable.id, '=', params.vegetable_id),
+
+			set: {
+				tips: {
+					'+=': e.select(e.VegetableTip, (tip) => ({
+						filter: e.op(tip.id, 'in', e.array_unpack(params.tips)),
+					})),
+				},
 			},
 		})),
 )

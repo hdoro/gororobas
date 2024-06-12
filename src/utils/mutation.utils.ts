@@ -14,6 +14,7 @@ import type {
 } from '@/schemas'
 import type { Transaction } from 'edgedb/dist/transaction'
 import type { DeepMutable } from 'effect/Types'
+import { generateId } from './ids'
 import { tiptapJSONtoPlainText } from './tiptap'
 import { getStandardHandle } from './urls'
 
@@ -100,23 +101,32 @@ export function tipsToParam(
 			// If there are duplicates, give preference to the last ones in the array
 			if (tips.slice(tipIndex + 1).some((t) => t.id === tip.id)) return params
 
-			params.tips.push({
-				id: tip.id,
-				content: tip.content,
-				subjects: tip.subjects as DeepMutable<typeof tip.subjects>,
-				sources: referencesInFormToParam(tip.sources),
-				handle:
-					tip.handle ||
-					getStandardHandle(
+			if (tip.id) {
+				params.existing_tips.push({
+					id: tip.id ?? null,
+					optional_properties: {
+						content: tip.content,
+						subjects: tip.subjects as DeepMutable<typeof tip.subjects>,
+						sources: referencesInFormToParam(tip.sources),
+					},
+				})
+			} else {
+				params.new_tips.push({
+					content: tip.content,
+					subjects: tip.subjects as DeepMutable<typeof tip.subjects>,
+					sources: referencesInFormToParam(tip.sources),
+					handle: getStandardHandle(
 						tiptapJSONtoPlainText(tip.content) || String(tipIndex),
-						tip.id,
+						generateId(),
 					),
-			})
+				})
+			}
 
 			return params
 		},
 		{
-			tips: [],
+			existing_tips: [],
+			new_tips: [],
 		} as DeepMutable<UpsertVegetableTipsMutationParams>,
 	)
 }

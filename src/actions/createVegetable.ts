@@ -2,7 +2,6 @@ import {
 	insertVegetableMutation,
 	upsertSourcesMutation,
 	upsertVegetableFriendshipsMutation,
-	upsertVegetableTipsMutation,
 	upsertVegetableVarietiesMutation,
 } from '@/mutations'
 import {
@@ -12,7 +11,6 @@ import {
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { InvalidInputError, UnknownEdgeDBError } from '@/types/errors'
 import {
-	tipsToParam,
 	upsertImagesInTransaction,
 	varietiesToParam,
 } from '@/utils/mutation.utils'
@@ -39,7 +37,6 @@ export function createVegetable(
 				)
 			}
 
-			console.log('RUNNING')
 			return yield* pipe(
 				Effect.tryPromise({
 					try: () => getTransaction(input, client),

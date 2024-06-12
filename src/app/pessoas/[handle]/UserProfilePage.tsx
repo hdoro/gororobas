@@ -8,7 +8,7 @@ import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
-import type { UserProfileageData } from '@/queries'
+import type { UserProfilePageData } from '@/queries'
 import { truncate } from '@/utils/strings'
 import { paths } from '@/utils/urls'
 import { Edit2Icon } from 'lucide-react'
@@ -16,7 +16,7 @@ import Link from 'next/link'
 
 export default function UserProfilePage({
 	profile,
-}: { profile: UserProfileageData }) {
+}: { profile: UserProfilePageData }) {
 	const desiredVegetables = profile.wishlist.flatMap((userWishlist) =>
 		userWishlist.status === 'QUERO_CULTIVAR' ? userWishlist.vegetable : [],
 	)

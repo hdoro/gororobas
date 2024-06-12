@@ -2,6 +2,7 @@ import { ContributionCTA } from '@/components/ContributionCTA'
 import NotesGrid from '@/components/NotesGrid'
 import { SanityImage } from '@/components/SanityImage'
 import SectionTitle from '@/components/SectionTitle'
+import { SendTipDialog } from '@/components/SendTipDialog'
 import SourcesGrid from '@/components/SourcesGrid'
 import VegetablesGrid from '@/components/VegetablesGrid'
 import BulbIcon from '@/components/icons/BulbIcon'
@@ -19,7 +20,6 @@ import { RichText } from '@/schemas'
 import { gender } from '@/utils/strings'
 import { paths } from '@/utils/urls'
 import * as S from '@effect/schema/Schema'
-import { MessageSquarePlus } from 'lucide-react'
 import Link from 'next/link'
 import { VegetablePageHero } from './VegetablePageHero'
 import VegetablePageSidebar from './VegetablePageSidebar'
@@ -88,25 +88,28 @@ export default function VegetablePage({
 					hasInternalSources={internalSources.length > 0}
 				/>
 			</div>
-			{vegetable.tips && vegetable.tips.length > 1 && (
-				<>
-					<section className="my-36" id="sugestoes">
-						<SectionTitle
-							Icon={ShovelIcon}
-							CTA={
-								<Button asChild mode="outline">
-									<Link href={paths.editVegetable(vegetable.handle)}>
-										<MessageSquarePlus className="w-[1.25em]" /> Envie uma dica
-									</Link>
-								</Button>
-							}
-						>
-							Sugestões e dicas
-						</SectionTitle>
-						<VegetableTips vegetable={vegetable} />
-					</section>
-				</>
-			)}
+			<section className="my-36" id="sugestoes">
+				<SectionTitle
+					Icon={ShovelIcon}
+					CTA={
+						vegetable.tips.length > 0 ? (
+							<SendTipDialog vegetable={vegetable} />
+						) : null
+					}
+				>
+					Sugestões e dicas
+				</SectionTitle>
+				{vegetable.tips.length > 0 ? (
+					<VegetableTips vegetable={vegetable} />
+				) : (
+					<div className="space-y-2 px-pageX mt-1">
+						<Text level="p">
+							Ainda não temos dicas sobre esse vegetal. Que tal enviar a sua?
+						</Text>
+						<SendTipDialog vegetable={vegetable} />
+					</div>
+				)}
+			</section>
 			{Array.isArray(vegetable.varieties) && vegetable.varieties.length > 0 && (
 				<section className="my-36" id="variedades">
 					<SectionTitle Icon={RainbowIcon}>Variedades</SectionTitle>
@@ -202,7 +205,7 @@ export default function VegetablePage({
 				{vegetable.related_notes.length > 0 ? (
 					<NotesGrid notes={vegetable.related_notes} />
 				) : (
-					<Text level="p" className="px-pageX">
+					<Text level="p" className="px-pageX mt-1">
 						Ainda não temos notas sobre esse vegetal. Que tal{' '}
 						<Link href={paths.newNote()} className="link">
 							enviar uma

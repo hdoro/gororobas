@@ -48,5 +48,9 @@ export class SigninFailedError {
 }
 
 export class EmailNotVerifiedError {
-	readonly _tag = 'export class EmailNotVerified'
+	readonly _tag = 'EmailNotVerified'
+}
+
+export class UnauthorizedError {
+	readonly _tag = 'Unauthorized'
 }

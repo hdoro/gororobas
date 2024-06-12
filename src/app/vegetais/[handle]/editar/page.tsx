@@ -10,7 +10,6 @@ import {
 	type SourceForDB,
 	VegetableData,
 	type VegetableForDBWithImages,
-	type VegetableTipForDB,
 } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { ImageForRendering } from '@/types'
@@ -56,14 +55,6 @@ function getRouteData(handle: string) {
 					uses: vegetable.uses,
 					sources: vegetable.sources.map(formatQueriedSource),
 					photos: vegetable.photos.map(formatQueriedImage),
-					tips: vegetable.tips.map((tip): VegetableTipForDB => {
-						return {
-							id: tip.id,
-							content: tip.content as RichTextValue,
-							subjects: tip.subjects,
-							sources: tip.sources.map(formatQueriedSource),
-						}
-					}),
 					varieties: vegetable.varieties.map((variety) => ({
 						id: variety.id,
 						names:
@@ -95,7 +86,7 @@ function formatQueriedSource(source: SourceCardData): SourceForDB {
 		id: source.id,
 		type: source.type,
 		comments: source.comments as RichTextValue,
-		userIds: source.users.map((user) => user.id),
+		userIds: source.users.map((user) => user.id) as [string, ...string[]],
 	}
 }
 

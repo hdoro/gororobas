@@ -439,10 +439,14 @@ export const userProfilePageQuery = e.params(
 		})),
 )
 
-export type UserProfileageData = Exclude<
+export type UserProfilePageData = Exclude<
 	$infer<typeof userProfilePageQuery>,
 	null
 >
+
+export const currentUserQuery = e.select(e.UserProfile, (profile) => ({
+	filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
+}))
 
 export const vegetablesIndexQuery = e.params(
 	{

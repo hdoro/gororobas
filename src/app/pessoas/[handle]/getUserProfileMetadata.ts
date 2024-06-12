@@ -1,12 +1,12 @@
 import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
-import type { UserProfileageData } from '@/queries'
+import type { UserProfilePageData } from '@/queries'
 import { imageBuilder } from '@/utils/imageBuilder'
 import { truncate } from '@/utils/strings'
 import { pathToAbsUrl, paths } from '@/utils/urls'
 import type { Metadata } from 'next'
 
 export default function getUserProfileMetadata(
-	profile: UserProfileageData | null,
+	profile: UserProfilePageData | null,
 ): Metadata {
 	const name = profile?.name
 

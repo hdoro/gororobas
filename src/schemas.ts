@@ -65,8 +65,8 @@ const isTipTapJSON = (input: unknown): input is RichTextValue =>
  * decoding before sending to the server to save compute in form validations. This JSON clone is expensive.
  */
 export const RichText = S.transform(
-	S.declare(isTipTapJSON),
-	S.declare(isTipTapJSON),
+	S.declare(isTipTapJSON).annotations({ message: () => 'Conteúdo inválido' }),
+	S.declare(isTipTapJSON).annotations({ message: () => 'Conteúdo inválido' }),
 	{
 		strict: true,
 		encode: (richTextInDB) => richTextInDB,
@@ -78,14 +78,23 @@ const SourceGororobasInForm = S.Struct({
 	id: S.UUID,
 	comments: Optional(RichText),
 	type: S.Literal('GOROROBAS' satisfies SourceType),
-	userIds: S.Array(S.UUID),
+	userIds: S.NonEmptyArray(S.UUID).annotations({
+		message: () => 'Escolha ao menos uma pessoa para creditar',
+	}),
 })
 
 const SourceExternalInForm = S.Struct({
 	id: S.UUID,
 	comments: Optional(RichText),
 	type: S.Literal('EXTERNAL' satisfies SourceType),
-	credits: S.String.pipe(S.minLength(1)),
+	credits: S.String.pipe(
+		S.annotations({
+			message: () => 'Obrigatório',
+		}),
+		S.minLength(3, {
+			message: () => 'Obrigatório (ao menos 3 caracteres)',
+		}),
+	),
 	origin: Optional(S.String),
 })
 
@@ -222,12 +231,15 @@ export const VegetableVarietyData = S.Struct({
 
 export type VegetableVarietyInForm = typeof VegetableVarietyData.Encoded
 
-const VegetableTipData = S.Struct({
-	id: S.UUID,
+export const VegetableTipData = S.Struct({
+	/** Only exists for tips that are already in DB */
+	id: Optional(S.UUID),
 	handle: Optional(Handle),
-	subjects: S.Array(
+	subjects: S.NonEmptyArray(
 		S.Literal(...(Object.keys(TIP_SUBJECT_TO_LABEL) as TipSubject[])),
-	),
+	).annotations({
+		message: () => 'Escolha ao menos um assunto',
+	}),
 	content: RichText,
 	sources: Optional(S.Array(SourceInForm)),
 })
