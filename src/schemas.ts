@@ -193,8 +193,8 @@ const Name = S.String.pipe(
 	S.minLength(3, {
 		message: () => 'Nomes precisam de ao menos 3 caracteres',
 	}),
-	S.maxLength(40, {
-		message: () => 'Nomes não podem ir além de 40 caracteres',
+	S.maxLength(60, {
+		message: () => 'Nomes não podem ir além de 60 caracteres',
 	}),
 )
 
@@ -247,7 +247,7 @@ export const VegetableTipData = S.Struct({
 export type VegetableTipForDB = typeof VegetableTipData.Type
 export type VegetableTipInForm = typeof VegetableTipData.Encoded
 
-export const VegetableData = S.Struct({
+const VegetableCoreData = S.Struct({
 	id: S.UUID,
 	names: S.NonEmptyArray(NameInArray),
 	handle: Handle,
@@ -322,7 +322,9 @@ export const VegetableData = S.Struct({
 	varieties: Optional(S.Array(VegetableVarietyData)),
 	photos: Optional(S.Array(ImageInForm)),
 	sources: Optional(S.Array(SourceInForm)),
-}).pipe(
+})
+
+export const VegetableData = VegetableCoreData.pipe(
 	S.filter((vegetable, _, ast) => {
 		if (
 			typeof vegetable.height_min !== 'number' ||
@@ -344,26 +346,22 @@ export const VegetableData = S.Struct({
 export type VegetableForDB = typeof VegetableData.Type
 export type VegetableInForm = typeof VegetableData.Encoded
 
-export const VegetableWithUploadedImages = VegetableData.pipe(
-	S.omit('photos', 'varieties'),
-	S.extend(
-		S.Struct({
-			photos: Optional(S.Array(ImageFormToDBTransformer)),
-			varieties: Optional(
-				S.Array(
-					VegetableVarietyData.pipe(
-						S.omit('photos'),
-						S.extend(
-							S.Struct({
-								photos: Optional(S.Array(ImageFormToDBTransformer)),
-							}),
-						),
-					),
+export const VegetableWithUploadedImages = S.Struct({
+	...VegetableCoreData.fields,
+	photos: Optional(S.Array(ImageFormToDBTransformer)),
+	varieties: Optional(
+		S.Array(
+			VegetableVarietyData.pipe(
+				S.omit('photos'),
+				S.extend(
+					S.Struct({
+						photos: Optional(S.Array(ImageFormToDBTransformer)),
+					}),
 				),
 			),
-		}),
+		),
 	),
-)
+})
 
 export type VegetableForDBWithImages = typeof VegetableWithUploadedImages.Type
 export type VegetableVarietyForDBWithImages = Exclude<

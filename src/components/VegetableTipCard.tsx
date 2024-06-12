@@ -2,8 +2,8 @@ import type { VegetableTipCardData } from '@/queries'
 import { RichText } from '@/schemas'
 import { Schema } from '@effect/schema'
 import React from 'react'
-import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
 import ProfileCard from './ProfileCard'
+import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
 import { Text } from './ui/text'
 
 export default function VegetableTipCard({

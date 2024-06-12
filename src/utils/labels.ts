@@ -11,6 +11,7 @@ import type {
 	VegetableUsage,
 	VegetableWishlistStatus,
 } from '@/edgedb.interfaces'
+import type { VegetableData } from '@/schemas'
 
 export const STRATUM_TO_LABEL = {
 	EMERGENTE: 'Emergente',
@@ -120,3 +121,28 @@ export const EDIT_SUGGESTION_STATUS_TO_LABEL = {
 	MERGED: 'Aprovada',
 	REJECTED: 'Rejeitada',
 } as const satisfies Record<EditSuggestionStatus, string>
+
+export const VEGETABLE_FIELD_LABELS_MAP: Record<
+	Exclude<keyof typeof VegetableData.Encoded, 'id'>,
+	string
+> = {
+	content: 'Conteúdo livre sobre o vegetal',
+	edible_parts: 'Partes comestíveis',
+	friends: 'Amigues',
+	gender: 'Gênero gramatical',
+	handle: 'Endereço no site',
+	height_max: 'Altura adulta máxima',
+	height_min: 'Altura adulta mínima',
+	lifecycles: 'Ciclo de vida',
+	names: 'Nomes',
+	origin: 'Origem',
+	photos: 'Fotos',
+	planting_methods: 'Plantio por',
+	scientific_names: 'Nomes científicos',
+	sources: 'Fontes',
+	strata: 'Estrato de cultivo',
+	temperature_max: 'Temperatura ideal máxima',
+	temperature_min: 'Temperatura ideal mínima',
+	uses: 'Principais usos',
+	varieties: 'Variedades',
+}

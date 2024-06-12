@@ -14,6 +14,7 @@ import {
 	VegetableWithUploadedImages,
 } from '@/schemas'
 import type { VegetableUsage } from '@/types'
+import { removeNullishKeys } from '@/utils/diffs'
 import { generateId } from '@/utils/ids'
 import {
 	EDIBLE_PART_TO_LABEL,
@@ -23,6 +24,7 @@ import {
 	USAGE_TO_LABEL,
 	VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
+import { VEGETABLE_FIELD_LABELS_MAP } from '@/utils/labels'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Schema } from '@effect/schema'
 import { Effect, pipe } from 'effect'
@@ -82,13 +84,7 @@ export default function VegetableForm(props: {
 	const onSubmit: SubmitHandler<VegetableInForm> = useCallback(
 		async (data) => {
 			setStatus('submitting')
-			const dataWithoutEmptyKeys = Object.fromEntries(
-				Object.entries(data).filter(([, value]) => {
-					if (value === undefined || value === null) return false
-
-					return true
-				}),
-			) as typeof data
+			const dataWithoutEmptyKeys = removeNullishKeys(data)
 			const program = pipe(
 				Schema.decode(VegetableWithUploadedImages)(dataWithoutEmptyKeys),
 				// Before proceeding with the mutation, save the uploaded photos to the form in case we need to re-send it on errors
@@ -185,7 +181,7 @@ export default function VegetableForm(props: {
 								</CardHeader>
 								<CardContent className="space-y-6">
 									<Field
-										label="Nomes"
+										label={VEGETABLE_FIELD_LABELS_MAP.names}
 										name="names"
 										form={form}
 										render={({ field }) => (
@@ -209,15 +205,15 @@ export default function VegetableForm(props: {
 									/>
 									<Field
 										form={form}
+										label={VEGETABLE_FIELD_LABELS_MAP.handle}
 										name="handle"
-										label="Endereço no site"
 										render={({ field }) => (
 											<HandleInput field={field} path="vegetais" />
 										)}
 									/>
 									<Field
-										label="Nomes científicos"
 										name="scientific_names"
+										label={VEGETABLE_FIELD_LABELS_MAP.scientific_names}
 										form={form}
 										render={({ field }) => (
 											<ArrayInput
@@ -241,7 +237,7 @@ export default function VegetableForm(props: {
 									<Field
 										form={form}
 										name="origin"
-										label="Origem"
+										label={VEGETABLE_FIELD_LABELS_MAP.origin}
 										render={({ field }) => (
 											<Input {...field} value={field.value || ''} type="text" />
 										)}
@@ -250,7 +246,7 @@ export default function VegetableForm(props: {
 										<Field
 											form={form}
 											name="height_min"
-											label="Altura adulta mínima"
+											label={VEGETABLE_FIELD_LABELS_MAP.height_min}
 											render={({ field }) => (
 												<NumberInput field={field} format="centimeters" />
 											)}
@@ -258,7 +254,7 @@ export default function VegetableForm(props: {
 										<Field
 											form={form}
 											name="height_max"
-											label="Altura adulta máxima"
+											label={VEGETABLE_FIELD_LABELS_MAP.height_max}
 											render={({ field }) => (
 												<NumberInput field={field} format="centimeters" />
 											)}
@@ -268,7 +264,7 @@ export default function VegetableForm(props: {
 										<Field
 											form={form}
 											name="temperature_min"
-											label="Temperatura ideal mínima"
+											label={VEGETABLE_FIELD_LABELS_MAP.temperature_min}
 											render={({ field }) => (
 												<NumberInput field={field} format="temperature" />
 											)}
@@ -276,7 +272,7 @@ export default function VegetableForm(props: {
 										<Field
 											form={form}
 											name="temperature_max"
-											label="Temperatura ideal máxima"
+											label={VEGETABLE_FIELD_LABELS_MAP.temperature_max}
 											render={({ field }) => (
 												<NumberInput field={field} format="temperature" />
 											)}
@@ -285,7 +281,7 @@ export default function VegetableForm(props: {
 									<Field
 										form={form}
 										name="friends"
-										label="Amigues"
+										label={VEGETABLE_FIELD_LABELS_MAP.friends}
 										description="Plantas que gostam de serem plantadas e estarem próximas. Simbioses e consórcios também entram :)"
 										render={({ field }) => (
 											<ReferenceListInput
@@ -297,7 +293,7 @@ export default function VegetableForm(props: {
 									<Field
 										form={form}
 										name="content"
-										label="Conteúdo livre sobre o vegetal"
+										label={VEGETABLE_FIELD_LABELS_MAP.content}
 										render={({ field }) => (
 											<RichTextInput
 												field={field}
@@ -307,8 +303,8 @@ export default function VegetableForm(props: {
 									/>
 									<Field
 										form={form}
-										label="Fontes"
 										name={'sources'}
+										label={VEGETABLE_FIELD_LABELS_MAP.sources}
 										render={({ field: sourcesField }) => (
 											<ArrayInput
 												field={sourcesField}
@@ -334,13 +330,13 @@ export default function VegetableForm(props: {
 							</Card>
 							<Card>
 								<CardHeader>
-									<CardTitle>Fotos</CardTitle>
+									<CardTitle>{VEGETABLE_FIELD_LABELS_MAP.photos}</CardTitle>
 								</CardHeader>
 								<CardContent>
 									<Field
 										form={form}
 										name="photos"
-										label="Fotos"
+										label={VEGETABLE_FIELD_LABELS_MAP.photos}
 										hideLabel
 										render={({ field }) => {
 											return (
@@ -366,13 +362,13 @@ export default function VegetableForm(props: {
 							</Card>
 							<Card>
 								<CardHeader>
-									<CardTitle>Variedades</CardTitle>
+									<CardTitle>{VEGETABLE_FIELD_LABELS_MAP.varieties}</CardTitle>
 								</CardHeader>
 								<CardContent>
 									<Field
 										form={form}
 										name="varieties"
-										label="Variedades"
+										label={VEGETABLE_FIELD_LABELS_MAP.varieties}
 										hideLabel
 										render={({ field }) => {
 											return (
@@ -417,7 +413,7 @@ export default function VegetableForm(props: {
 									<Field
 										form={form}
 										name="gender"
-										label="Gênero gramatical"
+										label={VEGETABLE_FIELD_LABELS_MAP.gender}
 										render={({ field }) => (
 											<RadioGroupInput
 												field={field}
@@ -433,7 +429,7 @@ export default function VegetableForm(props: {
 									<Field
 										form={form}
 										name="uses"
-										label="Principais usos"
+										label={VEGETABLE_FIELD_LABELS_MAP.uses}
 										render={({ field }) => (
 											<CheckboxesInput
 												field={field}
@@ -450,7 +446,7 @@ export default function VegetableForm(props: {
 									<Field
 										form={form}
 										name="lifecycles"
-										label="Ciclo de vida"
+										label={VEGETABLE_FIELD_LABELS_MAP.lifecycles}
 										render={({ field }) => (
 											<CheckboxesInput
 												field={field}
@@ -463,7 +459,7 @@ export default function VegetableForm(props: {
 									<Field
 										form={form}
 										name="strata"
-										label="Estrato de cultivo"
+										label={VEGETABLE_FIELD_LABELS_MAP.strata}
 										render={({ field }) => (
 											<CheckboxesInput
 												field={field}
@@ -476,7 +472,7 @@ export default function VegetableForm(props: {
 									<Field
 										form={form}
 										name="planting_methods"
-										label="Plantio por"
+										label={VEGETABLE_FIELD_LABELS_MAP.planting_methods}
 										render={({ field }) => (
 											<CheckboxesInput
 												field={field}
@@ -506,7 +502,7 @@ function EdibleParts() {
 		<Field
 			form={form}
 			name="edible_parts"
-			label="Partes comestíveis"
+			label={VEGETABLE_FIELD_LABELS_MAP.edible_parts}
 			render={({ field }) => (
 				<CheckboxesInput
 					field={field}

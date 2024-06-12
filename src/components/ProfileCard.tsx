@@ -15,12 +15,16 @@ const profileCardVariants = tv({
 			'block object-cover rounded-full bg-background-card text-xs overflow-hidden',
 		name: 'max-w-[16ch] truncate',
 		location: '',
+		textContainer: 'space-y-2',
 	},
 	variants: {
 		size: {
 			sm: {
 				root: 'gap-2',
 				image: 'w-7 h-7',
+				name: 'text-sm md:text-sm',
+				location: 'text-xs md:text-xs text-muted-foreground',
+				textContainer: '-space-y-0.5',
 			},
 			md: {
 				root: 'gap-3',
@@ -87,7 +91,7 @@ export default function ProfileCard(props: ProfileCardProps) {
 		>
 			<ProfilePhoto {...props} />
 			{includeName && (
-				<div className="space-2">
+				<div className={classes.textContainer()}>
 					<Text className={classes.name()}>{profile.name}</Text>
 					{profile.location && (
 						<Text level="sm" className={classes.location()}>

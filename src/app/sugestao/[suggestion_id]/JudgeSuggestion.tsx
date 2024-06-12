@@ -38,15 +38,17 @@ export default function JudgeSuggestion({
 	}
 
 	return (
-		<div className="flex items-center gap-3 mt-4">
+		<div className="flex items-center gap-3">
 			<Button
 				tone="destructive"
 				disabled={status !== 'idle'}
 				onClick={rejectSuggestion}
+				size="sm"
+				mode="outline"
 			>
 				Rejeitar
 			</Button>
-			<Button onClick={acceptSuggestion} disabled={status !== 'idle'}>
+			<Button onClick={acceptSuggestion} disabled={status !== 'idle'} size="sm">
 				Aceitar e publicar
 			</Button>
 		</div>

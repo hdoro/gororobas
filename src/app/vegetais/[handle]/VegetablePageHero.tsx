@@ -1,3 +1,4 @@
+import ChangeIndicator from '@/components/ChangeIndicator'
 import { SanityImage } from '@/components/SanityImage'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -18,15 +19,23 @@ import {
 	USAGE_TO_LABEL,
 	VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
-import { average } from '@/utils/numbers'
+import { average, formatCentimeters } from '@/utils/numbers'
 import { gender } from '@/utils/strings'
 import React, { Fragment, Suspense } from 'react'
 import WishlistButtonData from './WishlistButtonData'
 
+export type VegetablePageHeroData = Omit<
+	VegetablePageData,
+	'related_notes' | 'sources' | 'friends' | 'tips'
+>
+
 export function VegetablePageHero({
 	vegetable,
+	dataThatChanged,
 }: {
-	vegetable: VegetablePageData
+	vegetable: VegetablePageHeroData
+	/** In the context of EditSuggestions, this is an array of keys that changed in the hero */
+	dataThatChanged?: (keyof VegetablePageHeroData)[]
 }) {
 	const mainImage = vegetable.photos?.[0]
 	const { names = [], scientific_names = [] } = vegetable
@@ -64,18 +73,25 @@ export function VegetablePageHero({
 						</Text>
 					)}
 				</div>
-				<Suspense>
-					<WishlistButtonData vegetable_id={vegetable.id} />
-				</Suspense>
+				{/* Hide the wishlist action when reviewing a suggestion */}
+				{!dataThatChanged && (
+					<Suspense>
+						<WishlistButtonData vegetable_id={vegetable.id} />
+					</Suspense>
+				)}
 			</div>
 
 			{vegetable.photos && mainImage?.sanity_id && (
 				<div
-					className="flex flex-col lg:flex-row gap-5 mt-5 overflow-hidden"
+					className={cn(
+						'flex flex-col lg:flex-row gap-5 mt-5 overflow-hidden',
+						dataThatChanged?.includes('photos') && 'overflow-visible relative',
+					)}
 					style={{
 						'--max-height': `${maxImageHeight / 16}rem`,
 					}}
 				>
+					{dataThatChanged?.includes('photos') && <ChangeIndicator />}
 					<div className="flex-1 rounded-2xl object-cover relative z-10 max-h-[80dvh] lg:max-w-80 lg:max-h-[var(--max-height)]">
 						<SanityImage
 							image={mainImage}
@@ -178,27 +194,43 @@ export function VegetablePageHero({
 							vegetable.gender || 'MASCULINO',
 						)} como`}
 						right={names.slice(1).join(', ')}
+						hasChanged={dataThatChanged?.includes('names')}
 					/>
 				)}
+				{vegetable.scientific_names &&
+					vegetable.scientific_names.length > 1 && (
+						<TwoColInfo
+							left={'Nomes científicos'}
+							right={vegetable.scientific_names.join(', ')}
+							hasChanged={dataThatChanged?.includes('scientific_names')}
+						/>
+					)}
 				{vegetable.origin && (
-					<TwoColInfo left={'Origem'} right={vegetable.origin} />
+					<TwoColInfo
+						left={'Origem'}
+						right={vegetable.origin}
+						hasChanged={dataThatChanged?.includes('origin')}
+					/>
 				)}
 				{vegetable.uses && (
 					<TwoColInfo
 						left={'Principais usos'}
 						right={vegetable.uses.map((u) => USAGE_TO_LABEL[u])}
+						hasChanged={dataThatChanged?.includes('uses')}
 					/>
 				)}
 				{vegetable.edible_parts && (
 					<TwoColInfo
 						left={'Partes comestíveis'}
 						right={vegetable.edible_parts.map((u) => EDIBLE_PART_TO_LABEL[u])}
+						hasChanged={dataThatChanged?.includes('edible_parts')}
 					/>
 				)}
 				{vegetable.strata && (
 					<TwoColInfo
 						left={'Estrato'}
 						right={vegetable.strata.map((u) => STRATUM_TO_LABEL[u])}
+						hasChanged={dataThatChanged?.includes('strata')}
 					/>
 				)}
 				{vegetable.lifecycles && (
@@ -207,6 +239,7 @@ export function VegetablePageHero({
 						right={vegetable.lifecycles.map(
 							(u) => VEGETABLE_LIFECYCLE_TO_LABEL[u],
 						)}
+						hasChanged={dataThatChanged?.includes('lifecycles')}
 					/>
 				)}
 				{vegetable.planting_methods && (
@@ -215,6 +248,39 @@ export function VegetablePageHero({
 						right={vegetable.planting_methods.map(
 							(u) => PLANTING_METHOD_TO_LABEL[u],
 						)}
+						hasChanged={dataThatChanged?.includes('planting_methods')}
+					/>
+				)}
+				{(vegetable.temperature_min || vegetable.temperature_max) && (
+					<TwoColInfo
+						left={'Temperatura ideal'}
+						right={
+							vegetable.temperature_min && vegetable.temperature_max
+								? `De ${vegetable.temperature_min}° a ${vegetable.temperature_max}°C`
+								: vegetable.temperature_min
+									? `Acima de ${vegetable.temperature_min}°C`
+									: `Abaixo de ${vegetable.temperature_max}°C`
+						}
+						hasChanged={
+							dataThatChanged?.includes('temperature_min') ||
+							dataThatChanged?.includes('temperature_max')
+						}
+					/>
+				)}
+				{(vegetable.height_min || vegetable.height_max) && (
+					<TwoColInfo
+						left={`Altura quando adult${gender.suffix(vegetable.gender || 'FEMININO')}`}
+						right={
+							vegetable.height_min && vegetable.height_max
+								? `De ${formatCentimeters(vegetable.height_min)} a ${formatCentimeters(vegetable.height_max)}`
+								: vegetable.height_min
+									? `A partir de ${formatCentimeters(vegetable.height_min)}`
+									: `Até ${formatCentimeters(vegetable.height_max || 0)}`
+						}
+						hasChanged={
+							dataThatChanged?.includes('height_min') ||
+							dataThatChanged?.includes('height_max')
+						}
 					/>
 				)}
 			</div>
@@ -225,14 +291,17 @@ export function VegetablePageHero({
 function TwoColInfo({
 	left,
 	right,
+	hasChanged = false,
 }: {
 	left: string
 	right: string | string[]
+	hasChanged?: boolean | undefined
 }) {
 	if (!right || (Array.isArray(right) && right.length === 0)) return null
 
 	return (
-		<div className="flex gap-5 items-start leading-normal">
+		<div className="flex gap-5 items-start leading-normal relative">
+			{hasChanged && <ChangeIndicator />}
 			<Text as="h2" weight="semibold" className="flex-1 max-w-[12.5rem]">
 				{left}
 			</Text>

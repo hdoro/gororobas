@@ -15,6 +15,8 @@ import {
 
 import { Label } from '@/components/ui/label'
 import { cn } from '@/utils/cn'
+import { CircleAlertIcon } from 'lucide-react'
+import { Text } from './text'
 
 const FormProvider = RHFProvider
 
@@ -170,14 +172,17 @@ const FormMessage = React.forwardRef<
 	}
 
 	return (
-		<p
+		<Text
 			ref={ref}
 			id={formMessageId}
-			className={cn('text-sm font-medium text-destructive', className)}
+			weight="normal"
+			level="sm"
+			className={cn('text-destructive flex items-center gap-1 mt-1', className)}
 			{...props}
 		>
+			<CircleAlertIcon className="size-[1.25em]" />
 			{body}
-		</p>
+		</Text>
 	)
 })
 FormMessage.displayName = 'FormMessage'

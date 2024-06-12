@@ -1,9 +1,9 @@
 import { ContributionCTA } from '@/components/ContributionCTA'
 import NotesGrid from '@/components/NotesGrid'
-import { SanityImage } from '@/components/SanityImage'
 import SectionTitle from '@/components/SectionTitle'
 import { SendTipDialog } from '@/components/SendTipDialog'
 import SourcesGrid from '@/components/SourcesGrid'
+import VegetableVarietyCard from '@/components/VegetableVarietyCard'
 import VegetablesGrid from '@/components/VegetablesGrid'
 import BulbIcon from '@/components/icons/BulbIcon'
 import NoteIcon from '@/components/icons/NoteIcon'
@@ -114,34 +114,9 @@ export default function VegetablePage({
 				<section className="my-36" id="variedades">
 					<SectionTitle Icon={RainbowIcon}>Variedades</SectionTitle>
 					<div className="overflow-x-auto flex gap-20 mt-3 px-pageX hide-scrollbar">
-						{vegetable.varieties.map((variety) => {
-							if (!variety.names || variety.names.length === 0) return null
-
-							return (
-								<div key={variety.handle} className="flex gap-5 items-center">
-									{Array.isArray(variety.photos) &&
-										variety.photos[0]?.sanity_id && (
-											<SanityImage
-												image={variety.photos[0]}
-												maxWidth={200}
-												className="w-auto flex-0 max-h-[12.5rem] max-w-[12.5rem] object-cover rounded-lg"
-											/>
-										)}
-									<div
-										style={{
-											minWidth: `${variety.names[0].length / 2}ch`,
-										}}
-									>
-										<Text level="h3" weight="normal">
-											{variety.names[0]}
-										</Text>
-										{variety.names.length > 1 && (
-											<Text level="p">{variety.names.slice(1).join(', ')}</Text>
-										)}
-									</div>
-								</div>
-							)
-						})}
+						{vegetable.varieties.map((variety) => (
+							<VegetableVarietyCard key={variety.handle} variety={variety} />
+						))}
 					</div>
 				</section>
 			)}

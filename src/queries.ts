@@ -109,6 +109,11 @@ const vegetableVarietyForCard = e.shape(e.VegetableVariety, (variety) => ({
 	}),
 }))
 
+export type VegetableVarietyCardData = Exclude<
+	$infer<typeof vegetableVarietyForCard>,
+	null
+>[number]
+
 const vegetableTipForCard = e.shape(e.VegetableTip, (tip) => ({
 	handle: true,
 	subjects: true,
@@ -192,6 +197,48 @@ export const vegetablePageQuery = e.params(
 
 export type VegetablePageData = Exclude<$infer<typeof vegetablePageQuery>, null>
 
+const vegetableEditingShape = e.shape(e.Vegetable, (vegetable) => ({
+	...coreVegetableData(vegetable),
+	photos: (image) => ({
+		...imageForRendering(image),
+
+		order_by: {
+			expression: image['@order_index'],
+			direction: 'ASC',
+			empty: e.EMPTY_LAST,
+		},
+	}),
+	varieties: (variety) => ({
+		...vegetableVarietyForCard(variety),
+		id: true,
+
+		order_by: {
+			expression: variety['@order_index'],
+			direction: 'ASC',
+			empty: e.EMPTY_LAST,
+		},
+	}),
+	tips: (tip) => ({
+		...vegetableTipForCard(tip),
+		id: true,
+
+		order_by: {
+			expression: tip['@order_index'],
+			direction: 'ASC',
+			empty: e.EMPTY_LAST,
+		},
+	}),
+	friends: {
+		id: true,
+	},
+	sources: sourceForCard,
+}))
+
+export type VegetableEditingData = Exclude<
+	$infer<typeof vegetableEditingShape>,
+	null
+>[number]
+
 export const vegetableEditingQuery = e.params(
 	{
 		handle: e.str,
@@ -199,44 +246,40 @@ export const vegetableEditingQuery = e.params(
 	(params) =>
 		e.select(e.Vegetable, (vegetable) => ({
 			filter_single: e.op(vegetable.handle, '=', params.handle),
+			...vegetableEditingShape(vegetable),
+		})),
+)
 
-			...coreVegetableData(vegetable),
-			photos: (image) => ({
-				...imageForRendering(image),
+export const editSuggestionPreviewQuery = e.params(
+	{
+		suggestion_id: e.uuid,
+	},
+	(params) =>
+		e.select(e.EditSuggestion, (suggestion) => ({
+			filter_single: e.op(suggestion.id, '=', params.suggestion_id),
 
-				order_by: {
-					expression: image['@order_index'],
-					direction: 'ASC',
-					empty: e.EMPTY_LAST,
-				},
+			id: true,
+			diff: true,
+			status: true,
+			created_by: (userProfile) => ({
+				...userProfileForAvatar(userProfile),
 			}),
-			varieties: (variety) => ({
-				...vegetableVarietyForCard(variety),
-				id: true,
-
-				order_by: {
-					expression: variety['@order_index'],
-					direction: 'ASC',
-					empty: e.EMPTY_LAST,
-				},
+			target_object: (vegetable) => ({
+				...vegetableEditingShape(vegetable),
 			}),
-			tips: (tip) => ({
-				...vegetableTipForCard(tip),
-				id: true,
+			can_approve: e.op(e.global.current_user.userRole, '!=', e.Role.USER),
+		})),
+)
 
-				order_by: {
-					expression: tip['@order_index'],
-					direction: 'ASC',
-					empty: e.EMPTY_LAST,
-				},
-			}),
-			friends: vegetableForCard,
-			sources: sourceForCard,
-			related_notes: (note) => ({
-				...noteForCard(note),
+export const vegetableCardsByIdQuery = e.params(
+	{
+		vegetable_ids: e.array(e.uuid),
+	},
+	(params) =>
+		e.select(e.Vegetable, (vegetable) => ({
+			filter: e.op(vegetable.id, 'in', e.array_unpack(params.vegetable_ids)),
 
-				limit: 12,
-			}),
+			...vegetableForCard(vegetable),
 		})),
 )
 
@@ -609,21 +652,3 @@ export type NotesIndexQueryParams = Pick<
 }
 
 export type NotesIndexFilterParams = Omit<NotesIndexQueryParams, 'offset'>
-
-export const editSuggestionPreviewQuery = e.params(
-	{
-		suggestion_id: e.uuid,
-	},
-	(params) =>
-		e.select(e.EditSuggestion, (suggestion) => ({
-			filter_single: e.op(suggestion.id, '=', params.suggestion_id),
-
-			id: true,
-			diff: true,
-			status: true,
-			target_object: (vegetable) => ({
-				...vegetablePageShape(vegetable),
-			}),
-			can_approve: e.op(e.global.current_user.userRole, '!=', e.Role.USER),
-		})),
-)

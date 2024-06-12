@@ -2,7 +2,7 @@
 
 import { createEditSuggestionAction } from '@/actions/createEditSuggestion'
 import type { VegetableForDBWithImages, VegetableInForm } from '@/schemas'
-import { getChangedObjectSubset } from '@/utils/diffs'
+import { getChangedObjectSubset, removeNullishKeys } from '@/utils/diffs'
 import { paths } from '@/utils/urls'
 import dynamic from 'next/dynamic'
 
@@ -18,8 +18,11 @@ export default function EditVegetableForm(props: {
 	return (
 		<VegetableForm
 			onSubmit={async (updatedVegetable) => {
+				const currentVegetable = removeNullishKeys(
+					props.vegetableForDBWithImages,
+				)
 				const dataThatChanged = getChangedObjectSubset({
-					prev: props.vegetableForDBWithImages,
+					prev: currentVegetable,
 					next: updatedVegetable,
 				})
 				if (Object.keys(dataThatChanged).length === 0) {
@@ -33,7 +36,7 @@ export default function EditVegetableForm(props: {
 					}
 				}
 				return await createEditSuggestionAction({
-					current: props.vegetableForDBWithImages,
+					current: currentVegetable,
 					updated: updatedVegetable,
 				})
 			}}

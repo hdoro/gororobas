@@ -8,7 +8,7 @@
     --background-base: 27 82% 98%;
     --background-card: 27 60% 99%;
     --foreground: var(--primary-900);
-    --card: 0 0% 100%;
+    --card: var(--background-card);
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;

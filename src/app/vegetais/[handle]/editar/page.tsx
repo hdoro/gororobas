@@ -2,6 +2,7 @@ import { auth } from '@/edgedb'
 import {
 	type ImageForRenderingData,
 	type SourceCardData,
+	type VegetableEditingData,
 	vegetableEditingQuery,
 } from '@/queries'
 import {
@@ -21,6 +22,37 @@ import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import EditVegetableForm from './EditVegetableForm'
 
+export function vegetableEditingToForDBWithImages(
+	vegetable: VegetableEditingData,
+): VegetableForDBWithImages {
+	return {
+		id: vegetable.id,
+		handle: vegetable.handle,
+		names: vegetable.names as unknown as VegetableForDBWithImages['names'],
+		scientific_names: vegetable.scientific_names,
+		content: (vegetable.content as RichTextValue) || undefined,
+		friends: vegetable.friends.map((friend) => friend.id),
+		height_max: vegetable.height_max,
+		height_min: vegetable.height_min,
+		temperature_max: vegetable.temperature_max,
+		temperature_min: vegetable.temperature_min,
+		gender: vegetable.gender,
+		lifecycles: vegetable.lifecycles,
+		strata: vegetable.strata,
+		planting_methods: vegetable.planting_methods,
+		edible_parts: vegetable.edible_parts,
+		origin: vegetable.origin,
+		uses: vegetable.uses,
+		sources: vegetable.sources.map(formatQueriedSource),
+		photos: vegetable.photos.map(formatQueriedImage),
+		varieties: vegetable.varieties.map((variety) => ({
+			id: variety.id,
+			names: variety.names as unknown as VegetableForDBWithImages['names'], // casting to non-empty array
+			photos: variety.photos.map(formatQueriedImage),
+		})),
+	}
+}
+
 function getRouteData(handle: string) {
 	const session = auth.getSession()
 
@@ -34,36 +66,7 @@ function getRouteData(handle: string) {
 				if (!vegetable)
 					return Effect.fail(new InvalidInputError(vegetable, VegetableData))
 
-				const vegetableForDBWithImages: VegetableForDBWithImages = {
-					id: vegetable.id,
-					handle: vegetable.handle,
-					names:
-						vegetable.names as unknown as VegetableForDBWithImages['names'],
-					scientific_names: vegetable.scientific_names,
-					content: (vegetable.content as RichTextValue) || undefined,
-					friends: vegetable.friends.map((friend) => friend.id),
-					height_max: vegetable.height_max,
-					height_min: vegetable.height_min,
-					temperature_max: vegetable.temperature_max,
-					temperature_min: vegetable.temperature_min,
-					gender: vegetable.gender,
-					lifecycles: vegetable.lifecycles,
-					strata: vegetable.strata,
-					planting_methods: vegetable.planting_methods,
-					edible_parts: vegetable.edible_parts,
-					origin: vegetable.origin,
-					uses: vegetable.uses,
-					sources: vegetable.sources.map(formatQueriedSource),
-					photos: vegetable.photos.map(formatQueriedImage),
-					varieties: vegetable.varieties.map((variety) => ({
-						id: variety.id,
-						names:
-							variety.names as unknown as VegetableForDBWithImages['names'], // casting to non-empty array
-						photos: variety.photos.map(formatQueriedImage),
-					})),
-				}
-
-				return Effect.succeed(vegetableForDBWithImages)
+				return Effect.succeed(vegetableEditingToForDBWithImages(vegetable))
 			}),
 			...buildTraceAndMetrics('vegetable_page', { handle }),
 			Effect.catchAll(() => Effect.succeed(null)),
