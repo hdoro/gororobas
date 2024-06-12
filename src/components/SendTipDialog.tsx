@@ -5,7 +5,9 @@ import type { VegetablePageData } from '@/queries'
 import { generateId } from '@/utils/ids'
 import { gender } from '@/utils/strings'
 import { MessageSquarePlus } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import { useState } from 'react'
+import Carrot from './icons/Carrot'
 import SparklesIcon from './icons/SparklesIcon'
 import { Button } from './ui/button'
 import {
@@ -17,8 +19,6 @@ import {
 	DialogTrigger,
 } from './ui/dialog'
 import { Text } from './ui/text'
-import dynamic from 'next/dynamic'
-import Carrot from './icons/Carrot'
 
 const VegetableTipForm = dynamic(() => import('./VegetableTipForm'), {
 	loading: () => (

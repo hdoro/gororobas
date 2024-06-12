@@ -116,6 +116,11 @@ const vegetableTipForCard = e.shape(e.VegetableTip, (tip) => ({
 	sources: sourceForCard,
 }))
 
+export type VegetableTipCardData = Exclude<
+	$infer<typeof vegetableTipForCard>,
+	null
+>[number]
+
 const coreVegetableData = e.shape(e.Vegetable, () => ({
 	id: true,
 	names: true,

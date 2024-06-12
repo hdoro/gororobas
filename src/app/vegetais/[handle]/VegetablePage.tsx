@@ -100,7 +100,7 @@ export default function VegetablePage({
 					Sugestões e dicas
 				</SectionTitle>
 				{vegetable.tips.length > 0 ? (
-					<VegetableTips vegetable={vegetable} />
+					<VegetableTips tips={vegetable.tips} />
 				) : (
 					<div className="space-y-2 px-pageX mt-1">
 						<Text level="p">
