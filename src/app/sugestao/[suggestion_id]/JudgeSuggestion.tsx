@@ -1,5 +1,6 @@
 'use client'
 
+import { acceptEditSuggestionAction } from '@/actions/acceptEditSuggestion'
 import { rejectEditSuggestionAction } from '@/actions/rejectEditSuggestion'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
@@ -34,7 +35,21 @@ export default function JudgeSuggestion({
 	}
 
 	async function acceptSuggestion() {
-		// @TODO
+		setStatus('submitting')
+		const result = await acceptEditSuggestionAction({ suggestion_id })
+		if (result.success) {
+			toast({
+				title: 'Sugestão aceita ✨',
+			})
+			router.push(result.redirectTo)
+			setStatus('success')
+		} else {
+			toast({
+				title: 'Erro ao aceitar sugestão',
+				variant: 'destructive',
+			})
+			setStatus('idle')
+		}
 	}
 
 	return (

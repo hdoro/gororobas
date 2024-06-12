@@ -203,12 +203,21 @@ export function referencesInFormToParam(
 		| undefined
 		| null,
 ): DeepMutable<ReferencesParam> {
-	return (references || []).map((reference, order_index) => {
-		return {
-			id: reference.id,
-			order_index,
-		}
-	})
+	return (references || [])
+		.filter((reference, index) => {
+			if (
+				(references || []).slice(index + 1).some((r) => r.id === reference.id)
+			)
+				return false
+
+			return true
+		})
+		.flatMap((reference, order_index) => {
+			return {
+				id: reference.id,
+				order_index,
+			}
+		})
 }
 
 export function photosToReferences(

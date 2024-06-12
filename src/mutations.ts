@@ -464,19 +464,21 @@ export const upsertVegetableVarietiesMutation = e.params(
 	({ varieties }) =>
 		e.assert_distinct(
 			e.for(e.array_unpack(varieties), (variety) => {
-				const inserted = e.insert(e.VegetableVariety, {
-					id: variety.id,
-					handle: variety.handle,
-					names: variety.names,
-					photos: e.assert_distinct(
-						e.for(e.array_unpack(variety.photos), (image) =>
-							e.select(e.Image, (v) => ({
-								filter_single: e.op(v.id, '=', image.id),
-								// '@order_index': variety.order_index,
-							})),
+				const inserted = e
+					.insert(e.VegetableVariety, {
+						id: variety.id,
+						handle: variety.handle,
+						names: variety.names,
+						photos: e.assert_distinct(
+							e.for(e.array_unpack(variety.photos), (image) =>
+								e.select(e.Image, (v) => ({
+									filter_single: e.op(v.id, '=', image.id),
+									// '@order_index': variety.order_index,
+								})),
+							),
 						),
-					),
-				})
+					})
+					.unlessConflict()
 				const updated = e.update(e.VegetableVariety, (existingVariety) => ({
 					filter_single: e.op(existingVariety.id, '=', variety.id),
 
@@ -512,15 +514,15 @@ const COMMON_VEGETABLE_PARAMS = {
 	temperature_min: e.optional(e.float32),
 	temperature_max: e.optional(e.float32),
 	content: e.optional(e.json),
-	photos: REFERENCES_PARAM,
-	sources: REFERENCES_PARAM,
-	varieties: REFERENCES_PARAM,
 } as const
 
 export const insertVegetableMutation = e.params(
 	{
 		names: e.array(e.str),
 		handle: e.str,
+		photos: REFERENCES_PARAM,
+		sources: REFERENCES_PARAM,
+		varieties: REFERENCES_PARAM,
 		...COMMON_VEGETABLE_PARAMS,
 	},
 	(params) =>
@@ -580,13 +582,16 @@ export const updateVegetableMutation = e.params(
 	{
 		names: e.optional(e.array(e.str)),
 		handle: e.optional(e.str),
+		photos: e.optional(REFERENCES_PARAM),
+		sources: e.optional(REFERENCES_PARAM),
+		varieties: e.optional(REFERENCES_PARAM),
+		// All the rest is optional by default
 		...COMMON_VEGETABLE_PARAMS,
 	},
 	(params) =>
 		e.update(e.Vegetable, (existingVegetable) => ({
 			filter_single: e.op(existingVegetable.id, '=', params.id),
 			set: {
-				id: params.id,
 				// @ts-expect-error erroing out for some unknown reason
 				names: e.op(params.names, '??', existingVegetable.names),
 				// @ts-expect-error erroing out for some unknown reason
@@ -643,29 +648,41 @@ export const updateVegetableMutation = e.params(
 				),
 
 				// References
-				sources: e.assert_distinct(
-					e.for(e.array_unpack(params.sources), (source) =>
-						e.select(e.Source, (v) => ({
-							filter_single: e.op(v.id, '=', source.id),
-							// '@order_index': variety.order_index,
-						})),
+				sources: e.op(
+					e.assert_distinct(
+						e.for(e.array_unpack(params.sources), (source) =>
+							e.select(e.Source, (v) => ({
+								// '@order_index': source.order_index,
+								filter_single: e.op(v.id, '=', source.id),
+							})),
+						),
 					),
+					'??',
+					existingVegetable.sources,
 				),
-				photos: e.assert_distinct(
-					e.for(e.array_unpack(params.photos), (image) =>
-						e.select(e.Image, (v) => ({
-							filter_single: e.op(v.id, '=', image.id),
-							// '@order_index': variety.order_index,
-						})),
+				photos: e.op(
+					e.assert_distinct(
+						e.for(e.array_unpack(params.photos), (image) =>
+							e.select(e.Image, (v) => ({
+								// '@order_index': image.order_index,
+								filter_single: e.op(v.id, '=', image.id),
+							})),
+						),
 					),
+					'??',
+					existingVegetable.photos,
 				),
-				varieties: e.assert_distinct(
-					e.for(e.array_unpack(params.varieties), (variety) =>
-						e.select(e.VegetableVariety, (v) => ({
-							filter_single: e.op(v.id, '=', variety.id),
-							// '@order_index': variety.order_index,
-						})),
+				varieties: e.op(
+					e.assert_distinct(
+						e.for(e.array_unpack(params.varieties), (variety) =>
+							e.select(e.VegetableVariety, (v) => ({
+								filter: e.op(v.id, '=', variety.id),
+								// '@order_index': variety.order_index,
+							})),
+						),
 					),
+					'??',
+					existingVegetable.varieties,
 				),
 			},
 		})),
@@ -686,6 +703,20 @@ export const addTipsToVegetableMutation = e.params(
 						filter: e.op(tip.id, 'in', e.array_unpack(params.tips)),
 					})),
 				},
+			},
+		})),
+)
+
+export const acceptSuggestionMutation = e.params(
+	{
+		suggestion_id: e.uuid,
+	},
+	(params) =>
+		e.update(e.EditSuggestion, (suggestion) => ({
+			filter_single: e.op(suggestion.id, '=', params.suggestion_id),
+			set: {
+				status: e.EditSuggestionStatus.MERGED,
+				reviewed_by: e.global.current_user_profile,
 			},
 		})),
 )

@@ -1,8 +1,8 @@
+import { getEditSuggestionData } from '@/actions/getEditSuggestionData'
 import {
 	VegetablePageHero,
 	type VegetablePageHeroData,
 } from '@/app/vegetais/[handle]/VegetablePageHero'
-import { vegetableEditingToForDBWithImages } from '@/app/vegetais/[handle]/editar/page'
 import ChangeIndicator from '@/components/ChangeIndicator'
 import ProfileCard from '@/components/ProfileCard'
 import SectionTitle from '@/components/SectionTitle'
@@ -17,22 +17,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
 import { auth } from '@/edgedb'
 import type { EditSuggestionStatus } from '@/edgedb.interfaces'
-import {
-	type VegetableCardData,
-	editSuggestionPreviewQuery,
-	vegetableCardsByIdQuery,
-} from '@/queries'
-import type { VegetableForDBWithImages } from '@/schemas'
-import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { getChangedObjectSubset } from '@/utils/diffs'
+import { type VegetableCardData, vegetableCardsByIdQuery } from '@/queries'
+import { runServerEffect } from '@/services/runtime'
 import {
 	EDIT_SUGGESTION_STATUS_TO_LABEL,
 	VEGETABLE_FIELD_LABELS_MAP,
 } from '@/utils/labels'
 import { gender } from '@/utils/strings'
-import { Effect, pipe } from 'effect'
-import type { Changeset } from 'json-diff-ts'
-import { applyChangeset } from 'json-diff-ts'
+import { paths } from '@/utils/urls'
+import { Effect } from 'effect'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import JudgeSuggestion from './JudgeSuggestion'
@@ -41,22 +34,11 @@ type RouteParams = {
 	suggestion_id: string
 }
 
-function getRouteData({ suggestion_id }: RouteParams) {
-	const session = auth.getSession()
-
+async function getRouteData(params: RouteParams) {
 	return runServerEffect(
-		pipe(
-			Effect.tryPromise({
-				try: () =>
-					editSuggestionPreviewQuery.run(session.client, {
-						suggestion_id,
-					}),
-				catch: (error) => console.log(error),
-			}),
-			...buildTraceAndMetrics('suggestion_page', {
-				suggestion_id,
-			}),
-		).pipe(Effect.catchAll(() => Effect.succeed(null))),
+		getEditSuggestionData(params.suggestion_id).pipe(
+			Effect.catchAll(() => Effect.succeed(null)),
+		),
 	)
 }
 
@@ -95,24 +77,12 @@ export default async function EditSuggestionRoute({
 
 	if (!data || !data.target_object) return notFound()
 
-	const diff = data.diff as Changeset
-
-	const currentVegetable = vegetableEditingToForDBWithImages(data.target_object)
-	const updatedVegetable = applyChangeset(
-		structuredClone(currentVegetable),
-		diff,
-	) as VegetableForDBWithImages
-	const dataThatChanged = getChangedObjectSubset({
-		prev: currentVegetable,
-		next: updatedVegetable,
-	})
-
+	const { dataThatChanged, updatedVegetable, diff } = data
 	const friends = dataThatChanged.friends
 		? await vegetableCardsByIdQuery.run(auth.getSession().client, {
 				vegetable_ids: dataThatChanged.friends,
 			})
 		: ([] as VegetableCardData[])
-
 	return (
 		<div className="px-pageX py-pageY flex flex-col lg:flex-row items-start gap-6">
 			<div className="flex-1 lg:sticky top-2">
@@ -179,10 +149,17 @@ export default async function EditSuggestionRoute({
 							<JudgeSuggestion suggestion_id={data.id} />
 						)}
 					</div>
-					<CardTitle className="flex justify-between">
+					<CardTitle>
 						Sugestão para{' '}
 						{gender.article(data.target_object.gender || 'NEUTRO')}{' '}
-						{data.target_object.names[0] || 'vegetal'}
+						<a
+							href={paths.vegetable(data.target_object.handle)}
+							className="link"
+							// biome-ignore lint: same-site link
+							target="_blank"
+						>
+							{data.target_object.names[0] || 'vegetal'}
+						</a>
 					</CardTitle>
 					{data.created_by && (
 						<div className="flex items-center gap-3">
@@ -192,19 +169,23 @@ export default async function EditSuggestionRoute({
 					)}
 				</CardHeader>
 				<CardContent className="border-t pt-4 md:pt-6">
-					<ul>
+					<ul className="space-y-3">
 						{diff.map((change) => {
 							return (
 								<li key={change.key}>
-									{VEGETABLE_FIELD_LABELS_MAP[
-										change.key as keyof typeof VEGETABLE_FIELD_LABELS_MAP
-									] || change.key}
-									:{' '}
-									{change.changes
-										? `${change.changes.length} ${
-												change.changes.length > 1 ? 'alterações' : 'alteração'
-											}`
-										: 'alterado'}
+									<span className="font-medium">
+										{VEGETABLE_FIELD_LABELS_MAP[
+											change.key as keyof typeof VEGETABLE_FIELD_LABELS_MAP
+										] || change.key}
+										:{' '}
+									</span>
+									<span className="text-muted-foreground">
+										{change.changes
+											? `${change.changes.length} ${
+													change.changes.length > 1 ? 'alterações' : 'alteração'
+												}`
+											: 'alterado'}
+									</span>
 								</li>
 							)
 						})}

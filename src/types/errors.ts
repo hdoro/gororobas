@@ -54,3 +54,7 @@ export class EmailNotVerifiedError {
 export class UnauthorizedError {
 	readonly _tag = 'Unauthorized'
 }
+
+export class NotFoundError {
+	readonly _tag = 'NotFound'
+}

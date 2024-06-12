@@ -26,7 +26,7 @@ export async function rejectEditSuggestionAction({
 				},
 			}),
 			Effect.map(() => true),
-			...buildTraceAndMetrics('reject_suggestion', {
+			...buildTraceAndMetrics('reject_edit_suggestion', {
 				suggestion_id,
 			}),
 		).pipe(Effect.catchAll(() => Effect.succeed(false))),
