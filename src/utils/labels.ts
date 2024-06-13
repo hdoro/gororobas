@@ -119,8 +119,8 @@ export const NOTE_TYPE_TO_LABEL = {
 
 export const EDIT_SUGGESTION_STATUS_TO_LABEL = {
 	PENDING_REVIEW: 'Em revisão',
-	MERGED: 'Aprovada',
-	REJECTED: 'Rejeitada',
+	MERGED: 'Aprovadas',
+	REJECTED: 'Rejeitadas',
 } as const satisfies Record<EditSuggestionStatus, string>
 
 export const VEGETABLE_FIELD_LABELS_MAP: Record<

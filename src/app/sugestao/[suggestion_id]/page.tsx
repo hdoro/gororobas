@@ -13,7 +13,13 @@ import RainbowIcon from '@/components/icons/RainbowIcon'
 import VegetableFriendsIcon from '@/components/icons/VegetableFriendsIcon'
 import DefaultTipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
 import { auth } from '@/edgedb'
 import type { EditSuggestionStatus } from '@/edgedb.interfaces'
@@ -51,7 +57,7 @@ export async function generateMetadata({
 	if (!data?.target_object?.names) return {}
 
 	return {
-		title: `Prévia de edição de ${data.target_object.names[0]} | Gororobas`,
+		title: `Sugestão de edição d${gender.suffix(data.toRender.gender || 'NEUTRO')} ${data.toRender.names[0]} | Gororobas`,
 		robots: {
 			index: false,
 			follow: false,
@@ -77,32 +83,32 @@ export default async function EditSuggestionRoute({
 
 	if (!data || !data.target_object) return notFound()
 
-	const { dataThatChanged, updatedVegetable, diff } = data
+	const { dataThatChanged, toRender, diff } = data
 	const friends = dataThatChanged.friends
 		? await vegetableCardsByIdQuery.run(auth.getSession().client, {
 				vegetable_ids: dataThatChanged.friends,
 			})
 		: ([] as VegetableCardData[])
+
 	return (
 		<div className="px-pageX py-pageY flex flex-col lg:flex-row items-start gap-6">
 			<div className="flex-1 lg:sticky top-2">
 				<VegetablePageHero
 					// @ts-expect-error data is not perfectly the same, but it renders™
-					vegetable={{ ...data.target_object, ...updatedVegetable }}
-					dataThatChanged={
-						Object.keys(dataThatChanged) as (keyof VegetablePageHeroData)[]
+					vegetable={{ ...data.target_object, ...toRender }}
+					diffKeys={
+						diff.flatMap((d) => d.key) as (keyof VegetablePageHeroData)[]
 					}
 				/>
 				{dataThatChanged.content && (
 					<section className="my-36" id="curiosidades">
 						<SectionTitle Icon={BulbIcon} includePadding={false}>
-							Sobre{' '}
-							{gender.article(updatedVegetable.gender || 'NEUTRO', 'both')}
-							{updatedVegetable.names[0]}
+							Sobre {gender.article(toRender.gender || 'NEUTRO', 'both')}
+							{toRender.names[0]}
 						</SectionTitle>
 						<div className="text-base box-content mt-5 space-y-3 relative pl-[2.625rem]">
 							<ChangeIndicator />
-							<DefaultTipTapRenderer content={dataThatChanged.content} />
+							<DefaultTipTapRenderer content={toRender.content} />
 						</div>
 					</section>
 				)}
@@ -114,7 +120,7 @@ export default async function EditSuggestionRoute({
 
 						<div className="flex flex-wrap gap-20 mt-3 pl-[2.625rem] relative">
 							<ChangeIndicator />
-							{dataThatChanged.varieties.map((variety) => (
+							{(toRender.varieties || []).map((variety) => (
 								// @ts-expect-error data is not perfectly the same, but it renders™
 								<VegetableVarietyCard key={variety.handle} variety={variety} />
 							))}
@@ -124,13 +130,12 @@ export default async function EditSuggestionRoute({
 				{friends.length > 0 && (
 					<section className="my-36" id="amizades">
 						<SectionTitle Icon={VegetableFriendsIcon} includePadding={false}>
-							Amigues d{gender.suffix(updatedVegetable.gender || 'NEUTRO')}{' '}
-							{updatedVegetable.names[0]}
+							Amigues d{gender.suffix(toRender.gender || 'NEUTRO')}{' '}
+							{toRender.names[0]}
 						</SectionTitle>
 						<Text level="h3" className="font-normal pl-[2.625rem]">
 							Plantas que gostam de serem plantadas e estarem próximas a
-							{gender.suffix(updatedVegetable.gender || 'NEUTRO')}{' '}
-							{updatedVegetable.names[0]}
+							{gender.suffix(toRender.gender || 'NEUTRO')} {toRender.names[0]}
 						</Text>
 						<div className="relative pl-[2.625rem]">
 							<ChangeIndicator />
@@ -141,16 +146,23 @@ export default async function EditSuggestionRoute({
 			</div>
 			<Card className="flex-1 max-w-md lg:sticky top-2">
 				<CardHeader className="space-y-3">
-					<div className="flex justify-between items-end">
+					<div className="flex items-center gap-3">
 						<Badge variant={STATUS_BADGE_MAP[data.status]}>
-							Status: {EDIT_SUGGESTION_STATUS_TO_LABEL[data.status]}
+							Status:{' '}
+							{EDIT_SUGGESTION_STATUS_TO_LABEL[data.status].toLowerCase()}
 						</Badge>
-						{data.can_approve && data.status === 'PENDING_REVIEW' && (
-							<JudgeSuggestion suggestion_id={data.id} />
+						{data.created_at && (
+							<Text level="sm" className="text-muted-foreground">
+								{data.created_at.toLocaleDateString('pt-BR', {
+									month: '2-digit',
+									day: '2-digit',
+									year: 'numeric',
+								})}
+							</Text>
 						)}
 					</div>
 					<CardTitle>
-						Sugestão para{' '}
+						Sugestões para{' '}
 						{gender.article(data.target_object.gender || 'NEUTRO')}{' '}
 						<a
 							href={paths.vegetable(data.target_object.handle)}
@@ -161,16 +173,23 @@ export default async function EditSuggestionRoute({
 							{data.target_object.names[0] || 'vegetal'}
 						</a>
 					</CardTitle>
-					{data.created_by && (
-						<div className="flex items-center gap-3">
-							<Text level="sm">Sugestões por:</Text>
-							<ProfileCard profile={data.created_by} size="sm" />
-						</div>
-					)}
+					<div className="flex items-center gap-3">
+						{data.created_by?.name && (
+							<>
+								<Text level="sm">Enviadas por:</Text>
+								<ProfileCard profile={data.created_by} size="sm" />
+							</>
+						)}
+					</div>
 				</CardHeader>
 				<CardContent className="border-t pt-4 md:pt-6">
 					<ul className="space-y-3">
-						{diff.map((change) => {
+						{diff.map((change, i) => {
+							// Only render the last change for each key
+							if (diff.slice(i + 1).some((c) => c.key === change.key)) {
+								return null
+							}
+
 							return (
 								<li key={change.key}>
 									<span className="font-medium">
@@ -191,6 +210,11 @@ export default async function EditSuggestionRoute({
 						})}
 					</ul>
 				</CardContent>
+				{data.can_approve && data.status === 'PENDING_REVIEW' && (
+					<CardFooter className="border-t mt-2 grid grid-cols-2 gap-3">
+						<JudgeSuggestion suggestion_id={data.id} />
+					</CardFooter>
+				)}
 			</Card>
 		</div>
 	)

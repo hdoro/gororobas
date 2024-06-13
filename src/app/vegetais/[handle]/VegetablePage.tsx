@@ -21,6 +21,8 @@ import { gender } from '@/utils/strings'
 import { paths } from '@/utils/urls'
 import * as S from '@effect/schema/Schema'
 import Link from 'next/link'
+import { Suspense } from 'react'
+import VegetableEditHistory from './VegetableEditHistory'
 import { VegetablePageHero } from './VegetablePageHero'
 import VegetablePageSidebar from './VegetablePageSidebar'
 import VegetableTips from './VegetableTips'
@@ -190,6 +192,9 @@ export default function VegetablePage({
 				)}
 			</section>
 			<ContributionCTA />
+			<Suspense>
+				<VegetableEditHistory vegetable_id={vegetable.id} />
+			</Suspense>
 		</main>
 	)
 }

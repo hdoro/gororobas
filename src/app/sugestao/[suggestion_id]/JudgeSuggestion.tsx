@@ -4,6 +4,7 @@ import { acceptEditSuggestionAction } from '@/actions/acceptEditSuggestion'
 import { rejectEditSuggestionAction } from '@/actions/rejectEditSuggestion'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
+import { CheckIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -53,19 +54,18 @@ export default function JudgeSuggestion({
 	}
 
 	return (
-		<div className="flex items-center gap-3">
+		<>
 			<Button
 				tone="destructive"
 				disabled={status !== 'idle'}
 				onClick={rejectSuggestion}
-				size="sm"
 				mode="outline"
 			>
 				Rejeitar
 			</Button>
-			<Button onClick={acceptSuggestion} disabled={status !== 'idle'} size="sm">
-				Aceitar e publicar
+			<Button onClick={acceptSuggestion} disabled={status !== 'idle'}>
+				<CheckIcon className="w-[1.25em]" /> Aceitar e publicar
 			</Button>
-		</div>
+		</>
 	)
 }

@@ -35,20 +35,24 @@ export function getEditSuggestionData(suggestion_id: string) {
 			const currentVegetable = vegetableEditingToForDBWithImages(
 				data.target_object,
 			)
-			// We run the diffs against the freshest version, so applied diffs won't carry anything stale from the EditSuggestion's `snapshot`
-			const updatedVegetable = applyChangeset(
+			const withChangesApplied = applyChangeset(
 				structuredClone(currentVegetable),
 				diff,
 			) as VegetableForDBWithImages
+			const toRender =
+				data.status === 'MERGED'
+					? data.target_object
+					: // We run the diffs against the freshest version, so applied diffs won't carry anything stale from the EditSuggestion's `snapshot`
+						withChangesApplied
 			const dataThatChanged = getChangedObjectSubset({
 				prev: currentVegetable,
-				next: updatedVegetable,
+				next: withChangesApplied,
 			})
 
 			return {
 				...data,
 				diff,
-				updatedVegetable,
+				toRender,
 				dataThatChanged,
 				currentVegetable,
 			}

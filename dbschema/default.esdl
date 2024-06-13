@@ -354,7 +354,7 @@ module default {
       using (global current_user_profile ?= .created_by);
   }
 
-  type EditSuggestion extending Auditable, AdminCanDoAnything, UserCanInsert, UserCanSelect, ModeratorCanUpdate {
+  type EditSuggestion extending Auditable, AdminCanDoAnything, UserCanInsert, PublicRead, ModeratorCanUpdate {
     required target_object: Vegetable;
     required diff: json;
     required snapshot: json;

@@ -38,7 +38,6 @@ export async function acceptEditSuggestionAction({
 	return runServerEffect(
 		pipe(
 			getEditSuggestionData(suggestion_id),
-			Effect.tap(Effect.logInfo),
 			Effect.flatMap((data) =>
 				Effect.tryPromise({
 					try: () => getTransaction(data, session.client),
@@ -48,7 +47,6 @@ export async function acceptEditSuggestionAction({
 					},
 				}),
 			),
-			Effect.tap(Effect.logInfo),
 			Effect.map(
 				(result) =>
 					({
@@ -110,11 +108,6 @@ function getTransaction(
 			)
 		}
 
-		console.log(
-			referencesInFormToParam(dataThatChanged.varieties),
-			dataThatChanged.varieties,
-		)
-
 		// #4 MODIFY THE VEGETABLE
 		const updatedVegetable = await updateVegetableMutation.run(tx, {
 			id: vegetable_id,
@@ -157,7 +150,7 @@ function getTransaction(
 		return {
 			updatedVegetable,
 			updated_friendships,
-			handle: data.updatedVegetable.handle,
+			handle: data.toRender.handle,
 		}
 	})
 }

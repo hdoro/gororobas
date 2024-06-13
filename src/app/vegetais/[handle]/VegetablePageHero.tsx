@@ -31,11 +31,11 @@ export type VegetablePageHeroData = Omit<
 
 export function VegetablePageHero({
 	vegetable,
-	dataThatChanged,
+	diffKeys,
 }: {
 	vegetable: VegetablePageHeroData
 	/** In the context of EditSuggestions, this is an array of keys that changed in the hero */
-	dataThatChanged?: (keyof VegetablePageHeroData)[]
+	diffKeys?: (keyof VegetablePageHeroData)[]
 }) {
 	const mainImage = vegetable.photos?.[0]
 	const { names = [], scientific_names = [] } = vegetable
@@ -74,7 +74,7 @@ export function VegetablePageHero({
 					)}
 				</div>
 				{/* Hide the wishlist action when reviewing a suggestion */}
-				{!dataThatChanged && (
+				{!diffKeys && (
 					<Suspense>
 						<WishlistButtonData vegetable_id={vegetable.id} />
 					</Suspense>
@@ -85,13 +85,13 @@ export function VegetablePageHero({
 				<div
 					className={cn(
 						'flex flex-col lg:flex-row gap-5 mt-5 overflow-hidden',
-						dataThatChanged?.includes('photos') && 'overflow-visible relative',
+						diffKeys?.includes('photos') && 'overflow-visible relative',
 					)}
 					style={{
 						'--max-height': `${maxImageHeight / 16}rem`,
 					}}
 				>
-					{dataThatChanged?.includes('photos') && <ChangeIndicator />}
+					{diffKeys?.includes('photos') && <ChangeIndicator />}
 					<div className="flex-1 rounded-2xl object-cover relative z-10 max-h-[80dvh] lg:max-w-80 lg:max-h-[var(--max-height)]">
 						<SanityImage
 							image={mainImage}
@@ -138,11 +138,11 @@ export function VegetablePageHero({
 													{photo.sources && photo.sources.length > 0 && (
 														<div className="text-xs font-normal text-muted-foreground max-w-full overflow-hidden text-ellipsis">
 															Por{' '}
-															{photo.sources.map((source) => {
+															{(photo.sources || []).map((source) => {
 																if (source.type === 'GOROROBAS') {
 																	return (
 																		<React.Fragment key={source.id}>
-																			{source.users
+																			{(source.users || [])
 																				.map((u) => u.name)
 																				.join(', ')}
 																		</React.Fragment>
@@ -194,7 +194,7 @@ export function VegetablePageHero({
 							vegetable.gender || 'MASCULINO',
 						)} como`}
 						right={names.slice(1).join(', ')}
-						hasChanged={dataThatChanged?.includes('names')}
+						hasChanged={diffKeys?.includes('names')}
 					/>
 				)}
 				{vegetable.scientific_names &&
@@ -202,35 +202,35 @@ export function VegetablePageHero({
 						<TwoColInfo
 							left={'Nomes científicos'}
 							right={vegetable.scientific_names.join(', ')}
-							hasChanged={dataThatChanged?.includes('scientific_names')}
+							hasChanged={diffKeys?.includes('scientific_names')}
 						/>
 					)}
 				{vegetable.origin && (
 					<TwoColInfo
 						left={'Origem'}
 						right={vegetable.origin}
-						hasChanged={dataThatChanged?.includes('origin')}
+						hasChanged={diffKeys?.includes('origin')}
 					/>
 				)}
 				{vegetable.uses && (
 					<TwoColInfo
 						left={'Principais usos'}
 						right={vegetable.uses.map((u) => USAGE_TO_LABEL[u])}
-						hasChanged={dataThatChanged?.includes('uses')}
+						hasChanged={diffKeys?.includes('uses')}
 					/>
 				)}
 				{vegetable.edible_parts && (
 					<TwoColInfo
 						left={'Partes comestíveis'}
 						right={vegetable.edible_parts.map((u) => EDIBLE_PART_TO_LABEL[u])}
-						hasChanged={dataThatChanged?.includes('edible_parts')}
+						hasChanged={diffKeys?.includes('edible_parts')}
 					/>
 				)}
 				{vegetable.strata && (
 					<TwoColInfo
 						left={'Estrato'}
 						right={vegetable.strata.map((u) => STRATUM_TO_LABEL[u])}
-						hasChanged={dataThatChanged?.includes('strata')}
+						hasChanged={diffKeys?.includes('strata')}
 					/>
 				)}
 				{vegetable.lifecycles && (
@@ -239,7 +239,7 @@ export function VegetablePageHero({
 						right={vegetable.lifecycles.map(
 							(u) => VEGETABLE_LIFECYCLE_TO_LABEL[u],
 						)}
-						hasChanged={dataThatChanged?.includes('lifecycles')}
+						hasChanged={diffKeys?.includes('lifecycles')}
 					/>
 				)}
 				{vegetable.planting_methods && (
@@ -248,7 +248,7 @@ export function VegetablePageHero({
 						right={vegetable.planting_methods.map(
 							(u) => PLANTING_METHOD_TO_LABEL[u],
 						)}
-						hasChanged={dataThatChanged?.includes('planting_methods')}
+						hasChanged={diffKeys?.includes('planting_methods')}
 					/>
 				)}
 				{(vegetable.temperature_min || vegetable.temperature_max) && (
@@ -262,8 +262,8 @@ export function VegetablePageHero({
 									: `Abaixo de ${vegetable.temperature_max}°C`
 						}
 						hasChanged={
-							dataThatChanged?.includes('temperature_min') ||
-							dataThatChanged?.includes('temperature_max')
+							diffKeys?.includes('temperature_min') ||
+							diffKeys?.includes('temperature_max')
 						}
 					/>
 				)}
@@ -278,8 +278,8 @@ export function VegetablePageHero({
 									: `Até ${formatCentimeters(vegetable.height_max || 0)}`
 						}
 						hasChanged={
-							dataThatChanged?.includes('height_min') ||
-							dataThatChanged?.includes('height_max')
+							diffKeys?.includes('height_min') ||
+							diffKeys?.includes('height_max')
 						}
 					/>
 				)}

@@ -261,6 +261,7 @@ export const editSuggestionPreviewQuery = e.params(
 			id: true,
 			diff: true,
 			status: true,
+			created_at: true,
 			created_by: (userProfile) => ({
 				...userProfileForAvatar(userProfile),
 			}),
@@ -652,3 +653,22 @@ export type NotesIndexQueryParams = Pick<
 }
 
 export type NotesIndexFilterParams = Omit<NotesIndexQueryParams, 'offset'>
+
+export const editHistoryQuery = e.params(
+	{
+		vegetable_id: e.uuid,
+	},
+	(params) =>
+		e.select(e.EditSuggestion, (suggestion) => ({
+			filter: e.op(
+				e.op(suggestion.target_object.id, '=', params.vegetable_id),
+				'and',
+				e.op(suggestion.status, '=', e.EditSuggestionStatus.MERGED),
+			),
+
+			id: true,
+			created_by: userProfileForAvatar,
+			created_at: true,
+			diff: true,
+		})),
+)
