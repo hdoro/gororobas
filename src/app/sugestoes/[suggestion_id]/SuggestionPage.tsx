@@ -1,4 +1,4 @@
-import { getEditSuggestionData } from '@/actions/getEditSuggestionData'
+import type { EditSuggestionData } from '@/actions/getEditSuggestionData'
 import {
 	VegetablePageHero,
 	type VegetablePageHeroData,
@@ -12,7 +12,7 @@ import BulbIcon from '@/components/icons/BulbIcon'
 import RainbowIcon from '@/components/icons/RainbowIcon'
 import VegetableFriendsIcon from '@/components/icons/VegetableFriendsIcon'
 import DefaultTipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
-import { Badge } from '@/components/ui/badge'
+import { Badge, type BadgeProps } from '@/components/ui/badge'
 import {
 	Card,
 	CardContent,
@@ -24,65 +24,28 @@ import { Text } from '@/components/ui/text'
 import { auth } from '@/edgedb'
 import type { EditSuggestionStatus } from '@/edgedb.interfaces'
 import { type VegetableCardData, vegetableCardsByIdQuery } from '@/queries'
-import { runServerEffect } from '@/services/runtime'
 import {
 	EDIT_SUGGESTION_STATUS_TO_LABEL,
 	VEGETABLE_FIELD_LABELS_MAP,
 } from '@/utils/labels'
 import { gender } from '@/utils/strings'
 import { paths } from '@/utils/urls'
-import { Effect } from 'effect'
-import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
 import JudgeSuggestion from './JudgeSuggestion'
-
-type RouteParams = {
-	suggestion_id: string
-}
-
-async function getRouteData(params: RouteParams) {
-	return runServerEffect(
-		getEditSuggestionData(params.suggestion_id).pipe(
-			Effect.catchAll(() => Effect.succeed(null)),
-		),
-	)
-}
-
-export async function generateMetadata({
-	params,
-}: {
-	params: RouteParams
-}): Promise<Metadata> {
-	const data = await getRouteData(params)
-	if (!data?.target_object?.names) return {}
-
-	return {
-		title: `Sugestão de edição d${gender.suffix(data.toRender.gender || 'NEUTRO')} ${data.toRender.names[0]} | Gororobas`,
-		robots: {
-			index: false,
-			follow: false,
-		},
-	}
-}
 
 const STATUS_BADGE_MAP: Record<
 	EditSuggestionStatus,
-	'default' | 'outline' | 'note'
+	Exclude<BadgeProps['variant'], undefined>
 > = {
 	PENDING_REVIEW: 'outline',
 	MERGED: 'default',
 	REJECTED: 'note',
 }
 
-export default async function EditSuggestionRoute({
-	params,
+export default async function SuggestionPage({
+	data,
 }: {
-	params: RouteParams
+	data: EditSuggestionData
 }) {
-	const data = await getRouteData(params)
-
-	if (!data || !data.target_object) return notFound()
-
 	const { dataThatChanged, toRender, diff } = data
 	const friends = dataThatChanged.friends
 		? await vegetableCardsByIdQuery.run(auth.getSession().client, {

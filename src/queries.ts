@@ -655,6 +655,38 @@ export type NotesIndexQueryParams = Pick<
 
 export type NotesIndexFilterParams = Omit<NotesIndexQueryParams, 'offset'>
 
+const editSuggestionForCard = e.shape(e.EditSuggestion, () => ({
+	id: true,
+	created_by: userProfileForAvatar,
+	created_at: true,
+	diff: true,
+	target_object: (vegetable) => ({
+		name: vegetableForCard(vegetable).name,
+		photos: (image) => ({
+			...imageForRendering(image),
+
+			order_by: {
+				expression: image['@order_index'],
+				direction: 'ASC',
+				empty: e.EMPTY_LAST,
+			},
+			limit: 1,
+		}),
+	}),
+}))
+
+export type EditSuggestionCardData = Omit<
+	Exclude<$infer<typeof editSuggestionForCard>, null>[number],
+	'target_object'
+> &
+	// target_object is optional, and is not used in `editHistoryQuery`
+	Partial<
+		Pick<
+			Exclude<$infer<typeof editSuggestionForCard>, null>[number],
+			'target_object'
+		>
+	>
+
 export const editHistoryQuery = e.params(
 	{
 		vegetable_id: e.uuid,
@@ -667,9 +699,21 @@ export const editHistoryQuery = e.params(
 				e.op(suggestion.status, '=', e.EditSuggestionStatus.MERGED),
 			),
 
-			id: true,
-			created_by: userProfileForAvatar,
-			created_at: true,
-			diff: true,
+			...editSuggestionForCard(suggestion),
+			target_object: false,
 		})),
+)
+
+export const pendingSuggestionsIndexQuery = e.select(
+	e.EditSuggestion,
+	(suggestion) => ({
+		filter: e.op(suggestion.status, '=', e.EditSuggestionStatus.PENDING_REVIEW),
+		order_by: {
+			expression: suggestion.created_at,
+			direction: e.ASC, // older suggestions first
+			empty: e.EMPTY_FIRST,
+		},
+
+		...editSuggestionForCard(suggestion),
+	}),
 )

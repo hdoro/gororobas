@@ -21,7 +21,10 @@ import { Schema } from '@effect/schema'
 import type { Client } from 'edgedb'
 import { Effect, pipe } from 'effect'
 import { formatVegetableFriendForDB } from './formatVegetableFriendForDB'
-import { getEditSuggestionData } from './getEditSuggestionData'
+import {
+	type EditSuggestionData,
+	getEditSuggestionData,
+} from './getEditSuggestionData'
 
 export async function acceptEditSuggestionAction({
 	suggestion_id,
@@ -69,10 +72,7 @@ export async function acceptEditSuggestionAction({
 	)
 }
 
-function getTransaction(
-	data: Effect.Effect.Success<ReturnType<typeof getEditSuggestionData>>,
-	inputClient: Client,
-) {
+function getTransaction(data: EditSuggestionData, inputClient: Client) {
 	const client = inputClient.withConfig({ allow_user_specified_id: true })
 
 	const { dataThatChanged } = data

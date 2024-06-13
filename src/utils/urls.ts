@@ -88,7 +88,7 @@ export const paths = {
 	editVegetable: (handle: string) => formatPath(`/vegetais/${handle}/editar`),
 	newVegetable: () => '/vegetais/novo' as const,
 	editSuggestion: (suggestionId: string) =>
-		formatPath(`/sugestao/${suggestionId}`),
+		formatPath(`/sugestoes/${suggestionId}`),
 
 	notesIndex: () => '/notas' as const,
 	note: (handle: string) => formatPath(`/notas/${handle}`),

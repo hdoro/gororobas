@@ -59,3 +59,7 @@ export function getEditSuggestionData(suggestion_id: string) {
 		}),
 	)
 }
+
+export type EditSuggestionData = Effect.Effect.Success<
+	ReturnType<typeof getEditSuggestionData>
+>
