@@ -1,7 +1,7 @@
 import { auth } from '@/edgedb'
 import { editProfileQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { getAuthRedirect } from '@/utils/urls'
+import { getAuthRedirect, paths } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
 import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
@@ -15,7 +15,7 @@ export default async function ProfileRoute() {
 	const session = auth.getSession()
 
 	if (!(await session.isSignedIn())) {
-		return redirect(getAuthRedirect(false))
+		return redirect(getAuthRedirect(false, paths.editProfile()))
 	}
 
 	const profile = await runServerEffect(

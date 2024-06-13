@@ -5,10 +5,11 @@ import { redirect } from 'next/navigation'
  * Example usage: WishlistButton's dialog point users to the log-in
  */
 export const GET = (request: Request) => {
-	const mode =
-		new URL(request.url).searchParams.get('modo') === 'criar-conta'
-			? 'signup'
-			: 'login'
+	const searchParams = new URL(request.url).searchParams
+	const mode = searchParams.get('modo') === 'criar-conta' ? 'signup' : 'login'
+
+	// @TODO: implement redirecting to the correct page - probably blocked by EdgeDB's builtin UI
+	// const redirectTo = searchParams.get('redirecionar')
 	redirect(
 		mode === 'login' ? auth.getBuiltinUIUrl() : auth.getBuiltinUISignUpUrl(),
 	)

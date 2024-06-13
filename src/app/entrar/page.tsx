@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
 import { auth } from '@/edgedb'
-import { getAuthRedirect } from '@/utils/urls'
+import { getAuthRedirect, paths } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
@@ -9,11 +9,13 @@ export const metadata: Metadata = {
 	title: 'Entrar no Gororobas',
 }
 
-export default async function ProfileRoute() {
+export default async function ProfileRoute({
+	searchParams,
+}: { searchParams: { redirecionar?: string } }) {
 	const session = auth.getSession()
 
 	if (await session.isSignedIn()) {
-		return redirect(getAuthRedirect(true))
+		return redirect(getAuthRedirect(true, paths.home()))
 	}
 
 	return (
@@ -30,10 +32,14 @@ export default async function ProfileRoute() {
 				</Text>
 				<div className="flex items-center gap-2 pt-2">
 					<Button asChild>
-						<a href={auth.getBuiltinUISignUpUrl()}>Criar conta</a>
+						<a href={paths.signup(searchParams.redirecionar || paths.home())}>
+							Criar conta
+						</a>
 					</Button>
 					<Button asChild mode="outline">
-						<a href={auth.getBuiltinUIUrl()}>Entrar</a>
+						<a href={paths.signin(searchParams.redirecionar || paths.home())}>
+							Entrar
+						</a>
 					</Button>
 				</div>
 			</div>

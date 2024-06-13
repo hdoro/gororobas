@@ -23,7 +23,7 @@ import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
 import { WISHLIST_STATUS_TO_LABEL } from '@/utils/labels'
 import { paths } from '@/utils/urls'
 import { ChevronDownIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export type WishlistInfo =
@@ -35,6 +35,7 @@ export default function WishlistButton(
 		vegetable_id: string
 	} & WishlistInfo,
 ) {
+	const pathname = usePathname()
 	const router = useRouter()
 	const { toast } = useToast()
 	const [optimisticStatus, setOptimisticStatus] =
@@ -80,10 +81,10 @@ export default function WishlistButton(
 						</Text>
 						<div className="flex items-center gap-2 pt-2">
 							<Button asChild>
-								<a href={paths.signup()}>Criar conta</a>
+								<a href={paths.signup(pathname)}>Criar conta</a>
 							</Button>
 							<Button asChild mode="outline">
-								<a href={paths.signin()}>Entrar</a>
+								<a href={paths.signin(pathname)}>Entrar</a>
 							</Button>
 						</div>
 					</DialogBody>

@@ -147,6 +147,7 @@ const coreVegetableData = e.shape(e.Vegetable, () => ({
 
 const vegetablePageShape = e.shape(e.Vegetable, (vegetable) => ({
 	...coreVegetableData(vegetable),
+	current_user_id: e.global.current_user_profile.id,
 	photos: (image) => ({
 		...imageForRendering(image),
 

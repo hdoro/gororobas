@@ -1,5 +1,5 @@
 import { auth } from '@/edgedb'
-import { getAuthRedirect } from '@/utils/urls'
+import { getAuthRedirect, paths } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import NoteForm from './NoteForm'
@@ -13,7 +13,7 @@ export default async function ProfileRoute() {
 	const session = auth.getSession()
 
 	if (!(await session.isSignedIn())) {
-		return redirect(getAuthRedirect(false))
+		return redirect(getAuthRedirect(false, paths.newNote()))
 	}
 
 	return <NoteForm />

@@ -72,10 +72,13 @@ export const paths = {
 	editProfile: () => '/perfil' as const,
 	userProfile: (handle: string) => formatPath(`/pessoas/${handle}`),
 
-	signinNotice: () => '/entrar' as const,
+	signinNotice: (onAuthRedirectTo: string) =>
+		`/entrar?redirecionar=${encodeURIComponent(onAuthRedirectTo)}` as const,
 	// Refer to `src/app/redirecionar/route.ts` for why this redirect is needed
-	signin: () => '/redirecionar?modo=entrar',
-	signup: () => '/redirecionar?modo=criar-conta',
+	signin: (onAuthRedirectTo: string) =>
+		`/redirecionar?modo=entrar&redirecionar=${encodeURIComponent(onAuthRedirectTo)}` as const,
+	signup: (onAuthRedirectTo: string) =>
+		`/redirecionar?modo=criar-conta&redirecionar=${encodeURIComponent(onAuthRedirectTo)}` as const,
 	signout: () => '/auth/signout',
 	authCallback: (isSignUp = false) =>
 		`/auth/builtin/callback${isSignUp ? '?isSignUp=true' : ''}`,
@@ -92,8 +95,8 @@ export const paths = {
 	newNote: () => '/notas/nova' as const,
 } as const
 
-export function getAuthRedirect(isSignedIn: boolean) {
-	if (!isSignedIn) return paths.signinNotice()
+export function getAuthRedirect(isSignedIn: boolean, onAuthRedirectTo: string) {
+	if (!isSignedIn) return paths.signinNotice(onAuthRedirectTo)
 
 	return paths.editProfile()
 }

@@ -130,7 +130,7 @@ export default async function EditVegetableRoute({
 	const session = auth.getSession()
 
 	if (!(await session.isSignedIn())) {
-		redirect(paths.signinNotice())
+		redirect(paths.signinNotice(paths.editVegetable(handle)))
 	}
 
 	const vegetableForDBWithImages = await getRouteData(handle)

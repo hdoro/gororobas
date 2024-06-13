@@ -30,7 +30,7 @@ export default function VegetableTipForm(props: {
 		| { success: false; error: string }
 	>
 	succesState: JSX.Element
-	initialValue?: VegetableTipInForm
+	initialValue?: Partial<VegetableTipInForm>
 }) {
 	const router = useRouter()
 	const { toast } = useToast()
@@ -39,7 +39,8 @@ export default function VegetableTipForm(props: {
 	)
 	const form = useFormWithSchema({
 		schema: Schema.encodedBoundSchema(VegetableTipData),
-		defaultValues: 'initialValue' in props ? props.initialValue : {},
+		defaultValues:
+			'initialValue' in props ? (props.initialValue as VegetableTipInForm) : {},
 		disabled: status !== 'idle',
 	})
 

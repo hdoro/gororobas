@@ -4,14 +4,17 @@ import { createVegetableTipAction } from '@/actions/createVegetableTip'
 import type { VegetablePageData } from '@/queries'
 import { generateId } from '@/utils/ids'
 import { gender } from '@/utils/strings'
+import { paths } from '@/utils/urls'
 import { MessageSquarePlus } from 'lucide-react'
 import dynamic from 'next/dynamic'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Carrot from './icons/Carrot'
 import SparklesIcon from './icons/SparklesIcon'
 import { Button } from './ui/button'
 import {
 	Dialog,
+	DialogBody,
 	DialogClose,
 	DialogContent,
 	DialogHeader,
@@ -30,11 +33,43 @@ const VegetableTipForm = dynamic(() => import('./VegetableTipForm'), {
 })
 
 export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
+	const router = useRouter()
+	const pathname = usePathname()
 	const [rerenderFormKey, setRerenderFormKey] = useState<null | string>(null)
+	const { current_user_id } = vegetable
 
 	// By using a key, we force the form to re-mount when the key changes
 	function resetForm() {
 		setRerenderFormKey(generateId())
+	}
+
+	if (!current_user_id) {
+		return (
+			<Dialog>
+				<DialogTrigger asChild>
+					<Button mode="outline">
+						<MessageSquarePlus className="w-[1.25em]" /> Envie uma dica
+					</Button>
+				</DialogTrigger>
+				<DialogContent className="max-w-lg">
+					<DialogBody className="space-y-2 pt-10">
+						<Text level="h2">Crie uma conta no Gororobas</Text>
+						<Text level="p">
+							Para enviar uma sugestão, você precisa ter uma conta. Só assim
+							podemos lembrar suas escolhas sem embolar quem escolheu o quê 🤗
+						</Text>
+						<div className="flex items-center gap-2 pt-2">
+							<Button asChild>
+								<a href={paths.signup(pathname)}>Criar conta</a>
+							</Button>
+							<Button asChild mode="outline">
+								<a href={paths.signin(pathname)}>Entrar</a>
+							</Button>
+						</div>
+					</DialogBody>
+				</DialogContent>
+			</Dialog>
+		)
 	}
 
 	return (
@@ -59,6 +94,15 @@ export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
 							tip: data,
 							vegetable_id: vegetable.id,
 						})
+					}}
+					initialValue={{
+						sources: [
+							{
+								id: generateId(),
+								type: 'GOROROBAS',
+								userIds: [current_user_id],
+							},
+						],
 					}}
 					succesState={
 						<div>
