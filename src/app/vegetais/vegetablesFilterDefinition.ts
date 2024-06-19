@@ -15,29 +15,39 @@ import {
 const PAGE_INDEX_QUERY_KEY = 'pagina'
 const FILTER_DEFINITIONS = [
 	{
+		queryKey: 'nome',
+		filterKey: 'search_query',
+		type: 'search_query',
+	},
+	{
 		queryKey: 'estrato',
 		filterKey: 'strata',
 		values: Object.keys(STRATUM_TO_LABEL),
+		type: 'multiselect',
 	},
 	{
 		queryKey: 'usos',
 		filterKey: 'uses',
 		values: Object.keys(USAGE_TO_LABEL),
+		type: 'multiselect',
 	},
 	{
 		queryKey: 'comestivel',
 		filterKey: 'edible_parts',
 		values: Object.keys(EDIBLE_PART_TO_LABEL),
+		type: 'multiselect',
 	},
 	{
 		queryKey: 'plantio',
 		filterKey: 'planting_methods',
 		values: Object.keys(PLANTING_METHOD_TO_LABEL),
+		type: 'multiselect',
 	},
 	{
 		queryKey: 'ciclo',
 		filterKey: 'lifecycles',
 		values: Object.keys(VEGETABLE_LIFECYCLE_TO_LABEL),
+		type: 'multiselect',
 	},
 ] as const
 
@@ -50,20 +60,31 @@ export function nextSearchParamsToQueryParams(
 
 	const filters = FILTER_DEFINITIONS.reduce(
 		(accFilters, definition) => {
-			const { queryKey, filterKey, values } = definition
+			const { queryKey, filterKey } = definition
 			const queryValue = searchParams[queryKey]
+
 			if (!queryValue) return accFilters
 
-			const arrayValue = Array.isArray(queryValue) ? queryValue : [queryValue]
-			const validValues = arrayValue.filter((value) => values.includes(value))
+			const arrayValue = (
+				Array.isArray(queryValue) ? queryValue : [queryValue]
+			).filter(Boolean)
 
-			if (validValues.length) {
-				accFilters[filterKey] = validValues
+			if (definition.type === 'multiselect') {
+				const validValues = arrayValue.filter((value) =>
+					definition.values.includes(value),
+				)
+				if (validValues.length) {
+					accFilters[filterKey] = validValues
+				}
+			}
+
+			if (definition.type === 'search_query') {
+				accFilters[filterKey] = arrayValue.join(' ')
 			}
 
 			return accFilters
 		},
-		{} as Record<string, string[]>,
+		{} as Record<string, string[] | string>,
 	)
 
 	return {

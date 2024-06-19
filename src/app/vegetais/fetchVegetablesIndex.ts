@@ -18,15 +18,21 @@ export default async function fetchVegetablesIndex(
 			? searchParamsToNextSearchParams(searchParams)
 			: searchParams,
 	)
+	const normalizedParams = {
+		...queryParams,
+		search_query: queryParams.search_query?.trim()
+			? `%${queryParams.search_query.trim()}%`
+			: '',
+	}
 	const session = auth.getSession()
 
 	const vegetables = await runServerEffect(
 		pipe(
 			Effect.tryPromise({
-				try: () => vegetablesIndexQuery.run(session.client, queryParams),
+				try: () => vegetablesIndexQuery.run(session.client, normalizedParams),
 				catch: (error) => console.log(error),
 			}),
-			...buildTraceAndMetrics('vegetables_index', queryParams),
+			...buildTraceAndMetrics('vegetables_index', normalizedParams),
 			Effect.catchAll(() => Effect.succeed(null)),
 		),
 	)

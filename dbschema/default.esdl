@@ -232,6 +232,8 @@ module default {
 
   type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything, ModeratorCanUpdate {
     required names: array<str>;
+    searchable_names := array_join(.names, ' ') ++ ' ' ++ .handle;
+    
     scientific_names: array<str>;
     gender: Gender;
     multi strata: Stratum;

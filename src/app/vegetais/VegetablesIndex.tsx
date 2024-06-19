@@ -7,6 +7,7 @@ import Field from '@/components/forms/Field'
 import Carrot from '@/components/icons/Carrot'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import type { VegetablesIndexFilterParams } from '@/queries'
 import { VEGETABLES_PER_PAGE } from '@/utils/config'
@@ -57,13 +58,14 @@ export default function VegetablesIndex() {
 	const autoFetchNextPage = autoFetchNextPageCount < 2 // allow 3 auto fetches
 
 	const queryKey = queryParamsToQueryKey(filterParams)
+	// @TODO debounce search_query to avoid happening at every keystroke
 	const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
 		useInfiniteQuery({
 			queryKey,
 			queryFn: ({ pageParam }) =>
 				fetchVegetablesIndexFromClient(filterParams, pageParam),
 			initialPageParam: 0,
-			getNextPageParam: (lastPage, allPages, lastPageParam) => {
+			getNextPageParam: (lastPage, _allPages, lastPageParam) => {
 				if (
 					!lastPage.vegetables ||
 					lastPage.vegetables.length < VEGETABLES_PER_PAGE
@@ -172,6 +174,14 @@ export default function VegetablesIndex() {
 							<CardTitle>Filtre os resultados</CardTitle>
 						</CardHeader>
 						<CardContent className="space-y-6 lg:overflow-y-auto hide-scrollbar">
+							<Field
+								form={form}
+								name="search_query"
+								label="Nome"
+								render={({ field }) => (
+									<Input {...field} value={field.value || ''} type="text" />
+								)}
+							/>
 							<Field
 								form={form}
 								name="strata"

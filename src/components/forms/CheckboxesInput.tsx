@@ -20,7 +20,7 @@ export default function CheckboxesInput<
 }) {
 	const value = (field.value || []) as string[]
 	return (
-		<div className="flex gap-x-3 gap-y-2 flex-wrap">
+		<div className="flex gap-2 flex-wrap">
 			{options.map((option) => {
 				const isChecked = value.includes(option.value)
 				return (

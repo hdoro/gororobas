@@ -505,6 +505,7 @@ export const vegetablesIndexQuery = e.params(
 		edible_parts: e.optional(e.array(e.str)),
 		lifecycles: e.optional(e.array(e.str)),
 		uses: e.optional(e.array(e.str)),
+		search_query: e.str,
 		offset: e.int32,
 	},
 	(params) =>
@@ -528,27 +529,38 @@ export const vegetablesIndexQuery = e.params(
 				},
 				{ field: vegetable.uses, values: params.uses, type: e.VegetableUsage },
 			] as const
-			const filterOps = filters.map(({ field, values, type }) =>
+			const filterOps = [
 				e.op(
-					// Either the param doesn't exist
-					e.op('not', e.op('exists', values)),
+					// Either there's no search query
+					e.op(e.len(params.search_query), '=', 0),
 					'or',
-					// Or the vegetable has at least one of the values
+					// Or the vegetable matches it
+					e.op(vegetable.searchable_names, 'ilike', params.search_query),
+				),
+
+				// MULTI-SELECT FILTERS
+				...filters.map(({ field, values, type }) =>
 					e.op(
-						e.count(
-							e.op(
-								field,
-								'intersect',
-								e.array_unpack(e.cast(e.array(type), values)),
+						// Either the param doesn't exist
+						e.op('not', e.op('exists', values)),
+						'or',
+						// Or the vegetable has at least one of the values
+						e.op(
+							e.count(
+								e.op(
+									field,
+									'intersect',
+									e.array_unpack(e.cast(e.array(type), values)),
+								),
 							),
+							'>',
+							0,
 						),
-						'>',
-						0,
 					),
 				),
-			)
+			]
 
-			const finalFilter = filterOps.reduce((finalFilter, op, index) => {
+			const finalFilter = filterOps.reduce((finalFilter, op) => {
 				if (finalFilter === null) return op
 				return e.op(finalFilter, 'and', op)
 			})
@@ -594,6 +606,7 @@ export type VegetablesIndexQueryParams = Pick<
 	edible_parts?: EdiblePart[] | null
 	lifecycles?: VegetableLifeCycle[] | null
 	uses?: VegetableUsage[] | null
+	search_query?: string | null
 }
 
 export type VegetablesIndexFilterParams = Omit<
