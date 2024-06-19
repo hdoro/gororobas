@@ -228,3 +228,33 @@ body {
 .link {
   @apply text-primary-700 underline;
 }
+
+@keyframes auto-scroll {
+  from {
+    transform: translateX(calc(var(--scroll-length) * -1));
+  }
+  to {
+    transform: translateX(var(--scroll-length));
+  }
+}
+
+.vegetables-strip {
+  --animation-duration: 25s;
+  --scroll-length: 50%;
+  animation: auto-scroll var(--animation-duration) cubic-bezier(.15,0,.85,1) forwards infinite alternate;
+  animation-play-state: playing;
+}
+
+.vegetables-strip--wrapper + .vegetables-strip--wrapper .vegetables-strip {
+  animation-direction: alternate-reverse;
+}
+
+.vegetables-strip:hover {
+  animation-play-state: paused;
+}
+
+@media screen and (min-width: 1920px) {
+  .vegetables-strip {
+    --scroll-length: 10vw;
+  }
+}

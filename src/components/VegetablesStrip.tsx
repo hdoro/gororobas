@@ -2,11 +2,6 @@ import type { VegetableCardData } from '@/queries'
 import type { PropsWithChildren } from 'react'
 import VegetableCard from './VegetableCard'
 
-/**
- * Not actually auto-scrolling 😅
- *
- * I'm worried about performance, so skipping the auto-scrolling as much as I'd like to see it happen.
- */
 export default function VegetablesStrip(
 	props: PropsWithChildren<{
 		vegetables: VegetableCardData[]
@@ -14,23 +9,16 @@ export default function VegetablesStrip(
 	}>,
 ) {
 	return (
-		<div
-			className="flex justify-center gap-9 overflow-auto w-auto mx-auto hide-scrollbar"
-			style={{
-				paddingLeft: props.offset
-					? `calc(calc(var(--vegetable-card-width) + 2.25rem) * ${
-							props.vegetables.length / 4
-						})`
-					: undefined,
-			}}
-		>
-			{props.vegetables.map((vegetable) => (
-				<VegetableCard
-					key={vegetable.handle}
-					vegetable={vegetable}
-					fixedWidth
-				/>
-			))}
+		<div className="flex justify-center vegetables-strip--wrapper">
+			<div className="flex justify-center gap-9 overflow-visible w-auto hide-scrollbar vegetables-strip">
+				{props.vegetables.map((vegetable) => (
+					<VegetableCard
+						key={vegetable.handle}
+						vegetable={vegetable}
+						fixedWidth
+					/>
+				))}
+			</div>
 		</div>
 	)
 }
