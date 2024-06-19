@@ -45,13 +45,33 @@ export async function createVegetableTipAction(input: {
 
 			return yield* pipe(
 				Effect.tryPromise({
-					try: () => getTransaction(input, session.client),
+					// Create the tip with the user's session to include correct Auditable data
+					try: () => createTipTransaction(input, session.client),
 					catch: (error) => {
 						console.log('Failed creating tip', error)
 						return new UnknownEdgeDBError(error)
 					},
 				}),
-				Effect.tap(Effect.logInfo),
+				// ADD THE TIP TO THE VEGETABLE
+				Effect.flatMap((createdTips) => {
+					// As modifying a vegetable requires admin privileges, we're executing it as an admin
+					const userClient = session.client.withConfig({
+						allow_user_specified_id: true,
+						apply_access_policies: false,
+					})
+
+					return Effect.tryPromise({
+						try: () =>
+							addTipsToVegetableMutation.run(userClient, {
+								vegetable_id: input.vegetable_id,
+								tips: createdTips.map((tip) => tip.id),
+							}),
+						catch: (error) => {
+							console.log('Failed adding tip to vegetable', error)
+							return new UnknownEdgeDBError(error)
+						},
+					})
+				}),
 				Effect.map(
 					() =>
 						({
@@ -74,14 +94,13 @@ export async function createVegetableTipAction(input: {
 	)
 }
 
-function getTransaction(
-	{ tip, vegetable_id }: { vegetable_id: string; tip: VegetableTipForDB },
+function createTipTransaction(
+	{ tip }: { vegetable_id: string; tip: VegetableTipForDB },
 	inputClient: Client,
 ) {
-	// As modifying a vegetable requires admin privileges, we're executing the transaction that way
-	const adminClient = inputClient.withConfig({ apply_access_policies: false })
+	const userClient = inputClient.withConfig({ allow_user_specified_id: true })
 
-	return adminClient.transaction(async (tx) => {
+	return userClient.transaction(async (tx) => {
 		// #1 CREATE ALL SOURCES
 		const allSources = tip.sources || []
 		if (allSources.length > 0) {
@@ -89,17 +108,6 @@ function getTransaction(
 		}
 
 		// #2 CREATE THE TIP
-		const createdTips = await upsertVegetableTipsMutation.run(
-			tx,
-			tipsToParam([tip]),
-		)
-
-		// #3 ADD THE TIP TO THE VEGETABLE
-		const result = await addTipsToVegetableMutation.run(tx, {
-			vegetable_id,
-			tips: createdTips.map((tip) => tip.id),
-		})
-
-		return result
+		return await upsertVegetableTipsMutation.run(tx, tipsToParam([tip]))
 	})
 }

@@ -15,9 +15,7 @@ export const metadata: Metadata = {
 	},
 }
 
-export default async function PendingSuggestionsIndex(props: {
-	vegetable_id: string
-}) {
+export default async function PendingSuggestionsIndex() {
 	const pendingSuggestions = await runServerEffect(
 		pipe(
 			Effect.tryPromise({
@@ -39,6 +37,11 @@ export default async function PendingSuggestionsIndex(props: {
 				Sugestões em aberto
 			</Text>
 			<div className="flex flex-wrap gap-3 mt-6">
+				{pendingSuggestions.length === 0 && (
+					<Text level="p">
+						Não há sugestões precisando de revisão. Tudo certin ✨
+					</Text>
+				)}
 				{pendingSuggestions.map((suggestion) => (
 					<SuggestionCard key={suggestion.id} suggestion={suggestion} />
 				))}

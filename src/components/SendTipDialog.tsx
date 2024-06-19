@@ -7,7 +7,7 @@ import { gender } from '@/utils/strings'
 import { paths } from '@/utils/urls'
 import { MessageSquarePlus } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import Carrot from './icons/Carrot'
 import SparklesIcon from './icons/SparklesIcon'
@@ -33,7 +33,6 @@ const VegetableTipForm = dynamic(() => import('./VegetableTipForm'), {
 })
 
 export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
-	const router = useRouter()
 	const pathname = usePathname()
 	const [rerenderFormKey, setRerenderFormKey] = useState<null | string>(null)
 	const { current_user_id } = vegetable

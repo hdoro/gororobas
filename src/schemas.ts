@@ -254,8 +254,8 @@ const VegetableCoreData = S.Struct({
 	scientific_names: Optional(S.Array(NameInArray)),
 	origin: Optional(
 		S.String.pipe(
-			S.maxLength(40, {
-				message: () => 'A origem tem de ser menor que 40 caracteres',
+			S.maxLength(60, {
+				message: () => 'A origem tem de ser menor que 60 caracteres',
 			}),
 		),
 	),

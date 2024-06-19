@@ -212,7 +212,7 @@ export const upsertSourcesMutation = e.params(
 								e.array_unpack(
 									e.cast(
 										e.array(e.uuid),
-										e.json_get(source.optional_properties, 'userIds'),
+										e.json_get(source.optional_properties, 'users'),
 									),
 								),
 							),
