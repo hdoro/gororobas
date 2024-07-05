@@ -247,6 +247,32 @@ export const VegetableTipData = S.Struct({
 export type VegetableTipForDB = typeof VegetableTipData.Type
 export type VegetableTipInForm = typeof VegetableTipData.Encoded
 
+const Height = S.Int.pipe(
+	S.positive({ message: () => 'Altura deve ser um número positivo' }),
+	S.lessThan(MAX_ACCEPTED_HEIGHT, {
+		message: () => 'Que vegetal gigante e louco é esse?!',
+	}),
+)
+
+const Temperature = S.Int.pipe(
+	S.greaterThan(-50, {
+		message: () => 'Que inverno gelado é esse que cê tá plantando?!',
+	}),
+	S.lessThan(60, {
+		message: () => 'Que verão quente é esse que cê tá plantando?!',
+	}),
+)
+
+const DevelopmentCycleDays = S.Int.pipe(
+	S.greaterThan(5, {
+		message: () => 'Que vegetal de crescimento supersônico é esse?! 😱',
+	}),
+	S.lessThan(1095, {
+		message: () =>
+			'Se leva mais de 3 anos para crescer, é um vegetal perene e não deveria ter esse campo preenchido',
+	}),
+)
+
 const VegetableCoreData = S.Struct({
 	id: S.UUID,
 	names: S.NonEmptyArray(NameInArray),
@@ -281,42 +307,12 @@ const VegetableCoreData = S.Struct({
 			S.Literal(...(Object.keys(PLANTING_METHOD_TO_LABEL) as PlantingMethod[])),
 		),
 	),
-	height_min: Optional(
-		S.Int.pipe(
-			S.positive({ message: () => 'Altura deve ser um número positivo' }),
-			S.lessThan(MAX_ACCEPTED_HEIGHT, {
-				message: () => 'Que vegetal gigante e louco é esse?!',
-			}),
-		),
-	),
-	height_max: Optional(
-		S.Int.pipe(
-			S.positive({ message: () => 'Altura deve ser um número positivo' }),
-			S.lessThan(MAX_ACCEPTED_HEIGHT, {
-				message: () => 'Que vegetal gigante e louco é esse?!',
-			}),
-		),
-	),
-	temperature_min: Optional(
-		S.Int.pipe(
-			S.greaterThan(-50, {
-				message: () => 'Que inverno gelado é esse que cê tá plantando?!',
-			}),
-			S.lessThan(60, {
-				message: () => 'Que verão quente é esse que cê tá plantando?!',
-			}),
-		),
-	),
-	temperature_max: Optional(
-		S.Int.pipe(
-			S.greaterThan(-50, {
-				message: () => 'Que inverno gelado é esse que cê tá plantando?!',
-			}),
-			S.lessThan(60, {
-				message: () => 'Que verão quente é esse que cê tá plantando?!',
-			}),
-		),
-	),
+	development_cycle_min: Optional(DevelopmentCycleDays),
+	development_cycle_max: Optional(DevelopmentCycleDays),
+	height_min: Optional(Height),
+	height_max: Optional(Height),
+	temperature_min: Optional(Temperature),
+	temperature_max: Optional(Temperature),
 	content: Optional(RichText),
 	friends: Optional(S.Array(S.UUID)),
 	varieties: Optional(S.Array(VegetableVarietyData)),

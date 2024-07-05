@@ -102,7 +102,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
-		"@edgedb/generate": "0.6.0-canary.20240703T140049",
+		"@edgedb/generate": "0.6.0-canary.20240530T194016",
 		"@portabletext/to-html": "^2.0.13",
 		"@sanity/types": "^3.49.0",
 		"@types/inquirer": "^9.0.7",

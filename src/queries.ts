@@ -138,6 +138,8 @@ const coreVegetableData = e.shape(e.Vegetable, () => ({
 	lifecycles: true,
 	uses: true,
 	origin: true,
+	development_cycle_min: true,
+	development_cycle_max: true,
 	height_min: true,
 	height_max: true,
 	temperature_min: true,

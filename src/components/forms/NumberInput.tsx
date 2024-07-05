@@ -14,7 +14,7 @@ export default function NumberInput<
 	format = 'none',
 }: {
 	field: ControllerRenderProps<TFieldValues, TName>
-	format?: 'none' | 'centimeters' | 'temperature'
+	format?: 'none' | 'centimeters' | 'temperature' | 'days'
 }) {
 	const value = Number(field.value)
 	return (
@@ -41,6 +41,7 @@ export default function NumberInput<
 						</>
 					)}
 					{format === 'temperature' && 'ºC'}
+					{format === 'days' && `dia${value > 1 ? 's' : ''}`}
 				</div>
 			) : null}
 		</div>

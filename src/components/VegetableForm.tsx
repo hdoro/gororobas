@@ -13,7 +13,7 @@ import {
 	type VegetableInForm,
 	VegetableWithUploadedImages,
 } from '@/schemas'
-import type { VegetableUsage } from '@/types'
+import type { VegetableLifeCycle, VegetableUsage } from '@/types'
 import { removeNullishKeys } from '@/utils/diffs'
 import { generateId } from '@/utils/ids'
 import {
@@ -278,6 +278,7 @@ export default function VegetableForm(props: {
 											)}
 										/>
 									</div>
+									<DevelopmentCycleFields />
 									<Field
 										form={form}
 										name="friends"
@@ -489,6 +490,31 @@ export default function VegetableForm(props: {
 				</form>
 			</FormProvider>
 		</main>
+	)
+}
+
+/** Only show the development cycle fields if the planting method is not perennial */
+function DevelopmentCycleFields() {
+	const form = useFormContext()
+	const lifecycles = (form.watch('lifecycles') || []) as VegetableLifeCycle[]
+
+	if (lifecycles.includes('PERENE')) return null
+
+	return (
+		<div className="grid grid-cols-2 gap-4">
+			<Field
+				form={form}
+				name="development_cycle_min"
+				label={VEGETABLE_FIELD_LABELS_MAP.development_cycle_min}
+				render={({ field }) => <NumberInput field={field} format="days" />}
+			/>
+			<Field
+				form={form}
+				name="development_cycle_max"
+				label={VEGETABLE_FIELD_LABELS_MAP.development_cycle_max}
+				render={({ field }) => <NumberInput field={field} format="days" />}
+			/>
+		</div>
 	)
 }
 

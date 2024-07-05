@@ -283,6 +283,23 @@ export function VegetablePageHero({
 						}
 					/>
 				)}
+				{(vegetable.development_cycle_min ||
+					vegetable.development_cycle_max) && (
+					<TwoColInfo
+						left={'Ciclo de desenvolvimento (referência)'}
+						right={
+							vegetable.development_cycle_min && vegetable.development_cycle_max
+								? `De ${vegetable.development_cycle_min} a ${vegetable.development_cycle_max} dias`
+								: vegetable.development_cycle_min
+									? `A partir de ${vegetable.development_cycle_min} dias`
+									: `Até ${vegetable.development_cycle_max} dias`
+						}
+						hasChanged={
+							diffKeys?.includes('development_cycle_min') ||
+							diffKeys?.includes('development_cycle_max')
+						}
+					/>
+				)}
 			</div>
 		</div>
 	)

@@ -217,8 +217,8 @@ importers:
         specifier: ^1.8.3
         version: 1.8.3
       '@edgedb/generate':
-        specifier: 0.6.0-canary.20240703T140049
-        version: 0.6.0-canary.20240703T140049(edgedb@1.5.7)
+        specifier: 0.6.0-canary.20240530T194016
+        version: 0.6.0-canary.20240530T194016(edgedb@1.5.7)
       '@portabletext/to-html':
         specifier: ^2.0.13
         version: 2.0.13
@@ -371,8 +371,8 @@ packages:
       next: '>=13.5.6 <15.0.0'
       react: ^18.2.0
 
-  '@edgedb/generate@0.6.0-canary.20240703T140049':
-    resolution: {integrity: sha512-IbO+g6oA5vHoxuAtiOocX6oi0EXWOlSaY3Hu7AKLhKu4kw5y2hYhTlpyWhInpqy6Yn6qGvxe5euqoYrmrDUMUA==}
+  '@edgedb/generate@0.6.0-canary.20240530T194016':
+    resolution: {integrity: sha512-xr5X1+rzShweufrFTKD9N37Z23z1Ww2iZzSMULftbzIgZNqOKbfv1gKbM919BsLfC0G68KH6dArDXD0lAvR5kg==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
@@ -3152,13 +3152,10 @@ snapshots:
       next: 14.2.4(@opentelemetry/api@1.8.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
 
-  '@edgedb/generate@0.6.0-canary.20240703T140049(edgedb@1.5.7)':
+  '@edgedb/generate@0.6.0-canary.20240530T194016(edgedb@1.5.7)':
     dependencies:
       '@iarna/toml': 2.2.5
-      debug: 4.3.4
       edgedb: 1.5.7
-    transitivePeerDependencies:
-      - supports-color
 
   '@effect/experimental@0.17.22(@effect/platform-node@0.53.19(@effect/platform@0.58.20(@effect/schema@0.68.17(effect@3.4.7))(effect@3.4.7))(effect@3.4.7))(@effect/platform@0.58.20(@effect/schema@0.68.17(effect@3.4.7))(effect@3.4.7))(@effect/schema@0.68.17(effect@3.4.7))(effect@3.4.7)(ws@8.18.0)':
     dependencies:

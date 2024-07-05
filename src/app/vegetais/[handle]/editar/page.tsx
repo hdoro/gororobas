@@ -32,6 +32,8 @@ export function vegetableEditingToForDBWithImages(
 		scientific_names: vegetable.scientific_names,
 		content: (vegetable.content as RichTextValue) || undefined,
 		friends: vegetable.friends.map((friend) => friend.id),
+		development_cycle_max: vegetable.development_cycle_max,
+		development_cycle_min: vegetable.development_cycle_min,
 		height_max: vegetable.height_max,
 		height_min: vegetable.height_min,
 		temperature_max: vegetable.temperature_max,
