@@ -38,8 +38,8 @@ export default function NotePage({ note }: { note: NotePageData }) {
 
 	return (
 		<main className="py-10">
-			<div className="px-pageX flex flex-col items-start gap-10 md:flex-row md:justify-center lg:gap-20">
-				<Card className="space-y-3 max-w-full md:flex-[5] md:max-w-2xl">
+			<div className="px-pageX flex flex-col items-start gap-10 lg:flex-row lg:justify-center xl:gap-20">
+				<Card className="space-y-3 max-w-full lg:flex-[5] lg:max-w-2xl">
 					<CardHeader className={'flex flex-col-reverse gap-2'}>
 						<div className={textVariants({ level: 'h1' })}>
 							<TipTapRenderer content={titleAsHeading} />
@@ -88,7 +88,7 @@ export default function NotePage({ note }: { note: NotePageData }) {
 				</Card>
 
 				{note.created_by && (
-					<div>
+					<div className="lg:flex-1">
 						<Text level="h2" as="h2" className="mb-2">
 							Enviada por:
 						</Text>

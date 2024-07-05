@@ -14,7 +14,7 @@ export default function SuggestionCard({
 		<Link
 			key={suggestion.id}
 			href={paths.editSuggestion(suggestion.id)}
-			className="block space-y-2 p-3 border bg-background-card rounded-md hover:bg-white/80 hover:border-primary-400 transition-all"
+			className="block space-y-2 p-3 border bg-background-card rounded-md hover:bg-white/80 hover:border-primary-400 transition-all group"
 		>
 			{suggestion.target_object?.name && (
 				<div className="flex items-center gap-2">
@@ -25,7 +25,10 @@ export default function SuggestionCard({
 							className="w-12 h-12 rounded-md object-cover"
 						/>
 					)}
-					<Text level="sm" className="text-muted-foreground">
+					<Text
+						level="sm"
+						className="text-muted-foreground group-hover:text-foreground"
+					>
 						{suggestion.target_object.name}
 					</Text>
 				</div>

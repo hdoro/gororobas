@@ -10,19 +10,18 @@ import NoteIcon from '@/components/icons/NoteIcon'
 import QuoteIcon from '@/components/icons/QuoteIcon'
 import RainbowIcon from '@/components/icons/RainbowIcon'
 import ShovelIcon from '@/components/icons/ShovelIcon'
-import SparklesIcon from '@/components/icons/SparklesIcon'
 import VegetableFriendsIcon from '@/components/icons/VegetableFriendsIcon'
 import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
 import type { VegetablePageData } from '@/queries'
-import { RichText } from '@/schemas'
 import { gender } from '@/utils/strings'
+import { isRenderableRichText } from '@/utils/tiptap'
 import { paths } from '@/utils/urls'
-import * as S from '@effect/schema/Schema'
+import { Edit2Icon } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
-import VegetableEditHistory from './VegetableEditHistory'
+import VegetableContributors from './VegetableContributors'
 import { VegetablePageHero } from './VegetablePageHero'
 import VegetablePageSidebar from './VegetablePageSidebar'
 import VegetableTips from './VegetableTips'
@@ -32,49 +31,25 @@ export default function VegetablePage({
 }: {
 	vegetable: VegetablePageData
 }) {
-	const { names = [] } = vegetable
+	const { names = [], sources = [] } = vegetable
 
 	const friends = vegetable.friends || []
 
-	const allSources = [
-		...(vegetable.tips || []).flatMap((tip) => tip?.sources || []),
-		...(vegetable.photos || []).flatMap((photo) => photo?.sources || []),
-		...(vegetable.varieties || []).flatMap(
-			(variety) =>
-				variety?.photos?.flatMap((photo) => photo?.sources || []) || [],
-		),
-		...(vegetable.sources || []),
-	]
-	const externalSources = allSources.flatMap((source, index) => {
+	const externalSources = sources.flatMap((source, index) => {
 		if (source?.type !== 'EXTERNAL') return []
 
-		return allSources
-			.slice(index + 1)
-			.some(
-				(s) =>
-					s.credits === source.credits ||
-					(source.origin && s.origin === source.origin),
-			)
-			? []
-			: source
-	})
-	const internalSources = allSources.flatMap((source, index) => {
-		if (source?.type !== 'GOROROBAS') return []
-
-		return {
-			...source,
-			// de-duplicate users that show up in multiple sources
-			users: source.users.filter(
-				(user) =>
-					!allSources
-						.slice(index + 1)
-						.some(
-							(s) =>
-								s.type === 'GOROROBAS' &&
-								s.users.some((u) => u.handle === user.handle),
-						),
-			),
-		}
+		return (
+			sources
+				.slice(index + 1)
+				// Avoid displaying duplicates
+				.some(
+					(s) =>
+						s.credits === source.credits ||
+						(source.origin && s.origin === source.origin),
+				)
+				? []
+				: source
+		)
 	})
 
 	return (
@@ -87,7 +62,6 @@ export default function VegetablePage({
 				<VegetablePageSidebar
 					vegetable={vegetable}
 					hasExternalSources={externalSources.length > 0}
-					hasInternalSources={internalSources.length > 0}
 				/>
 			</div>
 			<section className="my-36" id="sugestoes">
@@ -122,7 +96,7 @@ export default function VegetablePage({
 					</div>
 				</section>
 			)}
-			{S.is(RichText)(vegetable.content) && (
+			{isRenderableRichText(vegetable.content) && (
 				<section className="my-36" id="curiosidades">
 					<SectionTitle Icon={BulbIcon}>
 						Sobre {gender.article(vegetable.gender || 'NEUTRO', 'both')}
@@ -149,21 +123,12 @@ export default function VegetablePage({
 				<section className="my-36" id="fontes">
 					<SectionTitle Icon={QuoteIcon}>Fontes e recursos</SectionTitle>
 					<Text level="h3" className="px-pageX font-normal">
-						Materiais que embasaram essas informações e/ou fontes de algumas das
-						fotos mostradas aqui
+						Materiais que embasaram essas informações
 					</Text>
-					<SourcesGrid sources={externalSources} className="px-pageX mt-10" />
-				</section>
-			)}
-			{internalSources.length > 0 && (
-				<section className="my-36" id="contribuintes">
-					<SectionTitle Icon={SparklesIcon}>
-						Pessoas que contribuiram
-					</SectionTitle>
-					<Text level="h3" className="px-pageX font-normal">
-						Quem aqui no Gororobas contribuiu com fotos e/ou dicas
-					</Text>
-					<SourcesGrid sources={internalSources} className="px-pageX mt-10" />
+					<SourcesGrid
+						sources={externalSources}
+						className="px-pageX mt-6 gap-8"
+					/>
 				</section>
 			)}
 			<section className="my-36" id="notas">
@@ -191,9 +156,19 @@ export default function VegetablePage({
 					</Text>
 				)}
 			</section>
-			<ContributionCTA />
+			<ContributionCTA
+				customCTA={
+					<Button asChild>
+						<Link href={paths.editVegetable(vegetable.handle)}>
+							<Edit2Icon className="w-[1.25em]" />
+							Editar página {gender.preposition(vegetable.gender || 'NEUTRO')}{' '}
+							{vegetable.names[0]}
+						</Link>
+					</Button>
+				}
+			/>
 			<Suspense>
-				<VegetableEditHistory vegetable_id={vegetable.id} />
+				<VegetableContributors vegetable={vegetable} />
 			</Suspense>
 		</main>
 	)

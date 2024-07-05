@@ -1,6 +1,5 @@
 import type { VegetableTipCardData } from '@/queries'
-import { RichText } from '@/schemas'
-import { Schema } from '@effect/schema'
+import { isRenderableRichText } from '@/utils/tiptap'
 import React from 'react'
 import ProfileCard from './ProfileCard'
 import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
@@ -9,7 +8,7 @@ import { Text } from './ui/text'
 export default function VegetableTipCard({
 	tip,
 }: { tip: VegetableTipCardData }) {
-	if (!Schema.is(RichText)(tip.content)) return null
+	if (!isRenderableRichText(tip.content)) return null
 
 	// Put user profiles last for visual balance
 	const orderedSources = (tip.sources || []).sort((a, b) => {

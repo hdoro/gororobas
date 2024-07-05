@@ -6,7 +6,7 @@ import SparklesIcon from './icons/SparklesIcon'
 import { Button } from './ui/button'
 import { Text } from './ui/text'
 
-export function ContributionCTA() {
+export function ContributionCTA({ customCTA }: { customCTA?: JSX.Element }) {
 	return (
 		<section className="my-36 px-pageX text-center md:max-w-lg mx-auto box-content">
 			<SparklesIcon variant="color" className="w-12 inline-block mb-3" />
@@ -25,12 +25,14 @@ export function ContributionCTA() {
 					</Link>
 				</Button>
 				<span className="text-muted-foreground">ou</span>
-				<Button asChild>
-					<Link href={paths.newVegetable()}>
-						<SeedlingIcon variant="monochrome" className="w-[1.25em]" /> Envie
-						um novo vegetal
-					</Link>
-				</Button>
+				{customCTA || (
+					<Button asChild>
+						<Link href={paths.newVegetable()}>
+							<SeedlingIcon variant="monochrome" className="w-[1.25em]" /> Envie
+							um novo vegetal
+						</Link>
+					</Button>
+				)}
 			</div>
 		</section>
 	)

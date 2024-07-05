@@ -1,10 +1,9 @@
 import AnchorLink from '@/components/AnchorLink'
 import { Button } from '@/components/ui/button'
 import type { VegetablePageData } from '@/queries'
-import { RichText } from '@/schemas'
 import { cn } from '@/utils/cn'
+import { isRenderableRichText } from '@/utils/tiptap'
 import { paths } from '@/utils/urls'
-import { Schema } from '@effect/schema'
 import { Edit2Icon } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
@@ -13,11 +12,9 @@ import WishlistedBy from './WishlistedBy'
 export default function VegetablePageSidebar({
 	vegetable,
 	hasExternalSources,
-	hasInternalSources,
 }: {
 	vegetable: VegetablePageData
 	hasExternalSources: boolean
-	hasInternalSources: boolean
 }) {
 	const links = [
 		{
@@ -34,7 +31,7 @@ export default function VegetablePageSidebar({
 				label: 'Variedades',
 				href: '#variedades',
 			},
-		Schema.is(RichText)(vegetable.content) && {
+		isRenderableRichText(vegetable.content) && {
 			label: 'Curiosidades',
 			href: '#curiosidades',
 		},
@@ -47,11 +44,11 @@ export default function VegetablePageSidebar({
 			label: 'Fontes e recursos',
 			href: '#fontes',
 		},
-		hasInternalSources && {
+		{
 			label: 'Quem contribuiu',
 			href: '#contribuintes',
 		},
-		vegetable.related_notes.length > 0 && {
+		{
 			label: 'Aprendizados e experimentos',
 			href: '#notas',
 		},

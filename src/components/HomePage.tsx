@@ -8,8 +8,9 @@ import { ContributionCTA } from './ContributionCTA'
 import NotesGrid from './NotesGrid'
 import ProfilesGrid from './ProfilesGrid'
 import SectionTitle from './SectionTitle'
-import SuggestionCard from './SuggestionCard'
+import SuggestionsGrid from './SuggestionsGrid'
 import VegetablesStrip from './VegetablesStrip'
+import HistoryIcon from './icons/HistoryIcon'
 import NoteIcon from './icons/NoteIcon'
 import RainbowIcon from './icons/RainbowIcon'
 import { Button } from './ui/button'
@@ -108,12 +109,11 @@ export default async function HomePage(data: Partial<HomePageData>) {
 
 			{data.recent_contributions && data.recent_contributions.length > 0 && (
 				<section className="mt-36">
-					<SectionTitle Icon={RainbowIcon}>Contribuições recentes</SectionTitle>
-					<div className="grid gap-3 grid-cols-[repeat(auto-fit,_minmax(15rem,_1fr))] mt-6 px-pageX">
-						{data.recent_contributions.map((suggestion) => (
-							<SuggestionCard key={suggestion.id} suggestion={suggestion} />
-						))}
-					</div>
+					<SectionTitle Icon={HistoryIcon}>Contribuições recentes</SectionTitle>
+					<SuggestionsGrid
+						suggestions={data.recent_contributions}
+						className="mt-6 px-pageX"
+					/>
 				</section>
 			)}
 
