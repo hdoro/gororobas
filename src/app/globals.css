@@ -239,10 +239,11 @@ body {
 }
 
 .vegetables-strip {
-  --animation-duration: 25s;
+  --animation-duration: 35s;
   --scroll-length: 50%;
   animation: auto-scroll var(--animation-duration) cubic-bezier(.15,0,.85,1) forwards infinite alternate;
   animation-play-state: playing;
+  animation-delay: calc(var(--animation-duration) * -0.45);
 }
 
 .vegetables-strip--wrapper + .vegetables-strip--wrapper .vegetables-strip {

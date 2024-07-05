@@ -384,39 +384,6 @@ export const profileForNavQuery = e.select(e.UserProfile, (profile) => ({
 	photo: imageForRendering,
 }))
 
-export const homePageQuery = e.select({
-	featured_vegetables: e.select(e.Vegetable, (vegetable) => ({
-		...vegetableForCard(vegetable),
-		photos: (image) => ({
-			...imageForRendering(image),
-
-			order_by: {
-				expression: image['@order_index'],
-				direction: 'ASC',
-				empty: e.EMPTY_LAST,
-			},
-			limit: 1,
-		}),
-
-		filter: e.op('exists', vegetable.photos),
-		limit: 16,
-	})),
-
-	profiles: e.select(e.UserProfile, (profile) => ({
-		...userProfileForAvatar(profile),
-
-		limit: 12,
-	})),
-
-	notes: e.select(e.Note, (note) => ({
-		...noteForCard(note),
-
-		limit: 12,
-	})),
-})
-
-export type HomePageData = Exclude<$infer<typeof homePageQuery>, null>
-
 export const notePageQuery = e.params(
 	{
 		handle: e.str,
@@ -730,3 +697,53 @@ export const pendingSuggestionsIndexQuery = e.select(
 		...editSuggestionForCard(suggestion),
 	}),
 )
+
+export const homePageQuery = e.select({
+	featured_vegetables: e.select(e.Vegetable, (vegetable) => ({
+		...vegetableForCard(vegetable),
+		photos: (image) => ({
+			...imageForRendering(image),
+
+			order_by: {
+				expression: image['@order_index'],
+				direction: 'ASC',
+				empty: e.EMPTY_LAST,
+			},
+			limit: 1,
+		}),
+
+		filter: e.op('exists', vegetable.photos),
+		limit: 16,
+	})),
+
+	profiles: e.select(e.UserProfile, (profile) => ({
+		...userProfileForAvatar(profile),
+
+		limit: 12,
+	})),
+
+	notes: e.select(e.Note, (note) => ({
+		...noteForCard(note),
+		order_by: {
+			expression: note.published_at,
+			direction: e.DESC, // newest first
+			empty: e.EMPTY_FIRST,
+		},
+
+		limit: 12,
+	})),
+
+	recent_contributions: e.select(e.EditSuggestion, (suggestion) => ({
+		filter: e.op(suggestion.status, '=', e.EditSuggestionStatus.MERGED),
+		order_by: {
+			expression: suggestion.updated_at,
+			direction: e.DESC, // newest first
+			empty: e.EMPTY_FIRST,
+		},
+		limit: 12,
+
+		...editSuggestionForCard(suggestion),
+	})),
+})
+
+export type HomePageData = Exclude<$infer<typeof homePageQuery>, null>

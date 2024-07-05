@@ -8,6 +8,7 @@ import { ContributionCTA } from './ContributionCTA'
 import NotesGrid from './NotesGrid'
 import ProfilesGrid from './ProfilesGrid'
 import SectionTitle from './SectionTitle'
+import SuggestionCard from './SuggestionCard'
 import VegetablesStrip from './VegetablesStrip'
 import NoteIcon from './icons/NoteIcon'
 import RainbowIcon from './icons/RainbowIcon'
@@ -33,10 +34,10 @@ export default async function HomePage(data: Partial<HomePageData>) {
 				<Text
 					level="h1"
 					as="p"
-					className="text-primary-800 font-normal max-w-3xl text-[0.6em] leading-snug"
+					className="text-primary-800 font-normal max-w-3xl !text-[0.5em] leading-snug"
 				>
-					Cultivando sabedoria e compartilhando experiências para agroecologizar
-					o mundo
+					Enciclopédia colaborativa de conhecimento em agroecologia sobre mais
+					de 400 vegetais
 				</Text>
 			</section>
 			{featured_vegetables && featured_vegetables.length > 0 && (
@@ -95,11 +96,29 @@ export default async function HomePage(data: Partial<HomePageData>) {
 			{profiles && profiles.length > 0 && (
 				<section className="mt-36">
 					<SectionTitle Icon={RainbowIcon}>Quem se envolve</SectionTitle>
+					<Text level="h3" className="px-pageX font-normal">
+						Cultivando sabedoria e compartilhando experiências para
+						agroecologizar o mundo ✨
+					</Text>
 					<ProfilesGrid profiles={profiles} className="mt-8 px-pageX" />
 				</section>
 			)}
 
 			<ContributionCTA />
+
+			{data.recent_contributions && data.recent_contributions.length > 0 && (
+				<section className="mt-36">
+					<SectionTitle Icon={RainbowIcon}>Contribuições recentes</SectionTitle>
+					<div className="grid gap-3 grid-cols-[repeat(auto-fit,_minmax(15rem,_1fr))] mt-6 px-pageX">
+						{data.recent_contributions.map((suggestion) => (
+							<SuggestionCard key={suggestion.id} suggestion={suggestion} />
+						))}
+					</div>
+				</section>
+			)}
+
+			<div aria-hidden className="mt-36" />
+
 			{signedIn && (
 				<Button size="sm" asChild className="fixed left-4 bottom-4 z-50">
 					<Link href={paths.newNote()}>

@@ -22,7 +22,7 @@ export default function SuggestionCard({
 						<SanityImage
 							image={suggestion.target_object.photos[0]}
 							maxWidth={48}
-							className="w-12 h-12 rounded-md"
+							className="w-12 h-12 rounded-md object-cover"
 						/>
 					)}
 					<Text level="sm" className="text-muted-foreground">
