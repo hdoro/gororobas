@@ -39,7 +39,7 @@
     --secondary-950: 11 82% 15%;
     --secondary: var(--secondary-700);
     --secondary-foreground: var(--secondary-50);
-    
+
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
     --accent: 240 4.8% 95.9%;
@@ -112,7 +112,6 @@ body {
   pointer-events: none;
   float: left;
   height: 0;
-  
 }
 
 .tiptap-placeholder.is-empty {
@@ -125,16 +124,16 @@ body {
 }
 
 .tiptap[contenteditable='true'] {
-  @apply outline-none space-y-[0.5em];
+  @apply space-y-[0.5em] outline-none;
 }
 
 .hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-  display: none;  /* Safari and Chrome */
+  display: none; /* Safari and Chrome */
 }
 
 .note-card {
@@ -241,7 +240,8 @@ body {
 .vegetables-strip {
   --animation-duration: 35s;
   --scroll-length: 50%;
-  animation: auto-scroll var(--animation-duration) cubic-bezier(.15,0,.85,1) forwards infinite alternate;
+  animation: auto-scroll var(--animation-duration)
+    cubic-bezier(0.15, 0, 0.85, 1) forwards infinite alternate;
   animation-play-state: playing;
   animation-delay: calc(var(--animation-duration) * -0.45);
 }
@@ -258,4 +258,18 @@ body {
   .vegetables-strip {
     --scroll-length: 10vw;
   }
+}
+
+.scrollbar-gradient {
+  @apply relative;
+}
+
+.scrollbar-gradient:after {
+  @apply sticky inset-x-0 -bottom-1 block h-4;
+  content: '';
+  background: linear-gradient(
+    hsl(var(--background) / 0) 0%,
+    hsl(var(--background)) 60%
+  );
+  pointer-events: none;
 }

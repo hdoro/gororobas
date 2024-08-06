@@ -1,4 +1,5 @@
 import ChangeIndicator from '@/components/ChangeIndicator'
+import PhotoLabelAndSources from '@/components/PhotoLabelAndSources'
 import { SanityImage } from '@/components/SanityImage'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -21,7 +22,7 @@ import {
 } from '@/utils/labels'
 import { average, formatCentimeters } from '@/utils/numbers'
 import { gender } from '@/utils/strings'
-import React, { Fragment, Suspense } from 'react'
+import { Fragment, Suspense } from 'react'
 import WishlistButtonData from './WishlistButtonData'
 
 export type VegetablePageHeroData = Omit<
@@ -127,58 +128,12 @@ export function VegetablePageHero({
 													'h-full w-auto object-contain object-center max-h-[80dvh] lg:max-h-[var(--max-height)]'
 												}
 											/>
-											{photo.label && (
-												<Badge
-													className="absolute left-4 bottom-4 max-w-[75%] flex-col !items-start"
-													variant="outline"
-												>
-													<div className="max-w-full overflow-hidden text-ellipsis">
-														{photo.label}
-													</div>
-													{photo.sources && photo.sources.length > 0 && (
-														<div className="text-xs font-normal text-muted-foreground max-w-full overflow-hidden text-ellipsis">
-															Por{' '}
-															{(photo.sources || []).map((source) => {
-																if (source.type === 'GOROROBAS') {
-																	return (
-																		<React.Fragment key={source.id}>
-																			{(source.users || [])
-																				.map((u) => u.name)
-																				.join(', ')}
-																		</React.Fragment>
-																	)
-																}
-																if (
-																	source.origin &&
-																	URL.canParse(source.origin)
-																) {
-																	return (
-																		<a
-																			key={source.id}
-																			href={source.origin}
-																			target="_blank"
-																			rel="noopener noreferrer"
-																			className="link"
-																		>
-																			{source.credits}
-																		</a>
-																	)
-																}
-																return (
-																	<React.Fragment key={source.id}>
-																		{source.credits}
-																	</React.Fragment>
-																)
-															})}
-														</div>
-													)}
-												</Badge>
-											)}
+											<PhotoLabelAndSources photo={photo} />
 										</CarouselItem>
 									)
 								})}
 							</CarouselContent>
-							<div className="absolute right-4 bottom-4 flex gap-2.5 items-center">
+							<div className="absolute right-2 bottom-4 flex gap-2.5 items-center">
 								<CarouselPrevious className="relative translate-x-0 translate-y-0 left-0 top-0 bg-white" />
 								<CarouselNext className="relative translate-x-0 translate-y-0 left-0 top-0 bg-white" />
 							</div>
