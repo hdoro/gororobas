@@ -3,8 +3,8 @@
 import { auth } from '@/edgedb'
 import { insertEditSuggestionMutation } from '@/mutations'
 import {
-	type VegetableForDBWithImages,
-	VegetableWithUploadedImages,
+  type VegetableForDBWithImages,
+  VegetableWithUploadedImages,
 } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { UnknownEdgeDBError } from '@/types/errors'
@@ -42,79 +42,79 @@ import { diff as jsonDiff } from 'json-diff-ts'
  * - atomizeChangeset will flatten changes
  */
 export async function createEditSuggestionAction({
-	current,
-	updated,
+  current,
+  updated,
 }: {
-	current: VegetableForDBWithImages
-	updated: VegetableForDBWithImages
+  current: VegetableForDBWithImages
+  updated: VegetableForDBWithImages
 }) {
-	if (
-		!Schema.is(VegetableWithUploadedImages)(current) ||
-		!Schema.is(VegetableWithUploadedImages)(updated)
-	) {
-		return {
-			success: false,
-			error: 'invalid-input',
-		} as const
-	}
+  if (
+    !Schema.is(VegetableWithUploadedImages)(current) ||
+    !Schema.is(VegetableWithUploadedImages)(updated)
+  ) {
+    return {
+      success: false,
+      error: 'invalid-input',
+    } as const
+  }
 
-	const diff = diffVegetableForDB({
-		current,
-		updated,
-	})
+  const diff = diffVegetableForDB({
+    current,
+    updated,
+  })
 
-	const session = auth.getSession()
+  const session = auth.getSession()
 
-	return runServerEffect(
-		pipe(
-			Effect.tryPromise({
-				try: () =>
-					insertEditSuggestionMutation.run(session.client, {
-						diff: diff,
-						target_id: current.id,
-						snapshot: current,
-					}),
-				catch: (error) => new UnknownEdgeDBError(error),
-			}),
-			Effect.map(
-				(createdObject) =>
-					({
-						success: true,
-						redirectTo: paths.editSuggestion(createdObject.id),
-						message: {
-							title: 'Sugestão de edição enviada',
-							description:
-								'Recebemos sua sugestão e vamos avaliar em breve - brigadin! 🤗',
-						},
-					}) as const,
-			),
-			...buildTraceAndMetrics('insert_edit_suggestion', {
-				vegetable_id: current.id,
-			}),
-		).pipe(
-			Effect.catchAll(() =>
-				// @TODO: better user-facing errors
-				Effect.succeed({ success: false, error: 'unknown' } as const),
-			),
-		),
-	)
+  return runServerEffect(
+    pipe(
+      Effect.tryPromise({
+        try: () =>
+          insertEditSuggestionMutation.run(session.client, {
+            diff: diff,
+            target_id: current.id,
+            snapshot: current,
+          }),
+        catch: (error) => new UnknownEdgeDBError(error),
+      }),
+      Effect.map(
+        (createdObject) =>
+          ({
+            success: true,
+            redirectTo: paths.editSuggestion(createdObject.id),
+            message: {
+              title: 'Sugestão de edição enviada',
+              description:
+                'Recebemos sua sugestão e vamos avaliar em breve - brigadin! 🤗',
+            },
+          }) as const,
+      ),
+      ...buildTraceAndMetrics('insert_edit_suggestion', {
+        vegetable_id: current.id,
+      }),
+    ).pipe(
+      Effect.catchAll(() =>
+        // @TODO: better user-facing errors
+        Effect.succeed({ success: false, error: 'unknown' } as const),
+      ),
+    ),
+  )
 }
 
 function diffVegetableForDB({
-	current,
-	updated,
+  current,
+  updated,
 }: {
-	current: VegetableForDBWithImages
-	updated: VegetableForDBWithImages
+  current: VegetableForDBWithImages
+  updated: VegetableForDBWithImages
 }) {
-	return jsonDiff(current, updated, {
-		embeddedObjKeys: {
-			photos: 'id',
-			sources: 'id',
-			varieties: 'id',
-			tips: 'id',
-			'tips.sources': 'id',
-			'varieties.photos': 'id',
-		},
-	})
+  return jsonDiff(current, updated, {
+    embeddedObjKeys: {
+      photos: 'id',
+      sources: 'id',
+      varieties: 'id',
+      tips: 'id',
+      'tips.sources': 'id',
+      'varieties.photos': 'id',
+    },
+  })
 }

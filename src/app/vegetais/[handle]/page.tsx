@@ -8,35 +8,35 @@ import VegetablePage from './VegetablePage'
 import getVegetableMetadata from './getVegetableMetadata'
 
 function getRouteData(handle: string) {
-	const session = auth.getSession()
+  const session = auth.getSession()
 
-	return runServerEffect(
-		pipe(
-			Effect.tryPromise({
-				try: () => vegetablePageQuery.run(session.client, { handle }),
-				catch: (error) => console.log(error),
-			}),
-			...buildTraceAndMetrics('vegetable_page', { handle }),
-		).pipe(Effect.catchAll(() => Effect.succeed(null))),
-	)
+  return runServerEffect(
+    pipe(
+      Effect.tryPromise({
+        try: () => vegetablePageQuery.run(session.client, { handle }),
+        catch: (error) => console.log(error),
+      }),
+      ...buildTraceAndMetrics('vegetable_page', { handle }),
+    ).pipe(Effect.catchAll(() => Effect.succeed(null))),
+  )
 }
 
 export async function generateMetadata({
-	params,
+  params,
 }: {
-	params: { handle: string }
+  params: { handle: string }
 }): Promise<Metadata> {
-	return getVegetableMetadata(await getRouteData(params.handle))
+  return getVegetableMetadata(await getRouteData(params.handle))
 }
 
 export default async function VegetableRoute({
-	params: { handle },
+  params: { handle },
 }: {
-	params: { handle: string }
+  params: { handle: string }
 }) {
-	const vegetable = await getRouteData(handle)
+  const vegetable = await getRouteData(handle)
 
-	if (!vegetable) return notFound()
+  if (!vegetable) return notFound()
 
-	return <VegetablePage vegetable={vegetable} />
+  return <VegetablePage vegetable={vegetable} />
 }

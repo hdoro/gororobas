@@ -7,33 +7,33 @@ import { Button } from './ui/button'
 import { Text } from './ui/text'
 
 export function ContributionCTA({ customCTA }: { customCTA?: JSX.Element }) {
-	return (
-		<section className="my-36 px-pageX text-center md:max-w-lg mx-auto box-content">
-			<SparklesIcon variant="color" className="w-12 inline-block mb-3" />
-			<Text level="h2" as="h2">
-				Gororobas é um espaço colaborativo
-			</Text>
-			<Text>
-				Iríamos adorar receber suas notinhas ou conhecimento sobre plantas e
-				agroecologia{' '}
-			</Text>
-			<div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-5">
-				<Button asChild tone="secondary" mode="outline">
-					<Link href={paths.newNote()}>
-						<NoteIcon variant="monochrome" className="w-[1.25em]" /> Envie sua
-						nota
-					</Link>
-				</Button>
-				<span className="text-muted-foreground">ou</span>
-				{customCTA || (
-					<Button asChild>
-						<Link href={paths.newVegetable()}>
-							<SeedlingIcon variant="monochrome" className="w-[1.25em]" /> Envie
-							um novo vegetal
-						</Link>
-					</Button>
-				)}
-			</div>
-		</section>
-	)
+  return (
+    <section className="mx-auto my-36 box-content px-pageX text-center md:max-w-lg">
+      <SparklesIcon variant="color" className="mb-3 inline-block w-12" />
+      <Text level="h2" as="h2">
+        Gororobas é um espaço colaborativo
+      </Text>
+      <Text>
+        Iríamos adorar receber suas notinhas ou conhecimento sobre plantas e
+        agroecologia{' '}
+      </Text>
+      <div className="mt-5 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <Button asChild tone="secondary" mode="outline">
+          <Link href={paths.newNote()}>
+            <NoteIcon variant="monochrome" className="w-[1.25em]" /> Envie sua
+            nota
+          </Link>
+        </Button>
+        <span className="text-muted-foreground">ou</span>
+        {customCTA || (
+          <Button asChild>
+            <Link href={paths.newVegetable()}>
+              <SeedlingIcon variant="monochrome" className="w-[1.25em]" /> Envie
+              um novo vegetal
+            </Link>
+          </Button>
+        )}
+      </div>
+    </section>
+  )
 }

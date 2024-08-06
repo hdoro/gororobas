@@ -8,44 +8,44 @@ import { Config, Effect, FiberRef, Layer, LogLevel, Secret } from 'effect'
 
 // `nested` means secrets are prefixed by `HONEYCOMB_`
 const HoneycombConfig = Config.nested('HONEYCOMB')(
-	Config.all({
-		apiKey: Config.secret('API_KEY'),
-		serviceName: Config.secret('DATASET'),
-	}),
+  Config.all({
+    apiKey: Config.secret('API_KEY'),
+    serviceName: Config.secret('DATASET'),
+  }),
 )
 
 export const TracingLive = Layer.unwrapEffect(
-	Effect.gen(function* (_) {
-		const config = yield* _(Config.option(HoneycombConfig))
-		if (config._tag !== 'Some') {
-			return DevTools.layer().pipe(
-				Layer.locally(FiberRef.currentMinimumLogLevel, LogLevel.None),
-			)
-		}
+  Effect.gen(function* (_) {
+    const config = yield* _(Config.option(HoneycombConfig))
+    if (config._tag !== 'Some') {
+      return DevTools.layer().pipe(
+        Layer.locally(FiberRef.currentMinimumLogLevel, LogLevel.None),
+      )
+    }
 
-		const { apiKey, serviceName } = config.value
-		const headers = {
-			'X-Honeycomb-Team': Secret.value(apiKey),
-			'X-Honeycomb-Dataset': Secret.value(serviceName),
-		}
+    const { apiKey, serviceName } = config.value
+    const headers = {
+      'X-Honeycomb-Team': Secret.value(apiKey),
+      'X-Honeycomb-Dataset': Secret.value(serviceName),
+    }
 
-		return NodeSdk.layer(() => ({
-			resource: {
-				serviceName: Secret.value(serviceName),
-			},
-			spanProcessor: new BatchSpanProcessor(
-				new OTLPTraceExporter({
-					url: 'https://api.honeycomb.io/v1/traces',
-					headers,
-				}),
-			),
-			metricReader: new PeriodicExportingMetricReader({
-				exporter: new OTLPMetricExporter({
-					url: 'https://api.honeycomb.io/v1/metrics',
-					headers,
-				}),
-				exportIntervalMillis: 5000,
-			}),
-		}))
-	}),
+    return NodeSdk.layer(() => ({
+      resource: {
+        serviceName: Secret.value(serviceName),
+      },
+      spanProcessor: new BatchSpanProcessor(
+        new OTLPTraceExporter({
+          url: 'https://api.honeycomb.io/v1/traces',
+          headers,
+        }),
+      ),
+      metricReader: new PeriodicExportingMetricReader({
+        exporter: new OTLPMetricExporter({
+          url: 'https://api.honeycomb.io/v1/metrics',
+          headers,
+        }),
+        exportIntervalMillis: 5000,
+      }),
+    }))
+  }),
 )

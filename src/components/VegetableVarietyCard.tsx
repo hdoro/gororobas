@@ -10,11 +10,11 @@ import {
 } from '@/components/ui/carousel'
 import type { VegetableVarietyCardData } from '@/queries'
 import { cn } from '@/utils/cn'
+import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import { useCallback, useEffect, useState } from 'react'
 import PhotoLabelAndSources from './PhotoLabelAndSources'
 import { SanityImage } from './SanityImage'
 import { Text } from './ui/text'
-import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 
 export default function VegetableVarietyCard({
   variety,

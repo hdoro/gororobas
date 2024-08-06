@@ -8,44 +8,44 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 export const metadata: Metadata = {
-	title: 'Sugestões em aberto | Gororobas',
-	robots: {
-		index: false,
-		follow: false,
-	},
+  title: 'Sugestões em aberto | Gororobas',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
 export default async function PendingSuggestionsIndex() {
-	const pendingSuggestions = await runServerEffect(
-		pipe(
-			Effect.tryPromise({
-				try: () => pendingSuggestionsIndexQuery.run(client),
-				catch: (error) => console.log(error),
-			}),
-			...buildTraceAndMetrics('pending_suggestions'),
-			Effect.catchAll(() => Effect.succeed(null)),
-		),
-	)
+  const pendingSuggestions = await runServerEffect(
+    pipe(
+      Effect.tryPromise({
+        try: () => pendingSuggestionsIndexQuery.run(client),
+        catch: (error) => console.log(error),
+      }),
+      ...buildTraceAndMetrics('pending_suggestions'),
+      Effect.catchAll(() => Effect.succeed(null)),
+    ),
+  )
 
-	if (!pendingSuggestions) {
-		notFound()
-	}
+  if (!pendingSuggestions) {
+    notFound()
+  }
 
-	return (
-		<main className="py-pageY px-pageX">
-			<Text level="h1" as="h1">
-				Sugestões em aberto
-			</Text>
-			<div className="flex flex-wrap gap-3 mt-6">
-				{pendingSuggestions.length === 0 && (
-					<Text level="p">
-						Não há sugestões precisando de revisão. Tudo certin ✨
-					</Text>
-				)}
-				{pendingSuggestions.map((suggestion) => (
-					<SuggestionCard key={suggestion.id} suggestion={suggestion} />
-				))}
-			</div>
-		</main>
-	)
+  return (
+    <main className="px-pageX py-pageY">
+      <Text level="h1" as="h1">
+        Sugestões em aberto
+      </Text>
+      <div className="mt-6 flex flex-wrap gap-3">
+        {pendingSuggestions.length === 0 && (
+          <Text level="p">
+            Não há sugestões precisando de revisão. Tudo certin ✨
+          </Text>
+        )}
+        {pendingSuggestions.map((suggestion) => (
+          <SuggestionCard key={suggestion.id} suggestion={suggestion} />
+        ))}
+      </div>
+    </main>
+  )
 }

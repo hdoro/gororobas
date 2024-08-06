@@ -7,42 +7,42 @@ import { notFound } from 'next/navigation'
 import SuggestionPage from './SuggestionPage'
 
 type RouteParams = {
-	suggestion_id: string
+  suggestion_id: string
 }
 
 async function getRouteData(params: RouteParams) {
-	return runServerEffect(
-		getEditSuggestionData(params.suggestion_id).pipe(
-			Effect.catchAll(() => Effect.succeed(null)),
-		),
-	)
+  return runServerEffect(
+    getEditSuggestionData(params.suggestion_id).pipe(
+      Effect.catchAll(() => Effect.succeed(null)),
+    ),
+  )
 }
 
 export async function generateMetadata({
-	params,
+  params,
 }: {
-	params: RouteParams
+  params: RouteParams
 }): Promise<Metadata> {
-	const data = await getRouteData(params)
-	if (!data?.target_object?.names) return {}
+  const data = await getRouteData(params)
+  if (!data?.target_object?.names) return {}
 
-	return {
-		title: `Sugestão de edição d${gender.suffix(data.toRender.gender || 'NEUTRO')} ${data.toRender.names[0]} | Gororobas`,
-		robots: {
-			index: false,
-			follow: false,
-		},
-	}
+  return {
+    title: `Sugestão de edição d${gender.suffix(data.toRender.gender || 'NEUTRO')} ${data.toRender.names[0]} | Gororobas`,
+    robots: {
+      index: false,
+      follow: false,
+    },
+  }
 }
 
 export default async function EditSuggestionRoute({
-	params,
+  params,
 }: {
-	params: RouteParams
+  params: RouteParams
 }) {
-	const data = await getRouteData(params)
+  const data = await getRouteData(params)
 
-	if (!data || !data.target_object) return notFound()
+  if (!data || !data.target_object) return notFound()
 
-	return <SuggestionPage data={data} />
+  return <SuggestionPage data={data} />
 }

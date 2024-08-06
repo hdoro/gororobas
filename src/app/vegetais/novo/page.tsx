@@ -4,11 +4,11 @@ import { redirect } from 'next/navigation'
 import NewVegetableForm from './NewVegetableForm'
 
 export default async function NewVegetableRoute() {
-	const session = auth.getSession()
+  const session = auth.getSession()
 
-	if (!(await session.isSignedIn())) {
-		redirect(paths.signinNotice(paths.newVegetable()))
-	}
+  if (!(await session.isSignedIn())) {
+    redirect(paths.signinNotice(paths.newVegetable()))
+  }
 
-	return <NewVegetableForm />
+  return <NewVegetableForm />
 }

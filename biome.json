@@ -31,10 +31,7 @@
 		},
 		"ignore": ["src/playground/**/*"]
 	},
-	"javascript": {
-		"formatter": {
-			"quoteStyle": "single",
-			"semicolons": "asNeeded"
-		}
+	"formatter": {
+		"enabled": false
 	}
 }

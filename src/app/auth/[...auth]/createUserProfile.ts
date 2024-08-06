@@ -6,39 +6,39 @@ import { getStandardHandle } from '@/utils/urls'
 import { Effect } from 'effect'
 
 export default function createUserProfile(
-	/** Keep track of retries to gauge how many auth callbacks are failing */
-	isRetry = false,
+  /** Keep track of retries to gauge how many auth callbacks are failing */
+  isRetry = false,
 ) {
-	return Effect.gen(function* (_) {
-		const userClient = auth.getSession().client.withConfig({
-			allow_user_specified_id: true,
-			// Skip access policies as users can't create `User` objects until they have their `UserProfile`
-			apply_access_policies: false,
-		})
+  return Effect.gen(function* (_) {
+    const userClient = auth.getSession().client.withConfig({
+      allow_user_specified_id: true,
+      // Skip access policies as users can't create `User` objects until they have their `UserProfile`
+      apply_access_policies: false,
+    })
 
-		const factorData = yield* _(
-			Effect.tryPromise({
-				try: () =>
-					userClient.querySingle<{ email?: string }>(`
+    const factorData = yield* _(
+      Effect.tryPromise({
+        try: () =>
+          userClient.querySingle<{ email?: string }>(`
       SELECT ext::auth::Factor {
         [is ext::auth::MagicLinkFactor].email
       } FILTER .identity = (global ext::auth::ClientTokenIdentity)
     `),
-				catch: () => {
-					console.error('Failed fetching user factor')
-					return Effect.succeed(null)
-				},
-			}),
-		)
+        catch: () => {
+          console.error('Failed fetching user factor')
+          return Effect.succeed(null)
+        },
+      }),
+    )
 
-		const userId = generateId()
-		const initialName = factorData?.email?.split('@')[0] || ''
-		const initialHandle = getStandardHandle(initialName || '', userId)
+    const userId = generateId()
+    const initialName = factorData?.email?.split('@')[0] || ''
+    const initialHandle = getStandardHandle(initialName || '', userId)
 
-		return yield* Effect.tryPromise({
-			try: () =>
-				userClient.query(
-					`
+    return yield* Effect.tryPromise({
+      try: () =>
+        userClient.query(
+          `
 					WITH user := (
 						INSERT User {
 							id := <uuid>$userId,
@@ -56,21 +56,21 @@ export default function createUserProfile(
             handle := <str>$initialHandle
           };
         `,
-					{
-						userId,
-						email: factorData?.email,
-						initialHandle,
-						initialName,
-					},
-				),
-			catch: (error) => {
-				console.error('Failed creating user profile', error)
-				return new UnknownEdgeDBError(error)
-			},
-		}).pipe(
-			...buildTraceAndMetrics('create_user_profile', {
-				isRetry,
-			}),
-		)
-	})
+          {
+            userId,
+            email: factorData?.email,
+            initialHandle,
+            initialName,
+          },
+        ),
+      catch: (error) => {
+        console.error('Failed creating user profile', error)
+        return new UnknownEdgeDBError(error)
+      },
+    }).pipe(
+      ...buildTraceAndMetrics('create_user_profile', {
+        isRetry,
+      }),
+    )
+  })
 }

@@ -1,4 +1,3 @@
-# https://github.com/mulungood/gororobas/blob/ce3b0f1621f86034efb3cf534a20391efc5c5a42/edgedb/default.esdl
 using extension auth;
 
 module default {

@@ -1,60 +1,60 @@
 export class FailedUploadingImageError {
-	readonly _tag = 'FailedUploadingImage'
+  readonly _tag = 'FailedUploadingImage'
 
-	constructor(
-		readonly error: unknown,
-		readonly file: File,
-	) {}
+  constructor(
+    readonly error: unknown,
+    readonly file: File,
+  ) {}
 }
 
 // @TODO differentiate errors from EdgeDB
 export class UnknownEdgeDBError {
-	readonly _tag = 'EdgeDBError'
+  readonly _tag = 'EdgeDBError'
 
-	constructor(
-		readonly error: unknown,
-		readonly query?: string,
-	) {}
+  constructor(
+    readonly error: unknown,
+    readonly query?: string,
+  ) {}
 }
 
 export class InvalidInputError {
-	readonly _tag = 'InvalidInput'
+  readonly _tag = 'InvalidInput'
 
-	constructor(
-		readonly input: unknown,
-		readonly schema: unknown,
-	) {}
+  constructor(
+    readonly input: unknown,
+    readonly schema: unknown,
+  ) {}
 }
 
 export class UnkownActionError {
-	readonly _tag = 'UnkownAction'
+  readonly _tag = 'UnkownAction'
 
-	constructor(readonly error: unknown) {}
+  constructor(readonly error: unknown) {}
 }
 
 export class FailedConvertingBlobError {
-	readonly _tag = 'FailedConvertingBlob'
+  readonly _tag = 'FailedConvertingBlob'
 
-	constructor(
-		readonly error: unknown,
-		readonly blob: Blob | File | string,
-	) {}
+  constructor(
+    readonly error: unknown,
+    readonly blob: Blob | File | string,
+  ) {}
 }
 
 export class SigninFailedError {
-	readonly _tag = 'SigninFailed'
+  readonly _tag = 'SigninFailed'
 
-	constructor(readonly error: unknown) {}
+  constructor(readonly error: unknown) {}
 }
 
 export class EmailNotVerifiedError {
-	readonly _tag = 'EmailNotVerified'
+  readonly _tag = 'EmailNotVerified'
 }
 
 export class UnauthorizedError {
-	readonly _tag = 'Unauthorized'
+  readonly _tag = 'Unauthorized'
 }
 
 export class NotFoundError {
-	readonly _tag = 'NotFound'
+  readonly _tag = 'NotFound'
 }

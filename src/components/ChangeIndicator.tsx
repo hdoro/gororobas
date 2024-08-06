@@ -1,6 +1,6 @@
 /** Must come in a parent with a non-static `position` */
 export default function ChangeIndicator() {
-	return (
-		<div className="w-0.5 h-full absolute top-0 left-0 -translate-x-2 bg-secondary-400 rounded-sm" />
-	)
+  return (
+    <div className="absolute left-0 top-0 h-full w-0.5 -translate-x-2 rounded-sm bg-secondary-400" />
+  )
 }

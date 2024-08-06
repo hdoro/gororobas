@@ -8,35 +8,35 @@ import UserProfilePage from './UserProfilePage'
 import getUserProfileMetadata from './getUserProfileMetadata'
 
 function getRouteData(handle: string) {
-	const session = auth.getSession()
+  const session = auth.getSession()
 
-	return runServerEffect(
-		pipe(
-			Effect.tryPromise({
-				try: () => userProfilePageQuery.run(session.client, { handle }),
-				catch: (error) => console.log(error),
-			}),
-			...buildTraceAndMetrics('user_profile_page', { handle }),
-		).pipe(Effect.catchAll(() => Effect.succeed(null))),
-	)
+  return runServerEffect(
+    pipe(
+      Effect.tryPromise({
+        try: () => userProfilePageQuery.run(session.client, { handle }),
+        catch: (error) => console.log(error),
+      }),
+      ...buildTraceAndMetrics('user_profile_page', { handle }),
+    ).pipe(Effect.catchAll(() => Effect.succeed(null))),
+  )
 }
 
 export async function generateMetadata({
-	params,
+  params,
 }: {
-	params: { handle: string }
+  params: { handle: string }
 }): Promise<Metadata> {
-	return getUserProfileMetadata(await getRouteData(params.handle))
+  return getUserProfileMetadata(await getRouteData(params.handle))
 }
 
 export default async function UserProfileRoute({
-	params: { handle },
+  params: { handle },
 }: {
-	params: { handle: string }
+  params: { handle: string }
 }) {
-	const profile = await getRouteData(handle)
+  const profile = await getRouteData(handle)
 
-	if (!profile) return notFound()
+  if (!profile) return notFound()
 
-	return <UserProfilePage profile={profile} />
+  return <UserProfilePage profile={profile} />
 }

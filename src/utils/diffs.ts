@@ -7,14 +7,14 @@ import { diff as jsonDiff } from 'json-diff-ts'
  * value includes the entire root-level property.
  */
 export function getChangedObjectSubset<A extends object>(data: {
-	prev: A
-	next: A
+  prev: A
+  next: A
 }) {
-	return Object.fromEntries(
-		jsonDiff(data.prev, data.next).map((diff) => {
-			return [diff.key, data.next[diff.key as keyof A] || undefined]
-		}),
-	) as Partial<A>
+  return Object.fromEntries(
+    jsonDiff(data.prev, data.next).map((diff) => {
+      return [diff.key, data.next[diff.key as keyof A] || undefined]
+    }),
+  ) as Partial<A>
 }
 
 /**
@@ -22,11 +22,11 @@ export function getChangedObjectSubset<A extends object>(data: {
  * This function removes them from the object. Used by diffs.
  */
 export function removeNullishKeys<Obj extends object>(data: Obj) {
-	return Object.fromEntries(
-		Object.entries(data).filter(([, value]) => {
-			if (value === undefined || value === null) return false
+  return Object.fromEntries(
+    Object.entries(data).filter(([, value]) => {
+      if (value === undefined || value === null) return false
 
-			return true
-		}),
-	) as Obj
+      return true
+    }),
+  ) as Obj
 }

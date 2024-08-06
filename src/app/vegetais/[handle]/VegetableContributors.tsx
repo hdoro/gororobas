@@ -5,9 +5,9 @@ import SparklesIcon from '@/components/icons/SparklesIcon'
 import { Text } from '@/components/ui/text'
 import { client } from '@/edgedb'
 import {
-	type SourceCardData,
-	type VegetablePageData,
-	editHistoryQuery,
+  type SourceCardData,
+  type VegetablePageData,
+  editHistoryQuery,
 } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { generateId } from '@/utils/ids'
@@ -15,99 +15,99 @@ import { gender } from '@/utils/strings'
 import { Effect, pipe } from 'effect'
 
 const fetchEditHistory = (vegetable_id: string) =>
-	pipe(
-		Effect.tryPromise({
-			try: () =>
-				editHistoryQuery.run(
-					client.withConfig({
-						// Edit suggestions aren't public - we only allow reading them from the vegetable page so we can render the user list
-						apply_access_policies: false,
-					}),
-					{
-						vegetable_id,
-					},
-				),
-			catch: (error) => console.log(error),
-		}),
-		...buildTraceAndMetrics('edit_history', { vegetable_id }),
-		Effect.catchAll(() => Effect.succeed(null)),
-	)
+  pipe(
+    Effect.tryPromise({
+      try: () =>
+        editHistoryQuery.run(
+          client.withConfig({
+            // Edit suggestions aren't public - we only allow reading them from the vegetable page so we can render the user list
+            apply_access_policies: false,
+          }),
+          {
+            vegetable_id,
+          },
+        ),
+      catch: (error) => console.log(error),
+    }),
+    ...buildTraceAndMetrics('edit_history', { vegetable_id }),
+    Effect.catchAll(() => Effect.succeed(null)),
+  )
 
 export default async function VegetableContributors({
-	vegetable,
+  vegetable,
 }: {
-	vegetable: VegetablePageData
+  vegetable: VegetablePageData
 }) {
-	const acceptedSuggestions = await runServerEffect(
-		fetchEditHistory(vegetable.id),
-	)
+  const acceptedSuggestions = await runServerEffect(
+    fetchEditHistory(vegetable.id),
+  )
 
-	const allSources = [
-		...(vegetable.tips || []).flatMap((tip) => tip?.sources || []),
-		...(vegetable.photos || []).flatMap((photo) => photo?.sources || []),
-		...(vegetable.varieties || []).flatMap(
-			(variety) =>
-				variety?.photos?.flatMap((photo) => photo?.sources || []) || [],
-		),
-		...(vegetable.sources || []),
-		...(acceptedSuggestions || []).flatMap((suggestion) => {
-			if (!suggestion.created_by) return []
+  const allSources = [
+    ...(vegetable.tips || []).flatMap((tip) => tip?.sources || []),
+    ...(vegetable.photos || []).flatMap((photo) => photo?.sources || []),
+    ...(vegetable.varieties || []).flatMap(
+      (variety) =>
+        variety?.photos?.flatMap((photo) => photo?.sources || []) || [],
+    ),
+    ...(vegetable.sources || []),
+    ...(acceptedSuggestions || []).flatMap((suggestion) => {
+      if (!suggestion.created_by) return []
 
-			return {
-				id: generateId(),
-				type: 'GOROROBAS',
-				users: [{ ...suggestion.created_by, id: generateId() }],
-				credits: null,
-				origin: null,
-				comments: null,
-			} satisfies SourceCardData
-		}),
-	]
-	const internalSources = allSources.flatMap((source, index) => {
-		if (source?.type !== 'GOROROBAS') return []
+      return {
+        id: generateId(),
+        type: 'GOROROBAS',
+        users: [{ ...suggestion.created_by, id: generateId() }],
+        credits: null,
+        origin: null,
+        comments: null,
+      } satisfies SourceCardData
+    }),
+  ]
+  const internalSources = allSources.flatMap((source, index) => {
+    if (source?.type !== 'GOROROBAS') return []
 
-		return {
-			...source,
-			// de-duplicate users that show up in multiple sources
-			users: source.users.filter(
-				(user) =>
-					!allSources
-						.slice(index + 1)
-						.some(
-							(s) =>
-								s.type === 'GOROROBAS' &&
-								s.users.some((u) => u.handle === user.handle),
-						),
-			),
-		}
-	})
+    return {
+      ...source,
+      // de-duplicate users that show up in multiple sources
+      users: source.users.filter(
+        (user) =>
+          !allSources
+            .slice(index + 1)
+            .some(
+              (s) =>
+                s.type === 'GOROROBAS' &&
+                s.users.some((u) => u.handle === user.handle),
+            ),
+      ),
+    }
+  })
 
-	if (
-		(!acceptedSuggestions || acceptedSuggestions.length === 0) &&
-		internalSources.length === 0
-	) {
-		return null
-	}
+  if (
+    (!acceptedSuggestions || acceptedSuggestions.length === 0) &&
+    internalSources.length === 0
+  ) {
+    return null
+  }
 
-	return (
-		<section className="my-36" id="contribuintes">
-			<SectionTitle Icon={SparklesIcon}>Quem contribuiu</SectionTitle>
-			<div className="px-pageX">
-				<Text level="h3" className="font-normal">
-					Pessoas no Gororobas que contribuíram com fotos, dicas e/ou edições
-				</Text>
-				<SourcesGrid sources={internalSources} className="flex-1 gap-8 mt-3" />
-				{acceptedSuggestions && acceptedSuggestions.length > 0 && (
-					<div className="space-y-3 py-4 px-6 bg-background-card rounded-md mt-6 border-2">
-						<Text as="h3">
-							Últimas mudanças na página d
-							{gender.suffix(vegetable.gender || 'NEUTRO')} {vegetable.names[0]}
-						</Text>
+  return (
+    <section className="my-36" id="contribuintes">
+      <SectionTitle Icon={SparklesIcon}>Quem contribuiu</SectionTitle>
+      <div className="px-pageX">
+        <Text level="h3" className="font-normal">
+          Pessoas no Gororobas que contribuíram com fotos, dicas e/ou edições
+        </Text>
+        <SourcesGrid sources={internalSources} className="mt-3 flex-1 gap-8" />
+        {acceptedSuggestions && acceptedSuggestions.length > 0 && (
+          <div className="mt-6 space-y-3 rounded-md border-2 bg-background-card px-6 py-4">
+            <Text as="h3">
+              Últimas mudanças na página d
+              {gender.suffix(vegetable.gender || 'NEUTRO')} {vegetable.names[0]}
+            </Text>
 
-						<SuggestionsGrid suggestions={acceptedSuggestions} />
-					</div>
-				)}
-			</div>
-		</section>
-	)
+            <SuggestionsGrid suggestions={acceptedSuggestions} />
+          </div>
+        )}
+      </div>
+    </section>
+  )
 }
