@@ -89,7 +89,7 @@ export default function VegetablePage({
       {Array.isArray(vegetable.varieties) && vegetable.varieties.length > 0 && (
         <section className="my-36" id="variedades">
           <SectionTitle Icon={RainbowIcon}>Variedades</SectionTitle>
-          <div className="hide-scrollbar mt-3 flex w-max gap-20 overflow-x-auto px-pageX">
+          <div className="hide-scrollbar mt-3 flex gap-20 overflow-x-auto px-pageX">
             {vegetable.varieties.map((variety) => (
               <VegetableVarietyCard key={variety.handle} variety={variety} />
             ))}
