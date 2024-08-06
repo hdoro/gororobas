@@ -87,12 +87,15 @@ const noteForCard = e.shape(e.Note, (note) => ({
 	filter: e.op(note.public, '=', true),
 }))
 
+type NoteForCardResult = Exclude<$infer<typeof noteForCard>, null>[number]
 export type NoteCardData = Omit<
-	Exclude<$infer<typeof noteForCard>, null>[number],
-	'published_at'
+	NoteForCardResult,
+	'published_at' | 'created_by'
 > & {
 	/** When sending over the wire via API routes, the Date gets serialized to an ISOString */
 	published_at: Date | string
+	/** In UserProfilePage (userProfilePageQuery), created_by isn't fetched */
+	created_by?: NoteForCardResult['created_by']
 }
 
 const vegetableVarietyForCard = e.shape(e.VegetableVariety, (variety) => ({
@@ -529,6 +532,7 @@ export const vegetablesIndexQuery = e.params(
 				),
 			]
 
+			// @ts-expect-error
 			const finalFilter = filterOps.reduce((finalFilter, op) => {
 				if (finalFilter === null) return op
 				return e.op(finalFilter, 'and', op)

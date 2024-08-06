@@ -596,11 +596,8 @@ export const updateVegetableMutation = e.params(
 		e.update(e.Vegetable, (existingVegetable) => ({
 			filter_single: e.op(existingVegetable.id, '=', params.id),
 			set: {
-				// @ts-expect-error erroing out for some unknown reason
 				names: e.op(params.names, '??', existingVegetable.names),
-				// @ts-expect-error erroing out for some unknown reason
 				scientific_names: e.op(
-					// @ts-expect-error erroing out for some unknown reason
 					params.scientific_names,
 					'??',
 					existingVegetable.scientific_names,
