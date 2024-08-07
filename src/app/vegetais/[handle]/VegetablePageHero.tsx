@@ -1,18 +1,8 @@
 import ChangeIndicator from '@/components/ChangeIndicator'
-import PhotoLabelAndSources from '@/components/PhotoLabelAndSources'
-import { SanityImage } from '@/components/SanityImage'
 import { Badge } from '@/components/ui/badge'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel'
 import { Text } from '@/components/ui/text'
 import type { VegetablePageData } from '@/queries'
 import { cn } from '@/utils/cn'
-import { getImageDimensions } from '@/utils/getImageProps'
 import {
   EDIBLE_PART_TO_LABEL,
   PLANTING_METHOD_TO_LABEL,
@@ -20,9 +10,10 @@ import {
   USAGE_TO_LABEL,
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
-import { average, formatCentimeters } from '@/utils/numbers'
+import { formatCentimeters } from '@/utils/numbers'
 import { gender } from '@/utils/strings'
 import { Fragment, Suspense } from 'react'
+import { VegetableHeroPhotos } from './VegetableHeroPhotos'
 import WishlistButtonData from './WishlistButtonData'
 
 export type VegetablePageHeroData = Omit<
@@ -38,28 +29,12 @@ export function VegetablePageHero({
   /** In the context of EditSuggestions, this is an array of keys that changed in the hero */
   diffKeys?: (keyof VegetablePageHeroData)[]
 }) {
-  const mainImage = vegetable.photos?.[0]
   const { names = [], scientific_names = [] } = vegetable
 
-  const mainImageAspectRatio =
-    mainImage && getImageDimensions(mainImage)?.aspectRatio
-  const carouselPhotos = [
-    ...(vegetable.photos || []).slice(1),
+  const allPhotos = [
+    ...(vegetable.photos || []),
     ...(vegetable.varieties || []).flatMap((v) => v.photos || []),
   ].flatMap((p) => (p.sanity_id ? p : []))
-
-  const aspectRatios = [mainImage, ...carouselPhotos].flatMap(
-    (image) => (image && getImageDimensions(image)?.aspectRatio) || [],
-  )
-  const averageAspectRatio = average(aspectRatios)
-
-  /** in pixels */
-  const MAIN_IMAGE_WIDTH = 320
-  // by forcing horizontal/square main image to grow a bit, we allow the carousel to be less horizontally stretched
-  const MAIN_IMAGE_SIZE_INCREASE =
-    mainImageAspectRatio && mainImageAspectRatio > 1 ? 1.3 : 1
-  const maxImageHeight =
-    Math.round(MAIN_IMAGE_WIDTH / averageAspectRatio) * MAIN_IMAGE_SIZE_INCREASE
 
   return (
     <div className="max-w-[53.125rem] flex-[5]">
@@ -82,65 +57,7 @@ export function VegetablePageHero({
         )}
       </div>
 
-      {vegetable.photos && mainImage?.sanity_id && (
-        <div
-          className={cn(
-            'mt-5 flex flex-col gap-5 overflow-hidden lg:flex-row',
-            diffKeys?.includes('photos') && 'relative overflow-visible',
-          )}
-          style={{
-            '--max-height': `${maxImageHeight / 16}rem`,
-          }}
-        >
-          {diffKeys?.includes('photos') && <ChangeIndicator />}
-          <div className="relative z-10 max-h-[80dvh] flex-1 rounded-2xl object-cover lg:max-h-[var(--max-height)] lg:max-w-80">
-            <SanityImage
-              image={mainImage}
-              maxWidth={320}
-              className="relative z-10 h-full max-h-[inherit] w-full rounded-2xl object-cover"
-              fetchPriority="high"
-              loading="eager"
-            />
-            {/* Hides the left-most piece of the carousel images to fully show the main image's border */}
-            <div
-              aria-hidden
-              className="absolute left-0 top-0 h-full w-6 bg-white"
-            />
-          </div>
-          {carouselPhotos.length > 0 && (
-            <Carousel
-              className={'max-h-[80dvh] flex-1 lg:max-h-[var(--max-height)]'}
-              opts={{
-                loop: true,
-              }}
-            >
-              <CarouselContent className="ml-0 space-x-5" rootClassName="">
-                {carouselPhotos.map((photo, idx) => {
-                  return (
-                    <CarouselItem
-                      key={photo.sanity_id || idx}
-                      className="relative flex justify-center overflow-hidden rounded-2xl bg-stone-200 pl-0"
-                    >
-                      <SanityImage
-                        image={photo}
-                        maxWidth={520}
-                        className={
-                          'h-full max-h-[80dvh] w-auto object-contain object-center lg:max-h-[var(--max-height)]'
-                        }
-                      />
-                      <PhotoLabelAndSources photo={photo} />
-                    </CarouselItem>
-                  )
-                })}
-              </CarouselContent>
-              <div className="absolute bottom-4 right-2 flex items-center gap-2.5">
-                <CarouselPrevious className="relative left-0 top-0 translate-x-0 translate-y-0 bg-white" />
-                <CarouselNext className="relative left-0 top-0 translate-x-0 translate-y-0 bg-white" />
-              </div>
-            </Carousel>
-          )}
-        </div>
-      )}
+      <VegetableHeroPhotos photos={allPhotos} />
 
       <div className="mt-10 space-y-8">
         {names.length > 1 && (
