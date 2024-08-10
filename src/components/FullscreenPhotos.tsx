@@ -73,24 +73,41 @@ function FullscreenPhotosInner({
   const activePhoto = photos[currentIndex]
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="block! h-screen max-h-[95dvh] w-screen max-w-[95dvw] py-2">
-        <DialogBody className="grid h-full grid-rows-[1fr_max-content] gap-2 overflow-hidden px-0 pb-0">
+      <DialogContent
+        style={{
+          '--dialog-h': '95dvh',
+          '--dialog-w': '95dvw',
+          '--picker-height': '3.125rem',
+          // Dialog's padding: py-2;
+          '--dialog-padding': '0.5rem',
+          '--picker-photo-gap': '0.5rem',
+          '--photo-height':
+            photos.length > 1
+              ? 'calc(var(--dialog-h) - var(--picker-height) - var(--dialog-padding) * 2 - var(--picker-photo-gap))'
+              : 'calc(var(--dialog-h) - var(--dialog-padding) * 2)',
+          padding: 'var(--dialog-padding) 0',
+        }}
+        className="block! h-screen max-h-[var(--dialog-h)] w-screen max-w-[var(--dialog-w)]"
+      >
+        <DialogBody className="h-full overflow-hidden px-0 pb-0">
           {activePhoto && (
-            <>
+            <div className="w-ful relative h-[var(--photo-height)]">
               <SanityImage
                 image={activePhoto}
                 maxWidth="100vw"
                 className={'size-full object-contain object-center'}
               />
-              <PhotoLabelAndSources
-                photo={activePhoto}
-                className="bottom-auto top-4"
-              />
-            </>
+              <PhotoLabelAndSources photo={activePhoto} />
+            </div>
           )}
 
           {photos.length > 1 && (
-            <div className="space-x-1 overflow-x-auto overflow-y-visible text-center">
+            <div
+              className="space-x-1 overflow-x-auto overflow-y-visible text-center"
+              style={{
+                marginTop: 'var(--picker-photo-gap)',
+              }}
+            >
               {photos.map((photo, idx) => {
                 const isActive = idx === currentIndex
                 return (

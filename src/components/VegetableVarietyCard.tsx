@@ -44,13 +44,11 @@ export default function VegetableVarietyCard({
           </Text>
           {variety.names.length > 1 && (
             <ul className="hide-scrollbar scrollbar-gradient-y relative max-h-28 space-y-1 overflow-y-auto">
-              {[...variety.names, ...variety.names, ...variety.names]
-                .slice(1)
-                .map((name) => (
-                  <li key={name} className="leading-tight">
-                    {name}
-                  </li>
-                ))}
+              {variety.names.slice(1).map((name) => (
+                <li key={name} className="leading-tight">
+                  {name}
+                </li>
+              ))}
             </ul>
           )}
         </div>
