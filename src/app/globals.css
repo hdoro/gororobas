@@ -260,16 +260,38 @@ body {
   }
 }
 
-.scrollbar-gradient {
+.scrollbar-gradient-y,
+.scrollbar-gradient-x {
   @apply relative;
 }
 
-.scrollbar-gradient:after {
-  @apply sticky inset-x-0 -bottom-1 block h-4;
+.scrollbar-gradient-y::after,
+.scrollbar-gradient-x::after {
+  @apply sticky block;
   content: '';
+  pointer-events: none;
+}
+
+.scrollbar-gradient-y::after {
+  @apply inset-x-0 -bottom-1 h-4;
   background: linear-gradient(
     hsl(var(--background) / 0) 0%,
     hsl(var(--background)) 60%
   );
-  pointer-events: none;
+}
+
+/* @TODO debug why after element isn't being sized or positioned correctly with sticky, even width gets ignored.
+  - Chrome: 16px width, but 0 height
+  - Firefox: inset-y-0 by itself doesn't set height; with h-full, I get 20 height, but 0 width
+  - Safari: ::after is nowhere to be seen
+
+  These errors don't happen with overflow-y and scrollbar-gradient-y.
+*/
+.scrollbar-gradient-x::after {
+  @apply inset-y-0 -right-1 left-auto h-full w-4;
+  background: linear-gradient(
+    90deg,
+    hsl(var(--background) / 0) 0%,
+    hsl(var(--background)) 60%
+  );
 }

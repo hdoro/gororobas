@@ -43,7 +43,7 @@ export default function VegetableVarietyCard({
             {variety.names[0]}
           </Text>
           {variety.names.length > 1 && (
-            <ul className="hide-scrollbar scrollbar-gradient relative max-h-28 space-y-1 overflow-y-auto">
+            <ul className="hide-scrollbar scrollbar-gradient-y relative max-h-28 space-y-1 overflow-y-auto">
               {[...variety.names, ...variety.names, ...variety.names]
                 .slice(1)
                 .map((name) => (

@@ -91,8 +91,8 @@ export default function NotesIndex() {
       !data.pages[0].notes ||
       data.pages[0].notes.length === 0)
   return (
-    <main className="flex flex-col gap-x-8 gap-y-4 px-pageX py-10 lg:flex-row-reverse lg:items-start">
-      <div className="sticky top-4 flex-[5] space-y-4">
+    <main className="space-y-6 px-pageX py-10">
+      <div className="space-y-1">
         <Text
           level="h1"
           as="h1"
@@ -103,84 +103,25 @@ export default function NotesIndex() {
             <Link href={paths.newNote()}>Enviar sua nota</Link>
           </Button>
         </Text>
-        <NotesGridWrapper className="relative justify-start py-4">
-          {isFetching && !isFetchingNextPage && (
-            <div className="absolute inset-0 flex items-center justify-center gap-3 bg-background bg-opacity-50">
-              <Carrot className="h-6 w-6 animate-spin" />
-              Carregando...
-            </div>
-          )}
-          {data?.pages?.map((page) => (
-            <React.Fragment key={page.queryParams.offset}>
-              {(page.notes || []).map((note) => (
-                <NoteCard
-                  key={note.handle}
-                  note={note}
-                  transform={getNoteCardTransform()}
-                />
-              ))}
-            </React.Fragment>
-          ))}
-          {isFetchingNextPage && (
-            <div className="flex items-center justify-center gap-3 py-10">
-              <Carrot className="h-6 w-6 animate-spin" />
-              Carregando...
-            </div>
-          )}
-        </NotesGridWrapper>
-        {/* EMPTY STATE */}
-        {isEmpty && (
-          <Card aria-live="polite">
-            <CardHeader>
-              <CardTitle>Nenhuma nota encontrada</CardTitle>
-              <Text>
-                Tem algum experimento ou aprendizado pra compartilhar?
-              </Text>
-            </CardHeader>
-            <CardContent>
-              <Button asChild>
-                <Link href={paths.newNote()}>Enviar uma nota</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-        {hasNextPage &&
-          !isFetchingNextPage &&
-          (autoFetchNextPage ? (
-            <InView
-              as="div"
-              onChange={(inView) => {
-                if (inView) {
-                  setAutoFetchNextPageCount(autoFetchNextPageCount + 1)
-                  fetchNextPage()
-                }
-              }}
-            />
-          ) : (
-            <div className="py-10 text-center">
-              <Button
-                onClick={() => {
-                  setAutoFetchNextPageCount(0)
-                  fetchNextPage()
-                }}
-                mode="outline"
-              >
-                Carregar próxima página
-              </Button>
-            </div>
-          ))}
+        <Text level="h2" as="p" className="max-w-md font-normal">
+          Aprendizados e experimentos na cozinha, no plantio e no sacolão
+        </Text>
       </div>
       <FormProvider {...form}>
-        <form className="sticky top-4 max-w-xs">
-          <Card className="lg:flex lg:max-h-[calc(100dvh_-_2rem)] lg:flex-col lg:overflow-hidden">
-            <CardHeader>
+        <form className="sticky top-2 z-10">
+          <Card className="pr-0">
+            <CardHeader className="sr-only">
               <CardTitle>Filtre os resultados</CardTitle>
             </CardHeader>
-            <CardContent className="hide-scrollbar space-y-6 lg:overflow-y-auto">
+            <CardContent className="py-0 pr-0 md:py-0">
               <Field
                 form={form}
                 name="types"
                 label="Tipo(s) de nota"
+                classNames={{
+                  root: 'flex space-y-0 gap-2 items-center',
+                  label: 'flex-[0_0_max-content]',
+                }}
                 render={({ field }) => (
                   <CheckboxesInput
                     field={field}
@@ -190,6 +131,7 @@ export default function NotesIndex() {
                         label,
                       }),
                     )}
+                    className="hide-scrollbar scrollbar-gradient-x w-full flex-nowrap overflow-x-auto overflow-y-visible px-1 py-2"
                   />
                 )}
               />
@@ -197,6 +139,70 @@ export default function NotesIndex() {
           </Card>
         </form>
       </FormProvider>
+      <NotesGridWrapper className="relative justify-start py-4">
+        {isFetching && !isFetchingNextPage && (
+          <div className="absolute inset-0 flex items-center justify-center gap-3 bg-background bg-opacity-50">
+            <Carrot className="h-6 w-6 animate-spin" />
+            Carregando...
+          </div>
+        )}
+        {data?.pages?.map((page) => (
+          <React.Fragment key={page.queryParams.offset}>
+            {(page.notes || []).map((note) => (
+              <NoteCard
+                key={note.handle}
+                note={note}
+                transform={getNoteCardTransform()}
+              />
+            ))}
+          </React.Fragment>
+        ))}
+        {isFetchingNextPage && (
+          <div className="flex items-center justify-center gap-3 py-10">
+            <Carrot className="h-6 w-6 animate-spin" />
+            Carregando...
+          </div>
+        )}
+      </NotesGridWrapper>
+      {/* EMPTY STATE */}
+      {isEmpty && (
+        <Card aria-live="polite">
+          <CardHeader>
+            <CardTitle>Nenhuma nota encontrada</CardTitle>
+            <Text>Tem algum experimento ou aprendizado pra compartilhar?</Text>
+          </CardHeader>
+          <CardContent>
+            <Button asChild>
+              <Link href={paths.newNote()}>Enviar uma nota</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+      {hasNextPage &&
+        !isFetchingNextPage &&
+        (autoFetchNextPage ? (
+          <InView
+            as="div"
+            onChange={(inView) => {
+              if (inView) {
+                setAutoFetchNextPageCount(autoFetchNextPageCount + 1)
+                fetchNextPage()
+              }
+            }}
+          />
+        ) : (
+          <div className="py-10 text-center">
+            <Button
+              onClick={() => {
+                setAutoFetchNextPageCount(0)
+                fetchNextPage()
+              }}
+              mode="outline"
+            >
+              Carregar próxima página
+            </Button>
+          </div>
+        ))}
     </main>
   )
 }

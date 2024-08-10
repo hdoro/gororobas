@@ -99,10 +99,15 @@ export default function VegetablesIndex() {
       data.pages[0].vegetables.length === 0)
   return (
     <main className="flex flex-col gap-x-8 gap-y-4 px-pageX py-10 lg:flex-row-reverse lg:items-start">
-      <div className="flex-[5] space-y-4 lg:sticky lg:top-4">
-        <Text level="h1" as="h1">
-          Vegetais
-        </Text>
+      <div className="flex-[5] space-y-6 lg:sticky lg:top-4">
+        <div className="space-y-1">
+          <Text level="h1" as="h1">
+            Vegetais
+          </Text>
+          <Text level="h2" as="p" className="font-normal">
+            Conhecimento em agroecologia sobre mais de 400 vegetais
+          </Text>
+        </div>
         <VegetablesGridWrapper>
           {isFetching && !isFetchingNextPage && (
             <div className="absolute inset-0 flex items-center justify-center gap-3 bg-background bg-opacity-50">

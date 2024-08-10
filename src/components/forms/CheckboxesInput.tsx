@@ -1,4 +1,5 @@
 import type { FormOption } from '@/types'
+import { cn } from '@/utils/cn'
 import type {
   ControllerRenderProps,
   FieldPath,
@@ -14,13 +15,15 @@ export default function CheckboxesInput<
 >({
   field,
   options,
+  className,
 }: {
   field: ControllerRenderProps<TFieldValues, TName>
   options: FormOption[]
+  className?: string
 }) {
   const value = (field.value || []) as string[]
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className={cn('flex flex-wrap gap-2', className)}>
       {options.map((option) => {
         const isChecked = value.includes(option.value)
         return (
