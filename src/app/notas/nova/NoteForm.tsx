@@ -5,6 +5,7 @@ import BooleanInput, {
   BOOLEAN_FIELD_CLASSNAMES,
 } from '@/components/forms/BooleanInput'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
+import DateInput from '@/components/forms/DateInput'
 import Field from '@/components/forms/Field'
 import RichTextInput from '@/components/forms/RichTextInput'
 import Carrot from '@/components/icons/Carrot'
@@ -152,14 +153,32 @@ export default function NoteForm() {
           <div className="flex-1 md:hidden" />
 
           <div className="flex items-center justify-between gap-4 border-t border-t-primary-100 bg-background-card px-pageX py-4 md:flex-col-reverse md:items-start md:border-t-0 md:bg-transparent md:p-0">
-            <Field
-              form={form}
-              name="public"
-              label="Pública"
-              classNames={BOOLEAN_FIELD_CLASSNAMES}
-              render={({ field }) => <BooleanInput field={field} />}
-            />
-            <Button size="lg" type="submit" disabled={form.formState.disabled}>
+            <div className="flex items-center gap-2 md:flex-col md:items-start">
+              <Field
+                form={form}
+                name="public"
+                label="Pública"
+                classNames={BOOLEAN_FIELD_CLASSNAMES}
+                render={({ field }) => <BooleanInput field={field} />}
+              />
+              <Field
+                form={form}
+                name="published_at"
+                label="Publicada em"
+                classNames={{
+                  label: 'sr-only',
+                  root: 'space-y-0 md:-ml-3',
+                }}
+                render={({ field }) => (
+                  <DateInput field={field} timeWindow="past" />
+                )}
+              />
+            </div>
+            <Button
+              type="submit"
+              disabled={form.formState.disabled}
+              className="md:h-11 md:px-9"
+            >
               Enviar
             </Button>
           </div>

@@ -15,7 +15,7 @@ const profileCardVariants = tv({
       'block object-cover rounded-full bg-background-card text-xs overflow-hidden',
     name: 'max-w-[16ch] truncate',
     location: '',
-    textContainer: 'space-y-2',
+    textContainer: '',
   },
   variants: {
     size: {
@@ -29,13 +29,13 @@ const profileCardVariants = tv({
       md: {
         root: 'gap-3',
         image: 'w-24 h-24',
-        name: 'text-lg',
+        name: 'text-lg md:text-lg',
       },
       lg: {
         root: 'gap-4',
         image: 'w-40 h-40',
-        name: 'text-4xl',
-        location: 'text-2xl',
+        name: 'text-2xl md:text-3xl',
+        location: 'text-xl md:text-xl',
       },
     },
     includeName: {
