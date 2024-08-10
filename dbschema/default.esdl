@@ -205,6 +205,7 @@ module default {
     crop: json;
 
     multi sources: Source {
+      order_index: int16;
       on target delete allow;
       on source delete allow;
     }
@@ -224,6 +225,7 @@ module default {
     required content: json;
 
     multi sources: Source {
+      order_index: int16;
       on target delete allow;
       on source delete allow;
     };
@@ -274,6 +276,8 @@ module default {
     };
 
     multi sources: Source {
+      order_index: int16;
+      
       on target delete allow;
       on source delete allow;
     };

@@ -121,7 +121,15 @@ const vegetableTipForCard = e.shape(e.VegetableTip, (tip) => ({
   handle: true,
   subjects: true,
   content: true,
-  sources: sourceForCard,
+  sources: (source) => ({
+    ...sourceForCard(source),
+
+    order_by: {
+      expression: source['@order_index'],
+      direction: 'ASC',
+      empty: e.EMPTY_LAST,
+    },
+  }),
 }))
 
 export type VegetableTipCardData = Exclude<

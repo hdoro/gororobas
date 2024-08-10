@@ -304,12 +304,15 @@ export const upsertImagesMutation = e.params(
               e.json_get(image.optional_properties, 'hotspot'),
             ),
             crop: e.cast(e.json, e.json_get(image.optional_properties, 'crop')),
-            sources: e.assert_distinct(
-              e.for(e.array_unpack(image.sources), (source) =>
-                e.select(e.Source, (v) => ({
-                  filter_single: e.op(v.id, '=', source.id),
-                  // '@order_index': variety.order_index,
-                })),
+            sources: e.op(
+              'distinct',
+              e.assert_distinct(
+                e.for(e.array_unpack(image.sources), (source) =>
+                  e.select(e.Source, (v) => ({
+                    filter: e.op(v.id, '=', source.id),
+                    '@order_index': source.order_index,
+                  })),
+                ),
               ),
             ),
           })
@@ -339,12 +342,15 @@ export const upsertImagesMutation = e.params(
               '??',
               existingImage.crop,
             ),
-            sources: e.assert_distinct(
-              e.for(e.array_unpack(image.sources), (source) =>
-                e.select(e.Source, (v) => ({
-                  filter_single: e.op(v.id, '=', source.id),
-                  // '@order_index': variety.order_index,
-                })),
+            sources: e.op(
+              'distinct',
+              e.assert_distinct(
+                e.for(e.array_unpack(image.sources), (source) =>
+                  e.select(e.Source, (v) => ({
+                    filter: e.op(v.id, '=', source.id),
+                    '@order_index': source.order_index,
+                  })),
+                ),
               ),
             ),
           },
@@ -390,12 +396,15 @@ export const upsertVegetableTipsMutation = e.params(
           handle: tip.handle,
           subjects: e.array_unpack(e.cast(e.array(e.TipSubject), tip.subjects)),
           content: tip.content,
-          sources: e.assert_distinct(
-            e.for(e.array_unpack(tip.sources), (source) =>
-              e.select(e.Source, (v) => ({
-                filter_single: e.op(v.id, '=', source.id),
-                // '@order_index': variety.order_index,
-              })),
+          sources: e.op(
+            'distinct',
+            e.assert_distinct(
+              e.for(e.array_unpack(tip.sources), (source) =>
+                e.select(e.Source, (v) => ({
+                  filter: e.op(v.id, '=', source.id),
+                  '@order_index': source.order_index,
+                })),
+              ),
             ),
           ),
         }),
@@ -423,23 +432,26 @@ export const upsertVegetableTipsMutation = e.params(
               existingTip.content,
             ),
             sources: e.op(
-              e.assert_distinct(
-                e.for(
-                  e.array_unpack(
-                    e.cast(
-                      REFERENCES_PARAM,
-                      e.json_get(tip.optional_properties, 'sources'),
+              'distinct',
+              e.op(
+                e.assert_distinct(
+                  e.for(
+                    e.array_unpack(
+                      e.cast(
+                        REFERENCES_PARAM,
+                        e.json_get(tip.optional_properties, 'sources'),
+                      ),
                     ),
+                    (source) =>
+                      e.select(e.Source, (s) => ({
+                        filter: e.op(s.id, '=', source.id),
+                        '@order_index': source.order_index,
+                      })),
                   ),
-                  (source) =>
-                    e.select(e.Source, (v) => ({
-                      filter_single: e.op(v.id, '=', source.id),
-                      // '@order_index': variety.order_index,
-                    })),
                 ),
+                '??',
+                existingTip.sources,
               ),
-              '??',
-              existingTip.sources,
             ),
           },
         })),
@@ -469,12 +481,15 @@ export const upsertVegetableVarietiesMutation = e.params(
             id: variety.id,
             handle: variety.handle,
             names: variety.names,
-            photos: e.assert_distinct(
-              e.for(e.array_unpack(variety.photos), (image) =>
-                e.select(e.Image, (v) => ({
-                  filter_single: e.op(v.id, '=', image.id),
-                  // '@order_index': variety.order_index,
-                })),
+            photos: e.op(
+              'distinct',
+              e.assert_distinct(
+                e.for(e.array_unpack(variety.photos), (image) =>
+                  e.select(e.Image, (v) => ({
+                    filter: e.op(v.id, '=', image.id),
+                    '@order_index': image.order_index,
+                  })),
+                ),
               ),
             ),
           })
@@ -484,12 +499,15 @@ export const upsertVegetableVarietiesMutation = e.params(
 
           set: {
             names: variety.names,
-            photos: e.assert_distinct(
-              e.for(e.array_unpack(variety.photos), (image) =>
-                e.select(e.Image, (v) => ({
-                  filter_single: e.op(v.id, '=', image.id),
-                  // '@order_index': variety.order_index,
-                })),
+            photos: e.op(
+              'distinct',
+              e.assert_distinct(
+                e.for(e.array_unpack(variety.photos), (image) =>
+                  e.select(e.Image, (v) => ({
+                    filter: e.op(v.id, '=', image.id),
+                    '@order_index': image.order_index,
+                  })),
+                ),
               ),
             ),
           },
@@ -555,28 +573,37 @@ export const insertVegetableMutation = e.params(
       ),
 
       // References
-      sources: e.assert_distinct(
-        e.for(e.array_unpack(params.sources), (source) =>
-          e.select(e.Source, (v) => ({
-            filter_single: e.op(v.id, '=', source.id),
-            // '@order_index': variety.order_index,
-          })),
+      sources: e.op(
+        'distinct',
+        e.assert_distinct(
+          e.for(e.array_unpack(params.sources), (source) =>
+            e.select(e.detached(e.Source), (v) => ({
+              filter: e.op(v.id, '=', source.id),
+              '@order_index': source.order_index,
+            })),
+          ),
         ),
       ),
-      photos: e.assert_distinct(
-        e.for(e.array_unpack(params.photos), (image) =>
-          e.select(e.Image, (v) => ({
-            filter_single: e.op(v.id, '=', image.id),
-            // '@order_index': variety.order_index,
-          })),
+      photos: e.op(
+        'distinct',
+        e.assert_distinct(
+          e.for(e.array_unpack(params.photos), (image) =>
+            e.select(e.Image, (v) => ({
+              filter: e.op(v.id, '=', image.id),
+              '@order_index': image.order_index,
+            })),
+          ),
         ),
       ),
-      varieties: e.assert_distinct(
-        e.for(e.array_unpack(params.varieties), (variety) =>
-          e.select(e.VegetableVariety, (v) => ({
-            filter_single: e.op(v.id, '=', variety.id),
-            // '@order_index': variety.order_index,
-          })),
+      varieties: e.op(
+        'distinct',
+        e.assert_distinct(
+          e.for(e.array_unpack(params.varieties), (variety) =>
+            e.select(e.VegetableVariety, (v) => ({
+              filter: e.op(v.id, '=', variety.id),
+              '@order_index': variety.order_index,
+            })),
+          ),
         ),
       ),
     }),
@@ -660,40 +687,49 @@ export const updateVegetableMutation = e.params(
 
         // References
         sources: e.op(
-          e.assert_distinct(
-            e.for(e.array_unpack(params.sources), (source) =>
-              e.select(e.Source, (v) => ({
-                // '@order_index': source.order_index,
-                filter_single: e.op(v.id, '=', source.id),
-              })),
+          'distinct',
+          e.op(
+            e.assert_distinct(
+              e.for(e.array_unpack(params.sources), (source) =>
+                e.select(e.Source, (v) => ({
+                  filter: e.op(v.id, '=', source.id),
+                  '@order_index': source.order_index,
+                })),
+              ),
             ),
+            '??',
+            existingVegetable.sources,
           ),
-          '??',
-          existingVegetable.sources,
         ),
         photos: e.op(
-          e.assert_distinct(
-            e.for(e.array_unpack(params.photos), (image) =>
-              e.select(e.Image, (v) => ({
-                // '@order_index': image.order_index,
-                filter_single: e.op(v.id, '=', image.id),
-              })),
+          'distinct',
+          e.op(
+            e.assert_distinct(
+              e.for(e.array_unpack(params.photos), (image) =>
+                e.select(e.Image, (v) => ({
+                  filter: e.op(v.id, '=', image.id),
+                  '@order_index': image.order_index,
+                })),
+              ),
             ),
+            '??',
+            existingVegetable.photos,
           ),
-          '??',
-          existingVegetable.photos,
         ),
         varieties: e.op(
-          e.assert_distinct(
-            e.for(e.array_unpack(params.varieties), (variety) =>
-              e.select(e.VegetableVariety, (v) => ({
-                filter: e.op(v.id, '=', variety.id),
-                // '@order_index': variety.order_index,
-              })),
+          'distinct',
+          e.op(
+            e.assert_distinct(
+              e.for(e.array_unpack(params.varieties), (variety) =>
+                e.select(e.VegetableVariety, (v) => ({
+                  filter: e.op(v.id, '=', variety.id),
+                  '@order_index': variety.order_index,
+                })),
+              ),
             ),
+            '??',
+            existingVegetable.varieties,
           ),
-          '??',
-          existingVegetable.varieties,
         ),
       },
     })),
