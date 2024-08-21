@@ -101,7 +101,11 @@ const SourceExternalInForm = S.Struct({
 export const SourceInForm = S.Union(SourceGororobasInForm, SourceExternalInForm)
 
 export const NewImageDataInForm = S.Struct({
-  file: FileSchema,
+  file: FileSchema.pipe(
+    S.annotations({
+      message: () => 'Imagem inválida',
+    }),
+  ),
 })
 
 export const StoredImageDataInForm = S.Struct({

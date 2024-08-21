@@ -180,7 +180,7 @@ const FormMessage = React.forwardRef<
       className={cn('mt-1 flex items-center gap-1 text-destructive', className)}
       {...props}
     >
-      <CircleAlertIcon className="size-[1.25em]" />
+      <CircleAlertIcon className="size-[1.25em] flex-[0_0_1.25em]" />
       {body}
     </Text>
   )

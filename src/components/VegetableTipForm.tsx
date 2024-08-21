@@ -14,7 +14,7 @@ import { useCallback, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import ArrayInput from './forms/ArrayInput'
 import CheckboxesInput from './forms/CheckboxesInput'
-import Field from './forms/Field'
+import Field, { ArrayField } from './forms/Field'
 import RichTextInput from './forms/RichTextInput'
 import SourceInput from './forms/SourceInput'
 import { Button } from './ui/button'
@@ -121,7 +121,7 @@ export default function VegetableTipForm(props: {
               />
             )}
           />
-          <Field
+          <ArrayField
             form={form}
             label="Fontes"
             name={'sources'}

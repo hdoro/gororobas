@@ -15,7 +15,7 @@ import { Button } from '../ui/button'
 import { FormControl } from '../ui/form'
 import { Input } from '../ui/input'
 import ArrayInput from './ArrayInput'
-import Field from './Field'
+import Field, { ArrayField } from './Field'
 import ImageDropzone from './ImageDropzone'
 import SourceInput from './SourceInput'
 
@@ -57,7 +57,7 @@ export default function ImageInput<
             />
           )}
         />
-        <Field
+        <ArrayField
           form={form}
           label="Fontes"
           name={`${rootField.name}.sources`}

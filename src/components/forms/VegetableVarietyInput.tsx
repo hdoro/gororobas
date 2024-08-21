@@ -21,7 +21,7 @@ import { SanityImage } from '../SanityImage'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import ArrayInput from './ArrayInput'
-import Field from './Field'
+import Field, { ArrayField } from './Field'
 import ImageInput from './ImageInput'
 
 export default function VegetableVarietyInput<
@@ -40,6 +40,12 @@ export default function VegetableVarietyInput<
   const { names = [] } = value
 
   const renderablePhoto = value.photos?.[0]
+  const validPhoto = !!(
+    (renderablePhoto &&
+      'file' in renderablePhoto &&
+      renderablePhoto.file instanceof File) ||
+    (renderablePhoto && 'sanity_id' in renderablePhoto)
+  )
   return (
     <Dialog>
       <DialogTrigger
@@ -50,7 +56,7 @@ export default function VegetableVarietyInput<
           <div
             className={cn(
               'h-[6.25rem] w-[6.25rem] flex-[0_0_6.25rem] overflow-hidden rounded-lg bg-card-foreground/5 text-primary-700',
-              renderablePhoto ? '' : 'flex items-center justify-center',
+              validPhoto ? '' : 'flex items-center justify-center',
             )}
           >
             {renderablePhoto &&
@@ -69,7 +75,7 @@ export default function VegetableVarietyInput<
                 className="h-full w-full object-contain"
               />
             ) : (
-              <ImageOffIcon />
+              <ImageOffIcon className="size-8 opacity-80" />
             )}
           </div>
           <div className="space-y-1 text-left">
@@ -103,7 +109,7 @@ export default function VegetableVarietyInput<
           </DialogClose>
         </DialogHeader>
         <DialogBody className="space-y-6">
-          <Field
+          <ArrayField
             label="Nomes"
             name={`${rootField.name}.names`}
             form={form}
@@ -125,7 +131,7 @@ export default function VegetableVarietyInput<
               />
             )}
           />
-          <Field
+          <ArrayField
             form={form}
             name={`${rootField.name}.photos`}
             label="Fotos"

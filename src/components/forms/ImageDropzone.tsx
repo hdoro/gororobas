@@ -59,6 +59,7 @@ export default function ImageDropzone<
     },
     onDropAccepted: (files) => {
       field.onChange(files[0])
+      field.onBlur()
     },
   })
 

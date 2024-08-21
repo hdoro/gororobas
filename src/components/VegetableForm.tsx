@@ -22,9 +22,10 @@ import {
   PLANTING_METHOD_TO_LABEL,
   STRATUM_TO_LABEL,
   USAGE_TO_LABEL,
+  VEGETABLE_FIELD_LABELS_MAP,
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
-import { VEGETABLE_FIELD_LABELS_MAP } from '@/utils/labels'
+import { gender } from '@/utils/strings'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Schema } from '@effect/schema'
 import { Effect, pipe } from 'effect'
@@ -38,7 +39,7 @@ import {
 } from 'react-hook-form'
 import ArrayInput from './forms/ArrayInput'
 import CheckboxesInput from './forms/CheckboxesInput'
-import Field from './forms/Field'
+import Field, { ArrayField } from './forms/Field'
 import HandleInput from './forms/HandleInput'
 import ImageInput from './forms/ImageInput'
 import NumberInput from './forms/NumberInput'
@@ -52,7 +53,6 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Text } from './ui/text'
 import { useToast } from './ui/use-toast'
-import { gender } from '@/utils/strings'
 
 export default function VegetableForm(props: {
   onSubmit: (vegetable: VegetableForDBWithImages) => Promise<
@@ -77,6 +77,7 @@ export default function VegetableForm(props: {
         ? props.initialValue
         : {
             id: generateId(),
+            handle: '',
           },
     disabled: status !== 'idle',
   })
@@ -187,7 +188,7 @@ export default function VegetableForm(props: {
                   <CardTitle>Visão geral</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <Field
+                  <ArrayField
                     label={VEGETABLE_FIELD_LABELS_MAP.names}
                     name="names"
                     form={form}
@@ -218,7 +219,7 @@ export default function VegetableForm(props: {
                       <HandleInput field={field} path="vegetais" />
                     )}
                   />
-                  <Field
+                  <ArrayField
                     name="scientific_names"
                     label={VEGETABLE_FIELD_LABELS_MAP.scientific_names}
                     form={form}
@@ -309,7 +310,7 @@ export default function VegetableForm(props: {
                       />
                     )}
                   />
-                  <Field
+                  <ArrayField
                     form={form}
                     name={'sources'}
                     label={VEGETABLE_FIELD_LABELS_MAP.sources}
@@ -341,7 +342,7 @@ export default function VegetableForm(props: {
                   <CardTitle>{VEGETABLE_FIELD_LABELS_MAP.photos}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Field
+                  <ArrayField
                     form={form}
                     name="photos"
                     label={VEGETABLE_FIELD_LABELS_MAP.photos}
@@ -373,7 +374,7 @@ export default function VegetableForm(props: {
                   <CardTitle>{VEGETABLE_FIELD_LABELS_MAP.varieties}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Field
+                  <ArrayField
                     form={form}
                     name="varieties"
                     label={VEGETABLE_FIELD_LABELS_MAP.varieties}

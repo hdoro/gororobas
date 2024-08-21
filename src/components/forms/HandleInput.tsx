@@ -35,6 +35,7 @@ export default function HandleInput<
           field.onBlur()
         }}
         className="rounded-l-none rounded-r-md"
+        value={field.value || ''}
       />
     </div>
   )
