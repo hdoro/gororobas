@@ -8,3 +8,7 @@ export const APP_NAME = 'Gororobas'
 
 export const VEGETABLES_PER_PAGE = 24
 export const NOTES_PER_PAGE = 24
+
+if (!BASE_URL) {
+  throw new Error('NEXT_PUBLIC_BASE_URL environment variable is not set')
+}

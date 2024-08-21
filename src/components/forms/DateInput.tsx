@@ -66,7 +66,6 @@ export default function DateInput<
             mode="single"
             selected={date}
             onSelect={(date) => field.onChange(date?.toISOString())}
-            initialFocus
             disabled={
               timeWindow === 'past'
                 ? (date) => date >= new Date()
