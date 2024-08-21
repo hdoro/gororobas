@@ -52,8 +52,27 @@ const vegetableForCard = e.shape(e.Vegetable, (vegetable) => ({
   photos: (image) => ({
     ...imageForRendering(image),
 
+    limit: 1,
     order_by: {
       expression: image['@order_index'],
+      direction: 'ASC',
+      empty: e.EMPTY_LAST,
+    },
+  }),
+  varieties: (variety) => ({
+    photos: (image) => ({
+      ...imageForRendering(image),
+
+      limit: 1,
+      order_by: {
+        expression: image['@order_index'],
+        direction: 'ASC',
+        empty: e.EMPTY_LAST,
+      },
+    }),
+
+    order_by: {
+      expression: variety['@order_index'],
       direction: 'ASC',
       empty: e.EMPTY_LAST,
     },
@@ -656,16 +675,8 @@ const editSuggestionForCard = e.shape(e.EditSuggestion, () => ({
   diff: true,
   target_object: (vegetable) => ({
     name: vegetableForCard(vegetable).name,
-    photos: (image) => ({
-      ...imageForRendering(image),
-
-      order_by: {
-        expression: image['@order_index'],
-        direction: 'ASC',
-        empty: e.EMPTY_LAST,
-      },
-      limit: 1,
-    }),
+    photos: vegetableForCard(vegetable).photos,
+    varieties: false,
   }),
 }))
 
@@ -715,16 +726,7 @@ export const pendingSuggestionsIndexQuery = e.select(
 export const homePageQuery = e.select({
   featured_vegetables: e.select(e.Vegetable, (vegetable) => ({
     ...vegetableForCard(vegetable),
-    photos: (image) => ({
-      ...imageForRendering(image),
-
-      order_by: {
-        expression: image['@order_index'],
-        direction: 'ASC',
-        empty: e.EMPTY_LAST,
-      },
-      limit: 1,
-    }),
+    varieties: false,
 
     filter: e.op('exists', vegetable.photos),
     limit: 16,

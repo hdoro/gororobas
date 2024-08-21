@@ -1,4 +1,4 @@
-import SuggestionCard from '@/components/SuggestionCard'
+import SuggestionsGrid from '@/components/SuggestionsGrid'
 import { Text } from '@/components/ui/text'
 import { client } from '@/edgedb'
 import { pendingSuggestionsIndexQuery } from '@/queries'
@@ -42,9 +42,7 @@ export default async function PendingSuggestionsIndex() {
             Não há sugestões precisando de revisão. Tudo certin ✨
           </Text>
         )}
-        {pendingSuggestions.map((suggestion) => (
-          <SuggestionCard key={suggestion.id} suggestion={suggestion} />
-        ))}
+        <SuggestionsGrid suggestions={pendingSuggestions} />
       </div>
     </main>
   )

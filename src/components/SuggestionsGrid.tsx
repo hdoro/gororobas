@@ -16,7 +16,7 @@ export default function SuggestionsGrid({
     <div
       {...props}
       className={cn(
-        'grid grid-cols-[repeat(auto-fill,_minmax(15rem,_1fr))] gap-3',
+        'grid grid-cols-[repeat(auto-fill,_minmax(20rem,_1fr))] gap-3',
         props.className,
       )}
     >

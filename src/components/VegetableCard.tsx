@@ -9,7 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
-import type { VegetableCardData } from '@/queries'
+import type { ImageForRenderingData, VegetableCardData } from '@/queries'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
@@ -24,7 +24,12 @@ export default function VegetableCard({
   vegetable: VegetableCardData
   fixedWidth?: boolean
 }) {
-  const { photos = [] } = vegetable
+  const { photos: mainPhotos = [], varieties = [] } = vegetable
+
+  const photos = [
+    ...mainPhotos,
+    ...(varieties?.flatMap((variety) => variety.photos) || []),
+  ]
 
   return (
     <Link
@@ -39,7 +44,7 @@ export default function VegetableCard({
       draggable={false}
     >
       {photos.length > 0 ? (
-        <CardWithPhotoContents vegetable={vegetable} />
+        <CardWithPhotoContents vegetable={vegetable} photos={photos} />
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-stone-200">
           <span>{vegetable.name}</span>
@@ -51,10 +56,11 @@ export default function VegetableCard({
 
 function CardWithPhotoContents({
   vegetable,
+  photos,
 }: {
   vegetable: VegetableCardData
+  photos: ImageForRenderingData[]
 }) {
-  const { photos = [] } = vegetable
   const [api, setApi] = useState<CarouselApi>()
   const [selectedSlideIndex, setSelectedSlideIndex] = useState<number>(0)
 
