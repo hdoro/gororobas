@@ -52,6 +52,7 @@ import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Text } from './ui/text'
 import { useToast } from './ui/use-toast'
+import { gender } from '@/utils/strings'
 
 export default function VegetableForm(props: {
   onSubmit: (vegetable: VegetableForDBWithImages) => Promise<
@@ -161,17 +162,23 @@ export default function VegetableForm(props: {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex max-w-[90rem] flex-wrap gap-4"
         >
-          <div className="flex items-center gap-4">
-            <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-              {props.initialValue
-                ? `Sugerir edição para ${
-                    props.initialValue.names?.[0]?.value || 'vegetal'
-                  }`
-                : 'Criar vegetal'}
-            </h1>
-            <Button type="submit" disabled={form.formState.disabled}>
-              <SendIcon className="w-[1.25em]" /> Enviar
-            </Button>
+          <div className="fixed inset-x-0 bottom-0 z-20 w-full border-t bg-background-card px-pageX py-4">
+            <div className="m-auto flex max-w-[90rem] items-center justify-between gap-4">
+              <Text as="h1" level="h3">
+                {props.initialValue
+                  ? `Sugerir edição para ${gender.article(props.initialValue.gender || 'NEUTRO')} ${
+                      props.initialValue.names?.[0]?.value || 'vegetal'
+                    }`
+                  : 'Criar vegetal'}
+              </Text>
+              <Button
+                type="submit"
+                disabled={form.formState.disabled}
+                className="px-10"
+              >
+                <SendIcon className="w-[1.25em]" /> Enviar
+              </Button>
+            </div>
           </div>
           <div className="relative grid items-start gap-4 md:grid-cols-[1fr_350px] lg:grid-cols-3 lg:gap-8">
             <div className="grid auto-rows-max items-start gap-4 md:sticky md:top-4 lg:col-span-2 lg:gap-8">
