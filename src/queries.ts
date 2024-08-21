@@ -79,10 +79,15 @@ const vegetableForCard = e.shape(e.Vegetable, (vegetable) => ({
   }),
 }))
 
-export type VegetableCardData = Exclude<
+type VegetableCardDataRaw = Exclude<
   $infer<typeof vegetableForCard>,
   null
 >[number]
+
+export type VegetableCardData = Omit<VegetableCardDataRaw, 'varieties'> & {
+  // Some instances of vegetables' cards won't have varieties
+  varieties?: VegetableCardDataRaw['varieties']
+}
 
 const userProfileForAvatar = e.shape(e.UserProfile, () => ({
   name: true,
@@ -529,13 +534,14 @@ export const vegetablesIndexQuery = e.params(
         { field: vegetable.uses, values: params.uses, type: e.VegetableUsage },
       ] as const
       const filterOps = [
-        e.op(
-          // Either there's no search query
-          e.op(e.len(params.search_query), '=', 0),
-          'or',
-          // Or the vegetable matches it
-          e.op(vegetable.searchable_names, 'ilike', params.search_query),
-        ),
+        // @TODO: debug why textual search isn't working
+        // e.op(
+        //   // Either there's no search query
+        //   e.op(e.len(params.search_query), '=', 0),
+        //   'or',
+        //   // Or the vegetable matches it
+        //   e.op(vegetable.searchable_names, 'ilike', params.search_query),
+        // ),
 
         // MULTI-SELECT FILTERS
         ...filters.map(({ field, values, type }) =>

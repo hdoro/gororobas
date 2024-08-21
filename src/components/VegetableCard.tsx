@@ -38,8 +38,6 @@ export default function VegetableCard({
         'group relative aspect-[1.15] h-auto overflow-hidden rounded-lg',
         fixedWidth &&
           'w-[var(--vegetable-card-width)] flex-[0_0_var(--vegetable-card-width)]',
-        !fixedWidth &&
-          'min-w-[calc(var(--vegetable-card-width)_*_0.75)] max-w-[var(--vegetable-card-width)] flex-[1_0_calc(var(--vegetable-card-width)_*_0.75)]',
       )}
       draggable={false}
     >

@@ -19,7 +19,7 @@ export function VegetablesGridWrapper(
       style={{
         ...(props.style || {}),
         gridTemplateColumns:
-          'repeat(auto-fit, minmax(calc(var(--vegetable-card-width) * 0.75), var(--vegetable-card-width)))',
+          'repeat(auto-fit, minmax(calc(var(--vegetable-card-width) * 0.75), 1fr))',
       }}
     >
       {props.children}

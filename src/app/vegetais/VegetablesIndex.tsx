@@ -5,8 +5,18 @@ import { VegetablesGridWrapper } from '@/components/VegetablesGrid'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
 import Carrot from '@/components/icons/Carrot'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogBody,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import type { VegetablesIndexFilterParams } from '@/queries'
@@ -21,9 +31,10 @@ import {
 import { paths, persistParamsInUrl } from '@/utils/urls'
 import { searchParamsToNextSearchParams } from '@/utils/urls'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { FilterIcon, XIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { InView } from 'react-intersection-observer'
 import type { VegetablesIndexRouteData } from './fetchVegetablesIndex'
@@ -97,17 +108,177 @@ export default function VegetablesIndex() {
       !data.pages[0] ||
       !data.pages[0].vegetables ||
       data.pages[0].vegetables.length === 0)
+
   return (
-    <main className="flex flex-col gap-x-8 gap-y-4 px-pageX py-10 lg:flex-row-reverse lg:items-start">
-      <div className="flex-[5] space-y-6 lg:sticky lg:top-4">
-        <div className="space-y-1">
-          <Text level="h1" as="h1">
-            Vegetais
-          </Text>
-          <Text level="h2" as="p" className="font-normal">
-            Conhecimento em agroecologia sobre mais de 400 vegetais
-          </Text>
-        </div>
+    <main className="px-pageX py-10">
+      <div className="space-y-1">
+        <Text level="h1" as="h1">
+          Vegetais
+        </Text>
+        <Text level="h2" as="p" className="font-normal">
+          Conhecimento em agroecologia sobre mais de 400 vegetais
+        </Text>
+      </div>
+      <FormProvider {...form}>
+        <form className="sticky top-0 z-30 mt-8 bg-background py-2">
+          <Dialog>
+            <div className="flex items-end justify-between gap-2">
+              {/* @TODO: debug search query - returning no results in EdgeDB */}
+              {/* <Field
+                form={form}
+                name="search_query"
+                label="Nome"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    value={field.value || ''}
+                    type="text"
+                    placeholder="Buscar por nome"
+                  />
+                )}
+                hideLabel
+              /> */}
+              <div className="flex items-center gap-2">
+                <DialogTrigger asChild>
+                  <Button>
+                    <FilterIcon className="mr-2 h-auto w-[1.25em]" />
+                    Filtros
+                  </Button>
+                </DialogTrigger>
+                {Object.entries(filterParams).map(([key, values]) => {
+                  if (
+                    key === 'search_query' ||
+                    !values ||
+                    !Array.isArray(values) ||
+                    values.length === 0
+                  )
+                    return null
+
+                  const labels = {
+                    strata: STRATUM_TO_LABEL,
+                    lifecycles: VEGETABLE_LIFECYCLE_TO_LABEL,
+                    uses: USAGE_TO_LABEL,
+                    planting_methods: PLANTING_METHOD_TO_LABEL,
+                    edible_parts: EDIBLE_PART_TO_LABEL,
+                  }[key]
+                  return (
+                    <Fragment key={key}>
+                      {values.map((v) => (
+                        <Badge key={`${key}-${v}`} variant="outline">
+                          {labels?.[v as keyof typeof labels] || values}
+                          <Button
+                            size="icon"
+                            mode="bleed"
+                            tone="neutral"
+                            onClick={() =>
+                              form.setValue(
+                                // @ts-expect-error
+                                key,
+                                values.filter((x) => x !== v),
+                              )
+                            }
+                            className="ml-1 size-5 p-0"
+                          >
+                            <XIcon className="size-4" />
+                            <span className="sr-only">Remover</span>
+                          </Button>
+                        </Badge>
+                      ))}
+                    </Fragment>
+                  )
+                })}
+              </div>
+            </div>
+            <DialogContent className="max-w-[calc(100dvw_-_var(--page-padding-x))] rounded-md">
+              <DialogHeader>Filtre os resultados</DialogHeader>
+              <DialogBody className="space-y-2">
+                <Field
+                  form={form}
+                  name="strata"
+                  label="Estrato"
+                  render={({ field }) => (
+                    <CheckboxesInput
+                      field={field}
+                      options={Object.entries(STRATUM_TO_LABEL).map(
+                        ([value, label]) => ({
+                          value,
+                          label,
+                        }),
+                      )}
+                    />
+                  )}
+                />
+                <Field
+                  form={form}
+                  name="lifecycles"
+                  label="Ciclo de vida"
+                  render={({ field }) => (
+                    <CheckboxesInput
+                      field={field}
+                      options={Object.entries(VEGETABLE_LIFECYCLE_TO_LABEL).map(
+                        ([value, label]) => ({
+                          value,
+                          label,
+                        }),
+                      )}
+                    />
+                  )}
+                />
+                <Field
+                  form={form}
+                  name="uses"
+                  label="Principais usos"
+                  render={({ field }) => (
+                    <CheckboxesInput
+                      field={field}
+                      options={Object.entries(USAGE_TO_LABEL).map(
+                        ([value, label]) => ({
+                          value,
+                          label,
+                        }),
+                      )}
+                    />
+                  )}
+                />
+                <Field
+                  form={form}
+                  name="planting_methods"
+                  label="Plantio por"
+                  render={({ field }) => (
+                    <CheckboxesInput
+                      field={field}
+                      options={Object.entries(PLANTING_METHOD_TO_LABEL).map(
+                        ([value, label]) => ({ value, label }),
+                      )}
+                    />
+                  )}
+                />
+                <Field
+                  form={form}
+                  name="edible_parts"
+                  label="Partes comestíveis"
+                  render={({ field }) => (
+                    <CheckboxesInput
+                      field={field}
+                      options={Object.entries(EDIBLE_PART_TO_LABEL).map(
+                        ([value, label]) => ({ value, label }),
+                      )}
+                    />
+                  )}
+                />
+              </DialogBody>
+              <DialogFooter className="border-t">
+                <DialogClose asChild>
+                  <Button size="lg" mode="bleed" tone="neutral">
+                    Buscar
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </form>
+      </FormProvider>
+      <div className="relative mt-2 space-y-6">
         <VegetablesGridWrapper>
           {isFetching && !isFetchingNextPage && (
             <div className="absolute inset-0 flex items-center justify-center gap-3 bg-background bg-opacity-50">
@@ -172,99 +343,6 @@ export default function VegetablesIndex() {
             </div>
           ))}
       </div>
-      <FormProvider {...form}>
-        <form className="max-w-xs lg:sticky lg:top-4">
-          <Card className="lg:flex lg:max-h-[calc(100dvh_-_2rem)] lg:flex-col lg:overflow-hidden">
-            <CardHeader>
-              <CardTitle>Filtre os resultados</CardTitle>
-            </CardHeader>
-            <CardContent className="hide-scrollbar space-y-6 lg:overflow-y-auto">
-              <Field
-                form={form}
-                name="search_query"
-                label="Nome"
-                render={({ field }) => (
-                  <Input {...field} value={field.value || ''} type="text" />
-                )}
-              />
-              <Field
-                form={form}
-                name="strata"
-                label="Estrato"
-                render={({ field }) => (
-                  <CheckboxesInput
-                    field={field}
-                    options={Object.entries(STRATUM_TO_LABEL).map(
-                      ([value, label]) => ({
-                        value,
-                        label,
-                      }),
-                    )}
-                  />
-                )}
-              />
-              <Field
-                form={form}
-                name="lifecycles"
-                label="Ciclo de vida"
-                render={({ field }) => (
-                  <CheckboxesInput
-                    field={field}
-                    options={Object.entries(VEGETABLE_LIFECYCLE_TO_LABEL).map(
-                      ([value, label]) => ({
-                        value,
-                        label,
-                      }),
-                    )}
-                  />
-                )}
-              />
-              <Field
-                form={form}
-                name="uses"
-                label="Principais usos"
-                render={({ field }) => (
-                  <CheckboxesInput
-                    field={field}
-                    options={Object.entries(USAGE_TO_LABEL).map(
-                      ([value, label]) => ({
-                        value,
-                        label,
-                      }),
-                    )}
-                  />
-                )}
-              />
-              <Field
-                form={form}
-                name="planting_methods"
-                label="Plantio por"
-                render={({ field }) => (
-                  <CheckboxesInput
-                    field={field}
-                    options={Object.entries(PLANTING_METHOD_TO_LABEL).map(
-                      ([value, label]) => ({ value, label }),
-                    )}
-                  />
-                )}
-              />
-              <Field
-                form={form}
-                name="edible_parts"
-                label="Partes comestíveis"
-                render={({ field }) => (
-                  <CheckboxesInput
-                    field={field}
-                    options={Object.entries(EDIBLE_PART_TO_LABEL).map(
-                      ([value, label]) => ({ value, label }),
-                    )}
-                  />
-                )}
-              />
-            </CardContent>
-          </Card>
-        </form>
-      </FormProvider>
     </main>
   )
 }
