@@ -1,9 +1,10 @@
-import { formatCentimeters } from '@/utils/numbers'
+import { type NumberFormat, formatNumber } from '@/utils/numbers'
 import type {
   ControllerRenderProps,
   FieldPath,
   FieldValues,
 } from 'react-hook-form'
+import { FormControl } from '../ui/form'
 import { Input } from '../ui/input'
 
 export default function NumberInput<
@@ -14,17 +15,19 @@ export default function NumberInput<
   format = 'none',
 }: {
   field: ControllerRenderProps<TFieldValues, TName>
-  format?: 'none' | 'centimeters' | 'temperature' | 'days'
+  format?: NumberFormat
 }) {
   const value = Number(field.value)
   return (
     <div className="relative">
-      <Input
-        {...field}
-        value={value || ''}
-        onChange={(e) => field.onChange(Number(e.target.value))}
-        type="number"
-      />
+      <FormControl>
+        <Input
+          {...field}
+          value={value || ''}
+          onChange={(e) => field.onChange(Number(e.target.value))}
+          type="number"
+        />
+      </FormControl>
       {value && format !== 'none' ? (
         <div
           className="absolute inset-y-0 flex select-none items-center pl-3 text-sm font-normal text-stone-600"
@@ -32,16 +35,7 @@ export default function NumberInput<
             left: `calc(${value?.toString().length || 1} * 1ch)`,
           }}
         >
-          {format === 'centimeters' && (
-            <>
-              cm{' '}
-              {!Number.isNaN(value) &&
-                value >= 100 &&
-                `(${formatCentimeters(value)})`}
-            </>
-          )}
-          {format === 'temperature' && 'ºC'}
-          {format === 'days' && `dia${value > 1 ? 's' : ''}`}
+          {formatNumber(value, format)}
         </div>
       ) : null}
     </div>

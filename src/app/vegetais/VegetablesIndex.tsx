@@ -4,6 +4,7 @@ import VegetableCard from '@/components/VegetableCard'
 import { VegetablesGridWrapper } from '@/components/VegetablesGrid'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
+import SliderRangeInput from '@/components/forms/SliderRangeInput'
 import Carrot from '@/components/icons/Carrot'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -15,10 +16,16 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Text } from '@/components/ui/text'
 import type { VegetablesIndexFilterParams } from '@/queries'
+import {
+  MAX_ACCEPTED_TEMPERATURE,
+  MIN_ACCEPTED_TEMPERATURE,
+  type RangeFormValue,
+} from '@/schemas'
 import { VEGETABLES_PER_PAGE } from '@/utils/config'
 import {
   EDIBLE_PART_TO_LABEL,
@@ -27,21 +34,31 @@ import {
   USAGE_TO_LABEL,
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
-import { paths, persistParamsInUrl } from '@/utils/urls'
-import { searchParamsToNextSearchParams } from '@/utils/urls'
+import {
+  MAX_ACCEPTED_HEIGHT,
+  type NumberFormat,
+  formatNumber,
+} from '@/utils/numbers'
+import {
+  paths,
+  persistParamsInUrl,
+  searchParamsToNextSearchParams,
+} from '@/utils/urls'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { FilterIcon, XIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import React, { Fragment, useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { InView } from 'react-intersection-observer'
 import type { VegetablesIndexRouteData } from './fetchVegetablesIndex'
+import { FILTER_DEFINITIONS } from './vegetableFilterDefinitions'
 import {
+  type VegetablesSearchFormValue,
   nextSearchParamsToQueryParams,
   queryParamsToQueryKey,
   queryParamsToSearchParams,
-} from './vegetablesFilterDefinition'
+} from './vegetablesFilters'
 
 async function fetchVegetablesIndexFromClient(
   filterParams: VegetablesIndexFilterParams,
@@ -58,9 +75,10 @@ async function fetchVegetablesIndexFromClient(
 
 export default function VegetablesIndex() {
   const initialSearchParams = useSearchParams()
-  const form = useForm<VegetablesIndexFilterParams>({
+  const form = useForm<VegetablesSearchFormValue>({
     defaultValues: nextSearchParamsToQueryParams(
       searchParamsToNextSearchParams(initialSearchParams),
+      'form',
     ),
   })
   const filterParams = form.watch()
@@ -153,6 +171,21 @@ export default function VegetablesIndex() {
                   )
                     return null
 
+                  const filterDefinition = FILTER_DEFINITIONS.find(
+                    (filter) => filter.filterKey === key,
+                  )
+                  if (!filterDefinition) return null
+
+                  if (filterDefinition.type === 'range') {
+                    return (
+                      <RangeFilterDisplay
+                        key={key}
+                        filterKey={key}
+                        values={values}
+                      />
+                    )
+                  }
+
                   const labels = {
                     strata: STRATUM_TO_LABEL,
                     lifecycles: VEGETABLE_LIFECYCLE_TO_LABEL,
@@ -186,10 +219,49 @@ export default function VegetablesIndex() {
                     </Fragment>
                   )
                 })}
+                {/* If has filters, show clear button */}
+                {Object.entries(filterParams).some(([key, values]) => {
+                  if (
+                    key === 'search_query' ||
+                    !values ||
+                    !Array.isArray(values) ||
+                    values.length === 0
+                  )
+                    return false
+
+                  return true
+                }) && (
+                  <Button
+                    mode="bleed"
+                    tone="neutral"
+                    onClick={() => {
+                      // For some reason, I'm having to reset the form twice
+                      // to clear all the filters. Once doesn't work 🤷
+                      form.reset(
+                        {},
+                        {
+                          keepDefaultValues: false,
+                          keepValues: false,
+                        },
+                      )
+                      form.reset(
+                        {},
+                        {
+                          keepDefaultValues: false,
+                          keepValues: false,
+                        },
+                      )
+                    }}
+                  >
+                    Limpar
+                  </Button>
+                )}
               </div>
             </div>
             <DialogContent className="max-w-[calc(100dvw_-_var(--page-padding-x))] rounded-md">
-              <DialogHeader>Filtre os resultados</DialogHeader>
+              <DialogHeader>
+                <DialogTitle>Filtre os resultados</DialogTitle>
+              </DialogHeader>
               <DialogBody className="space-y-2">
                 <Field
                   form={form}
@@ -265,6 +337,7 @@ export default function VegetablesIndex() {
                     />
                   )}
                 />
+                <RangeFields />
               </DialogBody>
               <DialogFooter className="border-t">
                 <DialogClose asChild>
@@ -343,5 +416,144 @@ export default function VegetablesIndex() {
           ))}
       </div>
     </main>
+  )
+}
+
+const RANGE_DISPLAY_LABELS = {
+  development_cycle: {
+    label: 'Desenvolvimento',
+    format: 'days',
+  },
+  height: {
+    label: 'Altura',
+    format: 'centimeters',
+  },
+  temperature: {
+    label: 'Temperatura',
+    format: 'temperature',
+  },
+} as const
+
+function RangeFilterDisplay({
+  filterKey,
+  values,
+}: {
+  filterKey: string
+  values: VegetablesSearchFormValue[keyof VegetablesSearchFormValue]
+}) {
+  const form = useFormContext<VegetablesSearchFormValue>()
+  if (
+    !(filterKey in RANGE_DISPLAY_LABELS) ||
+    !Array.isArray(values) ||
+    values.length !== 2 ||
+    values.every((value) => typeof value !== 'number' || value === 0)
+  )
+    return null
+
+  return (
+    <Badge key={filterKey} variant="outline">
+      {
+        RANGE_DISPLAY_LABELS[filterKey as keyof typeof RANGE_DISPLAY_LABELS]
+          .label
+      }{' '}
+      -{' '}
+      {rangeValueToLabel(
+        values as unknown as typeof RangeFormValue.Type,
+        RANGE_DISPLAY_LABELS[filterKey as keyof typeof RANGE_DISPLAY_LABELS]
+          .format,
+      )}
+      <Button
+        size="icon"
+        mode="bleed"
+        tone="neutral"
+        onClick={() =>
+          form.setValue(
+            // @ts-expect-error
+            filterKey,
+            undefined,
+          )
+        }
+        className="ml-1 size-5 p-0"
+      >
+        <XIcon className="size-4" />
+        <span className="sr-only">Remover</span>
+      </Button>
+    </Badge>
+  )
+}
+
+function rangeValueToLabel(
+  value: typeof RangeFormValue.Type | null | undefined,
+  format: NumberFormat,
+) {
+  if (!value) return '\u200B'
+
+  const [min, max] = value
+  if (!min && !max) return '\u200B'
+
+  let parts: (string | number)[] = []
+  if (!min) {
+    parts = ['até ', max as number]
+  } else if (!max) {
+    parts = ['a partir de ', min]
+  } else {
+    parts = ['de ', min, ' a ', max]
+  }
+
+  return parts
+    .map((value) => {
+      if (typeof value === 'string' || format === 'none') return value
+
+      return formatNumber(value, format)
+    })
+    .join('')
+}
+
+function RangeFields() {
+  const form = useFormContext<VegetablesSearchFormValue>()
+  const development_cycle = form.watch('development_cycle')
+  const height = form.watch('height')
+  const temperature = form.watch('temperature')
+
+  return (
+    <>
+      <Field
+        form={form}
+        name="development_cycle"
+        label="Tempo de desenvolvimento"
+        description={rangeValueToLabel(development_cycle, 'days')}
+        render={({ field }) => (
+          <SliderRangeInput field={field} min={0} max={765} step={10} />
+        )}
+      />
+      <Field
+        form={form}
+        name="height"
+        label="Altura adulta"
+        description={rangeValueToLabel(height, 'centimeters')}
+        render={({ field }) => (
+          <SliderRangeInput
+            field={field}
+            min={0}
+            max={MAX_ACCEPTED_HEIGHT / 2}
+            step={20}
+          />
+        )}
+      />
+      <Field
+        form={form}
+        name="temperature"
+        label="Temperatura ideal"
+        description={rangeValueToLabel(temperature, 'temperature')}
+        render={({ field }) => (
+          <SliderRangeInput
+            field={field}
+            min={MIN_ACCEPTED_TEMPERATURE}
+            max={MAX_ACCEPTED_TEMPERATURE}
+            step={2.5}
+          />
+        )}
+      />
+    </>
   )
 }

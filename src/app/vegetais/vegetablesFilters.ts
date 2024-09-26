@@ -2,57 +2,31 @@ import type {
   VegetablesIndexFilterParams,
   VegetablesIndexQueryParams,
 } from '@/queries'
+import { RangeFormValue } from '@/schemas'
 import type { NextSearchParams } from '@/types'
 import { VEGETABLES_PER_PAGE } from '@/utils/config'
-import {
-  EDIBLE_PART_TO_LABEL,
-  PLANTING_METHOD_TO_LABEL,
-  STRATUM_TO_LABEL,
-  USAGE_TO_LABEL,
-  VEGETABLE_LIFECYCLE_TO_LABEL,
-} from '@/utils/labels'
+import { Schema } from '@effect/schema'
+import { FILTER_DEFINITIONS } from './vegetableFilterDefinitions'
 
 const PAGE_INDEX_QUERY_KEY = 'pagina'
-const FILTER_DEFINITIONS = [
-  {
-    queryKey: 'nome',
-    filterKey: 'search_query',
-    type: 'search_query',
-  },
-  {
-    queryKey: 'estrato',
-    filterKey: 'strata',
-    values: Object.keys(STRATUM_TO_LABEL),
-    type: 'multiselect',
-  },
-  {
-    queryKey: 'usos',
-    filterKey: 'uses',
-    values: Object.keys(USAGE_TO_LABEL),
-    type: 'multiselect',
-  },
-  {
-    queryKey: 'comestivel',
-    filterKey: 'edible_parts',
-    values: Object.keys(EDIBLE_PART_TO_LABEL),
-    type: 'multiselect',
-  },
-  {
-    queryKey: 'plantio',
-    filterKey: 'planting_methods',
-    values: Object.keys(PLANTING_METHOD_TO_LABEL),
-    type: 'multiselect',
-  },
-  {
-    queryKey: 'ciclo',
-    filterKey: 'lifecycles',
-    values: Object.keys(VEGETABLE_LIFECYCLE_TO_LABEL),
-    type: 'multiselect',
-  },
-] as const
 
-export function nextSearchParamsToQueryParams(
+export type VegetablesSearchFormValue = Omit<
+  VegetablesIndexQueryParams,
+  | 'development_cycle_min'
+  | 'development_cycle_max'
+  | 'height_min'
+  | 'height_max'
+  | 'temperature_min'
+  | 'temperature_max'
+> & {
+  height?: typeof RangeFormValue.Type | null
+  temperature?: typeof RangeFormValue.Type | null
+  development_cycle?: typeof RangeFormValue.Type | null
+}
+
+export function nextSearchParamsToQueryParams<Format extends 'form' | 'search'>(
   searchParams: NextSearchParams,
+  format: Format,
 ): VegetablesIndexQueryParams {
   const pageIndex = searchParams[PAGE_INDEX_QUERY_KEY]
     ? Number(searchParams[PAGE_INDEX_QUERY_KEY] as string)
@@ -82,15 +56,40 @@ export function nextSearchParamsToQueryParams(
         accFilters[filterKey] = arrayValue.join(' ')
       }
 
+      if (definition.type === 'range') {
+        try {
+          const [min, max] = Schema.decodeSync(RangeFormValue)(
+            JSON.parse(decodeURIComponent(arrayValue[0])),
+          )
+          if (format === 'form') {
+            accFilters[filterKey] = [min, max]
+          } else {
+            if (min) {
+              accFilters[`${filterKey}_min`] = min
+            }
+            if (max) {
+              accFilters[`${filterKey}_max`] = max
+            }
+          }
+        } catch (error) {} // invalid range
+      }
+
       return accFilters
     },
-    {} as Record<string, string[] | string>,
+    {} as Record<
+      string,
+      | VegetablesIndexQueryParams[keyof VegetablesIndexQueryParams]
+      | string[]
+      | VegetablesSearchFormValue[keyof VegetablesSearchFormValue]
+    >,
   )
 
   return {
     ...filters,
     offset: pageIndex * VEGETABLES_PER_PAGE,
-  } as VegetablesIndexQueryParams
+  } as typeof format extends 'form'
+    ? VegetablesSearchFormValue
+    : VegetablesIndexQueryParams
 }
 
 export function queryParamsToSearchParams(
@@ -109,9 +108,16 @@ export function queryParamsToSearchParams(
     )
     if (!definition || !value) return
 
-    const { queryKey } = definition
+    const { queryKey, type } = definition
 
-    if (Array.isArray(value)) {
+    if (type === 'range') {
+      // Skip ranges with unset min/max values
+      if (Array.isArray(value) && value.some((v) => v !== undefined)) {
+        // As ranges have orders and can include `undefined` for unset min/max, we can't `.append` as other generic arrays.
+        // Instead, we keep the JSON structure in the query param, which is parsed by `nextSearchParamsToQueryParams`
+        searchParams.set(queryKey, encodeURIComponent(JSON.stringify(value)))
+      }
+    } else if (Array.isArray(value)) {
       value.forEach((entry) => searchParams.append(queryKey, entry))
     } else {
       searchParams.set(queryKey, String(value))
@@ -121,6 +127,9 @@ export function queryParamsToSearchParams(
   return searchParams
 }
 
+/**
+ * Produces a query key for caching requests in @tanstack/query
+ */
 export function queryParamsToQueryKey(
   filterParams: VegetablesIndexFilterParams,
 ) {
@@ -132,8 +141,12 @@ export function queryParamsToQueryKey(
         if (!Array.isArray(value)) {
           return [key, String(value)]
         }
-        return [key, ...value]
+        return [key, ...value].flatMap((entry) => {
+          if (!entry) return []
+          return String(entry)
+        })
       })
+      // Sort keys
       .sort((a, b) => a.localeCompare(b)),
   ]
 }

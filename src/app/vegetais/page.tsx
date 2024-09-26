@@ -10,7 +10,7 @@ import fetchVegetablesIndex from './fetchVegetablesIndex'
 import {
   nextSearchParamsToQueryParams,
   queryParamsToQueryKey,
-} from './vegetablesFilterDefinition'
+} from './vegetablesFilters'
 
 export const metadata: Metadata = {
   title: 'Todos os vegetais e suas propriedades agroecológicas | Gororobas',
@@ -29,7 +29,7 @@ export default async function VegetablesRoute({
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: queryParamsToQueryKey(
-      nextSearchParamsToQueryParams(searchParams),
+      nextSearchParamsToQueryParams(searchParams, 'search'),
     ),
     queryFn: () => fetchVegetablesIndex(searchParams),
     initialPageParam: 0,

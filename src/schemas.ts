@@ -258,11 +258,13 @@ const Height = S.Int.pipe(
   }),
 )
 
+export const MAX_ACCEPTED_TEMPERATURE = 50
+export const MIN_ACCEPTED_TEMPERATURE = -50
 const Temperature = S.Int.pipe(
-  S.greaterThan(-50, {
+  S.greaterThan(MIN_ACCEPTED_TEMPERATURE, {
     message: () => 'Que inverno gelado é esse que cê tá plantando?!',
   }),
-  S.lessThan(60, {
+  S.lessThan(MAX_ACCEPTED_TEMPERATURE, {
     message: () => 'Que verão quente é esse que cê tá plantando?!',
   }),
 )
@@ -413,3 +415,7 @@ export type NoteInForm = typeof NoteData.Encoded
 
 export const NoteDataArray = S.NonEmptyArray(NoteData)
 export type NotesForDB = typeof NoteDataArray.Type
+
+const RangeBoundValue = S.NullishOr(S.Int)
+/** [min, max] */
+export const RangeFormValue = S.Tuple(RangeBoundValue, RangeBoundValue)

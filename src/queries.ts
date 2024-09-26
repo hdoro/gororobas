@@ -502,6 +502,10 @@ export const currentUserQuery = e.select(e.UserProfile, (profile) => ({
   filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
 }))
 
+/** EdgeDB's float32 max value */
+const MAX_FLOAT = 3.4e38
+const MIN_FLOAT = MAX_FLOAT * -1
+
 export const vegetablesIndexQuery = e.params(
   {
     strata: e.optional(e.array(e.str)),
@@ -511,28 +515,76 @@ export const vegetablesIndexQuery = e.params(
     uses: e.optional(e.array(e.str)),
     search_query: e.str,
     offset: e.int32,
+    height_min: e.optional(e.float32),
+    height_max: e.optional(e.float32),
+    temperature_min: e.optional(e.float32),
+    temperature_max: e.optional(e.float32),
+    development_cycle_min: e.optional(e.int16),
+    development_cycle_max: e.optional(e.int16),
   },
   (params) =>
     e.select(e.Vegetable, (vegetable) => {
-      const filters = [
-        { field: vegetable.strata, values: params.strata, type: e.Stratum },
+      const multiselectFilters = [
         {
-          field: vegetable.planting_methods,
-          values: params.planting_methods,
+          vegetableValue: vegetable.strata,
+          paramValue: params.strata,
+          type: e.Stratum,
+        },
+        {
+          vegetableValue: vegetable.planting_methods,
+          paramValue: params.planting_methods,
           type: e.PlantingMethod,
         },
         {
-          field: vegetable.edible_parts,
-          values: params.edible_parts,
+          vegetableValue: vegetable.edible_parts,
+          paramValue: params.edible_parts,
           type: e.EdiblePart,
         },
         {
-          field: vegetable.lifecycles,
-          values: params.lifecycles,
+          vegetableValue: vegetable.lifecycles,
+          paramValue: params.lifecycles,
           type: e.VegetableLifeCycle,
         },
-        { field: vegetable.uses, values: params.uses, type: e.VegetableUsage },
+        {
+          vegetableValue: vegetable.uses,
+          paramValue: params.uses,
+          type: e.VegetableUsage,
+        },
       ] as const
+
+      const numberFilters = [
+        {
+          vegetableValue: vegetable.height_min,
+          paramValue: params.height_min,
+          type: 'min',
+        },
+        {
+          vegetableValue: vegetable.height_max,
+          paramValue: params.height_max,
+          type: 'max',
+        },
+        {
+          vegetableValue: vegetable.temperature_min,
+          paramValue: params.temperature_min,
+          type: 'min',
+        },
+        {
+          vegetableValue: vegetable.temperature_max,
+          paramValue: params.temperature_max,
+          type: 'max',
+        },
+        {
+          vegetableValue: vegetable.development_cycle_min,
+          paramValue: params.development_cycle_min,
+          type: 'min',
+        },
+        {
+          vegetableValue: vegetable.development_cycle_max,
+          paramValue: params.development_cycle_max,
+          type: 'max',
+        },
+      ] as const
+
       const filterOps = [
         // @TODO: debug why textual search isn't working
         // e.op(
@@ -543,19 +595,35 @@ export const vegetablesIndexQuery = e.params(
         //   e.op(vegetable.searchable_names, 'ilike', params.search_query),
         // ),
 
-        // MULTI-SELECT FILTERS
-        ...filters.map(({ field, values, type }) =>
+        ...numberFilters.map(({ vegetableValue, paramValue, type }) => {
+          if (type === 'min') {
+            return e.op(
+              e.op(vegetableValue, '??', e.cast(e.float32, 0)),
+              '>=',
+              e.op(paramValue, '??', e.cast(e.float32, MIN_FLOAT)),
+            )
+          }
+
+          // max
+          return e.op(
+            e.op(vegetableValue, '??', e.cast(e.float32, 0)),
+            '<=',
+            e.op(paramValue, '??', e.cast(e.float32, MAX_FLOAT)),
+          )
+        }),
+
+        ...multiselectFilters.map(({ vegetableValue, paramValue, type }) =>
           e.op(
             // Either the param doesn't exist
-            e.op('not', e.op('exists', values)),
+            e.op('not', e.op('exists', paramValue)),
             'or',
             // Or the vegetable has at least one of the values
             e.op(
               e.count(
                 e.op(
-                  field,
+                  vegetableValue,
                   'intersect',
-                  e.array_unpack(e.cast(e.array(type), values)),
+                  e.array_unpack(e.cast(e.array(type), paramValue)),
                 ),
               ),
               '>',
@@ -612,6 +680,12 @@ export type VegetablesIndexQueryParams = Pick<
   lifecycles?: VegetableLifeCycle[] | null
   uses?: VegetableUsage[] | null
   search_query?: string | null
+  temperature_min?: number | null
+  temperature_max?: number | null
+  height_min?: number | null
+  height_max?: number | null
+  development_cycle_min?: number | null
+  development_cycle_max?: number | null
 }
 
 export type VegetablesIndexFilterParams = Omit<
