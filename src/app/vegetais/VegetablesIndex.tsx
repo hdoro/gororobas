@@ -17,7 +17,6 @@ import {
   DialogHeader,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import type { VegetablesIndexFilterParams } from '@/queries'
 import { VEGETABLES_PER_PAGE } from '@/utils/config'

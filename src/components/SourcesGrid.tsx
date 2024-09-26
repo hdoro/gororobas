@@ -18,7 +18,7 @@ export default function SourcesGrid({
       className={cn('flex flex-wrap gap-4', props.className)}
       style={{
         ...(props.style || {}),
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
       }}
     >
       {sources.map((source) => (

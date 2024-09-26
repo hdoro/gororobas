@@ -82,59 +82,57 @@ function CardWithPhotoContents({
         {vegetable.name}
       </Badge>
       {photos.length > 1 && (
-        <>
-          <Carousel
-            className={'h-full w-full'}
-            opts={{
-              loop: true,
-              duration: 15,
+        <Carousel
+          className={'h-full w-full'}
+          opts={{
+            loop: true,
+            duration: 15,
+          }}
+          setApi={setApi}
+          plugins={[WheelGesturesPlugin()]}
+        >
+          <CarouselContent className="h-full" rootClassName="h-full">
+            {photos.map((photo, idx) => {
+              return (
+                <CarouselItem
+                  key={photo.sanity_id || idx}
+                  className="relative h-full w-full"
+                >
+                  <SanityImage
+                    image={photo}
+                    maxWidth={250}
+                    className={
+                      'block h-full w-full select-none object-cover !transition-all group-hover:scale-105'
+                    }
+                    draggable={false}
+                  />
+                </CarouselItem>
+              )
+            })}
+          </CarouselContent>
+          <div
+            className="absolute inset-x-0 bottom-0 z-20 flex justify-center gap-1.5 pb-2 pt-3"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(64, 121, 75, 0) 0%, rgba(45, 78, 52) 105%)',
             }}
-            setApi={setApi}
-            plugins={[WheelGesturesPlugin()]}
           >
-            <CarouselContent className="h-full" rootClassName="h-full">
-              {photos.map((photo, idx) => {
-                return (
-                  <CarouselItem
-                    key={photo.sanity_id || idx}
-                    className="relative h-full w-full"
-                  >
-                    <SanityImage
-                      image={photo}
-                      maxWidth={250}
-                      className={
-                        'block h-full w-full select-none object-cover !transition-all group-hover:scale-105'
-                      }
-                      draggable={false}
-                    />
-                  </CarouselItem>
-                )
-              })}
-            </CarouselContent>
-            <div
-              className="absolute inset-x-0 bottom-0 z-20 flex justify-center gap-1.5 pb-2 pt-3"
-              style={{
-                background:
-                  'linear-gradient(180deg, rgba(64, 121, 75, 0) 0%, rgba(45, 78, 52) 105%)',
-              }}
-            >
-              {photos.map((photo, index) => (
-                <div
-                  key={photo.sanity_id}
-                  aria-hidden
-                  className={cn(
-                    'h-1.5 w-1.5 rounded-full',
-                    index === selectedSlideIndex
-                      ? 'bg-primary-50'
-                      : 'bg-primary-200',
-                  )}
-                />
-              ))}
-            </div>
-            <CarouselPrevious className="absolute left-2 top-1/2 z-30 -translate-y-1/2 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100" />
-            <CarouselNext className="absolute right-2 top-1/2 z-30 -translate-y-1/2 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100" />
-          </Carousel>
-        </>
+            {photos.map((photo, index) => (
+              <div
+                key={photo.sanity_id}
+                aria-hidden
+                className={cn(
+                  'h-1.5 w-1.5 rounded-full',
+                  index === selectedSlideIndex
+                    ? 'bg-primary-50'
+                    : 'bg-primary-200',
+                )}
+              />
+            ))}
+          </div>
+          <CarouselPrevious className="absolute left-2 top-1/2 z-30 -translate-y-1/2 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100" />
+          <CarouselNext className="absolute right-2 top-1/2 z-30 -translate-y-1/2 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100" />
+        </Carousel>
       )}
       {photos.length === 1 && (
         <SanityImage

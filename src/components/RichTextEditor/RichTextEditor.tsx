@@ -46,6 +46,7 @@ export default function RichTextEditor(
       props.onChange(Object.assign({}, editor.getJSON(), { version: 1 }))
     },
     editable: props.disabled !== true,
+    immediatelyRender: false,
   })
 
   return (

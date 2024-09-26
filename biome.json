@@ -1,37 +1,42 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.7.0/schema.json",
-	"organizeImports": {
-		"enabled": true
-	},
-	"files": {
-		"include": [
-			"src/**/*",
-			"dbschema/**/*.ts",
-			"./tailwind.config.ts",
-			"./package.json"
-		],
-		"ignore": ["src/edgeql/**/*", "src/edgedb.interfaces.ts"]
-	},
-	"linter": {
-		"enabled": true,
-		"rules": {
-			"recommended": true,
-			"a11y": {
-				"noSvgWithoutTitle": "off"
-			},
-			"complexity": {
-				"noForEach": "off"
-			},
-			"suspicious": {
-				"noExplicitAny": "warn"
-			},
-			"correctness": {
-				"noUnusedImports": "error"
-			}
-		},
-		"ignore": ["src/playground/**/*"]
-	},
-	"formatter": {
-		"enabled": false
-	}
+  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "files": {
+    "include": [
+      "src/**/*",
+      "dbschema/**/*.ts",
+      "./tailwind.config.ts",
+      "./package.json"
+    ],
+    "ignore": ["src/edgeql/**/*", "src/edgedb.interfaces.ts"]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "off"
+      },
+      "complexity": {
+        "noForEach": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn"
+      },
+      "correctness": {
+        "noUnusedImports": "error"
+      }
+    },
+    "ignore": ["src/playground/**/*"]
+  },
+  "formatter": {
+    "enabled": false
+  },
+  "css": {
+    "parser": {
+      "cssModules": true
+    }
+  }
 }

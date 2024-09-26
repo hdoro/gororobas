@@ -565,7 +565,6 @@ export const vegetablesIndexQuery = e.params(
         ),
       ]
 
-      // @ts-expect-error
       const finalFilter = filterOps.reduce((finalFilter, op) => {
         if (finalFilter === null) return op
         return e.op(finalFilter, 'and', op)

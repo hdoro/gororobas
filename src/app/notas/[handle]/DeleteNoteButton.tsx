@@ -65,12 +65,10 @@ export default function DeleteNoteButton({ noteId }: { noteId: string }) {
             </>
           )}
           {status === 'submitting' && (
-            <>
-              <Text level="h2" className="flex items-center gap-3">
-                <Carrot className="h-6 w-6 animate-spin" />
-                Robôs trabalhando...
-              </Text>
-            </>
+            <Text level="h2" className="flex items-center gap-3">
+              <Carrot className="h-6 w-6 animate-spin" />
+              Robôs trabalhando...
+            </Text>
           )}
           {status === 'idle' && (
             <>
