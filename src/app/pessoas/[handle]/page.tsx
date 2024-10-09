@@ -1,10 +1,10 @@
 import { auth } from '@/edgedb'
-import { userProfilePageQuery } from '@/queries'
+import { profilePageQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import UserProfilePage from './UserProfilePage'
+import ProfilePage from './ProfilePage'
 import getUserProfileMetadata from './getUserProfileMetadata'
 
 function getRouteData(handle: string) {
@@ -13,7 +13,7 @@ function getRouteData(handle: string) {
   return runServerEffect(
     pipe(
       Effect.tryPromise({
-        try: () => userProfilePageQuery.run(session.client, { handle }),
+        try: () => profilePageQuery.run(session.client, { handle }),
         catch: (error) => console.log(error),
       }),
       ...buildTraceAndMetrics('user_profile_page', { handle }),
@@ -38,5 +38,5 @@ export default async function UserProfileRoute({
 
   if (!profile) return notFound()
 
-  return <UserProfilePage profile={profile} />
+  return <ProfilePage profile={profile} />
 }

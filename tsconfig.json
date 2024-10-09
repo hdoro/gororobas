@@ -30,5 +30,12 @@
     ".next/types/**/*.ts",
     "**/*.(mts|ts)"
   ],
-  "exclude": ["node_modules", "src/playground/**", "src/edgeql/**", "effect-learnings/**", "gitignored"]
+  "exclude": [
+    "node_modules",
+    "src/playground/**",
+    "src/edgeql/**",
+    "effect-learnings/**",
+    "gitignored",
+    "scripts/ai-experiments.ts"
+  ]
 }

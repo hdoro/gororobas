@@ -1,12 +1,12 @@
 import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
-import type { UserProfilePageData } from '@/queries'
+import type { ProfilePageData } from '@/queries'
 import { imageBuilder } from '@/utils/imageBuilder'
 import { truncate } from '@/utils/strings'
 import { pathToAbsUrl, paths } from '@/utils/urls'
 import type { Metadata } from 'next'
 
 export default function getUserProfileMetadata(
-  profile: UserProfilePageData | null,
+  profile: ProfilePageData | null,
 ): Metadata {
   const name = profile?.name
 
@@ -43,7 +43,7 @@ export default function getUserProfileMetadata(
       `quer cultivar ${
         wishlistStatusCount.ESTOU_CULTIVANDO > 0 ? 'outras ' : ''
       }${wishlistStatusCount.QUERO_CULTIVAR} plantas`,
-    profile.notes.length > 0 && `e já enviou ${profile.notes.length} notas`,
+    profile.note_count > 0 && ` e já enviou ${profile.note_count} notas`,
   ]
     .flatMap((p) => p || [])
     .join(',')

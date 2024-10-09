@@ -448,56 +448,6 @@ export const notePageQuery = e.params(
 
 export type NotePageData = Exclude<$infer<typeof notePageQuery>, null>
 
-export const userProfilePageQuery = e.params(
-  {
-    handle: e.str,
-  },
-  (params) =>
-    e.select(e.UserProfile, (profile) => ({
-      filter_single: e.op(profile.handle, '=', params.handle),
-
-      ...userProfileForAvatar(profile),
-      bio: true,
-      is_owner: e.op(profile.id, '=', e.global.current_user_profile.id),
-
-      notes: e.select(e.Note, (note) => ({
-        ...noteForCard(note),
-        created_by: false,
-
-        filter: e.op(
-          e.op(note.created_by, '=', profile),
-          'and',
-          e.op(note.public, '=', true),
-        ),
-        limit: 12,
-      })),
-
-      wishlist: e.select(e.UserWishlist, (wishlist) => ({
-        status: true,
-        vegetable: vegetableForCard,
-
-        filter: e.op(
-          e.op(wishlist.user_profile.id, '=', profile.id),
-          'and',
-          e.op(
-            wishlist.status,
-            '!=',
-            e.cast(
-              e.VegetableWishlistStatus,
-              'SEM_INTERESSE' satisfies VegetableWishlistStatus,
-            ),
-          ),
-        ),
-        limit: 20,
-      })),
-    })),
-)
-
-export type UserProfilePageData = Exclude<
-  $infer<typeof userProfilePageQuery>,
-  null
->
-
 export const currentUserQuery = e.select(e.UserProfile, (profile) => ({
   filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
 }))
@@ -844,3 +794,76 @@ export const homePageQuery = e.select({
 })
 
 export type HomePageData = Exclude<$infer<typeof homePageQuery>, null>
+
+export const profilePageQuery = e.params(
+  {
+    handle: e.str,
+  },
+  (params) =>
+    e.select(e.UserProfile, (profile) => ({
+      filter_single: e.op(profile.handle, '=', params.handle),
+
+      ...userProfileForAvatar(profile),
+      bio: true,
+      is_owner: e.op(profile.id, '=', e.global.current_user_profile.id),
+
+      notes: e.select(e.Note, (note) => ({
+        ...noteForCard(note),
+        created_by: false,
+
+        filter: e.op(
+          e.op(note.created_by, '=', profile),
+          'and',
+          e.op(note.public, '=', true),
+        ),
+        limit: 12,
+      })),
+
+      note_count: e.count(
+        e.select(e.Note, (note) => ({
+          filter: e.op(
+            e.op(note.created_by, '=', profile),
+            'and',
+            e.op(note.public, '=', true),
+          ),
+        })),
+      ),
+
+      wishlist: e.select(e.UserWishlist, (wishlist) => ({
+        status: true,
+        vegetable: vegetableForCard,
+
+        filter: e.op(
+          e.op(wishlist.user_profile.id, '=', profile.id),
+          'and',
+          e.op(
+            wishlist.status,
+            '!=',
+            e.cast(
+              e.VegetableWishlistStatus,
+              'SEM_INTERESSE' satisfies VegetableWishlistStatus,
+            ),
+          ),
+        ),
+        limit: 20,
+      })),
+
+      recent_contributions: e.select(e.EditSuggestion, (suggestion) => ({
+        filter: e.op(
+          e.op(suggestion.status, '=', e.EditSuggestionStatus.MERGED),
+          'and',
+          e.op(suggestion.created_by, '=', profile),
+        ),
+        order_by: {
+          expression: suggestion.updated_at,
+          direction: e.DESC, // newest first
+          empty: e.EMPTY_FIRST,
+        },
+        limit: 12,
+
+        ...editSuggestionForCard(suggestion),
+      })),
+    })),
+)
+
+export type ProfilePageData = Exclude<$infer<typeof profilePageQuery>, null>
