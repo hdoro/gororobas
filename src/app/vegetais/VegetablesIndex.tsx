@@ -19,6 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import type { VegetablesIndexFilterParams } from '@/queries'
 import {
@@ -139,29 +140,30 @@ export default function VegetablesIndex() {
       <FormProvider {...form}>
         <form className="sticky top-0 z-30 mt-8 bg-background py-2">
           <Dialog>
-            <div className="flex items-end justify-between gap-2">
-              {/* @TODO: debug search query - returning no results in EdgeDB */}
-              {/* <Field
-                form={form}
-                name="search_query"
-                label="Nome"
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    value={field.value || ''}
-                    type="text"
-                    placeholder="Buscar por nome"
-                  />
-                )}
-                hideLabel
-              /> */}
-              <div className="flex items-center gap-2">
+            <div className="xl:flex xl:items-center xl:justify-between">
+              <div className="flex gap-2">
+                <Field
+                  form={form}
+                  name="search_query"
+                  label="Nome"
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      value={field.value || ''}
+                      type="text"
+                      placeholder="Buscar por nome"
+                    />
+                  )}
+                  hideLabel
+                />
                 <DialogTrigger asChild>
                   <Button>
                     <FilterIcon className="mr-2 h-auto w-[1.25em]" />
                     Filtros
                   </Button>
                 </DialogTrigger>
+              </div>
+              <div className="mt-2 flex items-center gap-2 overflow-auto">
                 {Object.entries(filterParams).map(([key, values]) => {
                   if (
                     key === 'search_query' ||

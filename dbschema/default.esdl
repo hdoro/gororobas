@@ -1,4 +1,5 @@
 using extension auth;
+using extension pg_trgm;
 
 module default {
 
@@ -233,7 +234,12 @@ module default {
 
   type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything, ModeratorCanUpdate {
     required names: array<str>;
-    searchable_names := array_join(.names, ' ') ++ ' ' ++ array_join(.varieties.names, ' ') ++ ' ' ++ .handle;
+    searchable_names := array_join(
+      .names ++ 
+      array_agg(array_join(.varieties.names, ' ')) ++ 
+      [.handle],
+      ' '
+    );
     
     scientific_names: array<str>;
     gender: Gender;

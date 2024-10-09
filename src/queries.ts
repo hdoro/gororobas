@@ -586,14 +586,16 @@ export const vegetablesIndexQuery = e.params(
       ] as const
 
       const filterOps = [
-        // @TODO: debug why textual search isn't working
-        // e.op(
-        //   // Either there's no search query
-        //   e.op(e.len(params.search_query), '=', 0),
-        //   'or',
-        //   // Or the vegetable matches it
-        //   e.op(vegetable.searchable_names, 'ilike', params.search_query),
-        // ),
+        e.op(
+          // Either there's no search query
+          e.op(e.len(params.search_query), '=', 0),
+          'or',
+          // Or the vegetable matches it
+          e.ext.pg_trgm.word_similar(
+            params.search_query,
+            vegetable.searchable_names,
+          ),
+        ),
 
         ...numberFilters.map(({ vegetableValue, paramValue, type }) => {
           if (type === 'min') {
