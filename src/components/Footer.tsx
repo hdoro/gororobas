@@ -14,6 +14,7 @@ export default function Footer() {
     <footer
       className="flex flex-col items-center gap-[var(--page-padding-x)] border-t border-t-primary-100 bg-background-card px-pageX py-10 md:flex-row md:items-start md:justify-start md:py-16 lg:py-24"
       aria-label="Rodapé"
+      id="global-footer"
     >
       <Link href={paths.home()} rel="home" title="Página inicial">
         <GororobasLogo />

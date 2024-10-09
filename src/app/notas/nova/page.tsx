@@ -1,9 +1,9 @@
+import HideFooter from '@/components/HideFooter'
 import { auth } from '@/edgedb'
 import { getAuthRedirect, paths } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import NoteForm from './NoteForm'
-import './hideFooter.css'
 
 export const metadata: Metadata = {
   title: 'Enviar nota | Gororobas',
@@ -16,5 +16,10 @@ export default async function ProfileRoute() {
     return redirect(getAuthRedirect(false, paths.newNote()))
   }
 
-  return <NoteForm />
+  return (
+    <>
+      <NoteForm />
+      <HideFooter />
+    </>
+  )
 }
