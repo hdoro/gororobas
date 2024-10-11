@@ -2,7 +2,7 @@ import { auth } from '@/edgedb'
 import type { HomePageData } from '@/queries'
 import { shuffleArray } from '@/utils/arrays'
 import { paths } from '@/utils/urls'
-import { Edit2Icon } from 'lucide-react'
+import { Edit2Icon, SearchIcon } from 'lucide-react'
 import Link from 'next/link'
 import { ContributionCTA } from './ContributionCTA'
 import NotesGrid from './NotesGrid'
@@ -15,6 +15,7 @@ import NoteIcon from './icons/NoteIcon'
 import RainbowIcon from './icons/RainbowIcon'
 import { Button } from './ui/button'
 import { Text } from './ui/text'
+import { Input } from './ui/input'
 
 export default async function HomePage(data: Partial<HomePageData>) {
   const featured_vegetables = shuffleArray(data.featured_vegetables || [])
@@ -40,6 +41,18 @@ export default async function HomePage(data: Partial<HomePageData>) {
           Enciclopédia colaborativa de conhecimento em agroecologia sobre mais
           de 400 vegetais
         </Text>
+
+        <form action="/vegetais" method="get" className="mt-2 flex">
+          <Input
+            type="text"
+            name="nome"
+            placeholder="Buscar vegetais..."
+            className="h-[2.525rem] rounded-r-none"
+          />
+          <Button type="submit" className="rounded-l-none">
+            <SearchIcon className="w-4" /> Buscar
+          </Button>
+        </form>
       </section>
       {featured_vegetables && featured_vegetables.length > 0 && (
         <>
