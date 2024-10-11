@@ -14,8 +14,8 @@ import HistoryIcon from './icons/HistoryIcon'
 import NoteIcon from './icons/NoteIcon'
 import RainbowIcon from './icons/RainbowIcon'
 import { Button } from './ui/button'
-import { Text } from './ui/text'
 import { Input } from './ui/input'
+import { Text } from './ui/text'
 
 export default async function HomePage(data: Partial<HomePageData>) {
   const featured_vegetables = shuffleArray(data.featured_vegetables || [])

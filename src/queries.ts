@@ -859,7 +859,7 @@ export const profilePageQuery = e.params(
           direction: e.DESC, // newest first
           empty: e.EMPTY_FIRST,
         },
-        limit: 12,
+        limit: 6,
 
         ...editSuggestionForCard(suggestion),
       })),

@@ -54,6 +54,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
+      <head>
+        <link
+          rel="search"
+          type="application/opensearchdescription+xml"
+          title="Gororobas"
+          href="/opensearch.xml"
+        />
+      </head>
       <body className={cn(fontFamily.className, 'flex min-h-dvh flex-col')}>
         <HeaderNav />
         <div className="flex-1">{children}</div>
