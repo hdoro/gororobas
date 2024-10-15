@@ -101,6 +101,7 @@ export function tipsToParam(
       // If there are duplicates, give preference to the last ones in the array
       if (tips.slice(tipIndex + 1).some((t) => t.id === tip.id)) return params
 
+      // Only existing tips have an id
       if (tip.id) {
         params.existing_tips.push({
           id: tip.id ?? null,

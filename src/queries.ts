@@ -142,6 +142,7 @@ export type VegetableVarietyCardData = Exclude<
 >[number]
 
 const vegetableTipForCard = e.shape(e.VegetableTip, (tip) => ({
+  id: true,
   handle: true,
   subjects: true,
   content: true,
@@ -185,6 +186,7 @@ const coreVegetableData = e.shape(e.Vegetable, () => ({
 const vegetablePageShape = e.shape(e.Vegetable, (vegetable) => ({
   ...coreVegetableData(vegetable),
   current_user_id: e.global.current_user_profile.id,
+  current_user_role: e.global.current_user.userRole,
   photos: (image) => ({
     ...imageForRendering(image),
 

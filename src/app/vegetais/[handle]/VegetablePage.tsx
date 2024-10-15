@@ -82,7 +82,7 @@ export default function VegetablePage({
             Sugestões e dicas
           </SectionTitle>
           {vegetable.tips.length > 0 ? (
-            <VegetableTips tips={vegetable.tips} />
+            <VegetableTips tips={vegetable.tips} vegetable={vegetable} />
           ) : (
             <div className="mt-1 space-y-2 px-pageX">
               <Text level="p">

@@ -3,9 +3,9 @@
 import { auth } from '@/edgedb'
 import type { NoteInForm } from '@/schemas'
 import { runServerEffect } from '@/services/runtime'
+import { NoteUpdateFailedError } from '@/types/errors'
 import { Effect } from 'effect'
 import { updateNote } from './updateNote'
-import { NoteUpdateFailedError } from '@/types/errors'
 
 export async function updateNoteAction(input: {
   current: NoteInForm

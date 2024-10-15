@@ -1,10 +1,10 @@
 'use client'
 
 import { updateNoteAction } from '@/actions/updateNote.action'
+import NoteForm from '@/components/NoteForm'
 import type { NoteInForm } from '@/schemas'
 import { getChangedObjectSubset, removeNullishKeys } from '@/utils/diffs'
 import { paths } from '@/utils/urls'
-import NoteForm from '@/components/NoteForm'
 
 export default function EditNoteForm(props: {
   noteForDB: NoteInForm

@@ -25,7 +25,7 @@ import { Text } from './ui/text'
 
 const VegetableTipForm = dynamic(() => import('./VegetableTipForm'), {
   loading: () => (
-    <div className="flex items-center justify-center gap-3 p-3">
+    <div className="flex items-center justify-center gap-3 p-3 py-12">
       <Carrot className="h-6 w-6 animate-spin" />
       Carregando...
     </div>

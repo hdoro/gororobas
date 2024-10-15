@@ -1,8 +1,8 @@
 'use client'
 
 import { createNotesAction } from '@/actions/createNotes.action'
-import { paths } from '@/utils/urls'
 import NoteForm from '@/components/NoteForm'
+import { paths } from '@/utils/urls'
 
 export default function NewNoteForm() {
   return (

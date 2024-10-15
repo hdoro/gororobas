@@ -1,14 +1,17 @@
-import type { VegetableTipCardData } from '@/queries'
+import type { VegetablePageData, VegetableTipCardData } from '@/queries'
 import { isRenderableRichText } from '@/utils/tiptap'
 import React from 'react'
+import { EditTipDialog } from './EditTipDialog'
 import ProfileCard from './ProfileCard'
 import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
 import { Text } from './ui/text'
 
 export default function VegetableTipCard({
   tip,
+  vegetable,
 }: {
   tip: VegetableTipCardData
+  vegetable: VegetablePageData
 }) {
   if (!isRenderableRichText(tip.content)) return null
 
@@ -19,10 +22,23 @@ export default function VegetableTipCard({
     return 0
   })
 
+  const { current_user_id, current_user_role } = vegetable
+  const isByCurrentUser =
+    !!current_user_id &&
+    orderedSources.some(
+      (source) =>
+        source.type === 'GOROROBAS' &&
+        source.users.some((user) => user.id === current_user_id),
+    )
+  const canEdit =
+    isByCurrentUser ||
+    current_user_role === 'ADMIN' ||
+    current_user_role === 'MODERATOR'
+
   return (
     <div
       key={tip.handle}
-      className="rounded-lg border-2 bg-background-card px-4 py-3 text-xl"
+      className="relative rounded-lg border-2 bg-background-card px-4 py-3 text-xl"
     >
       <DefaultTipTapRenderer content={tip.content} />
       {orderedSources.length > 0 && (
@@ -66,6 +82,7 @@ export default function VegetableTipCard({
           </div>
         </div>
       )}
+      {canEdit && <EditTipDialog vegetable={vegetable} tip={tip} />}
     </div>
   )
 }

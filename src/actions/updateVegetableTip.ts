@@ -1,7 +1,6 @@
 'use server'
 
 import { auth } from '@/edgedb'
-import { addTipsToVegetableMutation } from '@/mutations'
 import { currentUserQuery } from '@/queries'
 import { VegetableTipData, type VegetableTipForDB } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
@@ -14,8 +13,7 @@ import { Schema } from '@effect/schema'
 import { Effect, pipe } from 'effect'
 import { createOrUpdateTipTransaction } from './createOrUpdateTipTransaction'
 
-export async function createVegetableTipAction(input: {
-  vegetable_id: string
+export async function updateVegetableTipAction(input: {
   tip: VegetableTipForDB
 }) {
   const session = auth.getSession()
@@ -30,42 +28,21 @@ export async function createVegetableTipAction(input: {
       }
 
       if (
-        !Schema.is(VegetableTipData)(input.tip) ||
-        !Schema.is(Schema.UUID)(input.vegetable_id)
+        !Schema.is(Schema.partial(VegetableTipData))(input.tip) ||
+        !Schema.is(Schema.UUID)(input.tip.id)
       ) {
         return yield* Effect.fail(
-          new InvalidInputError(input, VegetableTipData),
+          new InvalidInputError(input, Schema.partial(VegetableTipData)),
         )
       }
 
       return yield* pipe(
         Effect.tryPromise({
-          // Create the tip with the user's session to include correct Auditable data
           try: () => createOrUpdateTipTransaction(input, session.client),
           catch: (error) => {
-            console.log('Failed creating tip', error)
+            console.log('Failed updating tip', error)
             return new UnknownEdgeDBError(error)
           },
-        }),
-        // ADD THE TIP TO THE VEGETABLE
-        Effect.flatMap((createdTips) => {
-          // As modifying a vegetable requires admin privileges, we're executing it as an admin
-          const userClient = session.client.withConfig({
-            allow_user_specified_id: true,
-            apply_access_policies: false,
-          })
-
-          return Effect.tryPromise({
-            try: () =>
-              addTipsToVegetableMutation.run(userClient, {
-                vegetable_id: input.vegetable_id,
-                tips: createdTips.map((tip) => tip.id),
-              }),
-            catch: (error) => {
-              console.log('Failed adding tip to vegetable', error)
-              return new UnknownEdgeDBError(error)
-            },
-          })
         }),
         Effect.map(
           () =>
@@ -73,14 +50,13 @@ export async function createVegetableTipAction(input: {
               success: true,
             }) as const,
         ),
-        ...buildTraceAndMetrics('create_vegetable_tip', {
-          vegetable_id: input.vegetable_id,
+        ...buildTraceAndMetrics('update_vegetable_tip', {
+          tip_id: input.tip.id,
         }),
       ).pipe(
         Effect.catchAll(() =>
           Effect.succeed({
             success: false,
-            // @TODO better handle error so users know what went wrong
             error: 'erro-desconhecido',
           } as const),
         ),

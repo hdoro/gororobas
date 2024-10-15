@@ -1,14 +1,16 @@
 import VegetableTipCard from '@/components/VegetableTipCard'
 import { Text } from '@/components/ui/text'
 import type { TipSubject } from '@/edgedb.interfaces'
-import type { VegetableTipCardData } from '@/queries'
+import type { VegetablePageData, VegetableTipCardData } from '@/queries'
 import { cn } from '@/utils/cn'
 import { TIP_SUBJECT_TO_LABEL } from '@/utils/labels'
 
 export default function VegetableTips({
   tips = [],
+  vegetable,
 }: {
   tips?: VegetableTipCardData[]
+  vegetable: VegetablePageData
 }) {
   if (!Array.isArray(tips) || tips.length === 0) return null
 
@@ -39,7 +41,11 @@ export default function VegetableTips({
               </Text>
               <div className="flex-1 space-y-4">
                 {subjectTips.map((tip) => (
-                  <VegetableTipCard key={tip.handle} tip={tip} />
+                  <VegetableTipCard
+                    key={tip.handle}
+                    tip={tip}
+                    vegetable={vegetable}
+                  />
                 ))}
               </div>
             </div>
