@@ -17,6 +17,15 @@ export class UnknownEdgeDBError {
   ) {}
 }
 
+export class NoteUpdateFailedError {
+  readonly _tag = 'NoteUpdateFailed'
+
+  constructor(
+    readonly error: unknown,
+    readonly note_id: string,
+  ) {}
+}
+
 export class InvalidInputError {
   readonly _tag = 'InvalidInput'
 

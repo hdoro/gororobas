@@ -1,6 +1,5 @@
 'use client'
 
-import { createNotesAction } from '@/actions/createNotes.action'
 import BooleanInput, {
   BOOLEAN_FIELD_CLASSNAMES,
 } from '@/components/forms/BooleanInput'
@@ -13,10 +12,9 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
-import { NoteData, type NoteInForm } from '@/schemas'
+import { NoteData, type NoteForDB, type NoteInForm } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
-import { paths } from '@/utils/urls'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Schema } from '@effect/schema'
 import { Effect, pipe } from 'effect'
@@ -24,20 +22,34 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 
-export default function NoteForm() {
+export default function NoteForm(props: {
+  onSubmit: (note: NoteForDB) => Promise<
+    | {
+        success: true
+        redirectTo: string
+        message?: { title?: string; description?: string }
+      }
+    | { success: false; error: string }
+  >
+  operation: 'create' | 'edit'
+  initialValue?: NoteInForm
+}) {
   const router = useRouter()
-  const toast = useToast()
+  const { toast } = useToast()
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>(
     'idle',
   )
 
   const form = useFormWithSchema({
     schema: Schema.encodedSchema(NoteData),
-    defaultValues: {
-      id: generateId(),
-      public: true,
-      published_at: new Date().toISOString(),
-    },
+    defaultValues:
+      'initialValue' in props
+        ? props.initialValue
+        : {
+            id: generateId(),
+            public: true,
+            published_at: new Date().toISOString(),
+          },
     disabled: status === 'submitting',
   })
 
@@ -47,7 +59,7 @@ export default function NoteForm() {
     const program = pipe(
       Schema.decode(NoteData)(data),
       Effect.flatMap((noteForDB) =>
-        Effect.tryPromise(() => createNotesAction([noteForDB])),
+        Effect.tryPromise(() => props.onSubmit(noteForDB)),
       ),
       Effect.catchAll(() =>
         Effect.succeed({
@@ -57,18 +69,22 @@ export default function NoteForm() {
       ),
     )
     const response = await Effect.runPromise(program)
-    if (response.success === true && response.result[0]?.handle) {
-      toast.toast({
+    if (response.success === true) {
+      toast({
         variant: 'default',
-        title: 'Nota criada ✨',
-        description: 'Te enviando pra página dela...',
+        title: response.message?.title || 'Nota salva ✨',
+        description:
+          response.message?.description || 'Te enviando pra página dela...',
       })
-      router.push(paths.note(response.result[0].handle))
+      router.push(response.redirectTo)
       setStatus('success')
     } else {
-      toast.toast({
+      toast({
         variant: 'destructive',
-        title: 'Erro ao criar a nota',
+        title:
+          props.operation === 'create'
+            ? 'Erro ao salvar a nota'
+            : 'Erro ao atualizar a nota',
         description: 'Por favor, tente novamente.',
       })
       setStatus('idle')
@@ -83,7 +99,10 @@ export default function NoteForm() {
       >
         <Card className="space-y-4 px-5 py-3">
           <CardHeader>
-            <CardTitle>Nota criada com sucesso!</CardTitle>
+            <CardTitle>
+              Nota {props.operation === 'create' ? 'criada' : 'atualizada'} com
+              sucesso!
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <Text className="flex items-center justify-center gap-3">

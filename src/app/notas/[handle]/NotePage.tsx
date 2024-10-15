@@ -13,7 +13,7 @@ import type { NotePageData } from '@/queries'
 import type { TiptapNode } from '@/types'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 import { paths } from '@/utils/urls'
-import { PlusIcon } from 'lucide-react'
+import { EditIcon } from 'lucide-react'
 import Link from 'next/link'
 import DeleteNoteButton from './DeleteNoteButton'
 
@@ -65,10 +65,10 @@ export default function NotePage({ note }: { note: NotePageData }) {
               {note.is_owner && (
                 <div className="flex flex-1 items-center justify-end gap-3">
                   <DeleteNoteButton noteId={note.id} />
-                  <Button mode="outline" tone="primary" size="xs" asChild>
-                    <Link href={paths.newNote()}>
-                      <PlusIcon className="w-[1.25em]" />
-                      Nova nota
+                  <Button mode="outline" tone="neutral" size="xs" asChild>
+                    <Link href={paths.editNote(note.handle)}>
+                      <EditIcon className="w-[1.25em]" />
+                      Editar
                     </Link>
                   </Button>
                 </div>

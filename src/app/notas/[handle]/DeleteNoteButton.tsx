@@ -48,9 +48,8 @@ export default function DeleteNoteButton({ noteId }: { noteId: string }) {
   return (
     <Dialog>
       <DialogTrigger asChild disabled={status === 'submitting'}>
-        <Button mode="outline" tone="destructive" size="xs">
+        <Button mode="bleed" tone="destructive" size="xs" title="Deletar nota">
           <TrashIcon className="w-[1.25em]" />
-          Deletar nota
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-lg" hasClose={status === 'idle'}>

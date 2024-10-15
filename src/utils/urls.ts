@@ -93,6 +93,7 @@ export const paths = {
   notesIndex: () => '/notas' as const,
   note: (handle: string) => formatPath(`/notas/${handle}`),
   newNote: () => '/notas/nova' as const,
+  editNote: (handle: string) => formatPath(`/notas/${handle}/editar`),
 } as const
 
 export function getAuthRedirect(isSignedIn: boolean, onAuthRedirectTo: string) {

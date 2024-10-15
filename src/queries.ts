@@ -448,6 +448,18 @@ export const notePageQuery = e.params(
 
 export type NotePageData = Exclude<$infer<typeof notePageQuery>, null>
 
+export const noteEditingQuery = e.params(
+  {
+    handle: e.str,
+  },
+  (params) =>
+    e.select(e.Note, (note) => ({
+      filter_single: e.op(note.handle, '=', params.handle),
+
+      ...e.Note['*'],
+    })),
+)
+
 export const currentUserQuery = e.select(e.UserProfile, (profile) => ({
   filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
 }))

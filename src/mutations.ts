@@ -128,11 +128,75 @@ export const insertNotesMutation = e.params(
         ),
       })
 
-      return e.select(inserted, (note) => ({
+      return e.select(inserted, () => ({
         id: true,
         handle: true,
       }))
     }),
+)
+
+export const updateNotesMutation = e.params(
+  {
+    note_id: e.uuid,
+    updated_at: e.datetime,
+    /**
+     * {
+     * body: e.optional(e.json),
+     * created_by: e.uuid,
+     * title: e.json,
+     * public: e.bool,
+     * published_at: e.datetime,
+     * types: e.array(e.str),
+     * }
+     **/
+    optional_properties: e.json,
+  },
+  (params) => {
+    const updated = e.update(e.Note, (note) => ({
+      filter_single: e.op(note.id, '=', params.note_id),
+      set: {
+        updated_at: params.updated_at,
+        title: e.op(
+          e.cast(e.json, e.json_get(params.optional_properties, 'title')),
+          '??',
+          note.title,
+        ),
+        body: e.op(
+          e.cast(e.json, e.json_get(params.optional_properties, 'body')),
+          '??',
+          note.body,
+        ),
+        public: e.op(
+          e.cast(e.bool, e.json_get(params.optional_properties, 'public')),
+          '??',
+          note.public,
+        ),
+        published_at: e.op(
+          e.cast(
+            e.datetime,
+            e.json_get(params.optional_properties, 'published_at'),
+          ),
+          '??',
+          note.published_at,
+        ),
+        types: e.op(
+          e.array_unpack(
+            e.cast(
+              e.array(e.NoteType),
+              e.json_get(params.optional_properties, 'types'),
+            ),
+          ),
+          '??',
+          note.types,
+        ),
+      },
+    }))
+
+    return e.select(updated, () => ({
+      id: true,
+      handle: true,
+    }))
+  },
 )
 
 export const deleteNotesMutation = e.params(
