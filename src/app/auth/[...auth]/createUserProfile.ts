@@ -8,6 +8,7 @@ import { Effect } from 'effect'
 export default function createUserProfile(
   /** Keep track of retries to gauge how many auth callbacks are failing */
   isRetry = false,
+  oauthName: string | null = null,
 ) {
   return Effect.gen(function* (_) {
     const userClient = auth.getSession().client.withConfig({
@@ -25,14 +26,14 @@ export default function createUserProfile(
       } FILTER .identity = (global ext::auth::ClientTokenIdentity)
     `),
         catch: () => {
-          console.error('Failed fetching user factor')
+          console.error('[createUserProfile] Failed fetching user factor')
           return Effect.succeed(null)
         },
       }),
     )
 
     const userId = generateId()
-    const initialName = factorData?.email?.split('@')[0] || ''
+    const initialName = oauthName || factorData?.email?.split('@')[0] || ''
     const initialHandle = getStandardHandle(initialName || '', userId)
 
     return yield* Effect.tryPromise({

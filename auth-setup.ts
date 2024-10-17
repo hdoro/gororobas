@@ -1,5 +1,4 @@
-import { APP_NAME, BRAND_COLOR } from '@/utils/config'
-import { pathToAbsUrl, paths } from '@/utils/urls'
+import { APP_NAME } from '@/utils/config'
 import { createClient } from 'edgedb'
 import crypto from 'node:crypto'
 import process from 'node:process'
@@ -16,27 +15,20 @@ const CONFIG = {
       providerType: 'GoogleOAuthProvider',
       clientId: process.env.GOOGLE_CLIENT_ID,
       secret: process.env.GOOGLE_SECRET,
-    }
+    },
   ],
   appName: APP_NAME,
-  edgedbUi: {
-    redirectTo: pathToAbsUrl(paths.authCallback()),
-    redirectToOnSignup: pathToAbsUrl(paths.authCallback(true)),
-    brandColor: BRAND_COLOR,
-    logoUrl: pathToAbsUrl('/logo-full.svg'),
-  },
   /** Email sending */
   SMTP: {
-    sender: "ola@gororobas.com",
+    sender: 'ola@gororobas.com',
     username: process.env.SMTP_USERNAME,
     password: process.env.SMTP_PASSWORD,
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT),
     security: process.env.SMTP_SECURITY,
     validate_certs: Boolean(process.env.SMTP_VALIDATE_CERTS),
-  }
+  },
 } as const
-
 
 let query = `
 CONFIGURE CURRENT BRANCH
@@ -60,15 +52,6 @@ ext::auth::AuthConfig::token_time_to_live := <duration>'${CONFIG.tokenTTL}';
 CONFIGURE CURRENT BRANCH
 INSERT ext::auth::MagicLinkProviderConfig {
   token_time_to_live := <duration>'${CONFIG.magicLinkTokenTTL}',
-};
-
-CONFIGURE CURRENT BRANCH
-INSERT ext::auth::UIConfig {
-  redirect_to := '${CONFIG.edgedbUi.redirectTo}',
-  redirect_to_on_signup := '${CONFIG.edgedbUi.redirectToOnSignup}',
-  app_name := '${CONFIG.appName}',
-  brand_color := '${CONFIG.edgedbUi.brandColor}',
-  logo_url := '${CONFIG.edgedbUi.logoUrl}',
 };
 
 CONFIGURE CURRENT BRANCH SET
@@ -98,8 +81,7 @@ ext::auth::SMTPConfig::password := '${CONFIG.SMTP.password}';
 `
 }
 
-
-for (const { providerType, clientId, secret} of CONFIG.providers) {
+for (const { providerType, clientId, secret } of CONFIG.providers) {
   query += `
 
     CONFIGURE CURRENT BRANCH
@@ -110,4 +92,7 @@ for (const { providerType, clientId, secret} of CONFIG.providers) {
   `
 }
 
-await client.execute(query).catch(console.error).then(() => console.log('Auth setup complete'))
+await client
+  .execute(query)
+  .catch(console.error)
+  .then(() => console.log('Auth setup complete'))

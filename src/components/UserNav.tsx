@@ -2,7 +2,9 @@ import createUserProfile from '@/app/auth/[...auth]/createUserProfile'
 import { auth } from '@/edgedb'
 import { profileForNavQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { paths } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
+import Link from 'next/link'
 import ProfileCard from './ProfileCard'
 import { Button } from './ui/button'
 
@@ -13,11 +15,8 @@ export default async function UserNav({ signedIn }: { signedIn: boolean }) {
     return (
       <>
         <div className="flex items-center gap-2">
-          <Button asChild mode="outline" size="sm">
-            <a href={auth.getBuiltinUIUrl()}>Entrar</a>
-          </Button>
-          <Button asChild size="sm">
-            <a href={auth.getBuiltinUISignUpUrl()}>Criar conta</a>
+          <Button asChild mode="outline">
+            <Link href={paths.signInOrSignUp(paths.home())}>Entrar</Link>
           </Button>
         </div>
       </>

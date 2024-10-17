@@ -41,7 +41,7 @@ export default async function EditNotePage({
   const session = auth.getSession()
 
   if (!(await session.isSignedIn())) {
-    redirect(paths.signinNotice(paths.editNote(handle)))
+    redirect(paths.signInOrSignUp(paths.editNote(handle)))
   }
 
   const noteForDB = await getRouteData(handle)

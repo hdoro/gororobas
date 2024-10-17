@@ -59,10 +59,9 @@ export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
             </Text>
             <div className="flex items-center gap-2 pt-2">
               <Button asChild>
-                <a href={paths.signup(pathname)}>Criar conta</a>
-              </Button>
-              <Button asChild mode="outline">
-                <a href={paths.signin(pathname)}>Entrar</a>
+                <a href={paths.signInOrSignUp(pathname)}>
+                  Entrar ou criar conta
+                </a>
               </Button>
             </div>
           </DialogBody>

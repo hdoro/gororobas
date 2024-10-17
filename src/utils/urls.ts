@@ -1,4 +1,5 @@
 import type { NextSearchParams } from '@/types'
+import type { BuiltinOAuthProviderNames } from '@edgedb/auth-core'
 import type { ReadonlyURLSearchParams } from 'next/navigation'
 import { BASE_URL, PRODUCTION_URL } from './config'
 import { slugify, truncate } from './strings'
@@ -69,19 +70,23 @@ export function formatPath(path?: string): string {
 export const paths = {
   home: () => '/' as const,
 
-  editProfile: () => '/perfil' as const,
+  editProfile: (isFirstTime = false) =>
+    `/perfil${isFirstTime ? '?bem-vinde=true' : ''}` as const,
   userProfile: (handle: string) => formatPath(`/pessoas/${handle}`),
 
-  signinNotice: (onAuthRedirectTo: string) =>
-    `/entrar?redirecionar=${encodeURIComponent(onAuthRedirectTo)}` as const,
   // Refer to `src/app/redirecionar/route.ts` for why this redirect is needed
-  signin: (onAuthRedirectTo: string) =>
-    `/redirecionar?modo=entrar&redirecionar=${encodeURIComponent(onAuthRedirectTo)}` as const,
-  signup: (onAuthRedirectTo: string) =>
-    `/redirecionar?modo=criar-conta&redirecionar=${encodeURIComponent(onAuthRedirectTo)}` as const,
+  signInOrSignUp: (onAuthRedirectTo?: string) =>
+    `/entrar${onAuthRedirectTo ? `?redirecionar=${encodeURIComponent(onAuthRedirectTo)}` : ''}` as const,
   signout: () => '/auth/signout',
-  authCallback: (isSignUp = false) =>
-    `/auth/builtin/callback${isSignUp ? '?isSignUp=true' : ''}`,
+  oauthLogin: (
+    provider: BuiltinOAuthProviderNames,
+    onAuthRedirectTo?: string,
+  ) =>
+    `/auth/oauth?provider_name=${encodeURIComponent(provider)}${
+      onAuthRedirectTo
+        ? `&redirecionar=${encodeURIComponent(onAuthRedirectTo)}`
+        : ''
+    }`,
 
   vegetablesIndex: () => '/vegetais' as const,
   vegetable: (handle: string) => formatPath(`/vegetais/${handle}`),
@@ -97,7 +102,7 @@ export const paths = {
 } as const
 
 export function getAuthRedirect(isSignedIn: boolean, onAuthRedirectTo: string) {
-  if (!isSignedIn) return paths.signinNotice(onAuthRedirectTo)
+  if (!isSignedIn) return paths.signInOrSignUp(onAuthRedirectTo)
 
   return paths.editProfile()
 }

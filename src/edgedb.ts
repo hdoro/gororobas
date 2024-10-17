@@ -11,4 +11,6 @@ export const client = createClient({
 
 export const auth = createAuth(client, {
   baseUrl: BASE_URL,
+  magicLinkFailurePath: '/entrar?error=magic-link',
+  authRoutesPath: '/auth',
 })

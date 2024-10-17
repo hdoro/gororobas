@@ -22,6 +22,7 @@
     "@dnd-kit/modifiers": "^7.0.0",
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@edgedb/auth-core": "^0.2.1",
     "@edgedb/auth-nextjs": "^0.3.2",
     "@effect/experimental": "^0.29.1",
     "@effect/opentelemetry": "^0.38.1",

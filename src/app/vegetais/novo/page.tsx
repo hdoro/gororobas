@@ -7,7 +7,7 @@ export default async function NewVegetableRoute() {
   const session = auth.getSession()
 
   if (!(await session.isSignedIn())) {
-    redirect(paths.signinNotice(paths.newVegetable()))
+    redirect(paths.signInOrSignUp(paths.newVegetable()))
   }
 
   return <NewVegetableForm />

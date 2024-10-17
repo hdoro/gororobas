@@ -20,6 +20,9 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@18.3.1)
+      '@edgedb/auth-core':
+        specifier: ^0.2.1
+        version: 0.2.1(edgedb@1.5.12)
       '@edgedb/auth-nextjs':
         specifier: ^0.3.2
         version: 0.3.2(edgedb@1.5.12)(next@14.2.15(@babel/core@7.25.2)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
