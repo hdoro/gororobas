@@ -21,11 +21,32 @@ export const STRATUM_TO_LABEL = {
   RASTEIRO: 'Rasteiro',
 } as const satisfies Record<Stratum, string>
 
+export const STRATUM_EXPLAINERS = {
+  EMERGENTE:
+    'Plantas que devem estar acima de todas as outras e receber o máximo de luz - toleram até ~20% de sombra ao longo do dia',
+  ALTO: 'Plantas que só ficam abaixo das de estrato emergente - toleram até ~40% de sombra ao longo do dia',
+  MEDIO:
+    'Plantas que ficam abaixo das de estrato alto - toleram até ~60% de sombra ao longo do dia',
+  BAIXO:
+    'Plantas que ficam abaixo das de estrato médio - toleram até ~80% de sombra ao longo do dia',
+  RASTEIRO: 'Plantas de solo de floresta, sobrevivem sem luz direta',
+} as const satisfies Record<Stratum, string>
+
 export const VEGETABLE_LIFECYCLE_TO_LABEL = {
   SEMESTRAL: 'Semestral',
   ANUAL: 'Anual',
   BIENAL: 'Bienal',
   PERENE: 'Perene',
+} as const satisfies Record<VegetableLifeCycle, string>
+
+export const VEGETABLE_LIFECYCLE_EXPLAINERS = {
+  SEMESTRAL:
+    'Plantas que removemos ou colhemos em até 6 meses ou que morrem naturalmente nesse período',
+  ANUAL:
+    'Plantas que removemos ou colhemos entre 6 meses e 1 ano ou que morrem naturalmente nesse período',
+  BIENAL:
+    'Plantas que removemos ou colhemos em 1 a 2 anos ou que morrem naturalmente nesse período',
+  PERENE: 'Plantas que cultivamos por mais de 2 anos, como árvores frutíferas',
 } as const satisfies Record<VegetableLifeCycle, string>
 
 export const USAGE_TO_LABEL = {
@@ -77,6 +98,7 @@ export const EDIBLE_PART_TO_LABEL = {
   RIZOMA: 'Rizoma',
 } as const satisfies Record<EdiblePart, string>
 
+// @TODO: explicações para os métodos de plantio
 export const PLANTING_METHOD_TO_LABEL = {
   BROTO: 'Broto',
   ENXERTO: 'Enxerto',
