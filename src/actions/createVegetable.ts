@@ -20,8 +20,8 @@ import {
   referencesInFormToParam,
 } from '@/utils/mutation.utils'
 import { paths } from '@/utils/urls'
-import { Schema } from '@effect/schema'
 import type { Client } from 'edgedb'
+import { Schema } from 'effect'
 import { Effect, pipe } from 'effect'
 import { formatVegetableFriendForDB } from './formatVegetableFriendForDB'
 

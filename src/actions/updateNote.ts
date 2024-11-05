@@ -2,8 +2,8 @@ import { updateNotesMutation } from '@/mutations'
 import { NoteData, type NoteInForm } from '@/schemas'
 import { buildTraceAndMetrics } from '@/services/runtime'
 import { UnknownEdgeDBError } from '@/types/errors'
-import { Schema } from '@effect/schema'
 import type { Client } from 'edgedb'
+import { Schema } from 'effect'
 import { Effect, pipe } from 'effect'
 
 export function updateNote(

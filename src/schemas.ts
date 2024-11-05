@@ -28,10 +28,9 @@ import {
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
 import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
-import { ParseResult } from '@effect/schema'
-import * as S from '@effect/schema/Schema'
 import type { JSONContent } from '@tiptap/react'
-import { Effect } from 'effect'
+import { Schema as S } from 'effect'
+import { Effect, ParseResult } from 'effect'
 import type { NoteType } from './edgedb.interfaces'
 import { FailedUploadingImageError } from './types/errors'
 

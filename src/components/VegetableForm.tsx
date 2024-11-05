@@ -27,7 +27,7 @@ import {
 } from '@/utils/labels'
 import { gender } from '@/utils/strings'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
-import { Schema } from '@effect/schema'
+import { Schema } from 'effect'
 import { Effect, pipe } from 'effect'
 import { SendIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'

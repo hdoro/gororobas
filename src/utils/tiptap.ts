@@ -2,8 +2,8 @@ import { richTextEditorTheme } from '@/components/RichTextEditor/RichTextEditor.
 import { getTiptapExtensions } from '@/components/RichTextEditor/getTiptapExtensions'
 import { RichText } from '@/schemas'
 import type { TiptapNode } from '@/types'
-import { Schema } from '@effect/schema'
 import { generateHTML } from '@tiptap/html'
+import { Schema } from 'effect'
 
 function HTMLToPlainText(html: string) {
   return html.replace(/<\/?[^>]*>/g, '')

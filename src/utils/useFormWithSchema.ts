@@ -1,5 +1,5 @@
 import { effectTsResolver } from '@/utils/effectResolver'
-import type { Schema } from '@effect/schema'
+import type { Schema } from 'effect'
 import {
   type FieldValues,
   type UseFormProps,

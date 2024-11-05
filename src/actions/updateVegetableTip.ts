@@ -9,7 +9,7 @@ import {
   UnauthorizedError,
   UnknownEdgeDBError,
 } from '@/types/errors'
-import { Schema } from '@effect/schema'
+import { Schema } from 'effect'
 import { Effect, pipe } from 'effect'
 import { createOrUpdateTipTransaction } from './createOrUpdateTipTransaction'
 

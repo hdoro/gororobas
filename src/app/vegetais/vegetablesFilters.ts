@@ -5,7 +5,7 @@ import type {
 import { RangeFormValue } from '@/schemas'
 import type { NextSearchParams } from '@/types'
 import { VEGETABLES_PER_PAGE } from '@/utils/config'
-import { Schema } from '@effect/schema'
+import { Schema } from 'effect'
 import { FILTER_DEFINITIONS } from './vegetableFilterDefinitions'
 
 const PAGE_INDEX_QUERY_KEY = 'pagina'

@@ -1,5 +1,5 @@
 import type { TokenData } from '@edgedb/auth-nextjs/app'
-import { Schema } from '@effect/schema'
+import { Schema } from 'effect'
 import { Effect } from 'effect'
 
 /**

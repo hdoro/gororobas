@@ -8,7 +8,7 @@ import {
 import { removeNullishKeys } from '@/utils/diffs'
 import { TIP_SUBJECT_TO_LABEL } from '@/utils/labels'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
-import { Schema } from '@effect/schema'
+import { Schema } from 'effect'
 import { Effect, pipe } from 'effect'
 import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'

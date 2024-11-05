@@ -4,14 +4,14 @@
  * @see https://github.com/react-hook-form/resolvers/blob/master/effect-ts/src/effect-ts.ts
  */
 
-import type { Schema } from '@effect/schema'
-import type { ParseOptions } from '@effect/schema/AST'
-import { formatIssue } from '@effect/schema/ArrayFormatter'
-import { decodeUnknown } from '@effect/schema/ParseResult'
 import { toNestErrors, validateFieldsNatively } from '@hookform/resolvers'
+import type { Schema } from 'effect'
 import * as Effect from 'effect/Effect'
-import type { FieldErrors } from 'react-hook-form'
+import { ArrayFormatter } from 'effect/ParseResult'
+import { decodeUnknown } from 'effect/Schema'
+import type { ParseOptions } from 'effect/SchemaAST'
 import type {
+  FieldErrors,
   FieldValues,
   ResolverOptions,
   ResolverResult,
@@ -33,7 +33,9 @@ export const effectTsResolver: Resolver =
       schema,
       config,
     )(values).pipe(
-      Effect.catchAll((parseIssue) => Effect.flip(formatIssue(parseIssue))),
+      Effect.catchAll((parseIssue) =>
+        Effect.flip(ArrayFormatter.formatIssue(parseIssue.issue)),
+      ),
       Effect.mapError((issues) => {
         /** ADAPTATION: Removes parent issues when a more specific issue is available in children */
         const displayableIssues = issues.filter((issue, index) => {

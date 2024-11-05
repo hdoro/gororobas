@@ -8,8 +8,8 @@ import {
   sourcesToParam,
   upsertImagesInTransaction,
 } from '@/utils/mutation.utils'
-import { Schema } from '@effect/schema'
 import type { Client } from 'edgedb'
+import { Schema } from 'effect'
 import { Effect, pipe } from 'effect'
 
 export async function updateProfileAction(
