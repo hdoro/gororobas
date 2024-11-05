@@ -1,6 +1,5 @@
 import type { TokenData } from '@edgedb/auth-nextjs/app'
-import { Schema } from 'effect'
-import { Effect } from 'effect'
+import { Effect, Schema } from 'effect'
 
 /**
  * We're only interested in the `displayName` subset.

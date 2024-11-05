@@ -2,8 +2,7 @@ import { deleteNotesMutation } from '@/mutations'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { InvalidInputError } from '@/types/errors'
 import type { Client } from 'edgedb'
-import { Schema } from 'effect'
-import { Effect, pipe } from 'effect'
+import { Effect, Schema, pipe } from 'effect'
 
 export const DeleteNotesInput = Schema.NonEmptyArray(Schema.UUID)
 

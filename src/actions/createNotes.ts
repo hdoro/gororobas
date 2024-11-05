@@ -5,8 +5,7 @@ import { UnknownEdgeDBError } from '@/types/errors'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { getStandardHandle } from '@/utils/urls'
 import type { Client } from 'edgedb'
-import { Schema } from 'effect'
-import { Effect, pipe } from 'effect'
+import { Effect, Schema, pipe } from 'effect'
 
 export function createNotes(input: NotesForDB, client: Client) {
   return pipe(

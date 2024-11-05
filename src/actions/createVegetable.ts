@@ -11,18 +11,15 @@ import {
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { InvalidInputError, UnknownEdgeDBError } from '@/types/errors'
 import {
+  photosToReferences,
+  referencesInFormToParam,
+  sourcesToParam,
   upsertImagesInTransaction,
   varietiesToParam,
 } from '@/utils/mutation.utils'
-import { sourcesToParam } from '@/utils/mutation.utils'
-import {
-  photosToReferences,
-  referencesInFormToParam,
-} from '@/utils/mutation.utils'
 import { paths } from '@/utils/urls'
 import type { Client } from 'edgedb'
-import { Schema } from 'effect'
-import { Effect, pipe } from 'effect'
+import { Effect, Schema, pipe } from 'effect'
 import { formatVegetableFriendForDB } from './formatVegetableFriendForDB'
 
 export function createVegetable(

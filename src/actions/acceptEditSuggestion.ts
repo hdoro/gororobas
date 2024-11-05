@@ -18,8 +18,7 @@ import {
 } from '@/utils/mutation.utils'
 import { paths } from '@/utils/urls'
 import type { Client } from 'edgedb'
-import { Schema } from 'effect'
-import { Effect, pipe } from 'effect'
+import { Effect, Schema, pipe } from 'effect'
 import { formatVegetableFriendForDB } from './formatVegetableFriendForDB'
 import {
   type EditSuggestionData,

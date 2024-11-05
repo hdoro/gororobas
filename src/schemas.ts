@@ -29,8 +29,7 @@ import {
 } from '@/utils/labels'
 import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
 import type { JSONContent } from '@tiptap/react'
-import { Schema as S } from 'effect'
-import { Effect, ParseResult } from 'effect'
+import { Effect, ParseResult, Schema as S } from 'effect'
 import type { NoteType } from './edgedb.interfaces'
 import { FailedUploadingImageError } from './types/errors'
 

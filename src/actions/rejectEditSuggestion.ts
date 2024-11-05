@@ -3,8 +3,7 @@
 import { auth } from '@/edgedb'
 import { rejectSuggestionMutation } from '@/mutations'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { Schema } from 'effect'
-import { Effect, pipe } from 'effect'
+import { Effect, Schema, pipe } from 'effect'
 
 export async function rejectEditSuggestionAction({
   suggestion_id,

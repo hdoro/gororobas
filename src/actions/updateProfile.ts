@@ -9,8 +9,7 @@ import {
   upsertImagesInTransaction,
 } from '@/utils/mutation.utils'
 import type { Client } from 'edgedb'
-import { Schema } from 'effect'
-import { Effect, pipe } from 'effect'
+import { Effect, Schema, pipe } from 'effect'
 
 export async function updateProfileAction(
   input: typeof ProfileDataWithImage.Type,
