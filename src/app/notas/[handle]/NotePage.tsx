@@ -9,15 +9,19 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Text, textVariants } from '@/components/ui/text'
+import { auth } from '@/edgedb'
 import type { NotePageData } from '@/queries'
 import type { TiptapNode } from '@/types'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 import { paths } from '@/utils/urls'
-import { EditIcon } from 'lucide-react'
+import { Edit2Icon, EditIcon } from 'lucide-react'
 import Link from 'next/link'
 import DeleteNoteButton from './DeleteNoteButton'
 
-export default function NotePage({ note }: { note: NotePageData }) {
+export default async function NotePage({ note }: { note: NotePageData }) {
+  const session = auth.getSession()
+  const signedIn = await session.isSignedIn()
+
   const title = note.title as TiptapNode
   if (!title) return
 
@@ -139,6 +143,14 @@ export default function NotePage({ note }: { note: NotePageData }) {
             </Text>
           )}
         </section>
+      )}
+
+      {signedIn && (
+        <Button size="sm" asChild className="fixed bottom-4 left-4 z-50">
+          <Link href={paths.newNote()}>
+            <Edit2Icon className="w-[1.25em]" /> Enviar nota
+          </Link>
+        </Button>
       )}
     </main>
   )
