@@ -59,7 +59,9 @@ export default function ProfilePageHeader({
                     </Link>
                   </Button>
                   <Button size="sm" asChild tone="secondary" mode="outline">
-                    <Link href={paths.signout()}>Sair ou trocar conta</Link>
+                    <Link href={paths.signout()} prefetch={false}>
+                      Sair ou trocar conta
+                    </Link>
                   </Button>
                 </div>
               )}
