@@ -831,3 +831,21 @@ export const acceptSuggestionMutation = e.params(
       },
     })),
 )
+
+export const relate_note_to_vegetable_mutation = e.params(
+  {
+    note_id: e.uuid,
+    vegetable_id: e.uuid,
+  },
+  (params) =>
+    e.update(e.Note, (note) => ({
+      filter_single: e.op(note.id, '=', params.note_id),
+      set: {
+        related_to_vegetables: {
+          '+=': e.select(e.Vegetable, (vegetable) => ({
+            filter_single: e.op(vegetable.id, '=', params.vegetable_id),
+          })),
+        },
+      },
+    })),
+)
