@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbo",
+    "dev:network": "LOCAL_IP=$(ifconfig en0 | grep 'inet ' | awk '{print $2}') && next dev --turbo -H $LOCAL_IP",
     "build": "next build",
     "prebuild": "npm run generate:all",
     "start": "EDGEDB_CLIENT_SECURITY=insecure_dev_mode next start",

@@ -774,6 +774,9 @@ export const homePageQuery = e.select({
     varieties: false,
 
     filter: e.op('exists', vegetable.photos),
+    order_by: {
+      expression: e.random(),
+    },
     limit: 16,
   })),
 
@@ -781,6 +784,9 @@ export const homePageQuery = e.select({
     ...userProfileForAvatar(profile),
 
     limit: 12,
+    order_by: {
+      expression: e.random(),
+    },
   })),
 
   notes: e.select(e.Note, (note) => ({
@@ -791,7 +797,7 @@ export const homePageQuery = e.select({
       empty: e.EMPTY_FIRST,
     },
 
-    limit: 12,
+    limit: 9,
   })),
 
   recent_contributions: e.select(e.EditSuggestion, (suggestion) => ({

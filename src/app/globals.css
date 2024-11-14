@@ -220,7 +220,7 @@ body {
   flex: 0 0 min-content;
 }
 
-.note-card--root :global(img) {
+.note-card--root img {
   max-width: 100%;
 }
 
