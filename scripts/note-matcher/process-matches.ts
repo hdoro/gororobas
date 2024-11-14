@@ -10,6 +10,7 @@ import {
   APPLIED_FOLDER,
   noteMatcherClient,
   PROCESSED_FOLDER,
+  UNPROCESSED_FOLDER,
   type SuggestedMutation,
 } from './note-matcher.utils'
 
@@ -45,10 +46,17 @@ function process_match_file({
           apply_access_policies: false,
         })
         .transaction(async (tx) => {
-          for (const mutation of match.suggested_mutations) {
-            if (!mutation.approved) {
-              console.info(`Mutation skipped for note ${match.note.id}`)
+          for (const [index, mutation] of match.suggested_mutations.entries()) {
+            if (mutation.status === 'rejected') {
+              console.info(
+                `Mutation #${index} skipped for note ${match.note.id}`,
+              )
               continue
+            }
+            if (mutation.status === 'pending') {
+              throw new Error(
+                `Mutation #${index} forgotten for note ${match.note.id}\nfile: ${UNPROCESSED_FOLDER}/${fileName}`,
+              )
             }
 
             const new_vegetable_id = generateId()
@@ -97,7 +105,9 @@ function process_match_file({
       `${PROCESSED_FOLDER}/${fileName}`,
       `${APPLIED_FOLDER}/${fileName}`,
     )
-  })
+  }).pipe(
+    Effect.catchAll((e) => Effect.logError(`Failed processing ${fileName}`, e)),
+  )
 }
 
 await Effect.runPromise(

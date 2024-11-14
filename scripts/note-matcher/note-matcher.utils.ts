@@ -29,7 +29,8 @@ export const noteMatcherClient = createClient({
 export type SuggestedMutation =
   | {
       type: 'create-vegetable'
-      approved: boolean
+      status: 'pending' | 'approved' | 'rejected'
+      reason: string
       vegetable: {
         names: string[]
         scientific_names: string[]
@@ -38,6 +39,7 @@ export type SuggestedMutation =
     }
   | {
       type: 'relate-note'
-      approved: boolean
+      status: 'pending' | 'approved' | 'rejected'
+      reason: string
       vegetable: (typeof VEGETABLES)[number]
     }

@@ -47,7 +47,7 @@ select Note {
   body,
 }
   filter count(.related_to_vegetables) = 0 and .updated_at > <datetime>'${LAST_PROCESSED}'
-  limit 10`)
+  limit 20`)
 
 if (!NOTES.length) {
   throw new Error('notas falharam')
@@ -183,7 +183,8 @@ function parseNote(note: (typeof NOTES)[number]) {
               : `${possible_handles[0]}-1`)
           return {
             type: 'create-vegetable',
-            approved: false,
+            status: 'pending',
+            reason: match.razao,
             vegetable: {
               names,
               scientific_names,
@@ -194,8 +195,9 @@ function parseNote(note: (typeof NOTES)[number]) {
 
         return possible_vegetables.map((vegetable) => ({
           type: 'relate-note',
-          approved: false,
+          status: 'pending',
           vegetable,
+          reason: match.razao,
         }))
       },
     )
