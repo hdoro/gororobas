@@ -29,9 +29,7 @@ export function VegetableHeroPhotos({
 
   const mainImageAspectRatio =
     mainImage && getImageDimensions(mainImage)?.aspectRatio
-  const carouselPhotos = (photos || [])
-    .slice(1)
-    .flatMap((p) => (p.sanity_id ? p : []))
+  const carouselPhotos = (photos || []).flatMap((p) => (p.sanity_id ? p : []))
 
   const aspectRatios = [mainImage, ...carouselPhotos].flatMap(
     (image) => (image && getImageDimensions(image)?.aspectRatio) || [],
@@ -61,7 +59,7 @@ export function VegetableHeroPhotos({
       {diffKeys?.includes('photos') && <ChangeIndicator />}
       <button
         type="button"
-        className="relative z-10 max-h-[80dvh] flex-1 rounded-2xl object-cover lg:max-h-[var(--max-height)] lg:max-w-80"
+        className="relative z-10 max-h-[80dvh] flex-1 rounded-2xl object-cover hidden lg:block lg:max-h-[var(--max-height)] lg:max-w-80"
         onClick={() => fullscreen.openAtIndex(0)}
       >
         <SanityImage
@@ -77,7 +75,7 @@ export function VegetableHeroPhotos({
           className="absolute left-0 top-0 h-full w-6 bg-white"
         />
       </button>
-      {carouselPhotos.length > 0 && (
+      {carouselPhotos.length > 1 && (
         <Carousel
           className={'max-h-[80dvh] flex-1 lg:max-h-[var(--max-height)]'}
           opts={{
@@ -86,10 +84,15 @@ export function VegetableHeroPhotos({
         >
           <CarouselContent className="ml-0 space-x-5" rootClassName="">
             {carouselPhotos.map((photo, idx) => {
+              const isMainImage = idx === 0
+
               return (
                 <CarouselItem
                   key={photo.sanity_id || idx}
-                  className="relative flex justify-center overflow-hidden rounded-2xl bg-stone-200 pl-0"
+                  className={cn(
+                    'relative flex justify-center overflow-hidden rounded-2xl bg-stone-200 pl-0',
+                    isMainImage && 'lg:hidden',
+                  )}
                 >
                   <button
                     type="button"

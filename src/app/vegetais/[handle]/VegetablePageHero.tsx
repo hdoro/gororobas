@@ -228,9 +228,9 @@ function TwoColInfo({
   if (!right || (Array.isArray(right) && right.length === 0)) return null
 
   return (
-    <div className="relative flex items-start gap-5 leading-normal">
+    <div className="relative flex items-start gap-5 leading-normal max-w-full">
       {hasChanged && <ChangeIndicator />}
-      <div className="max-w-[12.5rem] flex-1">
+      <div className="w-[min(40%,12.5rem)] flex-[0_0_min(40%,12.5rem)]">
         <Text as="h2" weight="semibold">
           {left}
         </Text>
@@ -242,7 +242,7 @@ function TwoColInfo({
       </div>
       <Text
         className={cn(
-          'wrap flex flex-1 gap-2',
+          'wrap flex flex-1 gap-2 overflow-auto hide-scrollbar lg:mr-0 lg:pr-0 -mr-[calc(var(--page-padding-x)_*_2)] pr-[calc(var(--page-padding-x)_*_2)]',
           Array.isArray(right) && '-ml-1',
         )}
         as={Array.isArray(right) ? 'div' : 'p'}
