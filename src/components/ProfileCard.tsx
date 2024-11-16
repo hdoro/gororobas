@@ -3,8 +3,8 @@ import type { ImageForRendering } from '@/types'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
 import { SproutIcon } from 'lucide-react'
-import Link from 'next/link'
 import { type VariantProps, tv } from 'tailwind-variants'
+import ProfileCardLink from './ProfileCardLink'
 import { SanityImage } from './SanityImage'
 import { Text } from './ui/text'
 
@@ -77,12 +77,11 @@ export default function ProfileCard(props: ProfileCardProps) {
 
   const classes = profileCardVariants({ size, includeName })
 
-  const RootComponent = linkToProfile && profile.handle ? Link : 'div'
   return (
-    <RootComponent
+    <ProfileCardLink
+      asLink={linkToProfile && !!profile.handle}
       key={profile.name}
       className={classes.root()}
-      // @ts-expect-error href is only needed when using Link
       href={
         linkToProfile && profile.handle
           ? paths.userProfile(profile.handle)
@@ -100,7 +99,7 @@ export default function ProfileCard(props: ProfileCardProps) {
           )}
         </div>
       )}
-    </RootComponent>
+    </ProfileCardLink>
   )
 }
 
