@@ -3,8 +3,8 @@
   "singleQuote": true,
   "trailingComma": "all",
   "plugins": [
-    "prettier-plugin-tailwindcss",
-    "prettier-plugin-organize-imports"
+    "prettier-plugin-organize-imports",
+    "prettier-plugin-tailwindcss"
   ],
   "organizeImportsSkipDestructiveCodeActions": true
 }

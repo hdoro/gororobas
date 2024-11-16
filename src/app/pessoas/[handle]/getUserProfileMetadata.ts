@@ -1,12 +1,12 @@
-import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
-import type { ProfilePageData } from '@/queries'
+
+import type { ProfileLayoutData } from '@/queries'
 import { imageBuilder } from '@/utils/imageBuilder'
 import { truncate } from '@/utils/strings'
 import { pathToAbsUrl, paths } from '@/utils/urls'
 import type { Metadata } from 'next'
 
 export default function getUserProfileMetadata(
-  profile: ProfilePageData | null,
+  profile: ProfileLayoutData | null,
 ): Metadata {
   const name = profile?.name
 
@@ -21,29 +21,15 @@ export default function getUserProfileMetadata(
     }
   }
 
-  const wishlistStatusCount = profile.wishlist.reduce(
-    (acc, w) => {
-      acc[w.status] += 1
-      return acc
-    },
-    {
-      ESTOU_CULTIVANDO: 0,
-      QUERO_CULTIVAR: 0,
-      JA_CULTIVEI: 0,
-      SEM_INTERESSE: 0,
-    } satisfies Record<VegetableWishlistStatus, number>,
-  )
-
   const firstName = name.split(' ')[0]
   const description = [
     profile.location && `${firstName} é de ${profile.location}`,
-    wishlistStatusCount.ESTOU_CULTIVANDO > 0 &&
-      `está cultivando ${wishlistStatusCount.ESTOU_CULTIVANDO} vegetais`,
-    wishlistStatusCount.QUERO_CULTIVAR > 0 &&
+    profile.planted_count > 0 &&
+      `está cultivando ${profile.planted_count} vegetais`,
+    profile.desired_count > 0 &&
       `quer cultivar ${
-        wishlistStatusCount.ESTOU_CULTIVANDO > 0 ? 'outras ' : ''
-      }${wishlistStatusCount.QUERO_CULTIVAR} plantas`,
-    profile.note_count > 0 && ` e já enviou ${profile.note_count} notas`,
+        profile.desired_count > 0 ? 'outras ' : ''
+      }${profile.desired_count} plantas`,
   ]
     .flatMap((p) => p || [])
     .join(',')

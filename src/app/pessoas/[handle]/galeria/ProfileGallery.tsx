@@ -1,0 +1,75 @@
+'use client'
+
+import FullscreenPhotos, {
+  useFullscreenPhotos,
+} from '@/components/FullscreenPhotos'
+import PhotoLabelAndSources from '@/components/PhotoLabelAndSources'
+import { SanityImage } from '@/components/SanityImage'
+import SectionTitle from '@/components/SectionTitle'
+import CameraIcon from '@/components/icons/CameraIcon'
+import { Text } from '@/components/ui/text'
+import type { ProfileGalleryData } from '@/queries'
+
+function ImageInGallery({
+  image,
+  index,
+}: {
+  image: ProfileGalleryData['images'][number]
+  index: number
+}) {
+  const fullscreen = useFullscreenPhotos()
+
+  return (
+    <div className={'relative'}>
+      <button
+        type="button"
+        onClickCapture={() => fullscreen.openAtIndex(index + 1)}
+        className="block rounded-lg"
+      >
+        <SanityImage
+          image={image}
+          maxWidth={400}
+          className={
+            'aspect-square w-auto rounded-lg object-cover object-center lg:max-h-[var(--max-height)]'
+          }
+        />
+      </button>
+      <PhotoLabelAndSources photo={image} />
+    </div>
+  )
+}
+
+export default function ProfileGallery({
+  images,
+  is_owner,
+  name,
+}: ProfileGalleryData) {
+  return (
+    <FullscreenPhotos photos={images}>
+      <section className="mt-16">
+        <SectionTitle Icon={CameraIcon}>
+          Fotos {is_owner ? 'que você enviou' : `de ${name}`}
+        </SectionTitle>
+
+        {images && images.length > 0 ? (
+          <div className="mt-6 grid grid-cols-3 gap-x-2 gap-y-2 px-pageX">
+            {/* @TODO: infinite scrolling ao invés de puxar tudo */}
+            {images.map((image, index) => (
+              <ImageInGallery key={image.id} image={image} index={index} />
+            ))}
+          </div>
+        ) : (
+          <Text
+            level="h3"
+            as="p"
+            className="mt-3 px-pageX text-muted-foreground"
+          >
+            {is_owner
+              ? 'Você ainda não fez nenhuma contribuição'
+              : `${name} ainda não fez nenhuma contribuição`}
+          </Text>
+        )}
+      </section>
+    </FullscreenPhotos>
+  )
+}

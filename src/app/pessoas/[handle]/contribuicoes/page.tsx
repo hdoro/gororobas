@@ -1,9 +1,9 @@
 import { auth } from '@/edgedb'
-import { profileNotesQuery } from '@/queries'
+import { profileContributionsQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 import { notFound } from 'next/navigation'
-import ProfileNotes from './ProfileNotes'
+import ProfileContributions from './ProfileContributions'
 
 function getRouteData(handle: string) {
   const session = auth.getSession()
@@ -11,15 +11,15 @@ function getRouteData(handle: string) {
   return runServerEffect(
     pipe(
       Effect.tryPromise({
-        try: () => profileNotesQuery.run(session.client, { handle }),
+        try: () => profileContributionsQuery.run(session.client, { handle }),
         catch: (error) => console.log(error),
       }),
-      ...buildTraceAndMetrics('user_profile_notes_page', { handle }),
+      ...buildTraceAndMetrics('user_profile_contributions_page', { handle }),
     ).pipe(Effect.catchAll(() => Effect.succeed(null))),
   )
 }
 
-export default async function UserProfilePage({
+export default async function UserContributionsPage({
   params: { handle },
 }: {
   params: { handle: string }
@@ -28,5 +28,5 @@ export default async function UserProfilePage({
 
   if (!data) return notFound()
 
-  return <ProfileNotes {...data} />
+  return <ProfileContributions {...data} />
 }

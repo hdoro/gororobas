@@ -1,9 +1,10 @@
 import { auth } from '@/edgedb'
-import { profileNotesQuery } from '@/queries'
+import { profileGalleryQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { shuffleArray } from '@/utils/arrays'
 import { Effect, pipe } from 'effect'
 import { notFound } from 'next/navigation'
-import ProfileNotes from './ProfileNotes'
+import ProfileGallery from './ProfileGallery'
 
 function getRouteData(handle: string) {
   const session = auth.getSession()
@@ -11,15 +12,15 @@ function getRouteData(handle: string) {
   return runServerEffect(
     pipe(
       Effect.tryPromise({
-        try: () => profileNotesQuery.run(session.client, { handle }),
+        try: () => profileGalleryQuery.run(session.client, { handle }),
         catch: (error) => console.log(error),
       }),
-      ...buildTraceAndMetrics('user_profile_notes_page', { handle }),
+      ...buildTraceAndMetrics('user_profile_gallery_page', { handle }),
     ).pipe(Effect.catchAll(() => Effect.succeed(null))),
   )
 }
 
-export default async function UserProfilePage({
+export default async function UserGalleryPage({
   params: { handle },
 }: {
   params: { handle: string }
@@ -28,5 +29,5 @@ export default async function UserProfilePage({
 
   if (!data) return notFound()
 
-  return <ProfileNotes {...data} />
+  return <ProfileGallery {...data} images={shuffleArray(data.images)} />
 }

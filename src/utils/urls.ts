@@ -73,6 +73,9 @@ export const paths = {
   editProfile: (isFirstTime = false) =>
     `/perfil${isFirstTime ? '?bem-vinde=true' : ''}` as const,
   userProfile: (handle: string) => formatPath(`/pessoas/${handle}`),
+  userGallery: (handle: string) => formatPath(`/pessoas/${handle}/galeria`),
+  userContributions: (handle: string) =>
+    formatPath(`/pessoas/${handle}/contribuicoes`),
 
   // Refer to `src/app/redirecionar/route.ts` for why this redirect is needed
   signInOrSignUp: (onAuthRedirectTo?: string) =>

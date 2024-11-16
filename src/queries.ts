@@ -6,7 +6,6 @@ import type {
   Stratum,
   VegetableLifeCycle,
   VegetableUsage,
-  VegetableWishlistStatus,
 } from './edgedb.interfaces'
 import { NOTES_PER_PAGE, VEGETABLES_PER_PAGE } from './utils/config'
 
@@ -815,7 +814,32 @@ export const homePageQuery = e.select({
 
 export type HomePageData = Exclude<$infer<typeof homePageQuery>, null>
 
-export const profilePageQuery = e.params(
+export const VEGETABLES_PER_WISHLIST_STATUS = 4 as const
+
+const wishlistForProfile = e.shape(e.UserWishlist, () => ({
+  status: true,
+  vegetable: (vegetable) => ({
+    id: true,
+    handle: true,
+    name: vegetable.names.index(0),
+    photos: (image) => ({
+      ...imageForRendering(image),
+
+      limit: 1,
+      order_by: {
+        expression: image['@order_index'],
+        direction: 'ASC',
+        empty: e.EMPTY_LAST,
+      },
+    }),
+  }),
+}))
+export type WishlistForProfile = Exclude<
+  $infer<typeof wishlistForProfile>,
+  null
+>[number]
+
+export const profileLayoutQuery = e.params(
   {
     handle: e.str,
   },
@@ -827,46 +851,68 @@ export const profilePageQuery = e.params(
       bio: true,
       is_owner: e.op(profile.id, '=', e.global.current_user_profile.id),
 
-      notes: e.select(e.Note, (note) => ({
-        ...noteForCard(note),
-        created_by: false,
-
-        filter: e.op(
-          e.op(note.created_by, '=', profile),
-          'and',
-          e.op(note.public, '=', true),
-        ),
-        limit: 12,
-      })),
-
-      note_count: e.count(
-        e.select(e.Note, (note) => ({
-          filter: e.op(
-            e.op(note.created_by, '=', profile),
-            'and',
-            e.op(note.public, '=', true),
-          ),
-        })),
-      ),
-
-      wishlist: e.select(e.UserWishlist, (wishlist) => ({
-        status: true,
-        vegetable: vegetableForCard,
+      planted: e.select(e.UserWishlist, (wishlist) => ({
+        ...wishlistForProfile(wishlist),
 
         filter: e.op(
           e.op(wishlist.user_profile.id, '=', profile.id),
           'and',
           e.op(
             wishlist.status,
-            '!=',
-            e.cast(
-              e.VegetableWishlistStatus,
-              'SEM_INTERESSE' satisfies VegetableWishlistStatus,
+            'in',
+            e.set(
+              e.VegetableWishlistStatus.JA_CULTIVEI,
+              e.VegetableWishlistStatus.ESTOU_CULTIVANDO,
             ),
           ),
         ),
-        limit: 20,
+        limit: VEGETABLES_PER_WISHLIST_STATUS,
+        order_by: {
+          expression: e.random(),
+        },
       })),
+      planted_count: e.count(
+        e.select(e.UserWishlist, (wishlist) => ({
+          filter: e.op(
+            e.op(wishlist.user_profile.id, '=', profile.id),
+            'and',
+            e.op(
+              wishlist.status,
+              'in',
+              e.set(
+                e.VegetableWishlistStatus.JA_CULTIVEI,
+                e.VegetableWishlistStatus.ESTOU_CULTIVANDO,
+              ),
+            ),
+          ),
+        })),
+      ),
+      desired: e.select(e.UserWishlist, (wishlist) => ({
+        ...wishlistForProfile(wishlist),
+
+        filter: e.op(
+          e.op(wishlist.user_profile.id, '=', profile.id),
+          'and',
+          e.op(wishlist.status, '=', e.VegetableWishlistStatus.QUERO_CULTIVAR),
+        ),
+        limit: VEGETABLES_PER_WISHLIST_STATUS,
+        order_by: {
+          expression: e.random(),
+        },
+      })),
+      desired_count: e.count(
+        e.select(e.UserWishlist, (wishlist) => ({
+          filter: e.op(
+            e.op(wishlist.user_profile.id, '=', profile.id),
+            'and',
+            e.op(
+              wishlist.status,
+              '=',
+              e.VegetableWishlistStatus.QUERO_CULTIVAR,
+            ),
+          ),
+        })),
+      ),
 
       recent_contributions: e.select(e.EditSuggestion, (suggestion) => ({
         filter: e.op(
@@ -886,4 +932,103 @@ export const profilePageQuery = e.params(
     })),
 )
 
-export type ProfilePageData = Exclude<$infer<typeof profilePageQuery>, null>
+export type ProfileLayoutData = Exclude<$infer<typeof profileLayoutQuery>, null>
+
+export const profileNotesQuery = e.params(
+  {
+    handle: e.str,
+  },
+  (params) =>
+    e.select(e.UserProfile, (profile) => ({
+      filter_single: e.op(profile.handle, '=', params.handle),
+      is_owner: e.op(profile.id, '=', e.global.current_user_profile.id),
+      name: true,
+
+      notes: e.select(e.Note, (note) => ({
+        ...noteForCard(note),
+        created_by: false,
+
+        filter: e.op(
+          e.op(note.created_by, '=', profile),
+          'and',
+          e.op(note.public, '=', true),
+        ),
+        limit: 12,
+        order_by: {
+          expression: e.random(),
+        },
+      })),
+
+      note_count: e.count(
+        e.select(e.Note, (note) => ({
+          filter: e.op(
+            e.op(note.created_by, '=', profile),
+            'and',
+            e.op(note.public, '=', true),
+          ),
+        })),
+      ),
+    })),
+)
+
+export type ProfileNotesData = Exclude<$infer<typeof profileNotesQuery>, null>
+
+export const profileContributionsQuery = e.params(
+  {
+    handle: e.str,
+  },
+  (params) =>
+    e.select(e.UserProfile, (profile) => ({
+      filter_single: e.op(profile.handle, '=', params.handle),
+      is_owner: e.op(profile.id, '=', e.global.current_user_profile.id),
+      name: true,
+
+      contributions: e.select(e.EditSuggestion, (suggestion) => ({
+        filter: e.op(
+          e.op(suggestion.status, '=', e.EditSuggestionStatus.MERGED),
+          'and',
+          e.op(suggestion.created_by, '=', profile),
+        ),
+        order_by: {
+          expression: suggestion.updated_at,
+          direction: e.DESC, // newest first
+          empty: e.EMPTY_FIRST,
+        },
+
+        ...editSuggestionForCard(suggestion),
+      })),
+    })),
+)
+
+export type ProfileContributionsData = Exclude<
+  $infer<typeof profileContributionsQuery>,
+  null
+>
+
+export const profileGalleryQuery = e.params(
+  {
+    handle: e.str,
+  },
+  (params) =>
+    e.select(e.UserProfile, (profile) => ({
+      filter_single: e.op(profile.handle, '=', params.handle),
+      is_owner: e.op(profile.id, '=', e.global.current_user_profile.id),
+      name: true,
+
+      images: e.select(e.Image, (image) => ({
+        filter: e.op(profile, 'in', e.assert_distinct(image.sources.users)),
+        order_by: {
+          expression: image.updated_at,
+          direction: e.DESC, // newest first
+          empty: e.EMPTY_FIRST,
+        },
+
+        ...imageForRendering(image),
+      })),
+    })),
+)
+
+export type ProfileGalleryData = Exclude<
+  $infer<typeof profileGalleryQuery>,
+  null
+>
