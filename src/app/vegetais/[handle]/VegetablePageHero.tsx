@@ -70,130 +70,133 @@ export function VegetablePageHero({
 
       <VegetableHeroPhotos photos={allPhotos} />
 
-      <div className="mt-6 space-y-8">
-        {names.length > 1 && (
-          <TwoColInfo
-            left={`Também conhecid${gender.suffix(
-              vegetable.gender || 'MASCULINO',
-            )} como`}
-            right={names.slice(1).join(', ')}
-            hasChanged={diffKeys?.includes('names')}
-          />
-        )}
-        {vegetable.scientific_names &&
-          vegetable.scientific_names.length > 1 && (
+      <TooltipProvider delayDuration={300}>
+        <div className="mt-6 space-y-8">
+          {names.length > 1 && (
             <TwoColInfo
-              left={'Nomes científicos'}
-              right={vegetable.scientific_names.join(', ')}
-              hasChanged={diffKeys?.includes('scientific_names')}
+              left={`Também conhecid${gender.suffix(
+                vegetable.gender || 'MASCULINO',
+              )} como`}
+              right={names.slice(1).join(', ')}
+              hasChanged={diffKeys?.includes('names')}
             />
           )}
-        {vegetable.origin && (
-          <TwoColInfo
-            left={'Origem'}
-            right={vegetable.origin}
-            hasChanged={diffKeys?.includes('origin')}
-          />
-        )}
-        {vegetable.uses && (
-          <TwoColInfo
-            left={'Principais usos'}
-            right={vegetable.uses.map((u) => USAGE_TO_LABEL[u])}
-            hasChanged={diffKeys?.includes('uses')}
-          />
-        )}
-        {vegetable.edible_parts && (
-          <TwoColInfo
-            left={'Partes comestíveis'}
-            right={vegetable.edible_parts.map((u) => EDIBLE_PART_TO_LABEL[u])}
-            hasChanged={diffKeys?.includes('edible_parts')}
-          />
-        )}
-        {vegetable.strata && (
-          <TwoColInfo
-            left={'Estrato'}
-            leftDescription="Camada vertical conforme necessidade de luz"
-            right={vegetable.strata.map((u) => ({
-              label: STRATUM_TO_LABEL[u],
-              explainer: STRATUM_EXPLAINERS[u],
-            }))}
-            hasChanged={diffKeys?.includes('strata')}
-          />
-        )}
-        {vegetable.lifecycles && (
-          <TwoColInfo
-            left={'Ciclo de vida'}
-            leftDescription="Duração do o plantio até a morte ou colheita"
-            right={vegetable.lifecycles.map((u) => ({
-              label: VEGETABLE_LIFECYCLE_TO_LABEL[u],
-              explainer: VEGETABLE_LIFECYCLE_EXPLAINERS[u],
-            }))}
-            hasChanged={diffKeys?.includes('lifecycles')}
-          />
-        )}
-        {vegetable.planting_methods && (
-          <TwoColInfo
-            left={'Métodos de plantio e propagação'}
-            right={vegetable.planting_methods.map(
-              (u) => PLANTING_METHOD_TO_LABEL[u],
+          {vegetable.scientific_names &&
+            vegetable.scientific_names.length > 1 && (
+              <TwoColInfo
+                left={'Nomes científicos'}
+                right={vegetable.scientific_names.join(', ')}
+                hasChanged={diffKeys?.includes('scientific_names')}
+              />
             )}
-            hasChanged={diffKeys?.includes('planting_methods')}
-          />
-        )}
-        {(vegetable.temperature_min || vegetable.temperature_max) && (
-          <TwoColInfo
-            left={'Temperatura ideal'}
-            right={
-              vegetable.temperature_min && vegetable.temperature_max
-                ? `De ${vegetable.temperature_min}° a ${vegetable.temperature_max}°C`
-                : vegetable.temperature_min
-                  ? `Acima de ${vegetable.temperature_min}°C`
-                  : `Abaixo de ${vegetable.temperature_max}°C`
-            }
-            hasChanged={
-              diffKeys?.includes('temperature_min') ||
-              diffKeys?.includes('temperature_max')
-            }
-          />
-        )}
-        {(vegetable.height_min || vegetable.height_max) && (
-          <TwoColInfo
-            left={`Altura quando adult${gender.suffix(vegetable.gender || 'FEMININO')}`}
-            right={
-              vegetable.height_min && vegetable.height_max
-                ? `De ${formatCentimeters(vegetable.height_min)} a ${formatCentimeters(vegetable.height_max)}`
-                : vegetable.height_min
-                  ? `A partir de ${formatCentimeters(vegetable.height_min)}`
-                  : `Até ${formatCentimeters(vegetable.height_max || 0)}`
-            }
-            hasChanged={
-              diffKeys?.includes('height_min') ||
-              diffKeys?.includes('height_max')
-            }
-          />
-        )}
-        {(vegetable.development_cycle_min ||
-          vegetable.development_cycle_max) && (
-          <TwoColInfo
-            left={'Ciclo de desenvolvimento (referência)'}
-            leftDescription="Quanto tempo até começarmos a colher"
-            right={
-              vegetable.development_cycle_min && vegetable.development_cycle_max
-                ? `De ${vegetable.development_cycle_min} a ${vegetable.development_cycle_max} dias`
-                : vegetable.development_cycle_min
-                  ? `A partir de ${vegetable.development_cycle_min} dias`
-                  : `Até ${vegetable.development_cycle_max} dias`
-            }
-            hasChanged={
-              diffKeys?.includes('development_cycle_min') ||
-              diffKeys?.includes('development_cycle_max')
-            }
-          />
-        )}
-      </div>
+          {vegetable.origin && (
+            <TwoColInfo
+              left={'Origem'}
+              right={vegetable.origin}
+              hasChanged={diffKeys?.includes('origin')}
+            />
+          )}
+          {vegetable.uses && (
+            <TwoColInfo
+              left={'Principais usos'}
+              right={vegetable.uses.map((u) => USAGE_TO_LABEL[u])}
+              hasChanged={diffKeys?.includes('uses')}
+            />
+          )}
+          {vegetable.edible_parts && (
+            <TwoColInfo
+              left={'Partes comestíveis'}
+              right={vegetable.edible_parts.map((u) => EDIBLE_PART_TO_LABEL[u])}
+              hasChanged={diffKeys?.includes('edible_parts')}
+            />
+          )}
+          {vegetable.strata && (
+            <TwoColInfo
+              left={'Estrato'}
+              leftDescription="Camada vertical conforme necessidade de luz"
+              right={vegetable.strata.map((u) => ({
+                label: STRATUM_TO_LABEL[u],
+                explainer: STRATUM_EXPLAINERS[u],
+              }))}
+              hasChanged={diffKeys?.includes('strata')}
+            />
+          )}
+          {vegetable.lifecycles && (
+            <TwoColInfo
+              left={'Ciclo de vida'}
+              leftDescription="Duração do o plantio até a morte ou colheita"
+              right={vegetable.lifecycles.map((u) => ({
+                label: VEGETABLE_LIFECYCLE_TO_LABEL[u],
+                explainer: VEGETABLE_LIFECYCLE_EXPLAINERS[u],
+              }))}
+              hasChanged={diffKeys?.includes('lifecycles')}
+            />
+          )}
+          {vegetable.planting_methods && (
+            <TwoColInfo
+              left={'Métodos de plantio e propagação'}
+              right={vegetable.planting_methods.map(
+                (u) => PLANTING_METHOD_TO_LABEL[u],
+              )}
+              hasChanged={diffKeys?.includes('planting_methods')}
+            />
+          )}
+          {(vegetable.temperature_min || vegetable.temperature_max) && (
+            <TwoColInfo
+              left={'Temperatura ideal'}
+              right={
+                vegetable.temperature_min && vegetable.temperature_max
+                  ? `De ${vegetable.temperature_min}° a ${vegetable.temperature_max}°C`
+                  : vegetable.temperature_min
+                    ? `Acima de ${vegetable.temperature_min}°C`
+                    : `Abaixo de ${vegetable.temperature_max}°C`
+              }
+              hasChanged={
+                diffKeys?.includes('temperature_min') ||
+                diffKeys?.includes('temperature_max')
+              }
+            />
+          )}
+          {(vegetable.height_min || vegetable.height_max) && (
+            <TwoColInfo
+              left={`Altura quando adult${gender.suffix(vegetable.gender || 'FEMININO')}`}
+              right={
+                vegetable.height_min && vegetable.height_max
+                  ? `De ${formatCentimeters(vegetable.height_min)} a ${formatCentimeters(vegetable.height_max)}`
+                  : vegetable.height_min
+                    ? `A partir de ${formatCentimeters(vegetable.height_min)}`
+                    : `Até ${formatCentimeters(vegetable.height_max || 0)}`
+              }
+              hasChanged={
+                diffKeys?.includes('height_min') ||
+                diffKeys?.includes('height_max')
+              }
+            />
+          )}
+          {(vegetable.development_cycle_min ||
+            vegetable.development_cycle_max) && (
+            <TwoColInfo
+              left={'Ciclo de desenvolvimento (referência)'}
+              leftDescription="Quanto tempo até começarmos a colher"
+              right={
+                vegetable.development_cycle_min &&
+                vegetable.development_cycle_max
+                  ? `De ${vegetable.development_cycle_min} a ${vegetable.development_cycle_max} dias`
+                  : vegetable.development_cycle_min
+                    ? `A partir de ${vegetable.development_cycle_min} dias`
+                    : `Até ${vegetable.development_cycle_max} dias`
+              }
+              hasChanged={
+                diffKeys?.includes('development_cycle_min') ||
+                diffKeys?.includes('development_cycle_max')
+              }
+            />
+          )}
+        </div>
+      </TooltipProvider>
 
-      <div className="mt-10 border-2 bg-card px-4 py-3 rounded-lg flex items-start gap-2 text-stone-800">
-        <InfoIcon className="w-6 h-6 flex-[0_0_1.5rem] opacity-80 mt-1" />
+      <div className="mt-10 flex items-start gap-2 rounded-lg border-2 bg-card px-4 py-3 text-stone-800">
+        <InfoIcon className="mt-1 h-6 w-6 flex-[0_0_1.5rem] opacity-80" />
         <div className="space-y-1">
           <Text level="h3" weight="semibold">
             Alguma informação errada ou faltando?
@@ -202,9 +205,9 @@ export function VegetablePageHero({
             Você pode{' '}
             <Link
               href={paths.editVegetable(vegetable.handle)}
-              className="underline font-semibold"
+              className="font-semibold underline"
             >
-              <Edit2Icon className="w-4 h-4 inline-block" /> enviar uma sugestão
+              <Edit2Icon className="inline-block h-4 w-4" /> enviar uma sugestão
             </Link>
             , essa enciclopédia é colaborativa!
           </Text>
@@ -228,7 +231,7 @@ function TwoColInfo({
   if (!right || (Array.isArray(right) && right.length === 0)) return null
 
   return (
-    <div className="relative flex items-start gap-5 leading-normal max-w-full">
+    <div className="relative flex max-w-full items-start gap-5 leading-normal">
       {hasChanged && <ChangeIndicator />}
       <div className="w-[min(40%,12.5rem)] flex-[0_0_min(40%,12.5rem)]">
         <Text as="h2" weight="semibold">
@@ -242,7 +245,7 @@ function TwoColInfo({
       </div>
       <Text
         className={cn(
-          'wrap flex flex-1 gap-2 overflow-auto hide-scrollbar lg:mr-0 lg:pr-0 -mr-[calc(var(--page-padding-x)_*_2)] pr-[calc(var(--page-padding-x)_*_2)]',
+          'wrap hide-scrollbar -mr-[calc(var(--page-padding-x)_*_2)] flex flex-1 gap-2 overflow-x-auto pr-[calc(var(--page-padding-x)_*_2)] lg:mr-0 lg:pr-0',
           Array.isArray(right) && '-ml-1',
         )}
         as={Array.isArray(right) ? 'div' : 'p'}
@@ -259,21 +262,19 @@ function TwoColInfo({
             }
 
             return (
-              <TooltipProvider key={item.label}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Badge className="select-none">
-                      {item.label}{' '}
-                      <CircleHelp className="w-4 h-4 ml-1 opacity-80" />
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent className="bg-card border">
-                    <Text level="sm" className="max-w-[20rem]">
-                      {item.explainer}
-                    </Text>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Tooltip key={item.label}>
+                <TooltipTrigger asChild>
+                  <Badge className="select-none">
+                    {item.label}{' '}
+                    <CircleHelp className="-mr-1 ml-1 h-4 w-4 opacity-80" />
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent className="border bg-card">
+                  <Text level="sm" className="max-w-[20rem]">
+                    {item.explainer}
+                  </Text>
+                </TooltipContent>
+              </Tooltip>
             )
           })}
         {typeof right === 'string' && (
