@@ -2,7 +2,7 @@ import { auth } from '@/edgedb'
 import type { HomePageData } from '@/queries'
 import { shuffleArray } from '@/utils/arrays'
 import { paths } from '@/utils/urls'
-import { Edit2Icon, SearchIcon } from 'lucide-react'
+import { SearchIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import wikiPreview from '../wiki-preview.png'
@@ -30,8 +30,8 @@ export default async function HomePage(data: Partial<HomePageData>) {
 
   return (
     <>
-      <section className="flex flex-col items-center gap-[0.33em] px-2 pb-12 pt-8 md:pt-16 xl:pt-24 text-center text-4xl md:text-5xl lg:text-6xl">
-        <h1 className="max-w-xl font-normal text-primary-800 leading-none">
+      <section className="flex flex-col items-center gap-[0.33em] px-2 pb-12 pt-8 text-center text-4xl md:pt-16 md:text-5xl lg:text-6xl xl:pt-24">
+        <h1 className="max-w-xl font-normal leading-none text-primary-800">
           Por terra, território,
           <br /> e{' '}
           <strong className="font-normal text-secondary-400">gororobas</strong>
@@ -85,17 +85,17 @@ export default async function HomePage(data: Partial<HomePageData>) {
       )}
       {notes && notes.length > 0 && (
         <section className="mt-36 flex flex-col xl:flex-row xl:items-start xl:gap-2.5">
-          <div className="flex lg:flex-row flex-col xl:flex-[3_0_15rem] pl-pageX xl:pl-[calc(var(--page-padding-x)_-_2.625rem)] xl:max-w-md items-start gap-1 pr-pageX xl:pr-0 box-content">
+          <div className="box-content flex flex-col items-start gap-1 pl-pageX pr-pageX lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pl-[calc(var(--page-padding-x)_-_2.625rem)] xl:pr-0">
             <NoteIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
             <div>
               <Text level="h2" as="h2">
                 Aprendizados e experimentos
               </Text>
-              <Text level="h3" className="font-normal max-w-lg">
+              <Text level="h3" className="max-w-lg font-normal">
                 Na cozinha, no plantio e no sacolão. <br />
                 Uma rede social agroecológica, por assim dizer
               </Text>
-              <div className="flex items-center gap-x-4 gap-y-2 pt-4 lg:pt-10 flex-wrap">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 lg:pt-10">
                 <Button asChild>
                   <Link href={paths.newNote()}>Enviar sua nota</Link>
                 </Button>
@@ -106,25 +106,25 @@ export default async function HomePage(data: Partial<HomePageData>) {
             </div>
           </div>
 
-          <div className="flex-1 hide-scrollbar overflow-x-auto lg:overflow-x-hidden py-10 px-4 lg:px-10 xl:-mt-5">
+          <div className="hide-scrollbar flex-1 overflow-x-auto px-4 py-10 lg:overflow-x-hidden lg:px-10 xl:-mt-5">
             <NotesStrip notes={notes} />
           </div>
         </section>
       )}
 
-      <section className="mt-36 flex flex-col xl:flex-row xl:items-start gap-4 xl:gap-2.5">
-        <div className="flex lg:flex-row flex-col xl:flex-[3_0_15rem] pl-pageX xl:pl-[calc(var(--page-padding-x)_-_2.625rem)] xl:max-w-md items-start gap-1 pr-pageX xl:pr-0 box-content">
+      <section className="mt-36 flex flex-col gap-4 xl:flex-row xl:items-start xl:gap-2.5">
+        <div className="box-content flex flex-col items-start gap-1 pl-pageX pr-pageX lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pl-[calc(var(--page-padding-x)_-_2.625rem)] xl:pr-0">
           <BulbIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
           <div>
             <Text level="h2" as="h2">
               Enciclopédia agroecológica
             </Text>
-            <Text level="h3" className="font-normal max-w-lg">
+            <Text level="h3" className="max-w-lg font-normal">
               Informações sobre centenas de vegetais baseadas em conhecimentos e
               experiências de diversas pessoas,{' '}
               <strong className="font-semibold">inclusive você</strong>
             </Text>
-            <div className="flex items-center gap-x-4 gap-y-2 pt-4 lg:pt-10 flex-wrap">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 lg:pt-10">
               <Button asChild>
                 <Link href={paths.vegetablesIndex()}>Todos os vegetais</Link>
               </Button>
@@ -135,7 +135,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
           </div>
         </div>
 
-        <div className="flex-1 max-w-[min(100vw,70rem)] xl:-mt-4">
+        <div className="max-w-[min(100vw,70rem)] flex-1 xl:-mt-4">
           <Image
             src={wikiPreview}
             alt="Foto da página do milho na enciclopédia do Gororobas"
@@ -168,14 +168,6 @@ export default async function HomePage(data: Partial<HomePageData>) {
       <ContributionCTA />
 
       <div aria-hidden className="mt-36" />
-
-      {signedIn && (
-        <Button size="sm" asChild className="fixed bottom-4 left-4 z-50">
-          <Link href={paths.newNote()}>
-            <Edit2Icon className="w-[1.25em]" /> Enviar nota
-          </Link>
-        </Button>
-      )}
     </>
   )
 }

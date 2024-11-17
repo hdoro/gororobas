@@ -59,7 +59,7 @@ export function VegetableHeroPhotos({
       {diffKeys?.includes('photos') && <ChangeIndicator />}
       <button
         type="button"
-        className="relative z-10 max-h-[80dvh] flex-1 rounded-2xl object-cover hidden lg:block lg:max-h-[var(--max-height)] lg:max-w-80"
+        className="relative z-10 hidden max-h-[80dvh] flex-1 rounded-2xl object-cover lg:block lg:max-h-[var(--max-height)] lg:max-w-80"
         onClick={() => fullscreen.openAtIndex(0)}
       >
         <SanityImage
@@ -96,7 +96,7 @@ export function VegetableHeroPhotos({
                 >
                   <button
                     type="button"
-                    onClickCapture={() => fullscreen.openAtIndex(idx + 1)}
+                    onClickCapture={() => fullscreen.openAtIndex(idx)}
                   >
                     <SanityImage
                       image={photo}

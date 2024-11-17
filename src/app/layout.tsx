@@ -1,6 +1,8 @@
 import Footer from '@/components/Footer'
 import HeaderNav from '@/components/HeaderNav'
+import MobileBottomBar from '@/components/MobileBottomBar'
 import { Toaster } from '@/components/ui/toaster'
+import { auth } from '@/edgedb'
 import { cn } from '@/utils/cn'
 import { pathToAbsUrl } from '@/utils/urls'
 import type { Metadata } from 'next'
@@ -47,11 +49,14 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = auth.getSession()
+  const signedIn = await session.isSignedIn()
+
   return (
     <html lang="pt-BR">
       <head>
@@ -63,7 +68,8 @@ export default function RootLayout({
         />
       </head>
       <body className={cn(fontFamily.className, 'flex min-h-dvh flex-col')}>
-        <HeaderNav />
+        <HeaderNav signedIn={signedIn} />
+        <MobileBottomBar signedIn={signedIn} />
         <div className="flex-1">{children}</div>
         <Footer />
         <Toaster />

@@ -1,4 +1,3 @@
-import { auth } from '@/edgedb'
 import { paths } from '@/utils/urls'
 import Link from 'next/link'
 import { Suspense } from 'react'
@@ -10,11 +9,7 @@ const HEADER_LINKS = [
   { href: paths.notesIndex(), text: 'Notas' },
 ]
 
-export default async function HeaderNav() {
-  const session = auth.getSession()
-
-  const signedIn = await session.isSignedIn()
-
+export default async function HeaderNav({ signedIn }: { signedIn: boolean }) {
   return (
     <>
       <nav

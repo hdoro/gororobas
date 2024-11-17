@@ -119,7 +119,7 @@ export default function NotesIndex() {
                 name="types"
                 label="Tipo(s) de nota"
                 classNames={{
-                  root: 'flex space-y-0 gap-2 items-center',
+                  root: 'flex space-y-0 gap-2 items-center flex-wrap pt-3',
                   label: 'flex-[0_0_max-content]',
                 }}
                 render={({ field }) => (
@@ -139,7 +139,7 @@ export default function NotesIndex() {
           </Card>
         </form>
       </FormProvider>
-      <NotesGridWrapper className="relative justify-start py-4">
+      <NotesGridWrapper className="hide-scrollbar relative justify-start overflow-x-hidden py-4">
         {isFetching && !isFetchingNextPage && (
           <div className="absolute inset-0 flex items-center justify-center gap-3 bg-background bg-opacity-50">
             <Carrot className="h-6 w-6 animate-spin" />

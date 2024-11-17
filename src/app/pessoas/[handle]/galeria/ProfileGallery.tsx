@@ -23,7 +23,7 @@ function ImageInGallery({
     <div className={'relative'}>
       <button
         type="button"
-        onClickCapture={() => fullscreen.openAtIndex(index + 1)}
+        onClickCapture={() => fullscreen.openAtIndex(index)}
         className="block aspect-square h-auto w-full rounded-lg"
       >
         <SanityImage
