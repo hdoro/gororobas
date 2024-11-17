@@ -1,5 +1,6 @@
 import { BASE_URL } from '@/utils/config'
 import Link from 'next/link'
+import { Children } from 'react'
 import type { NodeHandler, NodeHandlers, NodeProps } from './TipTapRender'
 
 const TextRender: NodeHandler = (props: NodeProps) => {
@@ -80,7 +81,12 @@ const Paragraph: NodeHandler = (props) => {
     }
   }
 
-  return <p style={style}>{props.children}</p>
+  const isEmpty = !props.children || Children.count(props.children) === 0
+  return (
+    <p style={style} className={isEmpty ? 'p-empty' : undefined}>
+      {props.children}
+    </p>
+  )
 }
 
 const LEVEL_TO_TAG = {

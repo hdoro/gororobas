@@ -9,7 +9,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import NotePage from './NotePage'
 
-function getRouteData(handle: string) {
+export function getNoteRouteData(handle: string) {
   const session = auth.getSession()
 
   return runServerEffect(
@@ -29,7 +29,7 @@ export async function generateMetadata({
 }: {
   params: { handle: string }
 }): Promise<Metadata> {
-  const note = await getRouteData(params.handle)
+  const note = await getNoteRouteData(params.handle)
 
   const title = note?.title ? tiptapJSONtoPlainText(note.title) : undefined
 
@@ -58,7 +58,7 @@ export default async function NoteRoute({
 }: {
   params: { handle: string }
 }) {
-  const note = await getRouteData(handle)
+  const note = await getNoteRouteData(handle)
 
   if (!note) return notFound()
 

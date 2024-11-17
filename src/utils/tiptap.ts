@@ -6,7 +6,13 @@ import { generateHTML } from '@tiptap/html'
 import { Schema } from 'effect'
 
 function HTMLToPlainText(html: string) {
-  return html.replace(/<\/?[^>]*>/g, '')
+  return (
+    html
+      // Transform <br>s into line-breaks
+      .replace(/<br\/?>/g, '\n')
+      // Then remove all the other tags
+      .replace(/<\/?[^>]*>/g, '')
+  )
 }
 
 export function tiptapJSONtoPlainText(json: TiptapNode) {

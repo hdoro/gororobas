@@ -127,6 +127,15 @@ body {
   @apply space-y-[0.5em] outline-none;
 }
 
+.p-empty {
+  min-height: 1lh;
+}
+
+/* Only allow users to visually skip up to 2 paragraphs to prevent abuse */
+.p-empty + .p-empty + .p-empty {
+  min-height: 0;
+}
+
 .hide-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
