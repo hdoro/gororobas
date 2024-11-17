@@ -8,12 +8,13 @@ on:
 jobs:
   backup:
     runs-on: ubuntu-latest
+    environment: production
     env:
       EDGEDB_INSTANCE: ${{ secrets.EDGEDB_INSTANCE }}
       EDGEDB_SECRET_KEY: ${{ secrets.EDGEDB_SECRET_KEY }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install EdgeDB CLI
         run: curl --proto '=https' --tlsv1.2 -sSf https://sh.edgedb.com | sh -s -- -y
@@ -22,7 +23,7 @@ jobs:
         run: sudo apt-get install -y gpg
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
