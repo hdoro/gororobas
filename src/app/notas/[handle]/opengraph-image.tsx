@@ -12,6 +12,7 @@ import type { CSSProperties } from 'react'
 import { getNoteRouteData } from './page'
 
 export const dynamic = 'force-dynamic'
+export const revalidate = 60 * 60 * 24 // 1 day
 
 export const size = {
   width: 512,
@@ -198,6 +199,7 @@ export default async function Image({
                     width: '3rem',
                     height: '3rem',
                     borderRadius: '9999px',
+                    objectFit: 'cover',
                   }}
                 />
               )}
