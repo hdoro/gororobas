@@ -38,7 +38,7 @@ jobs:
           COMPRESSED_FILE="${BACKUP_FILE}.gz"
 
           # Create the backup
-          edgedb dump > $BACKUP_FILE
+          edgedb dump $BACKUP_FILE
 
           # Compress the file
           gzip -9 $BACKUP_FILE
