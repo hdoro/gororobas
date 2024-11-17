@@ -1,10 +1,10 @@
-import fs from 'node:fs/promises'
 import GororobasLogo from '@/components/icons/GororobasLogo'
 import type { TiptapNode } from '@/types'
 import { getImageProps } from '@/utils/getImageProps'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 import { truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
+import { pathToAbsUrl } from '@/utils/urls'
 import type { SanityImageHotspot } from '@sanity/image-url/lib/types/types'
 import { notFound } from 'next/navigation'
 import { ImageResponse } from 'next/og'
@@ -78,12 +78,13 @@ export default async function Image({
   params: { handle: string }
 }) {
   const note = await getNoteRouteData(params.handle)
-  const regularFontData = await fs.readFile(
-    `${process.cwd()}/public/fonts/PlusJakartaSans-Regular.ttf`,
-  )
-  const semiboldFontData = await fs.readFile(
-    `${process.cwd()}/public/fonts/PlusJakartaSans-SemiBold.ttf`,
-  )
+  const regularFontData = await fetch(
+    new URL(pathToAbsUrl('/fonts/PlusJakartaSans-Regular.ttf')),
+  ).then((res) => res.arrayBuffer())
+
+  const semiboldFontData = await fetch(
+    new URL(pathToAbsUrl('/fonts/PlusJakartaSans-SemiBold.ttf')),
+  ).then((res) => res.arrayBuffer())
 
   if (!note) return notFound()
 
