@@ -15,7 +15,7 @@ export default function PhotoLabelAndSources({
   return (
     <Badge
       className={cn(
-        'absolute bottom-2 left-2 max-w-[80%] flex-col !items-start',
+        'absolute bottom-2 left-2 block max-w-[80%] space-y-[-0.125em] px-[1em] py-[0.5em]',
         className,
       )}
       variant="outline"
@@ -26,7 +26,7 @@ export default function PhotoLabelAndSources({
         </div>
       )}
       {photo.sources && photo.sources.length > 0 && (
-        <div className="max-w-full overflow-hidden text-ellipsis text-xs font-normal text-muted-foreground">
+        <div className="max-w-full overflow-hidden text-ellipsis text-[0.75em] font-normal leading-tight text-muted-foreground">
           Por{' '}
           {(photo.sources || []).map((source) => {
             if (source.type === 'GOROROBAS') {

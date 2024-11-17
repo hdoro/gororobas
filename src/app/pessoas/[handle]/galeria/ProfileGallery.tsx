@@ -24,17 +24,17 @@ function ImageInGallery({
       <button
         type="button"
         onClickCapture={() => fullscreen.openAtIndex(index + 1)}
-        className="block rounded-lg"
+        className="block aspect-square h-auto w-full rounded-lg"
       >
         <SanityImage
           image={image}
           maxWidth={400}
           className={
-            'aspect-square w-auto rounded-lg object-cover object-center lg:max-h-[var(--max-height)]'
+            'aspect-square h-auto w-full rounded-lg object-cover object-center lg:max-h-[var(--max-height)]'
           }
         />
       </button>
-      <PhotoLabelAndSources photo={image} />
+      <PhotoLabelAndSources photo={image} className="text-xs md:text-base" />
     </div>
   )
 }
@@ -52,7 +52,7 @@ export default function ProfileGallery({
         </SectionTitle>
 
         {images && images.length > 0 ? (
-          <div className="mt-6 grid grid-cols-3 gap-x-2 gap-y-2 px-pageX">
+          <div className="mt-6 grid grid-cols-2 gap-x-2 gap-y-2 px-pageX lg:grid-cols-3">
             {/* @TODO: infinite scrolling ao invés de puxar tudo */}
             {images.map((image, index) => (
               <ImageInGallery key={image.id} image={image} index={index} />
