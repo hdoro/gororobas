@@ -214,6 +214,7 @@ export default async function Image({
     ),
     {
       ...size,
+      emoji: 'noto',
       fonts: [
         {
           name: 'Jakarta',

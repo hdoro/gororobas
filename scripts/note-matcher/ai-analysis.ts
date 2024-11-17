@@ -13,6 +13,12 @@ import {
   type SuggestedMutation,
 } from './note-matcher.utils'
 
+if (!process.env.EDGEDB_INSTANCE) {
+  throw new Error(
+    "EDGEDB_INSTANCE environment variable is not set - don't run this script in the local database",
+  )
+}
+
 const LAST_PROCESSED = new Date(0).toISOString()
 
 export const VEGETABLES = await noteMatcherClient.query<{
@@ -47,7 +53,7 @@ select Note {
   body,
 }
   filter count(.related_to_vegetables) = 0 and .updated_at > <datetime>'${LAST_PROCESSED}'
-  limit 20`)
+  limit 30`)
 
 if (!NOTES.length) {
   throw new Error('notas falharam')
