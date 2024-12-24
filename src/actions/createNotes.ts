@@ -33,7 +33,12 @@ function getTransaction(input: NotesForDB, inputClient: Client) {
       id: note.id,
       handle:
         note.handle ||
-        getStandardHandle(tiptapJSONtoPlainText(note.title) || '', note.id),
+        getStandardHandle(
+          tiptapJSONtoPlainText(note.title)
+            // Remove all non-alphanumeric characters to prevent handles with "quot", "percent", etc.
+            ?.replace(/[^\w\d ]/g, '') || '',
+          note.id,
+        ),
       title: note.title,
       public: note.public,
       published_at: note.published_at,
