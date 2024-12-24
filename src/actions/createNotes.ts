@@ -35,8 +35,12 @@ function getTransaction(input: NotesForDB, inputClient: Client) {
         note.handle ||
         getStandardHandle(
           tiptapJSONtoPlainText(note.title)
-            // Remove all non-alphanumeric characters to prevent handles with "quot", "percent", etc.
-            ?.replace(/[^\w\d ]/g, '') || '',
+            ?.replace(/&amp;/g, 'e')
+            // Remove common escaped HTML entities
+            ?.replace(
+              /&quot;|&lt;|&gt;|&nbsp;|&#39;|&apos;|&cent;|&pound;|&yen;|&euro;|&copy;|&reg;/g,
+              '',
+            ) || '',
           note.id,
         ),
       title: note.title,
