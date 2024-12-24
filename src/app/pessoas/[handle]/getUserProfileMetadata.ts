@@ -1,4 +1,3 @@
-
 import type { ProfileLayoutData } from '@/queries'
 import { imageBuilder } from '@/utils/imageBuilder'
 import { truncate } from '@/utils/strings'

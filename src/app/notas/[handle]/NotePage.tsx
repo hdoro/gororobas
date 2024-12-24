@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Text, textVariants } from '@/components/ui/text'
-import { auth } from '@/edgedb'
 import type { NotePageData } from '@/queries'
 import type { TiptapNode } from '@/types'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
@@ -19,9 +18,6 @@ import Link from 'next/link'
 import DeleteNoteButton from './DeleteNoteButton'
 
 export default async function NotePage({ note }: { note: NotePageData }) {
-  const session = auth.getSession()
-  const signedIn = await session.isSignedIn()
-
   const title = note.title as TiptapNode
   if (!title) return
 

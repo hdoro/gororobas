@@ -19,13 +19,12 @@ export const metadata: Metadata = {
     'Notinhas compartilhadas por pessoas reais, em contextos reais. Escreva você também!',
 }
 
-export default async function NotesRoute({
-  searchParams,
-}: {
-  searchParams: {
+export default async function NotesRoute(props: {
+  searchParams: Promise<{
     [query: string]: string | string[]
-  }
+  }>
 }) {
+  const searchParams = await props.searchParams
   const queryClient = new QueryClient()
 
   await queryClient.prefetchInfiniteQuery({

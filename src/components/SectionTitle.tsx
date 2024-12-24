@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text'
 import { cn } from '@/utils/cn'
-import type { PropsWithChildren, SVGProps } from 'react'
+import type { JSX, PropsWithChildren, SVGProps } from 'react'
 
 export default function SectionTitle({
   children,

@@ -1,5 +1,6 @@
 import { paths } from '@/utils/urls'
 import Link from 'next/link'
+import type { JSX } from 'react'
 import NoteIcon from './icons/NoteIcon'
 import SeedlingIcon from './icons/SeedlingIcon'
 import SparklesIcon from './icons/SparklesIcon'

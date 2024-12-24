@@ -8,6 +8,8 @@ import {
   DialogBody,
   DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Text } from '@/components/ui/text'
@@ -56,26 +58,36 @@ export default function DeleteNoteButton({ noteId }: { noteId: string }) {
         <DialogBody className="space-y-2 pt-10">
           {status === 'success' && (
             <>
-              <Text level="h2">Nota deletada</Text>
-              <Text level="p">
-                Te levando pra outras notas, vai que você se inspira a escrever
-                mais?
-              </Text>
+              <DialogTitle asChild>
+                <Text level="h2">Nota deletada</Text>
+              </DialogTitle>
+              <DialogDescription asChild>
+                <Text level="p">
+                  Te levando pra outras notas, vai que você se inspira a
+                  escrever mais?
+                </Text>
+              </DialogDescription>
             </>
           )}
           {status === 'submitting' && (
-            <Text level="h2" className="flex items-center gap-3">
-              <Carrot className="h-6 w-6 animate-spin" />
-              Robôs trabalhando...
-            </Text>
+            <DialogTitle asChild>
+              <Text level="h2" className="flex items-center gap-3">
+                <Carrot className="h-6 w-6 animate-spin" />
+                Robôs trabalhando...
+              </Text>
+            </DialogTitle>
           )}
           {status === 'idle' && (
             <>
-              <Text level="h2">Deletar nota?</Text>
-              <Text level="p">
-                Essa ação é irreversível, você tem certeza que quer privar o
-                mundo da beleza das suas palavras e curiosidade?
-              </Text>
+              <DialogTitle asChild>
+                <Text level="h2">Deletar nota?</Text>
+              </DialogTitle>
+              <DialogDescription asChild>
+                <Text level="p">
+                  Essa ação é irreversível, você tem certeza que quer privar o
+                  mundo da beleza das suas palavras e curiosidade?
+                </Text>
+              </DialogDescription>
               <div className="flex items-center gap-2 pt-2">
                 <DialogClose asChild>
                   <Button mode="outline" tone="neutral" size="xs">

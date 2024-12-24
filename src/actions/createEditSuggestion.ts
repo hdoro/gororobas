@@ -62,7 +62,7 @@ export async function createEditSuggestionAction({
     updated,
   })
 
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   return runServerEffect(
     pipe(

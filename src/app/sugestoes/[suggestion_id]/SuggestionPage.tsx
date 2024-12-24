@@ -48,7 +48,7 @@ export default async function SuggestionPage({
 }) {
   const { dataThatChanged, toRender, diff } = data
   const friends = dataThatChanged.friends
-    ? await vegetableCardsByIdQuery.run(auth.getSession().client, {
+    ? await vegetableCardsByIdQuery.run((await auth.getSession()).client, {
         vegetable_ids: dataThatChanged.friends,
       })
     : ([] as VegetableCardData[])

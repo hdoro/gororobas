@@ -24,7 +24,7 @@ export default function VegetableVarietyCard({
   if (!variety.names || variety.names.length === 0) return null
 
   return (
-    <div className="flex-[1_0_min(15rem,95vw)] lg:flex-[1_0_min(25rem,95vw)] @container">
+    <div className="flex-[1_0_min(15rem,95vw)] @container lg:flex-[1_0_min(25rem,95vw)]">
       <div className="flex flex-col gap-5 @sm:flex-row @sm:items-center">
         {variety.photos.length > 0 ? (
           <CardWithPhotoContents variety={variety} />

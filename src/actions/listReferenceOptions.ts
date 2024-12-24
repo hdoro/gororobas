@@ -14,7 +14,7 @@ export type ReferenceObjectType = 'Vegetable' | 'UserProfile'
 export async function listReferenceOptions(
   objectType: ReferenceObjectType,
 ): Promise<ReferenceOption[] | { error: string }> {
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   let fetcher: Effect.Effect<ReferenceOption[], unknown, never> = pipe(
     Effect.tryPromise({

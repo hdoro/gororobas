@@ -12,7 +12,7 @@ import {
 import type { WishlistForProfile } from '@/queries'
 import { paths } from '@/utils/urls'
 import Link from 'next/link'
-import type { SVGProps } from 'react'
+import type { JSX, SVGProps } from 'react'
 
 function VegetableBadge({
   vegetable,

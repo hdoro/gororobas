@@ -18,13 +18,12 @@ export const metadata: Metadata = {
     'Descubra como plantar centenas de vegetais de forma agroecológica. O Gororobas é uma enciclopédia colaborativa, participe também :)',
 }
 
-export default async function VegetablesRoute({
-  searchParams,
-}: {
-  searchParams: {
+export default async function VegetablesRoute(props: {
+  searchParams: Promise<{
     [query: string]: string | string[]
-  }
+  }>
 }) {
+  const searchParams = await props.searchParams
   const queryClient = new QueryClient()
 
   await queryClient.prefetchInfiniteQuery({

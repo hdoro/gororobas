@@ -14,7 +14,7 @@ import { Effect, Schema, pipe } from 'effect'
 export async function updateProfileAction(
   input: typeof ProfileDataWithImage.Type,
 ) {
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   if (!Schema.is(ProfileDataWithImage)(input))
     return {

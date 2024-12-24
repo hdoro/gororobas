@@ -10,7 +10,7 @@ export async function addToWishlist(
   vegetable_id: string,
   wishlist_status: VegetableWishlistStatus,
 ) {
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   return runServerEffect(
     pipe(

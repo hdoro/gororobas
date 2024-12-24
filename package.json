@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev --turbopack",
     "dev:network": "LOCAL_IP=$(ifconfig en0 | grep 'inet ' | awk '{print $2}') && next dev --turbo -H $LOCAL_IP",
     "build": "next build",
     "prebuild": "npm run generate:all",
@@ -25,7 +25,7 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@edgedb/auth-core": "^0.2.1",
-    "@edgedb/auth-nextjs": "^0.3.2",
+    "@edgedb/auth-nextjs": "0.4.0-canary.20241217T160555",
     "@effect/experimental": "^0.32.0",
     "@effect/opentelemetry": "^0.39.10",
     "@effect/platform": "^0.69.16",
@@ -81,10 +81,10 @@
     "embla-carousel-wheel-gestures": "^8.0.1",
     "json-diff-ts": "^4.1.0",
     "lucide-react": "^0.454.0",
-    "next": "^14.2.16",
-    "react": "^18.3.1",
+    "next": "15.1.2",
+    "react": "19.0.0",
     "react-day-picker": "^9.3.0",
-    "react-dom": "^18.3.1",
+    "react-dom": "19.0.0",
     "react-dropzone": "^14.3.5",
     "react-hook-form": "7.52.2",
     "react-intersection-observer": "^9.13.1",
@@ -97,14 +97,14 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@edgedb/generate": "0.6.0-canary.20240923T100408",
+    "@edgedb/generate": "0.6.0-canary.20241217T160539",
     "@portabletext/to-html": "^2.0.13",
     "@sanity/types": "^3.63.0",
     "@types/inquirer": "^9.0.7",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.9.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "19.0.2",
+    "@types/react-dom": "19.0.2",
     "autoprefixer": "^10.4.20",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
@@ -117,5 +117,12 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx,css}": "biome check --staged --diagnostic-level=error"
+  },
+  "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387",
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.0.2",
+      "@types/react-dom": "19.0.2"
+    }
   }
 }

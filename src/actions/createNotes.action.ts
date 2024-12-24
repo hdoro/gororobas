@@ -7,7 +7,7 @@ import { Effect } from 'effect'
 import { createNotes } from './createNotes'
 
 export async function createNotesAction(input: NotesForDB) {
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   return runServerEffect(
     createNotes(input, session.client).pipe(

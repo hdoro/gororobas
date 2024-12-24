@@ -18,11 +18,10 @@ async function getRouteData(params: RouteParams) {
   )
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: RouteParams
+export async function generateMetadata(props: {
+  params: Promise<RouteParams>
 }): Promise<Metadata> {
+  const params = await props.params
   const data = await getRouteData(params)
   if (!data?.target_object?.names) return {}
 
@@ -35,11 +34,10 @@ export async function generateMetadata({
   }
 }
 
-export default async function EditSuggestionRoute({
-  params,
-}: {
-  params: RouteParams
+export default async function EditSuggestionRoute(props: {
+  params: Promise<RouteParams>
 }) {
+  const params = await props.params
   const data = await getRouteData(params)
 
   if (!data || !data.target_object) return notFound()

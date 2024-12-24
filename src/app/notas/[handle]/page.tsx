@@ -1,6 +1,6 @@
-import { auth } from '@/edgedb'
 import { notePageQuery } from '@/queries'
-import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { runQuery } from '@/services/runQuery'
+import { runServerEffect } from '@/services/runtime'
 import { truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { pathToAbsUrl, paths } from '@/utils/urls'
@@ -10,25 +10,25 @@ import { notFound } from 'next/navigation'
 import NotePage from './NotePage'
 
 export function getNoteRouteData(handle: string) {
-  const session = auth.getSession()
-
   return runServerEffect(
     pipe(
-      Effect.tryPromise({
-        try: () => notePageQuery.run(session.client, { handle }),
-        catch: (error) => console.log(error),
-      }),
-      ...buildTraceAndMetrics('note_page', { handle }),
+      runQuery(
+        notePageQuery,
+        { handle },
+        {
+          metricsName: 'note_page',
+          metricsData: { handle },
+        },
+      ),
       Effect.catchAll(() => Effect.succeed(null)),
     ),
   )
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { handle: string }
+export async function generateMetadata(props: {
+  params: Promise<{ handle: string }>
 }): Promise<Metadata> {
+  const params = await props.params
   const note = await getNoteRouteData(params.handle)
 
   const title = note?.title ? tiptapJSONtoPlainText(note.title) : undefined
@@ -53,11 +53,13 @@ export async function generateMetadata({
   }
 }
 
-export default async function NoteRoute({
-  params: { handle },
-}: {
-  params: { handle: string }
+export default async function NoteRoute(props: {
+  params: Promise<{ handle: string }>
 }) {
+  const params = await props.params
+
+  const { handle } = params
+
   const note = await getNoteRouteData(handle)
 
   if (!note) return notFound()

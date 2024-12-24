@@ -17,7 +17,7 @@ export async function createVegetableTipAction(input: {
   vegetable_id: string
   tip: VegetableTipForDB
 }) {
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   return runServerEffect(
     Effect.gen(function* (_) {

@@ -61,7 +61,7 @@ export default function VegetablePage({
     <FullscreenPhotos photos={carouselPhotos}>
       <main className="py-12">
         <div
-          className="relative flex flex-col gap-[4.5rem] px-pageX lg:flex-row lg:items-start overflow-x-hidden lg:overflow-x-visible"
+          className="relative flex flex-col gap-[4.5rem] overflow-x-hidden px-pageX lg:flex-row lg:items-start lg:overflow-x-visible"
           id="visao-geral"
         >
           <VegetablePageHero vegetable={vegetable} />
@@ -96,7 +96,7 @@ export default function VegetablePage({
           vegetable.varieties.length > 0 && (
             <section className="my-36" id="variedades">
               <SectionTitle Icon={RainbowIcon}>Variedades</SectionTitle>
-              <div className="hide-scrollbar mt-3 flex gap-6 xl:gap-20 overflow-x-auto px-pageX">
+              <div className="hide-scrollbar mt-3 flex gap-6 overflow-x-auto px-pageX xl:gap-20">
                 {vegetable.varieties.map((variety) => (
                   <VegetableVarietyCard
                     key={variety.handle}

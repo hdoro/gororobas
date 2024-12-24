@@ -11,7 +11,7 @@ export async function updateNoteAction(input: {
   current: NoteInForm
   updated: NoteInForm
 }) {
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   return runServerEffect(
     updateNote(input, session.client).pipe(

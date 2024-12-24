@@ -8,12 +8,11 @@ export const metadata: Metadata = {
   title: 'Entrar no Gororobas',
 }
 
-export default async function ProfileRoute({
-  searchParams,
-}: {
-  searchParams: { redirecionar?: string }
+export default async function ProfileRoute(props: {
+  searchParams: Promise<{ redirecionar?: string }>
 }) {
-  const session = auth.getSession()
+  const searchParams = await props.searchParams
+  const session = await auth.getSession()
 
   if (await session.isSignedIn()) {
     return redirect(getAuthRedirect(true, paths.home()))
