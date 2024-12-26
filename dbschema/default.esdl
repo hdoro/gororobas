@@ -238,6 +238,7 @@ module default {
     searchable_names := array_join(
       .names ++ 
       array_agg(array_join(.varieties.names, ' ')) ++ 
+      array_agg(array_join(.scientific_names, ' ')) ++ 
       [.handle],
       ' '
     );
