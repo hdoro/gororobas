@@ -1,4 +1,5 @@
 import ChangeIndicator from '@/components/ChangeIndicator'
+import { SanityImage } from '@/components/SanityImage'
 import { Badge } from '@/components/ui/badge'
 import { Text } from '@/components/ui/text'
 import {
@@ -47,10 +48,21 @@ export function VegetablePageHero({
     ...(vegetable.varieties || []).flatMap((v) => v.photos || []),
   ].flatMap((p) => (p.sanity_id ? p : []))
 
+  const mainImage = allPhotos?.[0]
+
   return (
     <div className="max-w-[53.125rem] flex-[5]">
-      <div className="flex flex-col items-start gap-3 md:flex-row md:items-end md:justify-between md:gap-5">
-        <div>
+      <div className="flex flex-col items-start gap-3 md:flex-row md:items-end">
+        {mainImage && (
+          <SanityImage
+            image={mainImage}
+            maxWidth={64}
+            className="size-16 rounded-sm object-cover"
+            fetchPriority="high"
+            loading="eager"
+          />
+        )}
+        <div className="flex-1 -space-y-1">
           <Text level="h1" as="h1">
             {names[0]}
           </Text>
