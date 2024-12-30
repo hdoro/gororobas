@@ -1032,3 +1032,25 @@ export type ProfileGalleryData = Exclude<
   $infer<typeof profileGalleryQuery>,
   null
 >
+
+export const getMentionsDataQuery = e.params(
+  { ids: e.array(e.uuid) },
+  (params) =>
+    e.select(e.op(e.Vegetable, 'union', e.UserProfile), (object) => ({
+      filter: e.op(object.id, 'in', e.array_unpack(params.ids)),
+
+      id: true,
+      handle: true,
+      ...e.is(e.Vegetable, {
+        names: true,
+        photos: (image) => ({
+          ...imageForRendering(image),
+          sources: false,
+        }),
+      }),
+      ...e.is(e.UserProfile, {
+        name: true,
+        photo: (image) => ({ ...imageForRendering(image), sources: false }),
+      }),
+    })),
+)

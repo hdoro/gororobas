@@ -1,6 +1,8 @@
+import type { ImageForRendering } from '@/types'
 import { BASE_URL } from '@/utils/config'
 import Link from 'next/link'
 import { Children } from 'react'
+import { Mention } from './Mention'
 import type { NodeHandler, NodeHandlers, NodeProps } from './TipTapRender'
 
 const TextRender: NodeHandler = (props: NodeProps) => {
@@ -139,6 +141,23 @@ const Passthrough: NodeHandler = (props) => {
   return <>{props.children}</>
 }
 
+const MentionHandler: NodeHandler = (props) => {
+  const { node } = props
+  if (!node?.attrs) return <Passthrough {...props} />
+
+  let label = node.attrs.label
+  let image: ImageForRendering | null = null
+  try {
+    // Tiptap/Prosemirror doesn't allow us to include custom data in mentions - only `id` and `label`
+    // As a result, in MentionList we set the label as a JSON string (refer to @selectItem in that component)
+    const labelAsJSON = JSON.parse(node.attrs.label)
+    label = labelAsJSON.label
+    image = labelAsJSON.image
+  } catch (error) {}
+
+  return <Mention id={node.attrs.id as string} label={label} image={image} />
+}
+
 const Image: NodeHandler = (props) => {
   const attrs = props.node.attrs
   return <img alt={attrs?.alt} src={attrs?.src} title={attrs?.title} />
@@ -154,4 +173,5 @@ export const tiptapNodeHandlers: NodeHandlers = {
   bulletList: BulletList,
   orderedList: OrderedList,
   listItem: ListItem,
+  mention: MentionHandler,
 }

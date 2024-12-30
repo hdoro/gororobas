@@ -1,12 +1,10 @@
-import {
-  type ReferenceObjectType,
-  listReferenceOptions,
-} from '@/actions/listReferenceOptions'
-import type { ReferenceOption } from '@/types'
+import { listReferenceOptions } from '@/actions/listReferenceOptions'
+import type { ReferenceObjectType, ReferenceOption } from '@/types'
 import { cn } from '@/utils/cn'
+import { useQuery } from '@tanstack/react-query'
 import { CommandLoading } from 'cmdk'
 import { CheckIcon, XIcon } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import type {
   ControllerRenderProps,
   FieldPath,
@@ -28,15 +26,15 @@ export default function ReferenceListInput<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   field,
-  objectType,
+  objectTypes,
 }: {
   field: ControllerRenderProps<TFieldValues, TName>
-  objectType: ReferenceObjectType
+  objectTypes: ReferenceObjectType[]
 }) {
   const [focused, setFocused] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const selected = (field.value || []) as ReferenceOption['id'][]
-  const { options, optionsMap, error } = useReferenceOptions(objectType)
+  const { options, optionsMap } = useReferenceOptions(objectTypes)
 
   function toggleOption(id: string) {
     if (selected.includes(id)) {
@@ -49,7 +47,7 @@ export default function ReferenceListInput<
 
   const selectedOptions = selected.flatMap((id) => optionsMap[id] || [])
 
-  const label = objectType === 'Vegetable' ? 'vegetais' : 'pessoas'
+  const label = objectTypes[0] === 'Vegetable' ? 'vegetais' : 'pessoas'
   return (
     <FormItem className={'rounded-md border'}>
       <Command
@@ -144,36 +142,29 @@ export default function ReferenceListInput<
   )
 }
 
-function useReferenceOptions(objectType: ReferenceObjectType) {
-  const [error, setError] = useState<string | null>(null)
-  const [options, setOptions] = useState<ReferenceOption[] | null>(null)
+export function useReferenceOptions(objectTypes: ReferenceObjectType[]) {
+  const result = useQuery({
+    queryKey: ['useReferenceOptions', objectTypes.sort().join(',')],
+    queryFn: () => listReferenceOptions(objectTypes),
+    enabled: true,
+  })
 
   const optionsMap = useMemo(() => {
-    return (options || []).reduce(
+    if (!result.data || !Array.isArray(result.data)) return {}
+
+    return (result.data || []).reduce(
       (acc, option) => {
         acc[option.id] = option
         return acc
       },
       {} as Record<string, ReferenceOption>,
     )
-  }, [options])
-
-  const fetchOptions = useCallback(async () => {
-    const fetchedOptions = await listReferenceOptions(objectType)
-    if ('error' in fetchedOptions) {
-      setError(fetchedOptions.error)
-    } else {
-      setOptions(fetchedOptions)
-    }
-  }, [objectType])
-
-  useEffect(() => {
-    fetchOptions()
-  }, [fetchOptions])
+  }, [result.data])
 
   return {
-    options,
+    ...result,
     optionsMap,
-    error,
+    options: Array.isArray(result.data) ? result.data : null,
+    error: result.data && !Array.isArray(result.data) ? result.error : null,
   }
 }

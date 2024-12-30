@@ -3,25 +3,17 @@ import type { $infer } from '@/edgeql'
 import { Effect, pipe } from 'effect'
 import { buildTraceAndMetrics } from './runtime'
 
-export interface QueryError {
-  readonly _tag: 'QueryError'
-  readonly error: unknown
+class QueryError {
+  readonly _tag = 'QueryError'
+
+  constructor(readonly error: unknown) {}
 }
 
-export interface AuthSessionError {
-  readonly _tag: 'AuthSessionError'
-  readonly error: unknown
+class AuthSessionError {
+  readonly _tag = 'AuthSessionError'
+
+  constructor(readonly error: unknown) {}
 }
-
-export const QueryError = (error: unknown): QueryError => ({
-  _tag: 'QueryError',
-  error,
-})
-
-export const AuthSessionError = (error: unknown): AuthSessionError => ({
-  _tag: 'AuthSessionError',
-  error,
-})
 
 /**
  * Runs an EdgeDB query with Effect, handling session management and error cases
@@ -38,26 +30,25 @@ export function runQuery<
   params: P,
   options: {
     metricsName: string
-    metricsData?: Record<string, string>
+    metricsData?: Record<string, string | number>
   },
 ) {
   return pipe(
     Effect.tryPromise({
       try: () => auth.getSession(),
-      catch: (error) => Effect.fail(AuthSessionError(error)),
+      catch: (error) => new AuthSessionError(String(error)),
     }).pipe(...buildTraceAndMetrics('run_query_auth')),
 
-    Effect.flatMap((session) =>
-      pipe(
-        Effect.tryPromise({
-          try: () => query.run(session.client, params),
-          catch: (error) => Effect.fail(QueryError(error)),
-        }),
-        ...buildTraceAndMetrics(
-          `${options.metricsName}_query`,
-          options.metricsData ?? {},
-        ),
-      ),
+    Effect.andThen((session) =>
+      Effect.tryPromise({
+        try: () => query.run(session.client, params),
+        catch: (error) => new QueryError(String(error)),
+      }),
+    ),
+
+    ...buildTraceAndMetrics(
+      `${options.metricsName}_query`,
+      options.metricsData ?? {},
     ),
   )
 }

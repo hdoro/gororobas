@@ -294,7 +294,7 @@ export default function VegetableForm(props: {
                     render={({ field }) => (
                       <ReferenceListInput
                         field={field}
-                        objectType="Vegetable"
+                        objectTypes={['Vegetable']}
                       />
                     )}
                   />

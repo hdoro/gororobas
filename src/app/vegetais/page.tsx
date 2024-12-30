@@ -1,4 +1,3 @@
-import TanstackQueryProvider from '@/components/TanstackQueryProvider'
 import {
   HydrationBoundary,
   QueryClient,
@@ -35,10 +34,8 @@ export default async function VegetablesRoute(props: {
   })
 
   return (
-    <TanstackQueryProvider>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <VegetablesIndex />
-      </HydrationBoundary>
-    </TanstackQueryProvider>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <VegetablesIndex />
+    </HydrationBoundary>
   )
 }

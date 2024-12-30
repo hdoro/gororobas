@@ -4,7 +4,6 @@ import {
   dehydrate,
 } from '@tanstack/react-query'
 import type { Metadata } from 'next'
-import TanstackQueryProvider from '../../components/TanstackQueryProvider'
 import NotesIndex from './NotesIndex'
 import fetchNotesIndex from './fetchNotesIndex'
 import {
@@ -36,10 +35,8 @@ export default async function NotesRoute(props: {
   })
 
   return (
-    <TanstackQueryProvider>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <NotesIndex />
-      </HydrationBoundary>
-    </TanstackQueryProvider>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NotesIndex />
+    </HydrationBoundary>
   )
 }

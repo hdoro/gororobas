@@ -83,7 +83,10 @@ export default function SourceInput<
           label="Pessoas"
           name={`${field.name}.userIds`}
           render={({ field: userIdsField }) => (
-            <ReferenceListInput field={userIdsField} objectType="UserProfile" />
+            <ReferenceListInput
+              field={userIdsField}
+              objectTypes={['UserProfile']}
+            />
           )}
         />
       )}

@@ -13,7 +13,7 @@
     "format": "prettier src --write",
     "lint": "biome check src --write --diagnostic-level=error",
     "auth:setup": "bun run auth-setup.ts",
-    "generate:edgeql": "npx @edgedb/generate edgeql-js --out src/edgeql",
+    "generate:edgeql": "npx @edgedb/generate edgeql-js --out src/edgeql --future-polymorphism-as-discriminated-unions --future-strict-type-names",
     "generate:interfaces": "npx @edgedb/generate interfaces --file src/edgedb.interfaces.ts",
     "generate:all": "pnpm generate:edgeql && pnpm generate:interfaces",
     "prepare": "husky"
@@ -81,6 +81,7 @@
     "embla-carousel-wheel-gestures": "^8.0.1",
     "json-diff-ts": "^4.1.0",
     "lucide-react": "^0.469.0",
+    "match-sorter": "^8.0.0",
     "next": "^15.1.2",
     "react": "^19.0.0",
     "react-day-picker": "^9.4.4",
