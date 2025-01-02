@@ -170,7 +170,7 @@ export default function ProfileForm({
                   render={({ field }) => (
                     <RichTextInput
                       field={field}
-                      placeholder="O que te encanta na cozinha? O que te levou à agroecologia?"
+                      placeholder="O que quiser falar! Por exemplo: o que te encanta na cozinha? O que te levou à agroecologia?"
                     />
                   )}
                 />
