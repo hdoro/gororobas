@@ -304,3 +304,10 @@ body {
     hsl(var(--background)) 60%
   );
 }
+
+/* Used by MentionList to make a bottom drawer for mentions instead of the usual popover, which is hard to read & browse */
+@media screen and (max-width: 767px) {
+  [id^='tippy-']:has(.tippy-bottom-drawer) {
+    transform: none !important;
+  }
+}

@@ -3,18 +3,35 @@
 import type { ReferenceObjectType, ReferenceOption } from '@/types'
 import type { SuggestionProps } from '@tiptap/suggestion'
 import { matchSorter } from 'match-sorter'
-import { forwardRef, useImperativeHandle, useMemo, useState } from 'react'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { SanityImage } from '../SanityImage'
 import { useReferenceOptions } from '../forms/ReferenceListInput'
 import Carrot from '../icons/Carrot'
 import { Button } from '../ui/button'
 import { Text } from '../ui/text'
 
+const OBJECT_TYPES: ReferenceObjectType[] = ['UserProfile', 'Vegetable']
+
+type Selection = {
+  index: number
+  objectType: ReferenceObjectType
+}
+
 export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
   (props, ref) => {
-    const [selectedIndex, setSelectedIndex] = useState(0)
-    const objectTypes: ReferenceObjectType[] = ['UserProfile', 'Vegetable']
-    const { options, isLoading } = useReferenceOptions(objectTypes)
+    const [selection, setSelection] = useState({
+      index: 0,
+      objectType: 'UserProfile' as ReferenceObjectType,
+    })
+    const containerRef = useRef<HTMLDivElement>(null)
+    const { options, isLoading } = useReferenceOptions(OBJECT_TYPES)
 
     const { query } = props
     const matches = useMemo(() => {
@@ -23,8 +40,8 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
       return matchSorter(options, query, { keys: ['label'] })
     }, [options, query])
 
-    const byOjbectType = useMemo(() => {
-      return objectTypes.reduce(
+    const byObjectType = useMemo(() => {
+      return OBJECT_TYPES.reduce(
         (acc, objectType) => {
           acc[objectType] = (matches || []).filter(
             (option) => option.objectType === objectType,
@@ -35,8 +52,30 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
       )
     }, [matches])
 
-    const selectItem = (index: number) => {
-      const item = matches[index]
+    // Reset selection when query changes
+    // biome-ignore lint: really only run effect on query changes
+    useEffect(() => {
+      setSelection({
+        index: 0,
+        objectType:
+          OBJECT_TYPES.find(
+            (objectType) => byObjectType[objectType].length > 0,
+          ) || OBJECT_TYPES[0],
+      })
+    }, [props.query])
+
+    const selectedItem = byObjectType[selection.objectType]?.[selection.index]
+
+    // Scroll to selected item when it changes
+    useEffect(() => {
+      if (selectedItem?.id)
+        containerRef?.current
+          ?.querySelector(`[data-id="${selectedItem?.id}"]`)
+          ?.scrollIntoView({ block: 'nearest' })
+    }, [selectedItem])
+
+    const selectItem = (id: string) => {
+      const item = matches.find((item) => item.id === id)
 
       if (item) {
         props.command({
@@ -50,27 +89,28 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
       }
     }
 
-    const upHandler = () => {
-      setSelectedIndex((selectedIndex + matches.length - 1) % matches.length)
-    }
-
-    const downHandler = () => {
-      setSelectedIndex((selectedIndex + 1) % matches.length)
-    }
+    const arrowHandler = (direction: 'up' | 'down') =>
+      setSelection(
+        parseNextSelection({
+          direction,
+          byObjectType,
+          selection,
+        }),
+      )
 
     const enterHandler = () => {
-      selectItem(selectedIndex)
+      if (selectedItem?.id) selectItem(selectedItem?.id)
     }
 
     useImperativeHandle(ref, () => ({
       onKeyDown: ({ event }: { event: KeyboardEvent }) => {
         if (event.key === 'ArrowUp') {
-          upHandler()
+          arrowHandler('up')
           return true
         }
 
         if (event.key === 'ArrowDown') {
-          downHandler()
+          arrowHandler('down')
           return true
         }
 
@@ -83,26 +123,21 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
       },
     }))
 
-    if (isLoading) {
-      return (
-        <div className="flex flex-col rounded-md border bg-white p-2 shadow-sm">
-          <div className="flex items-center justify-center gap-3">
-            <Carrot className="h-6 w-6 animate-spin" />
-            Carregando menções...
-          </div>
-        </div>
-      )
-    }
-
     return (
       <div
-        className="space-y-5 overflow-y-auto rounded-md border bg-white p-2 shadow-sm"
+        className="tippy-bottom-drawer fixed inset-x-0 bottom-0 h-[30dvh] w-screen space-y-5 overflow-y-auto rounded-md border bg-white p-2 md:relative md:h-auto md:w-auto md:shadow-sm"
         style={{
           maxHeight: `calc(80dvh - ${props.clientRect?.()?.top || 0}px)`,
         }}
+        ref={containerRef}
       >
-        {matches.length ? (
-          Object.entries(byOjbectType).map(([objectType, items]) => {
+        {isLoading ? (
+          <Text className="flex h-full items-center justify-center gap-3 text-muted-foreground">
+            <Carrot className="h-5 w-5 animate-spin" />
+            <span className="animate-pulse">Carregando menções...</span>
+          </Text>
+        ) : matches.length ? (
+          Object.entries(byObjectType).map(([objectType, items]) => {
             if (!items.length) return null
 
             return (
@@ -111,15 +146,21 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
                   {objectType === 'UserProfile' ? 'Pessoas' : 'Vegetais'}
                 </Text>
                 <div className="flex flex-col">
-                  {items.map((item, index) => (
+                  {items.map((item, itemIndex) => (
                     <Button
                       key={item.id}
                       tone="neutral"
-                      mode={index === selectedIndex ? 'outline' : 'bleed'}
-                      onClick={() => selectItem(index)}
+                      mode={
+                        selection.objectType === objectType &&
+                        selection.index === itemIndex
+                          ? 'outline'
+                          : 'bleed'
+                      }
+                      onClick={() => selectItem(item.id)}
                       type="button"
                       size="sm"
                       className="!justify-start"
+                      data-id={item.id}
                     >
                       {item.image && (
                         <SanityImage
@@ -145,3 +186,58 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
     )
   },
 )
+
+function parseNextSelection({
+  direction,
+  byObjectType,
+  selection: current,
+}: {
+  direction: 'up' | 'down'
+  byObjectType: Record<ReferenceObjectType, ReferenceOption[]>
+  selection: Selection
+}): Selection {
+  const objectTypeIndex = OBJECT_TYPES.findIndex(
+    (objectType) => objectType === current.objectType,
+  )
+  const objectTypesWithItems = OBJECT_TYPES.filter(
+    (objectType) => byObjectType[objectType].length > 0,
+  )
+
+  if (direction === 'up') {
+    if (current.index === 0) {
+      const newObjectType =
+        objectTypeIndex === 0
+          ? objectTypesWithItems.slice(-1)[0]
+          : objectTypesWithItems[objectTypeIndex - 1]
+      return {
+        index: byObjectType[newObjectType].length - 1,
+        objectType: newObjectType,
+      }
+    }
+
+    return {
+      index: current.index - 1,
+      objectType: current.objectType,
+    }
+  }
+
+  if (direction === 'down') {
+    if (current.index === byObjectType[current.objectType].length - 1) {
+      const newObjectType =
+        objectTypeIndex === OBJECT_TYPES.length - 1
+          ? objectTypesWithItems[0]
+          : objectTypesWithItems[objectTypeIndex + 1]
+      return {
+        index: 0,
+        objectType: newObjectType,
+      }
+    }
+
+    return {
+      index: current.index + 1,
+      objectType: current.objectType,
+    }
+  }
+
+  return current
+}
