@@ -1046,6 +1046,11 @@ export const getMentionsDataQuery = e.params(
         photos: (image) => ({
           ...imageForRendering(image),
           sources: false,
+          order_by: {
+            expression: image['@order_index'],
+            direction: 'ASC',
+            empty: e.EMPTY_LAST,
+          },
         }),
       }),
       ...e.is(e.UserProfile, {

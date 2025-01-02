@@ -20,7 +20,7 @@ export function Mention(props: {
     return (
       <span
         className={cn(
-          'relative font-medium text-primary-700',
+          'relative px-1 font-medium text-primary-700',
           isLoading && 'animate-pulse',
         )}
       >
@@ -43,7 +43,7 @@ export function Mention(props: {
   return (
     <Link
       href={href}
-      className="font-medium text-primary-700 underline"
+      className="px-1 font-medium text-primary-700 underline"
       onClick={(e) => {
         // Prevent the card from flipping
         e.stopPropagation()
