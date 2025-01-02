@@ -49,8 +49,6 @@ export async function getMentionsDataAction(rawIds: readonly string[]) {
           } satisfies FreshMentionData
         }),
       ),
-      Effect.tap(Effect.logInfo),
-      Effect.tapError(Effect.logError),
       Effect.catchAll(() => Effect.succeed(null)),
     ),
   )

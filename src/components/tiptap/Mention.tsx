@@ -41,7 +41,14 @@ export function Mention(props: {
       ? paths.userProfile(freshMention.handle)
       : paths.vegetable(freshMention.handle)
   return (
-    <Link href={href} className="font-medium text-primary-700 underline">
+    <Link
+      href={href}
+      className="font-medium text-primary-700 underline"
+      onClick={(e) => {
+        // Prevent the card from flipping
+        e.stopPropagation()
+      }}
+    >
       {freshMention.image && (
         <SanityImage
           image={freshMention.image}
