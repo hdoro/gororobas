@@ -1059,3 +1059,7 @@ export const getMentionsDataQuery = e.params(
       }),
     })),
 )
+
+export const peopleIndexQuery = e.select(e.UserProfile, userProfileForAvatar)
+
+export type PeopleIndexData = Exclude<$infer<typeof peopleIndexQuery>, null>
