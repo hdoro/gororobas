@@ -30,12 +30,13 @@ export default function NumberInput<
       </FormControl>
       {value && format !== 'none' ? (
         <div
-          className="absolute inset-y-0 flex select-none items-center pl-3 text-sm font-normal text-stone-600"
+          className="pointer-events-none absolute inset-y-0 flex select-none items-center overflow-hidden text-ellipsis whitespace-nowrap pl-3 text-sm font-normal text-stone-600"
           style={{
-            left: `calc(${value?.toString().length || 1} * 1ch)`,
+            left: `calc(${value?.toString().length || 1} * 0.85ch)`,
+            right: 0,
           }}
         >
-          {formatNumber(value, format)}
+          {formatNumber(value, format).replace(`${value} `, '')}
         </div>
       ) : null}
     </div>
