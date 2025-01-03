@@ -1,6 +1,6 @@
-import RainbowIcon from '@/components/icons/RainbowIcon'
 import ProfilesGrid from '@/components/ProfilesGrid'
 import SectionTitle from '@/components/SectionTitle'
+import RainbowIcon from '@/components/icons/RainbowIcon'
 import { Text } from '@/components/ui/text'
 import { auth, client } from '@/edgedb'
 import { peopleIndexQuery } from '@/queries'
