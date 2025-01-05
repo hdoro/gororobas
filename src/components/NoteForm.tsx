@@ -160,7 +160,7 @@ export default function NoteForm(props: {
               hideLabel
               label="Corpo"
               // Hacky way of making the Prosemirror contenteditable span the remaining space to make it clickable
-              classNames={{ root: 'flex-1 *:*:h-full *:h-full' }}
+              classNames={{ root: 'flex-1' }}
               render={({ field }) => (
                 <RichTextInput
                   field={field}

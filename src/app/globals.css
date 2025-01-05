@@ -107,6 +107,10 @@ body {
   height: 100%;
 }
 
+.note-body--content > .tiptap {
+  height: 100%;
+}
+
 .tiptap-placeholder::before {
   content: attr(data-placeholder);
   pointer-events: none;

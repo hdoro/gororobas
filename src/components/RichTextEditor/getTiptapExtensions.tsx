@@ -55,6 +55,12 @@ export function getTiptapExtensions({
         classes.placeholder(),
       ) as string,
     }),
+    Link.configure({
+      openOnClick: false,
+      HTMLAttributes: {
+        class: classes.tiptapLink(),
+      },
+    }),
     Mention.configure({
       suggestion: MentionSuggestions,
       renderHTML: ({ options, node }) => {
@@ -99,12 +105,6 @@ export function getTiptapExtensions({
           label = labelAsJSON.label
         } catch (error) {}
         return options.suggestion.char + label
-      },
-    }),
-    Link.configure({
-      openOnClick: false,
-      HTMLAttributes: {
-        class: classes.tiptapLink(),
       },
     }),
   ]

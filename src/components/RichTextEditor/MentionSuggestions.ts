@@ -1,5 +1,6 @@
 'use client'
 
+import { parseDeviceType } from '@/hooks/useDeviceType'
 import type { ReferenceOption } from '@/types'
 import { ReactRenderer } from '@tiptap/react'
 import type { SuggestionOptions } from '@tiptap/suggestion'
@@ -19,7 +20,7 @@ const MentionSuggestions: Omit<SuggestionOptions<ReferenceOption>, 'editor'> = {
           editor: props.editor,
         })
 
-        if (!props.clientRect) {
+        if (!props.clientRect || parseDeviceType() !== 'desktop') {
           return
         }
 

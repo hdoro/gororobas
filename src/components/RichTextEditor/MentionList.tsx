@@ -125,10 +125,7 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
 
     return (
       <div
-        className="tippy-bottom-drawer fixed inset-x-0 bottom-0 h-[30dvh] w-screen space-y-5 overflow-y-auto rounded-md border bg-white p-2 md:relative md:h-auto md:w-auto md:shadow-sm"
-        style={{
-          maxHeight: `calc(80dvh - ${props.clientRect?.()?.top || 0}px)`,
-        }}
+        className="max-h-[30dvh] space-y-5 overflow-y-auto overflow-x-hidden rounded-md border bg-white p-2 shadow-sm"
         ref={containerRef}
       >
         {isLoading ? (
@@ -178,7 +175,7 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
             )
           })
         ) : (
-          <div className="text-sm text-muted-foreground">
+          <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
             Nenhuma pessoa ou vegetal encontrado
           </div>
         )}

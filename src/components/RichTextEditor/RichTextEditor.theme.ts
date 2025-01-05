@@ -21,7 +21,8 @@ export const richTextEditorTheme = tv({
         tiptapBold: 'font-bold',
       },
       noteBody: {
-        contentEditable: 'text-xl font-normal text-stone-700',
+        contentEditable:
+          'text-xl font-normal text-stone-700 h-full note-body--content',
         placeholder: 'text-xl font-normal text-stone-500',
         tiptapBold: 'font-semibold',
       },
