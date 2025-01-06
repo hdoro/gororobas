@@ -61,8 +61,9 @@ export function VegetableHeroPhotos({
                       image={photo}
                       maxWidth={520}
                       className={
-                        'h-full max-h-[70dvh] w-auto object-contain object-center lg:max-h-[50dvh]'
+                        'h-full max-h-[70dvh] w-auto object-contain object-center data-[loaded=false]:h-auto data-[loaded=false]:max-h-full lg:max-h-[50dvh]'
                       }
+                      loading={idx === 0 ? 'eager' : 'lazy'}
                     />
                   </button>
                   <PhotoLabelAndSources photo={photo} />
