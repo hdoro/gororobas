@@ -107,16 +107,20 @@ body {
   height: 100%;
 }
 
+.note-body--content > .tiptap {
+  height: 100%;
+}
+
 .tiptap-placeholder::before {
   content: attr(data-placeholder);
   pointer-events: none;
-  float: left;
-  height: 0;
+  float: right;
+  width: 100%;
 }
 
 .tiptap-placeholder.is-empty {
   overflow: hidden;
-  height: 1.33em;
+  min-height: 1.33em;
 }
 
 .tiptap-wrapper:has(.tiptap-placeholder.is-empty)::before {
@@ -303,4 +307,11 @@ body {
     hsl(var(--background) / 0) 0%,
     hsl(var(--background)) 60%
   );
+}
+
+/* Used by MentionList to make a bottom drawer for mentions instead of the usual popover, which is hard to read & browse */
+@media screen and (max-width: 767px) {
+  [id^='tippy-']:has(.tippy-bottom-drawer) {
+    transform: none !important;
+  }
 }

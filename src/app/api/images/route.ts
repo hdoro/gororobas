@@ -6,7 +6,7 @@ import { sanityServerClient } from '@/utils/sanity.client'
 import { Effect, pipe } from 'effect'
 
 export async function POST(request: Request): Promise<Response> {
-  const session = auth.getSession()
+  const session = await auth.getSession()
   const origin = request.headers.get('origin') || request.headers.get('referer')
 
   if (

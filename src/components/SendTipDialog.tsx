@@ -17,6 +17,7 @@ import {
   DialogBody,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -52,11 +53,15 @@ export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
         </DialogTrigger>
         <DialogContent className="max-w-lg">
           <DialogBody className="space-y-2 pt-10">
-            <Text level="h2">Crie uma conta no Gororobas</Text>
-            <Text level="p">
-              Para enviar uma sugestão, você precisa ter uma conta. Só assim
-              podemos lembrar suas escolhas sem embolar quem escolheu o quê 🤗
-            </Text>
+            <DialogTitle asChild>
+              <Text level="h2">Crie uma conta no Gororobas</Text>
+            </DialogTitle>
+            <DialogDescription asChild>
+              <Text level="p">
+                Para enviar uma sugestão, você precisa ter uma conta. Só assim
+                podemos lembrar suas escolhas sem embolar quem escolheu o quê 🤗
+              </Text>
+            </DialogDescription>
             <div className="flex items-center gap-2 pt-2">
               <Button asChild>
                 <a href={paths.signInOrSignUp(pathname)}>

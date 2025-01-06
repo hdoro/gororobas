@@ -6,62 +6,71 @@ import {
   vegetablesForReferenceQuery,
 } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import type { ReferenceOption } from '@/types'
+import type { ReferenceObjectType, ReferenceOption } from '@/types'
 import { Effect, pipe } from 'effect'
 
-export type ReferenceObjectType = 'Vegetable' | 'UserProfile'
-
 export async function listReferenceOptions(
-  objectType: ReferenceObjectType,
+  objectTypes: ReferenceObjectType[],
 ): Promise<ReferenceOption[] | { error: string }> {
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
-  let fetcher: Effect.Effect<ReferenceOption[], unknown, never> = pipe(
-    Effect.tryPromise({
-      try: () => vegetablesForReferenceQuery.run(session.client),
-      catch: (error) => {
-        console.log('Failed listing reference options', error)
-        return error
-      },
-    }),
-    Effect.map((vegetables) =>
-      vegetables.map(
-        (vegetable) =>
-          ({
-            id: vegetable.id,
-            label: vegetable.label,
-            image: vegetable.photos[0],
-          }) satisfies ReferenceOption,
-      ),
-    ),
-  )
-
-  if (objectType === 'UserProfile') {
-    fetcher = pipe(
+  const vegetableFetcher: Effect.Effect<ReferenceOption[], unknown, never> =
+    pipe(
       Effect.tryPromise({
-        try: () => profilesForReferenceQuery.run(session.client),
+        try: () => vegetablesForReferenceQuery.run(session.client),
         catch: (error) => {
           console.log('Failed listing reference options', error)
           return error
         },
       }),
-      Effect.map((profiles) =>
-        profiles.map(
-          (profile) =>
+      Effect.map((vegetables) =>
+        vegetables.map(
+          (vegetable) =>
             ({
-              id: profile.id,
-              label: profile.label,
-              image: profile.photo,
+              id: vegetable.id,
+              label: vegetable.label,
+              image: vegetable.photos[0],
+              objectType: 'Vegetable',
             }) satisfies ReferenceOption,
         ),
       ),
     )
-  }
+
+  const userProfileFetcher = pipe(
+    Effect.tryPromise({
+      try: () => profilesForReferenceQuery.run(session.client),
+      catch: (error) => {
+        console.log('Failed listing reference options', error)
+        return error
+      },
+    }),
+    Effect.map((profiles) =>
+      profiles.map(
+        (profile) =>
+          ({
+            id: profile.id,
+            label: profile.label,
+            image: profile.photo,
+            objectType: 'UserProfile',
+          }) satisfies ReferenceOption,
+      ),
+    ),
+  )
+
+  const fetcher = Effect.all(
+    [
+      ...(objectTypes.includes('UserProfile') ? [userProfileFetcher] : []),
+      ...(objectTypes.includes('Vegetable') ? [vegetableFetcher] : []),
+    ],
+    { concurrency: 'unbounded' },
+  ).pipe(
+    Effect.map((options) => options.flat().filter((option) => !!option.label)),
+  )
 
   return runServerEffect(
     pipe(
       fetcher,
-      ...buildTraceAndMetrics('list_reference_options', { objectType }),
+      ...buildTraceAndMetrics('list_reference_options', { objectTypes }),
     ).pipe(
       Effect.catchAll(() =>
         Effect.succeed({

@@ -21,13 +21,14 @@ export const richTextEditorTheme = tv({
         tiptapBold: 'font-bold',
       },
       noteBody: {
-        contentEditable: 'text-xl font-normal text-stone-700',
+        contentEditable:
+          'text-xl font-normal text-stone-700 h-full note-body--content',
         placeholder: 'text-xl font-normal text-stone-500',
         tiptapBold: 'font-semibold',
       },
       formTextarea: {
         contentEditable:
-          'text-sm leading-tight font-normal *:w-full rounded-md *:rounded-md *:border *:border-input *:bg-white *:px-3 *:py-2 *:ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 *:disabled:cursor-not-allowed *:disabled:opacity-50',
+          'text-sm leading-tight font-normal *:w-full rounded-md *:rounded-md *:border *:border-input *:bg-white *:px-3 *:py-2 *:ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 *:disabled:cursor-not-allowed *:disabled:opacity-50 min-h-[4lh] *:min-h-[4lh]',
         placeholder: 'pt-0.5 text-muted-foreground',
         tiptapBold: 'font-semibold',
       },

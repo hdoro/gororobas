@@ -1,4 +1,3 @@
-
 import type { ProfileLayoutData } from '@/queries'
 import { imageBuilder } from '@/utils/imageBuilder'
 import { truncate } from '@/utils/strings'
@@ -41,7 +40,6 @@ export default function getUserProfileMetadata(
     alternates: {
       canonical: pathToAbsUrl(paths.userProfile(profile.handle)),
     },
-    // @ts-expect-error profile can have a non-image
     openGraph: {
       type: 'profile',
       firstName,

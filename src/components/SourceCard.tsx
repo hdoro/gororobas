@@ -46,7 +46,7 @@ export default function SourceCard({ source }: { source: SourceCardData }) {
 
   return (
     <Badge
-      className="space-y-2 max-w-full"
+      className="max-w-full space-y-2"
       variant="outline"
       title={source.credits}
     >

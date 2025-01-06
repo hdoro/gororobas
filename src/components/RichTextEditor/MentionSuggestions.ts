@@ -1,26 +1,14 @@
 'use client'
 
-import { findUsersToMention } from '@/actions/findUsersToMention'
-import type { UsersToMentionData } from '@/queries'
+import { parseDeviceType } from '@/hooks/useDeviceType'
+import type { ReferenceOption } from '@/types'
 import { ReactRenderer } from '@tiptap/react'
 import type { SuggestionOptions } from '@tiptap/suggestion'
 import type { ComponentProps } from 'react'
 import tippy, { type Instance as TippyInstance } from 'tippy.js'
 import MentionList from './MentionList'
 
-const MentionSuggestions: Omit<
-  SuggestionOptions<UsersToMentionData[number]>,
-  'editor'
-> = {
-  items: async ({ query }) => {
-    const result = await findUsersToMention(query)
-
-    // @TODO: how to do error handling?
-    if ('error' in result) return []
-
-    return result
-  },
-
+const MentionSuggestions: Omit<SuggestionOptions<ReferenceOption>, 'editor'> = {
   render: () => {
     let component: ReactRenderer<unknown, ComponentProps<typeof MentionList>>
     let popup: TippyInstance[]
@@ -32,7 +20,7 @@ const MentionSuggestions: Omit<
           editor: props.editor,
         })
 
-        if (!props.clientRect) {
+        if (!props.clientRect || parseDeviceType() !== 'desktop') {
           return
         }
 

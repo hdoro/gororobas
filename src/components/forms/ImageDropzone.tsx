@@ -37,7 +37,7 @@ export default function ImageDropzone<
     rootRef,
   } = useDropzone({
     accept: {
-      'image/*': ['.png', '.avif', '.jpg', '.jpeg', '.gif', '.webp'],
+      'image/*': ['.png', '.jpg', '.jpeg', '.gif', '.webp'],
     },
     maxFiles: 1,
     maxSize: MAX_UPLOAD_SIZE,

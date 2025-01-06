@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 }
 
 export default async function ProfileRoute() {
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   if (!(await session.isSignedIn())) {
     return redirect(getAuthRedirect(false, paths.editProfile()))

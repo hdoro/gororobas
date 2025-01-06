@@ -14,7 +14,7 @@ export async function rejectEditSuggestionAction({
     return false
   }
 
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   return runServerEffect(
     pipe(

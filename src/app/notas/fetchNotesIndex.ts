@@ -16,7 +16,7 @@ export default async function fetchNotesIndex(
       ? searchParamsToNextSearchParams(searchParams)
       : searchParams,
   )
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   const notes = await runServerEffect(
     pipe(

@@ -6,7 +6,7 @@ import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 
 export async function findUsersToMention(query: string) {
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   return runServerEffect(
     pipe(

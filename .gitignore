@@ -26,7 +26,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+.env
+.env*
+!.env.example
 
 # vercel
 .vercel
@@ -43,3 +45,4 @@ src/edgedb.interfaces.ts
 src/playground
 
 READMETHAL.md
+gitignored

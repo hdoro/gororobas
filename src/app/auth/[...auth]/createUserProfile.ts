@@ -11,7 +11,8 @@ export default function createUserProfile(
   oauthName: string | null = null,
 ) {
   return Effect.gen(function* (_) {
-    const userClient = auth.getSession().client.withConfig({
+    const session = yield* _(Effect.tryPromise(() => auth.getSession()))
+    const userClient = session.client.withConfig({
       allow_user_specified_id: true,
       // Skip access policies as users can't create `User` objects until they have their `UserProfile`
       apply_access_policies: false,

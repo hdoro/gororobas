@@ -30,7 +30,7 @@ import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Effect, Schema, pipe } from 'effect'
 import { SendIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   FormProvider,
   type SubmitHandler,
@@ -81,6 +81,26 @@ export default function VegetableForm(props: {
     disabled: status !== 'idle',
   })
   const { setValue } = form
+  const isDirty = form.formState.isDirty
+
+  // Show alert when user tries to leave with unsaved changes
+  // Does not work for Link navigation because of NextJS 🫠
+  useEffect(() => {
+    if (!isDirty) return
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // Standard way to show the browser's "Leave Site?" dialog
+      e.preventDefault()
+      // Required for older browsers, some browsers show this message
+      e.returnValue = 'Tem certeza que quer sair sem salvar as alterações?'
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [isDirty])
 
   const onSubmit: SubmitHandler<VegetableInForm> = useCallback(
     async (data) => {
@@ -294,7 +314,7 @@ export default function VegetableForm(props: {
                     render={({ field }) => (
                       <ReferenceListInput
                         field={field}
-                        objectType="Vegetable"
+                        objectTypes={['Vegetable']}
                       />
                     )}
                   />

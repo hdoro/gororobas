@@ -4,7 +4,6 @@ import {
   dehydrate,
 } from '@tanstack/react-query'
 import type { Metadata } from 'next'
-import TanstackQueryProvider from '../../components/TanstackQueryProvider'
 import NotesIndex from './NotesIndex'
 import fetchNotesIndex from './fetchNotesIndex'
 import {
@@ -19,13 +18,12 @@ export const metadata: Metadata = {
     'Notinhas compartilhadas por pessoas reais, em contextos reais. Escreva você também!',
 }
 
-export default async function NotesRoute({
-  searchParams,
-}: {
-  searchParams: {
+export default async function NotesRoute(props: {
+  searchParams: Promise<{
     [query: string]: string | string[]
-  }
+  }>
 }) {
+  const searchParams = await props.searchParams
   const queryClient = new QueryClient()
 
   await queryClient.prefetchInfiniteQuery({
@@ -37,10 +35,8 @@ export default async function NotesRoute({
   })
 
   return (
-    <TanstackQueryProvider>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <NotesIndex />
-      </HydrationBoundary>
-    </TanstackQueryProvider>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <NotesIndex />
+    </HydrationBoundary>
   )
 }

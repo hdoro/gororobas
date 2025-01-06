@@ -33,7 +33,16 @@ function getTransaction(input: NotesForDB, inputClient: Client) {
       id: note.id,
       handle:
         note.handle ||
-        getStandardHandle(tiptapJSONtoPlainText(note.title) || '', note.id),
+        getStandardHandle(
+          tiptapJSONtoPlainText(note.title)
+            ?.replace(/&amp;/g, 'e')
+            // Remove common escaped HTML entities
+            ?.replace(
+              /&quot;|&lt;|&gt;|&nbsp;|&#39;|&apos;|&cent;|&pound;|&yen;|&euro;|&copy;|&reg;/g,
+              '',
+            ) || '',
+          note.id,
+        ),
       title: note.title,
       public: note.public,
       published_at: note.published_at,

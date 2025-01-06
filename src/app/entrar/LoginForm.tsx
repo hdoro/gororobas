@@ -12,7 +12,8 @@ import { Label } from '@/components/ui/label'
 import { Text } from '@/components/ui/text'
 import { paths } from '@/utils/urls'
 import { SendIcon } from 'lucide-react'
-import { useFormState, useFormStatus } from 'react-dom'
+import { useActionState } from 'react'
+import { useFormStatus } from 'react-dom'
 
 function MagicLinkForm({ state }: { state: SendMagicLinkState }) {
   const { pending } = useFormStatus()
@@ -48,7 +49,7 @@ export default function LoginForm({
 }: {
   redirectTo?: string | undefined
 }) {
-  const [magicLinkState, formAction] = useFormState<SendMagicLinkState>(
+  const [magicLinkState, formAction] = useActionState<SendMagicLinkState>(
     // @ts-expect-error Next or React is providing the wrong types, this action works correctly
     sendMagicLink,
     {

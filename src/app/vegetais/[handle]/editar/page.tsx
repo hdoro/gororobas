@@ -12,6 +12,7 @@ import {
   VegetableData,
   type VegetableForDBWithImages,
 } from '@/schemas'
+import { runQuery } from '@/services/runQuery'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { ImageForRendering } from '@/types'
 import { InvalidInputError } from '@/types/errors'
@@ -55,14 +56,13 @@ export function vegetableEditingToForDBWithImages(
 }
 
 function getRouteData(handle: string) {
-  const session = auth.getSession()
-
   return runServerEffect(
     pipe(
-      Effect.tryPromise({
-        try: () => vegetableEditingQuery.run(session.client, { handle }),
-        catch: (error) => console.log(error),
-      }),
+      runQuery(
+        vegetableEditingQuery,
+        { handle },
+        { metricsName: 'vegetable_page', metricsData: { handle } },
+      ),
       Effect.flatMap((vegetable) => {
         if (!vegetable)
           return Effect.fail(new InvalidInputError(vegetable, VegetableData))
@@ -107,11 +107,10 @@ function formatQueriedImage(
   }
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { handle: string }
+export async function generateMetadata(props: {
+  params: Promise<{ handle: string }>
 }): Promise<Metadata> {
+  const params = await props.params
   const vegetable = await getRouteData(params.handle)
 
   if (!vegetable) {
@@ -123,12 +122,14 @@ export async function generateMetadata({
   }
 }
 
-export default async function EditVegetableRoute({
-  params: { handle },
-}: {
-  params: { handle: string }
+export default async function EditVegetableRoute(props: {
+  params: Promise<{ handle: string }>
 }) {
-  const session = auth.getSession()
+  const params = await props.params
+
+  const { handle } = params
+
+  const session = await auth.getSession()
 
   if (!(await session.isSignedIn())) {
     redirect(paths.signInOrSignUp(paths.editVegetable(handle)))

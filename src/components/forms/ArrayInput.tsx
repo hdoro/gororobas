@@ -17,7 +17,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVerticalIcon, PlusCircleIcon, TrashIcon } from 'lucide-react'
-import type { PropsWithChildren } from 'react'
+import type { JSX, PropsWithChildren } from 'react'
 import {
   type ControllerRenderProps,
   type FieldArray,

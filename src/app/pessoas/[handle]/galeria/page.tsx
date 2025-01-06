@@ -1,30 +1,31 @@
-import { auth } from '@/edgedb'
 import { profileGalleryQuery } from '@/queries'
-import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { runQuery } from '@/services/runQuery'
+import { runServerEffect } from '@/services/runtime'
 import { shuffleArray } from '@/utils/arrays'
 import { Effect, pipe } from 'effect'
 import { notFound } from 'next/navigation'
 import ProfileGallery from './ProfileGallery'
 
 function getRouteData(handle: string) {
-  const session = auth.getSession()
-
   return runServerEffect(
     pipe(
-      Effect.tryPromise({
-        try: () => profileGalleryQuery.run(session.client, { handle }),
-        catch: (error) => console.log(error),
-      }),
-      ...buildTraceAndMetrics('user_profile_gallery_page', { handle }),
-    ).pipe(Effect.catchAll(() => Effect.succeed(null))),
+      runQuery(
+        profileGalleryQuery,
+        { handle },
+        { metricsName: 'user_profile_gallery_page', metricsData: { handle } },
+      ),
+      Effect.catchAll(() => Effect.succeed(null)),
+    ),
   )
 }
 
-export default async function UserGalleryPage({
-  params: { handle },
-}: {
-  params: { handle: string }
+export default async function UserGalleryPage(props: {
+  params: Promise<{ handle: string }>
 }) {
+  const params = await props.params
+
+  const { handle } = params
+
   const data = await getRouteData(handle)
 
   if (!data) return notFound()

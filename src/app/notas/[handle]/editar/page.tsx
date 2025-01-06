@@ -1,6 +1,7 @@
 import { auth } from '@/edgedb'
 import { noteEditingQuery } from '@/queries'
 import { NoteData, type RichTextValue } from '@/schemas'
+import { runQuery } from '@/services/runQuery'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { InvalidInputError } from '@/types/errors'
 import { paths } from '@/utils/urls'
@@ -9,14 +10,13 @@ import { notFound, redirect } from 'next/navigation'
 import EditNoteForm from './EditNoteForm'
 
 function getRouteData(handle: string) {
-  const session = auth.getSession()
-
   return runServerEffect(
     pipe(
-      Effect.tryPromise({
-        try: () => noteEditingQuery.run(session.client, { handle }),
-        catch: (error) => console.log(error),
-      }),
+      runQuery(
+        noteEditingQuery,
+        { handle },
+        { metricsName: 'note_editing_page', metricsData: { handle } },
+      ),
       Effect.flatMap((note) => {
         if (!note) return Effect.fail(new InvalidInputError(note, NoteData))
 
@@ -32,12 +32,14 @@ function getRouteData(handle: string) {
   )
 }
 
-export default async function EditNotePage({
-  params: { handle },
-}: {
-  params: { handle: string }
+export default async function EditNotePage(props: {
+  params: Promise<{ handle: string }>
 }) {
-  const session = auth.getSession()
+  const params = await props.params
+
+  const { handle } = params
+
+  const session = await auth.getSession()
 
   if (!(await session.isSignedIn())) {
     redirect(paths.signInOrSignUp(paths.editNote(handle)))

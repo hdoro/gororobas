@@ -9,7 +9,7 @@ import ProfileCard from './ProfileCard'
 import { Button } from './ui/button'
 
 export default async function UserNav({ signedIn }: { signedIn: boolean }) {
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   if (!signedIn) {
     return (

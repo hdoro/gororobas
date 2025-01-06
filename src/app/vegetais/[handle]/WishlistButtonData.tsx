@@ -1,5 +1,6 @@
 import { auth } from '@/edgedb'
 import { userWishlistQuery } from '@/queries'
+import { runQuery } from '@/services/runQuery'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect } from 'effect'
 import WishlistButton, { type WishlistInfo } from './WishlistButton'
@@ -7,17 +8,20 @@ import WishlistButton, { type WishlistInfo } from './WishlistButton'
 const fetchWishlistStatus = (vegetable_id: string) =>
   Effect.gen(function* (_) {
     const isSignedIn = yield* _(
-      Effect.tryPromise(() => auth.getSession().isSignedIn()),
+      Effect.tryPromise(async () => (await auth.getSession()).isSignedIn()),
     )
 
     if (!isSignedIn) return { isSignedIn } as const
 
     const data = yield* _(
-      Effect.tryPromise({
-        try: () =>
-          userWishlistQuery.run(auth.getSession().client, { vegetable_id }),
-        catch: (error) => console.log(error),
-      }),
+      runQuery(
+        userWishlistQuery,
+        { vegetable_id },
+        {
+          metricsName: 'vegetable-wishlist-status',
+          metricsData: { vegetable_id },
+        },
+      ),
     )
 
     return {

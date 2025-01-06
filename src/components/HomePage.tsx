@@ -1,4 +1,3 @@
-import { auth } from '@/edgedb'
 import type { HomePageData } from '@/queries'
 import { shuffleArray } from '@/utils/arrays'
 import { paths } from '@/utils/urls'
@@ -24,9 +23,6 @@ export default async function HomePage(data: Partial<HomePageData>) {
   const featured_vegetables = shuffleArray(data.featured_vegetables || [])
   const profiles = shuffleArray(data.profiles || [])
   const notes = shuffleArray(data.notes || [])
-
-  const session = auth.getSession()
-  const signedIn = await session.isSignedIn()
 
   return (
     <>

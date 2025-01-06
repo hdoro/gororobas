@@ -1,29 +1,30 @@
-import { auth } from '@/edgedb'
 import { profileNotesQuery } from '@/queries'
-import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { runQuery } from '@/services/runQuery'
+import { runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 import { notFound } from 'next/navigation'
 import ProfileNotes from './ProfileNotes'
 
 function getRouteData(handle: string) {
-  const session = auth.getSession()
-
   return runServerEffect(
     pipe(
-      Effect.tryPromise({
-        try: () => profileNotesQuery.run(session.client, { handle }),
-        catch: (error) => console.log(error),
-      }),
-      ...buildTraceAndMetrics('user_profile_notes_page', { handle }),
-    ).pipe(Effect.catchAll(() => Effect.succeed(null))),
+      runQuery(
+        profileNotesQuery,
+        { handle },
+        { metricsName: 'user_profile_notes_page', metricsData: { handle } },
+      ),
+      Effect.catchAll(() => Effect.succeed(null)),
+    ),
   )
 }
 
-export default async function UserProfilePage({
-  params: { handle },
-}: {
-  params: { handle: string }
+export default async function UserProfilePage(props: {
+  params: Promise<{ handle: string }>
 }) {
+  const params = await props.params
+
+  const { handle } = params
+
   const data = await getRouteData(handle)
 
   if (!data) return notFound()

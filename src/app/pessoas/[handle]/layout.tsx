@@ -1,6 +1,6 @@
-import { auth } from '@/edgedb'
 import { profileLayoutQuery } from '@/queries'
-import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
+import { runQuery } from '@/services/runQuery'
+import { runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -9,33 +9,36 @@ import ProfileLayout from './ProfileLayout'
 import getUserProfileMetadata from './getUserProfileMetadata'
 
 function getRouteData(handle: string) {
-  const session = auth.getSession()
-
   return runServerEffect(
     pipe(
-      Effect.tryPromise({
-        try: () => profileLayoutQuery.run(session.client, { handle }),
-        catch: (error) => console.log(error),
-      }),
-      ...buildTraceAndMetrics('user_profile_layout', { handle }),
-    ).pipe(Effect.catchAll(() => Effect.succeed(null))),
+      runQuery(
+        profileLayoutQuery,
+        { handle },
+        { metricsName: 'user_profile_layout', metricsData: { handle } },
+      ),
+      Effect.catchAll(() => Effect.succeed(null)),
+    ),
   )
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { handle: string }
+export async function generateMetadata(props: {
+  params: Promise<{ handle: string }>
 }): Promise<Metadata> {
+  const params = await props.params
   return getUserProfileMetadata(await getRouteData(params.handle))
 }
 
-export default async function UserProfileLayout({
-  params: { handle },
-  children,
-}: PropsWithChildren<{
-  params: { handle: string }
-}>) {
+export default async function UserProfileLayout(
+  props: PropsWithChildren<{
+    params: Promise<{ handle: string }>
+  }>,
+) {
+  const params = await props.params
+
+  const { handle } = params
+
+  const { children } = props
+
   const profile = await getRouteData(handle)
 
   if (!profile) return notFound()

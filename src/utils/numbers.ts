@@ -49,7 +49,7 @@ export type NumberFormat = 'none' | 'centimeters' | 'temperature' | 'days'
 
 export function formatNumber(value: number, format: NumberFormat) {
   if (typeof value !== 'number' || Number.isNaN(value) || format === 'none')
-    return value
+    return String(value)
 
   if (format === 'centimeters')
     return `${value} cm ${value >= 100 ? `(${formatCentimeters(value)})` : ''}`
@@ -61,5 +61,5 @@ export function formatNumber(value: number, format: NumberFormat) {
       value >= 365 ? `(${formatDays(value)})` : ''
     }`
 
-  return value
+  return String(value)
 }

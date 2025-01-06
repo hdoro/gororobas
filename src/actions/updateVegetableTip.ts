@@ -15,7 +15,7 @@ import { createOrUpdateTipTransaction } from './createOrUpdateTipTransaction'
 export async function updateVegetableTipAction(input: {
   tip: VegetableTipForDB
 }) {
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   return runServerEffect(
     Effect.gen(function* (_) {

@@ -25,7 +25,7 @@ export default async function fetchVegetablesIndex(
       ? `%${queryParams.search_query.trim()}%`
       : '',
   }
-  const session = auth.getSession()
+  const session = await auth.getSession()
 
   const vegetables = await runServerEffect(
     pipe(
