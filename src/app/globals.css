@@ -131,6 +131,12 @@ body {
   @apply space-y-[0.5em] outline-none;
 }
 
+/* Because YouTube embeds have `z-index: 10`, we need to lower the index of its parent container to impede it from showing above the rich text editor UI */
+.tiptap--video {
+  position: relative;
+  z-index: -1;
+}
+
 .tiptap--video.ProseMirror-selectednode {
   @apply ring-2;
 }

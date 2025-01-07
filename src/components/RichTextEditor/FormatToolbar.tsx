@@ -16,12 +16,14 @@ export default function FormatToolbar({
   editor,
   editorId,
   send,
+  bottomOffset,
 }: EditorUIProps) {
   return (
     <ResponsiveFloater
       editor={editor}
       className="flex justify-between gap-2"
       editorId={editorId}
+      bottomOffset={bottomOffset}
     >
       <Button
         onClick={() => editor.chain().focus().toggleBold().run()}

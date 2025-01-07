@@ -14,7 +14,7 @@ import {
 } from './RichTextEditor.theme'
 import VideoEditor from './VideoEditor'
 import { getTiptapExtensions } from './getTiptapExtensions'
-import { tiptapStateMachine } from './tiptapStateMachine'
+import { type EditorUIProps, tiptapStateMachine } from './tiptapStateMachine'
 
 export default function RichTextEditor(
   props: {
@@ -83,6 +83,23 @@ export default function RichTextEditor(
     return () => window.removeEventListener('click', handleGlobalClick)
   }, [editorId, send])
 
+  console.log({
+    _name: state.value,
+    value: props.editorState,
+    state: state.toJSON(),
+  })
+
+  // @TODO - currently accounting only for NoteForm
+  const bottomOffset = 72
+
+  const uiProps: EditorUIProps | null = editor
+    ? {
+        editor,
+        editorId,
+        send,
+        bottomOffset,
+      }
+    : null
   return (
     <div
       ref={wrapperRef}
@@ -95,21 +112,11 @@ export default function RichTextEditor(
         className={classes.contentEditable({ className: 'tiptap-wrapper' })}
         data-placeholder={props.placeholder}
       />
-      {editor && state.matches('format') && (
-        <FormatToolbar editor={editor} send={send} editorId={editorId} />
-      )}
-      {editor && state.matches('focused') && (
-        <BlocksToolbar editor={editor} send={send} editorId={editorId} />
-      )}
-      {editor && state.matches('link') && (
-        <LinkEditor editor={editor} send={send} editorId={editorId} />
-      )}
-      {editor && state.matches('mention') && (
-        <MentionList editor={editor} send={send} editorId={editorId} />
-      )}
-      {editor && state.matches('video') && (
-        <VideoEditor editor={editor} send={send} editorId={editorId} />
-      )}
+      {uiProps && state.matches('format') && <FormatToolbar {...uiProps} />}
+      {uiProps && state.matches('focused') && <BlocksToolbar {...uiProps} />}
+      {uiProps && state.matches('link') && <LinkEditor {...uiProps} />}
+      {uiProps && state.matches('mention') && <MentionList {...uiProps} />}
+      {uiProps && state.matches('video') && <VideoEditor {...uiProps} />}
     </div>
   )
 }

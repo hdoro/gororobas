@@ -1,34 +1,22 @@
 'use client'
 
-import useViewport from '@/hooks/useViewport'
-import { cn } from '@/utils/cn'
 import { AtSignIcon, ImageUpIcon, LinkIcon, YoutubeIcon } from 'lucide-react'
 import { Button } from '../ui/button'
+import ResponsiveFloater from './ResponsiveFloater'
 import type { EditorUIProps } from './tiptapStateMachine'
 
 export default function BlocksToolbar({
   editor,
   editorId,
   send,
+  bottomOffset,
 }: EditorUIProps) {
-  const viewport = useViewport()
-
   return (
-    <div
-      className={cn(
-        'transform-[translateY(var(--translate))] fixed inset-x-0 bottom-0 z-50 w-full origin-bottom-left',
-        'md:sticky md:transform-none md:rounded-t-none',
-        'rounded-t-md border-t bg-white p-3',
-        'flex justify-between gap-2',
-      )}
-      style={{
-        '--translate-y': `translateY(-${Math.round(
-          viewport.window.height -
-            (viewport.visualViewport?.height || 0) -
-            viewport.visualViewport.offsetTop,
-        )}px)`,
-      }}
-      data-rich-editor-id={editorId}
+    <ResponsiveFloater
+      editor={editor}
+      className="flex justify-between gap-2"
+      editorId={editorId}
+      bottomOffset={bottomOffset}
     >
       <Button
         onClick={() => send({ type: 'EDIT_LINK' })}
@@ -42,7 +30,13 @@ export default function BlocksToolbar({
       <Button
         onClick={() => {
           send({ type: 'EDIT_MENTION' })
-          editor.chain().focus().setTextSelection(editor.state.selection).run()
+          const isStartOfLine = editor.state.selection.$from.parentOffset === 0
+          editor
+            .chain()
+            .focus()
+            // Don't include a leading space if at the start of the line
+            .insertContent(`${isStartOfLine ? '' : ' '}@`)
+            .run()
         }}
         disabled={!editor.can().chain().focus().toggleLink({ href: '' }).run()}
         mode={editor.isActive('mention') ? 'outline' : 'bleed'}
@@ -70,6 +64,6 @@ export default function BlocksToolbar({
       >
         <YoutubeIcon />
       </Button>
-    </div>
+    </ResponsiveFloater>
   )
 }

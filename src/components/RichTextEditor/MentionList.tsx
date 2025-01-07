@@ -1,105 +1,55 @@
 'use client'
 
 import useGlobalKeyDown from '@/hooks/useGlobalKeyDown'
-import { RichTextMentionAttributes } from '@/schemas'
-import type { ReferenceObjectType, ReferenceOption } from '@/types'
+import {
+  RichTextMentionAttributes,
+  type RichTextMentionAttributesInForm,
+} from '@/schemas'
 import { Schema } from 'effect'
-import { matchSorter } from 'match-sorter'
-import { useEffect, useMemo, useRef, useState } from 'react'
 import { SanityImage } from '../SanityImage'
-import { useReferenceOptions } from '../forms/ReferenceListInput'
 import Carrot from '../icons/Carrot'
 import { Button } from '../ui/button'
 import { Text } from '../ui/text'
 import ResponsiveFloater from './ResponsiveFloater'
+import { findMentionMatch } from './findSuggestionMatch'
 import type { EditorUIProps } from './tiptapStateMachine'
+import useMentionOptions from './useMentionOptions'
 
-const OBJECT_TYPES: ReferenceObjectType[] = ['UserProfile', 'Vegetable']
+export default function MentionList({
+  editor,
+  editorId,
+  send,
+  bottomOffset,
+}: EditorUIProps) {
+  const match = findMentionMatch(editor.state.selection.$from)
+  const query = match?.query || ''
 
-type Selection = {
-  index: number
-  objectType: ReferenceObjectType
-}
-
-export default function MentionList({ editor, editorId, send }: EditorUIProps) {
-  const [selection, setSelection] = useState({
-    index: 0,
-    objectType: 'UserProfile' as ReferenceObjectType,
-  })
-  const containerRef = useRef<HTMLDivElement>(null)
-  const { options, isLoading } = useReferenceOptions(OBJECT_TYPES)
-
-  // @TODO: dynamic query, somehow
-  const [query, _setQuery] = useState('')
-  const matches = useMemo(() => {
-    if (!options?.length) return []
-    if (!query) return options
-    return matchSorter(options, query, { keys: ['label'] })
-  }, [options, query])
-
-  const byObjectType = useMemo(() => {
-    return OBJECT_TYPES.reduce(
-      (acc, objectType) => {
-        acc[objectType] = (matches || []).filter(
-          (option) => option.objectType === objectType,
-        )
-        return acc
-      },
-      {} as Record<ReferenceObjectType, ReferenceOption[]>,
-    )
-  }, [matches])
-
-  // Reset selection when query changes
-  // biome-ignore lint: really only run effect on query changes
-  useEffect(() => {
-    setSelection({
-      index: 0,
-      objectType:
-        OBJECT_TYPES.find(
-          (objectType) => byObjectType[objectType].length > 0,
-        ) || OBJECT_TYPES[0],
-    })
-  }, [query])
-
-  const selectedItem = byObjectType[selection.objectType]?.[selection.index]
-
-  // Scroll to selected item when it changes
-  useEffect(() => {
-    if (selectedItem?.id)
-      containerRef?.current
-        ?.querySelector?.(`[data-id="${selectedItem?.id}"]`)
-        ?.scrollIntoView({ block: 'nearest' })
-  }, [selectedItem])
+  const {
+    arrowHandler,
+    byObjectType,
+    containerRef,
+    isLoading,
+    matches,
+    selectedItem,
+    selection,
+  } = useMentionOptions(query)
 
   const selectItem = (id: string) => {
     const item = matches.find((item) => item.id === id)
 
-    if (item) {
-      // const match = findSuggestionMatch({
-      //   char: '@',
-      //   allowSpaces: false,
-      //   allowToIncludeChar: false,
-      //   allowedPrefixes: [],
-      //   startOfLine: true,
-      //   $position: editor.state.selection.$from,
-      // })
-      // console.log({ match, item })
-      // if (!match) return
+    if (item && match) {
+      const range = match.range
+      const nodeAfter = editor.view.state.selection.$to.nodeAfter
+      const overrideSpace = nodeAfter?.text?.startsWith(' ')
 
-      // const { range } = match
+      if (overrideSpace) {
+        range.to += 1
+      }
 
-      // // increase range.to by one when the next node is of type "text"
-      // // and starts with a space character
-      // const nodeAfter = editor.view.state.selection.$to.nodeAfter
-      // const overrideSpace = nodeAfter?.text?.startsWith(' ')
-
-      // if (overrideSpace) {
-      //   range.to += 1
-      // }
       editor
         .chain()
         .focus()
-        .insertContentAt(editor.state.selection, [
+        .insertContentAt(range, [
           {
             type: 'mention',
             attrs: Schema.decodeSync(RichTextMentionAttributes)({
@@ -108,7 +58,8 @@ export default function MentionList({ editor, editorId, send }: EditorUIProps) {
                 version: 1,
                 label: item.label,
                 objectType: item.objectType,
-                image: item.image,
+                image:
+                  item.image as RichTextMentionAttributesInForm['data']['image'],
               },
             }),
           },
@@ -127,42 +78,41 @@ export default function MentionList({ editor, editorId, send }: EditorUIProps) {
     })
   }
 
-  const arrowHandler = (direction: 'up' | 'down') =>
-    setSelection(
-      parseNextSelection({
-        direction,
-        byObjectType,
-        selection,
-      }),
-    )
-
-  const enterHandler = () => {
-    if (selectedItem?.id) selectItem(selectedItem?.id)
-  }
-
   useGlobalKeyDown(
     (event) => {
       if (event.key === 'ArrowUp') {
         event.preventDefault()
-        arrowHandler('up')
+        event.stopPropagation()
+        arrowHandler('up', event)
       } else if (event.key === 'ArrowDown') {
         event.preventDefault()
-        arrowHandler('down')
-      } else if (event.key === 'Enter') {
-        event.preventDefault()
-        enterHandler()
+        event.stopPropagation()
+        arrowHandler('down', event)
       }
     },
-    [selectedItem],
+    [arrowHandler],
+  )
+
+  useGlobalKeyDown(
+    (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault()
+        event.stopPropagation()
+        if (selectedItem?.id) selectItem(selectedItem.id)
+      }
+    },
+    [selectedItem, selectItem],
+    { capture: true },
   )
 
   return (
     <ResponsiveFloater
       editor={editor}
       editorId={editorId}
-      className="max-h-[30dvh] space-y-5 overflow-y-auto overflow-x-hidden p-2"
+      bottomOffset={bottomOffset}
+      className="max-h-[30dvh] overflow-y-auto overflow-x-hidden p-2"
     >
-      <div ref={containerRef}>
+      <div ref={containerRef} className="space-y-5">
         {isLoading ? (
           <Text className="flex h-full items-center justify-center gap-3 text-muted-foreground">
             <Carrot className="h-5 w-5 animate-spin" />
@@ -217,59 +167,4 @@ export default function MentionList({ editor, editorId, send }: EditorUIProps) {
       </div>
     </ResponsiveFloater>
   )
-}
-
-function parseNextSelection({
-  direction,
-  byObjectType,
-  selection: current,
-}: {
-  direction: 'up' | 'down'
-  byObjectType: Record<ReferenceObjectType, ReferenceOption[]>
-  selection: Selection
-}): Selection {
-  const objectTypeIndex = OBJECT_TYPES.findIndex(
-    (objectType) => objectType === current.objectType,
-  )
-  const objectTypesWithItems = OBJECT_TYPES.filter(
-    (objectType) => byObjectType[objectType].length > 0,
-  )
-
-  if (direction === 'up') {
-    if (current.index === 0) {
-      const newObjectType =
-        objectTypeIndex === 0
-          ? objectTypesWithItems.slice(-1)[0]
-          : objectTypesWithItems[objectTypeIndex - 1]
-      return {
-        index: byObjectType[newObjectType].length - 1,
-        objectType: newObjectType,
-      }
-    }
-
-    return {
-      index: current.index - 1,
-      objectType: current.objectType,
-    }
-  }
-
-  if (direction === 'down') {
-    if (current.index === byObjectType[current.objectType].length - 1) {
-      const newObjectType =
-        objectTypeIndex === OBJECT_TYPES.length - 1
-          ? objectTypesWithItems[0]
-          : objectTypesWithItems[objectTypeIndex + 1]
-      return {
-        index: 0,
-        objectType: newObjectType,
-      }
-    }
-
-    return {
-      index: current.index + 1,
-      objectType: current.objectType,
-    }
-  }
-
-  return current
 }

@@ -12,14 +12,33 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
+import { useFixedBottomPosition } from '@/hooks/useFixedBottomPosition'
 import { NoteData, type NoteForDB, type NoteInForm } from '@/schemas'
+import { cn } from '@/utils/cn'
 import { generateId } from '@/utils/ids'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Effect, Schema, pipe } from 'effect'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { type PropsWithChildren, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
+
+function ActionBar(props: PropsWithChildren) {
+  const position = useFixedBottomPosition(0)
+
+  return (
+    <div
+      className={cn(
+        position.className,
+        'flex items-center justify-between gap-4 border-t border-t-primary-100 bg-background-card px-pageX py-4',
+        'md:relative md:flex-col-reverse md:items-start md:border-t-0 md:bg-transparent md:p-0',
+      )}
+      style={position.styles}
+    >
+      {props.children}
+    </div>
+  )
+}
 
 export default function NoteForm(props: {
   onSubmit: (note: NoteForDB) => Promise<
@@ -171,7 +190,7 @@ export default function NoteForm(props: {
             />
           </div>
 
-          <div className="fixed inset-x-0 bottom-0 flex items-center justify-between gap-4 border-t border-t-primary-100 bg-background-card px-pageX py-4 md:relative md:flex-col-reverse md:items-start md:border-t-0 md:bg-transparent md:p-0">
+          <ActionBar>
             <div className="flex items-center gap-2 md:flex-col md:items-start">
               <Field
                 form={form}
@@ -200,7 +219,7 @@ export default function NoteForm(props: {
             >
               Enviar
             </Button>
-          </div>
+          </ActionBar>
         </form>
       </FormProvider>
     </main>

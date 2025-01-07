@@ -1,19 +1,14 @@
 import { type Editor, type EditorEvents, isTextSelection } from '@tiptap/core'
 import type { useMachine } from '@xstate/react'
 import { createMachine } from 'xstate'
+import { findMentionMatch } from './findSuggestionMatch'
 
 /**
  * TODOS:
- * - finish mentions
- *    - open list on `@` and update the query
- *     - when list opened via button, have query input inside list instead of in the editor
- *     - handle up/down arrows and enter key
- *     - consider using shadcn's drawer instead than fixed div on mobile
  * - Images
- * - special rendering for links to other notes?
- * - consider moving more logic into the state machine for centralization & clarity
+ * - (tiptapNodeHandlers) special rendering for links to other notes?
  * - other blocks?
- * - make FloatingUI popover more responsive to cursor position
+ * - make FloatingUI popover more responsive to cursor position (esp. for BlockToolbar)
  */
 
 type EditorEvent =
@@ -63,10 +58,13 @@ export const tiptapStateMachine = createMachine(
       },
       focused: {
         on: {
-          SELECTION_UPDATE: {
-            target: 'format',
-            guard: 'isTextFormattable',
-          },
+          SELECTION_UPDATE: [
+            {
+              target: 'format',
+              guard: 'isTextFormattable',
+            },
+            { target: 'mention', guard: 'isMentionTriggerable' },
+          ],
           EDIT_MENTION: 'mention',
           EDIT_LINK: 'link',
           EDIT_VIDEO: 'video',
@@ -79,8 +77,9 @@ export const tiptapStateMachine = createMachine(
               // Stay in format if selection is still valid
               guard: 'isTextFormattable',
             },
+            // Otherwise go back to mention or focused
+            { target: 'mention', guard: 'isMentionTriggerable' },
             {
-              // Otherwise go back to idle
               target: 'focused',
             },
           ],
@@ -89,7 +88,7 @@ export const tiptapStateMachine = createMachine(
             target: 'mention',
             actions: ['updatePosition', 'setQuery'],
           },
-          // @TODO: need for a guard?
+          // @TODO: need for a guard to ensure the editor can toggle the link?
           EDIT_LINK: 'link',
         },
       },
@@ -101,6 +100,18 @@ export const tiptapStateMachine = createMachine(
       mention: {
         on: {
           ESCAPE: 'focused',
+          SELECTION_UPDATE: [
+            // Stay in mention if selection is still valid
+            { guard: 'isMentionTriggerable' },
+            // Otherwise go back to format or focused
+            {
+              target: 'format',
+              guard: 'isTextFormattable',
+            },
+            {
+              target: 'focused',
+            },
+          ],
         },
       },
       video: {
@@ -131,11 +142,20 @@ export const tiptapStateMachine = createMachine(
 
         if (editor.isActive('link')) return true
 
+        if (editor.isActive('video')) return false
+
         if (empty || isEmptyTextBlock || !editor.isEditable) {
           return false
         }
 
         return true
+      },
+      isMentionTriggerable: ({ event }) => {
+        if (event.type !== 'SELECTION_UPDATE') return false
+
+        const { editor } = event.data
+
+        return !!findMentionMatch(editor.state.selection.$from)
       },
     },
   },
@@ -150,4 +170,8 @@ export type EditorUIProps = {
   editor: Editor
   editorId: string
   send: TiptapStateMachine['send']
+  /** The offset to account for UI elements below the toolbar
+   * Example: NoteForm has a fixed send footer
+   */
+  bottomOffset: number
 }

@@ -1,36 +1,30 @@
 'use client'
 
-import { useDeviceType } from '@/hooks/useDeviceType'
+import { useFixedBottomPosition } from '@/hooks/useFixedBottomPosition'
 import useViewport from '@/hooks/useViewport'
 import { cn } from '@/utils/cn'
 import { arrow, autoPlacement, offset, useFloating } from '@floating-ui/react'
-import type { Editor } from '@tiptap/react'
 import { type PropsWithChildren, useEffect, useRef } from 'react'
+import type { EditorUIProps } from './tiptapStateMachine'
 import { getEditorDomRect } from './tiptapUtils'
 
-type Props = PropsWithChildren<{
-  className?: string
-  editor: Editor
-  editorId: string
-}>
+type Props = PropsWithChildren<
+  Omit<EditorUIProps, 'send'> & {
+    className?: string
+  }
+>
 
 function MobileFloater(props: Props) {
-  const viewport = useViewport()
+  const position = useFixedBottomPosition(props.bottomOffset)
 
   return (
     <div
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 w-full origin-bottom-left', // position
-        'rounded-t-md border-t bg-white p-3', // cosmetic
+        position.className,
+        'rounded-t-md border-t bg-white p-3',
         props.className,
       )}
-      style={{
-        transform: `translateY(-${Math.round(
-          viewport.window.height -
-            (viewport.visualViewport?.height || 0) -
-            viewport.visualViewport.offsetTop,
-        )}px)`,
-      }}
+      style={position.styles}
       data-rich-editor-id={props.editorId}
     >
       {props.children}
@@ -87,9 +81,9 @@ function DesktopFloater(props: Props) {
 }
 
 const ResponsiveFloater = (props: Props) => {
-  const device = useDeviceType()
+  const viewport = useViewport()
 
-  if (device === 'desktop') {
+  if (viewport.viewport.width >= 768) {
     return <DesktopFloater {...props} />
   }
 
