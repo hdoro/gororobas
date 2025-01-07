@@ -1,7 +1,13 @@
-import type { ImageForRendering } from '@/types'
+import {
+  RichTextMentionAttributes,
+  RichTextVideoAttributes,
+  type YoutubeIdType,
+} from '@/schemas'
 import { BASE_URL } from '@/utils/config'
+import { Schema } from 'effect'
 import Link from 'next/link'
 import { Children } from 'react'
+import YoutubeVideo from '../YoutubeVideo'
 import { Mention } from './Mention'
 import type { NodeHandler, NodeHandlers, NodeProps } from './TipTapRender'
 
@@ -143,24 +149,35 @@ const Passthrough: NodeHandler = (props) => {
 
 const MentionHandler: NodeHandler = (props) => {
   const { node } = props
-  if (!node?.attrs) return <Passthrough {...props} />
 
-  let label = node.attrs.label
-  let image: ImageForRendering | null = null
   try {
-    // Tiptap/Prosemirror doesn't allow us to include custom data in mentions - only `id` and `label`
-    // As a result, in MentionList we set the label as a JSON string (refer to @selectItem in that component)
-    const labelAsJSON = JSON.parse(node.attrs.label)
-    label = labelAsJSON.label
-    image = labelAsJSON.image
-  } catch (error) {}
+    const { data } = Schema.encodeUnknownSync(RichTextMentionAttributes)(
+      node.attrs,
+    )
 
-  return <Mention id={node.attrs.id as string} label={label} image={image} />
+    return <Mention {...data} />
+  } catch (error) {
+    return <Passthrough {...props} />
+  }
 }
 
 const Image: NodeHandler = (props) => {
   const attrs = props.node.attrs
   return <img alt={attrs?.alt} src={attrs?.src} title={attrs?.title} />
+}
+
+const VideoHandler: NodeHandler = (props) => {
+  const { node } = props
+
+  try {
+    const { data } = Schema.encodeUnknownSync(RichTextVideoAttributes)(
+      node.attrs,
+    )
+
+    return <YoutubeVideo id={data.id as YoutubeIdType} />
+  } catch (error) {
+    return <Passthrough {...props} />
+  }
 }
 
 export const tiptapNodeHandlers: NodeHandlers = {
@@ -174,4 +191,5 @@ export const tiptapNodeHandlers: NodeHandlers = {
   orderedList: OrderedList,
   listItem: ListItem,
   mention: MentionHandler,
+  video: VideoHandler,
 }

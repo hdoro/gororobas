@@ -131,6 +131,10 @@ body {
   @apply space-y-[0.5em] outline-none;
 }
 
+.tiptap--video.ProseMirror-selectednode {
+  @apply ring-2;
+}
+
 .p-empty {
   min-height: 1lh;
 }
@@ -307,11 +311,4 @@ body {
     hsl(var(--background) / 0) 0%,
     hsl(var(--background)) 60%
   );
-}
-
-/* Used by MentionList to make a bottom drawer for mentions instead of the usual popover, which is hard to read & browse */
-@media screen and (max-width: 767px) {
-  [id^='tippy-']:has(.tippy-bottom-drawer) {
-    transform: none !important;
-  }
 }

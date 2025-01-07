@@ -25,7 +25,7 @@ export default function CheckboxesInput<
   return (
     <div className={cn('flex flex-wrap gap-2', className)}>
       {options.map((option) => {
-        const isChecked = value.includes(option.value)
+        const isChecked = value.includes?.(option.value) || false
         return (
           <FormItem
             key={option.value}

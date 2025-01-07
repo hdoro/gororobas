@@ -122,7 +122,7 @@ export default function NoteForm(props: {
           aria-disabled={form.formState.disabled}
           className="flex h-full flex-col gap-6 md:flex-row md:items-start md:px-pageX"
         >
-          <div className="flex max-w-3xl flex-[5] flex-col gap-6 px-pageX md:rounded-lg md:border md:bg-card md:p-6 md:text-card-foreground md:shadow-sm">
+          <div className="flex max-w-3xl flex-[5] flex-col gap-6 px-pageX pb-24 md:rounded-lg md:border md:bg-card md:p-6 md:pb-6 md:text-card-foreground md:shadow-sm">
             <Field
               form={form}
               name="title"

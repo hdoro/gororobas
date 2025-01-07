@@ -1,21 +1,19 @@
 'use client'
 
+import useGlobalKeyDown from '@/hooks/useGlobalKeyDown'
+import { RichTextMentionAttributes } from '@/schemas'
 import type { ReferenceObjectType, ReferenceOption } from '@/types'
-import type { SuggestionProps } from '@tiptap/suggestion'
+import type { Editor } from '@tiptap/react'
+import { Schema } from 'effect'
 import { matchSorter } from 'match-sorter'
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { SanityImage } from '../SanityImage'
 import { useReferenceOptions } from '../forms/ReferenceListInput'
 import Carrot from '../icons/Carrot'
 import { Button } from '../ui/button'
 import { Text } from '../ui/text'
+import ResponsiveFloater from './ResponsiveFloater'
+import type { TiptapStateMachine } from './tiptapStateMachine'
 
 const OBJECT_TYPES: ReferenceObjectType[] = ['UserProfile', 'Vegetable']
 
@@ -24,110 +22,153 @@ type Selection = {
   objectType: ReferenceObjectType
 }
 
-export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
-  (props, ref) => {
-    const [selection, setSelection] = useState({
-      index: 0,
-      objectType: 'UserProfile' as ReferenceObjectType,
-    })
-    const containerRef = useRef<HTMLDivElement>(null)
-    const { options, isLoading } = useReferenceOptions(OBJECT_TYPES)
+export default function MentionList({
+  editor,
+  send,
+}: {
+  editor: Editor
+  send: TiptapStateMachine['send']
+}) {
+  const [selection, setSelection] = useState({
+    index: 0,
+    objectType: 'UserProfile' as ReferenceObjectType,
+  })
+  const containerRef = useRef<HTMLDivElement>(null)
+  const { options, isLoading } = useReferenceOptions(OBJECT_TYPES)
 
-    const { query } = props
-    const matches = useMemo(() => {
-      if (!options?.length) return []
-      if (!query) return options
-      return matchSorter(options, query, { keys: ['label'] })
-    }, [options, query])
+  // @TODO: dynamic query, somehow
+  const [query, _setQuery] = useState('')
+  const matches = useMemo(() => {
+    if (!options?.length) return []
+    if (!query) return options
+    return matchSorter(options, query, { keys: ['label'] })
+  }, [options, query])
 
-    const byObjectType = useMemo(() => {
-      return OBJECT_TYPES.reduce(
-        (acc, objectType) => {
-          acc[objectType] = (matches || []).filter(
-            (option) => option.objectType === objectType,
-          )
-          return acc
-        },
-        {} as Record<ReferenceObjectType, ReferenceOption[]>,
-      )
-    }, [matches])
-
-    // Reset selection when query changes
-    // biome-ignore lint: really only run effect on query changes
-    useEffect(() => {
-      setSelection({
-        index: 0,
-        objectType:
-          OBJECT_TYPES.find(
-            (objectType) => byObjectType[objectType].length > 0,
-          ) || OBJECT_TYPES[0],
-      })
-    }, [props.query])
-
-    const selectedItem = byObjectType[selection.objectType]?.[selection.index]
-
-    // Scroll to selected item when it changes
-    useEffect(() => {
-      if (selectedItem?.id)
-        containerRef?.current
-          ?.querySelector(`[data-id="${selectedItem?.id}"]`)
-          ?.scrollIntoView({ block: 'nearest' })
-    }, [selectedItem])
-
-    const selectItem = (id: string) => {
-      const item = matches.find((item) => item.id === id)
-
-      if (item) {
-        props.command({
-          ...item,
-          label: JSON.stringify({
-            label: item.label,
-            image: item.image,
-            objectType: item.objectType,
-          }),
-        })
-      }
-    }
-
-    const arrowHandler = (direction: 'up' | 'down') =>
-      setSelection(
-        parseNextSelection({
-          direction,
-          byObjectType,
-          selection,
-        }),
-      )
-
-    const enterHandler = () => {
-      if (selectedItem?.id) selectItem(selectedItem?.id)
-    }
-
-    useImperativeHandle(ref, () => ({
-      onKeyDown: ({ event }: { event: KeyboardEvent }) => {
-        if (event.key === 'ArrowUp') {
-          arrowHandler('up')
-          return true
-        }
-
-        if (event.key === 'ArrowDown') {
-          arrowHandler('down')
-          return true
-        }
-
-        if (event.key === 'Enter') {
-          enterHandler()
-          return true
-        }
-
-        return false
+  const byObjectType = useMemo(() => {
+    return OBJECT_TYPES.reduce(
+      (acc, objectType) => {
+        acc[objectType] = (matches || []).filter(
+          (option) => option.objectType === objectType,
+        )
+        return acc
       },
-    }))
+      {} as Record<ReferenceObjectType, ReferenceOption[]>,
+    )
+  }, [matches])
 
-    return (
-      <div
-        className="max-h-[30dvh] space-y-5 overflow-y-auto overflow-x-hidden rounded-md border bg-white p-2 shadow-sm"
-        ref={containerRef}
-      >
+  // Reset selection when query changes
+  // biome-ignore lint: really only run effect on query changes
+  useEffect(() => {
+    setSelection({
+      index: 0,
+      objectType:
+        OBJECT_TYPES.find(
+          (objectType) => byObjectType[objectType].length > 0,
+        ) || OBJECT_TYPES[0],
+    })
+  }, [query])
+
+  const selectedItem = byObjectType[selection.objectType]?.[selection.index]
+
+  // Scroll to selected item when it changes
+  useEffect(() => {
+    if (selectedItem?.id)
+      containerRef?.current
+        ?.querySelector?.(`[data-id="${selectedItem?.id}"]`)
+        ?.scrollIntoView({ block: 'nearest' })
+  }, [selectedItem])
+
+  const selectItem = (id: string) => {
+    const item = matches.find((item) => item.id === id)
+
+    if (item) {
+      // const match = findSuggestionMatch({
+      //   char: '@',
+      //   allowSpaces: false,
+      //   allowToIncludeChar: false,
+      //   allowedPrefixes: [],
+      //   startOfLine: true,
+      //   $position: editor.state.selection.$from,
+      // })
+      // console.log({ match, item })
+      // if (!match) return
+
+      // const { range } = match
+
+      // // increase range.to by one when the next node is of type "text"
+      // // and starts with a space character
+      // const nodeAfter = editor.view.state.selection.$to.nodeAfter
+      // const overrideSpace = nodeAfter?.text?.startsWith(' ')
+
+      // if (overrideSpace) {
+      //   range.to += 1
+      // }
+      editor
+        .chain()
+        .focus()
+        .insertContentAt(editor.state.selection, [
+          {
+            type: 'mention',
+            attrs: Schema.decodeSync(RichTextMentionAttributes)({
+              data: {
+                id: item.id,
+                version: 1,
+                label: item.label,
+                objectType: item.objectType,
+                image: item.image,
+              },
+            }),
+          },
+          {
+            type: 'text',
+            text: ' ',
+          },
+        ])
+        .run()
+
+      editor.view.dom.ownerDocument.defaultView?.getSelection()?.collapseToEnd()
+    }
+
+    send({
+      type: 'ESCAPE',
+    })
+  }
+
+  const arrowHandler = (direction: 'up' | 'down') =>
+    setSelection(
+      parseNextSelection({
+        direction,
+        byObjectType,
+        selection,
+      }),
+    )
+
+  const enterHandler = () => {
+    if (selectedItem?.id) selectItem(selectedItem?.id)
+  }
+
+  useGlobalKeyDown(
+    (event) => {
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        arrowHandler('up')
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault()
+        arrowHandler('down')
+      } else if (event.key === 'Enter') {
+        event.preventDefault()
+        enterHandler()
+      }
+    },
+    [selectedItem],
+  )
+
+  return (
+    <ResponsiveFloater
+      editor={editor}
+      className="max-h-[30dvh] space-y-5 overflow-y-auto overflow-x-hidden p-2"
+    >
+      <div ref={containerRef}>
         {isLoading ? (
           <Text className="flex h-full items-center justify-center gap-3 text-muted-foreground">
             <Carrot className="h-5 w-5 animate-spin" />
@@ -180,9 +221,9 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
           </div>
         )}
       </div>
-    )
-  },
-)
+    </ResponsiveFloater>
+  )
+}
 
 function parseNextSelection({
   direction,

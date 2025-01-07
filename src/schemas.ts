@@ -43,7 +43,10 @@ const Optional = <A, I, R>(schema: S.Schema<A, I, R>) =>
 
 const isFile = (input: unknown): input is File => input instanceof File
 
-const FileSchema = S.declare(isFile)
+const FileSchema = S.declare(isFile, {
+  identifier: 'FileSchema',
+  description: 'Um arquivo (`File` no Javascript)',
+})
 
 export type RichTextValue = JSONContent & { version: 1 }
 const isTipTapJSON = (input: unknown): input is RichTextValue =>
@@ -417,3 +420,66 @@ export type NotesForDB = typeof NoteDataArray.Type
 const RangeBoundValue = S.NullishOr(S.Int)
 /** [min, max] */
 export const RangeFormValue = S.Tuple(RangeBoundValue, RangeBoundValue)
+
+export const RichTextMentionData = S.Struct({
+  version: S.Literal(1),
+  label: S.String,
+  objectType: S.Literal('Vegetable', 'UserProfile'),
+  image: Optional(StoredImageDataInForm),
+  id: S.String,
+})
+
+export const RichTextMentionAttributes = S.Struct({
+  data: S.transform(RichTextMentionData, S.String, {
+    encode: (stringifiedAttr) => JSON.parse(stringifiedAttr),
+    decode: (mention) => JSON.stringify(mention),
+  }),
+})
+
+export type RichTextMentionAttributesInDB =
+  typeof RichTextMentionAttributes.Type
+export type RichTextMentionAttributesInForm =
+  typeof RichTextMentionAttributes.Encoded
+
+export const YOUTUBE_REGEX =
+  /^((?:https?:)?\/\/)?((?:www|m|music)\.)?(?:youtube(?:-nocookie)?\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})(\S+)?$/g
+
+export const YoutubeURL = S.String.pipe(
+  S.pattern(/youtu\.?be/, { message: () => 'Link de vídeo inválido' }),
+  S.brand('YoutubeURL'),
+)
+
+export type YoutubeURLType = typeof YoutubeURL.Type
+
+export const YoutubeId = S.String.pipe(
+  S.pattern(/[a-zA-Z0-9_-]{6,11}/, { message: () => 'Link de vídeo inválido' }),
+  S.brand('YoutubeId'),
+)
+
+export type YoutubeIdType = typeof YoutubeId.Type
+
+export const RichTextVideoData = S.Struct({
+  version: S.Literal(1),
+  type: S.Literal('youtube'),
+  id: YoutubeId,
+})
+
+export const RichTextVideoAttributes = S.Struct({
+  data: S.transformOrFail(RichTextVideoData, S.String, {
+    strict: true,
+    encode: (stringifiedAttr, _, ast) =>
+      S.decode(RichTextVideoData)(JSON.parse(stringifiedAttr)).pipe(
+        Effect.catchAll(() =>
+          ParseResult.fail(
+            new ParseResult.Type(ast, stringifiedAttr, 'invalid-video'),
+          ),
+        ),
+      ),
+    decode: (video) => ParseResult.succeed(JSON.stringify(video)),
+  }),
+})
+
+export type RichTextVideoAttributesInDB = typeof RichTextVideoAttributes.Type
+// @TODO: why is `id` showing as a plain string instead of `YoutubeIdType`?
+export type RichTextVideoAttributesInForm =
+  typeof RichTextVideoAttributes.Encoded

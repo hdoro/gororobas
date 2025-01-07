@@ -1,17 +1,13 @@
 'use client'
 
 import { useMentionData } from '@/hooks/useMentionData'
-import type { ImageForRendering } from '@/types'
+import type { RichTextMentionAttributesInForm } from '@/schemas'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
 import Link from 'next/link'
 import { SanityImage } from '../SanityImage'
 
-export function Mention(props: {
-  id: string
-  label: string
-  image?: ImageForRendering | null
-}) {
+export function Mention(props: RichTextMentionAttributesInForm['data']) {
   const { data, isLoading } = useMentionData(props.id)
 
   const freshMention = data && 'mention' in data ? data.mention : undefined
@@ -45,7 +41,7 @@ export function Mention(props: {
       href={href}
       className="px-1 font-medium text-primary-700 underline"
       onClick={(e) => {
-        // Prevent the card from flipping
+        // Prevent an eventual parent NoteCard from flipping
         e.stopPropagation()
       }}
     >
