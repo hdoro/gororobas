@@ -3,7 +3,7 @@
 import { useFixedBottomPosition } from '@/hooks/useFixedBottomPosition'
 import useViewport from '@/hooks/useViewport'
 import { cn } from '@/utils/cn'
-import { arrow, autoPlacement, offset, useFloating } from '@floating-ui/react'
+import { autoPlacement, offset, useFloating } from '@floating-ui/react'
 import { type PropsWithChildren, useEffect, useRef } from 'react'
 import type { EditorUIProps } from './tiptapStateMachine'
 import { getEditorDomRect } from './tiptapUtils'
@@ -35,25 +35,42 @@ function MobileFloater(props: Props) {
 function DesktopFloater(props: Props) {
   const arrowRef = useRef<HTMLDivElement>(null)
 
-  const { refs, floatingStyles, middlewareData } = useFloating({
+  const { refs, floatingStyles } = useFloating({
     middleware: [
       offset(16),
       autoPlacement({
-        allowedPlacements: ['bottom', 'bottom-end', 'bottom-start'],
+        allowedPlacements: [
+          'bottom',
+          'bottom-end',
+          'bottom-start',
+          'top',
+          'top-end',
+          'top-start',
+        ],
         padding: 16,
       }),
-      arrow({ element: arrowRef }),
     ],
   })
 
   const { editor } = props
   useEffect(() => {
-    if (editor) {
-      refs.setPositionReference({
-        getBoundingClientRect() {
-          return getEditorDomRect(editor)
-        },
-      })
+    if (!editor) return
+
+    const reference = {
+      getBoundingClientRect() {
+        return getEditorDomRect(editor)
+      },
+    }
+    refs.setPositionReference(reference)
+
+    // Force update on selection changes
+    const updateOnSelectionChange = () => {
+      refs.setPositionReference({ ...reference })
+    }
+    editor.on('selectionUpdate', updateOnSelectionChange)
+
+    return () => {
+      editor.off('selectionUpdate', updateOnSelectionChange)
     }
   }, [editor, refs.setPositionReference])
 
@@ -61,20 +78,12 @@ function DesktopFloater(props: Props) {
     <div
       ref={refs.setFloating}
       className={cn(
-        'z-10 rounded-md border bg-white p-3', // cosmetic
+        'z-10 rounded-md border bg-white p-3 shadow-sm',
         props.className,
       )}
       style={floatingStyles}
       data-rich-editor-id={props.editorId}
     >
-      <div
-        ref={arrowRef}
-        className="absolute top-0 z-10 mx-3 h-4 w-4 rounded-sm border-l bg-white"
-        style={{
-          left: middlewareData.arrow?.x,
-          transform: 'translate(-50%, -40%) rotate(45deg)',
-        }}
-      />
       {props.children}
     </div>
   )
