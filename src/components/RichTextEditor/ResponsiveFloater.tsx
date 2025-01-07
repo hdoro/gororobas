@@ -11,6 +11,7 @@ import { getEditorDomRect } from './tiptapUtils'
 type Props = PropsWithChildren<{
   className?: string
   editor: Editor
+  editorId: string
 }>
 
 function MobileFloater(props: Props) {
@@ -30,6 +31,7 @@ function MobileFloater(props: Props) {
             viewport.visualViewport.offsetTop,
         )}px)`,
       }}
+      data-rich-editor-id={props.editorId}
     >
       {props.children}
     </div>
@@ -65,10 +67,11 @@ function DesktopFloater(props: Props) {
     <div
       ref={refs.setFloating}
       className={cn(
-        'rounded-md border bg-white p-3', // cosmetic
+        'z-10 rounded-md border bg-white p-3', // cosmetic
         props.className,
       )}
       style={floatingStyles}
+      data-rich-editor-id={props.editorId}
     >
       <div
         ref={arrowRef}

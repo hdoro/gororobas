@@ -3,7 +3,7 @@
 import CharacterCount from '@tiptap/extension-character-count'
 import { EditorContent, type JSONContent, useEditor } from '@tiptap/react'
 import { useMachine } from '@xstate/react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useMemo, useRef } from 'react'
 import BlocksToolbar from './BlocksToolbar'
 import FormatToolbar from './FormatToolbar'
 import LinkEditor from './LinkEditor'
@@ -15,8 +15,6 @@ import {
 import VideoEditor from './VideoEditor'
 import { getTiptapExtensions } from './getTiptapExtensions'
 import { tiptapStateMachine } from './tiptapStateMachine'
-
-const TIME_TO_BLUR = 600 // in ms
 
 export default function RichTextEditor(
   props: {
@@ -30,6 +28,7 @@ export default function RichTextEditor(
 ) {
   const classes = richTextEditorTheme(props)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const editorId = useId()
 
   const { placeholder, characterLimit } = props
   const extensions = useMemo(() => {
@@ -49,7 +48,6 @@ export default function RichTextEditor(
     return coreExtensions
   }, [placeholder, classes, characterLimit])
 
-  const [declareBlurredAt, setDeclareBlurredAt] = useState<number | null>(null)
   const [state, send] = useMachine(tiptapStateMachine)
   const editor = useEditor({
     extensions,
@@ -60,52 +58,35 @@ export default function RichTextEditor(
     },
     onSelectionUpdate: (data) => {
       send({ type: 'SELECTION_UPDATE', data })
-      setDeclareBlurredAt(null)
     },
     onFocus: () => {
       send({ type: 'FOCUS' })
-      setDeclareBlurredAt(null)
     },
     editable: props.disabled !== true,
     immediatelyRender: false,
   })
 
-  // biome-ignore lint: we don't want to re-run the effect on state.value
   useEffect(() => {
-    if (!declareBlurredAt) return
+    const handleGlobalClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      // Check if click target or any of its parents have our data attribute with matching ID
+      const isEditorClick = target.closest(
+        `[data-rich-editor-id="${editorId}"]`,
+      )
 
-    const timeout = setTimeout(() => {
-      if (state.value === 'link' || state.value === 'video') {
-        setDeclareBlurredAt(null)
-        return
-      }
-      send({ type: 'BLUR' })
-    }, TIME_TO_BLUR)
-
-    return () => clearTimeout(timeout)
-  }, [declareBlurredAt])
-
-  useEffect(() => {
-    if (!wrapperRef.current) return
-
-    const wrapper = wrapperRef.current
-
-    const handleWrapperBlur = (_event: FocusEvent) => {
-      if (
-        !document.activeElement ||
-        !wrapper.contains(document.activeElement)
-      ) {
-        setDeclareBlurredAt(Date.now() + TIME_TO_BLUR)
+      if (!isEditorClick) {
+        send({ type: 'BLUR' })
       }
     }
 
-    wrapper.addEventListener('focusout', handleWrapperBlur)
-    return () => wrapper.removeEventListener('focusout', handleWrapperBlur)
-  }, [])
+    window.addEventListener('click', handleGlobalClick)
+    return () => window.removeEventListener('click', handleGlobalClick)
+  }, [editorId, send])
 
   return (
     <div
       ref={wrapperRef}
+      data-rich-editor-id={editorId}
       tabIndex={-1}
       className={classes.root({ className: 'relative' })}
     >
@@ -115,19 +96,19 @@ export default function RichTextEditor(
         data-placeholder={props.placeholder}
       />
       {editor && state.matches('format') && (
-        <FormatToolbar editor={editor} send={send} />
+        <FormatToolbar editor={editor} send={send} editorId={editorId} />
       )}
       {editor && state.matches('focused') && (
-        <BlocksToolbar editor={editor} send={send} />
+        <BlocksToolbar editor={editor} send={send} editorId={editorId} />
       )}
       {editor && state.matches('link') && (
-        <LinkEditor editor={editor} send={send} />
+        <LinkEditor editor={editor} send={send} editorId={editorId} />
       )}
       {editor && state.matches('mention') && (
-        <MentionList editor={editor} send={send} />
+        <MentionList editor={editor} send={send} editorId={editorId} />
       )}
       {editor && state.matches('video') && (
-        <VideoEditor editor={editor} send={send} />
+        <VideoEditor editor={editor} send={send} editorId={editorId} />
       )}
     </div>
   )

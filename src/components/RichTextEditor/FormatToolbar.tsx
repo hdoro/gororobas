@@ -1,6 +1,5 @@
 'use client'
 
-import type { Editor } from '@tiptap/react'
 import {
   BoldIcon,
   ItalicIcon,
@@ -11,17 +10,19 @@ import {
 } from 'lucide-react'
 import { Button } from '../ui/button'
 import ResponsiveFloater from './ResponsiveFloater'
-import type { TiptapStateMachine } from './tiptapStateMachine'
+import type { EditorUIProps } from './tiptapStateMachine'
 
 export default function FormatToolbar({
   editor,
+  editorId,
   send,
-}: {
-  editor: Editor
-  send: TiptapStateMachine['send']
-}) {
+}: EditorUIProps) {
   return (
-    <ResponsiveFloater editor={editor} className="flex justify-between gap-2">
+    <ResponsiveFloater
+      editor={editor}
+      className="flex justify-between gap-2"
+      editorId={editorId}
+    >
       <Button
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}

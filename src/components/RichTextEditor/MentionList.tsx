@@ -3,7 +3,6 @@
 import useGlobalKeyDown from '@/hooks/useGlobalKeyDown'
 import { RichTextMentionAttributes } from '@/schemas'
 import type { ReferenceObjectType, ReferenceOption } from '@/types'
-import type { Editor } from '@tiptap/react'
 import { Schema } from 'effect'
 import { matchSorter } from 'match-sorter'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -13,7 +12,7 @@ import Carrot from '../icons/Carrot'
 import { Button } from '../ui/button'
 import { Text } from '../ui/text'
 import ResponsiveFloater from './ResponsiveFloater'
-import type { TiptapStateMachine } from './tiptapStateMachine'
+import type { EditorUIProps } from './tiptapStateMachine'
 
 const OBJECT_TYPES: ReferenceObjectType[] = ['UserProfile', 'Vegetable']
 
@@ -22,13 +21,7 @@ type Selection = {
   objectType: ReferenceObjectType
 }
 
-export default function MentionList({
-  editor,
-  send,
-}: {
-  editor: Editor
-  send: TiptapStateMachine['send']
-}) {
+export default function MentionList({ editor, editorId, send }: EditorUIProps) {
   const [selection, setSelection] = useState({
     index: 0,
     objectType: 'UserProfile' as ReferenceObjectType,
@@ -166,6 +159,7 @@ export default function MentionList({
   return (
     <ResponsiveFloater
       editor={editor}
+      editorId={editorId}
       className="max-h-[30dvh] space-y-5 overflow-y-auto overflow-x-hidden p-2"
     >
       <div ref={containerRef}>

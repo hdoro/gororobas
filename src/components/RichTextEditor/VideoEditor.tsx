@@ -7,7 +7,7 @@ import {
 } from '@/schemas'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { getYouTubeID } from '@/utils/youtube'
-import type { Editor, JSONContent } from '@tiptap/react'
+import type { JSONContent } from '@tiptap/react'
 import { Schema } from 'effect'
 import React, { useEffect } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
@@ -21,7 +21,7 @@ import {
   DialogTitle,
 } from '../ui/dialog'
 import { Input } from '../ui/input'
-import type { TiptapStateMachine } from './tiptapStateMachine'
+import type { EditorUIProps } from './tiptapStateMachine'
 
 export const formSchema = Schema.Struct({
   url: YoutubeURL,
@@ -36,13 +36,7 @@ export function getVideoTiptapContent(url: YoutubeURLType) {
   } satisfies JSONContent
 }
 
-export default function VideoEditor({
-  editor,
-  send,
-}: {
-  editor: Editor
-  send: TiptapStateMachine['send']
-}) {
+export default function VideoEditor({ editor, editorId, send }: EditorUIProps) {
   const videoInputRef = React.useRef<HTMLInputElement>(null)
 
   const form = useFormWithSchema({
@@ -79,7 +73,11 @@ export default function VideoEditor({
         editor.commands.focus()
       }}
     >
-      <DialogContent className="max-w-lg" hasClose={false}>
+      <DialogContent
+        className="max-w-lg"
+        hasClose={false}
+        data-rich-editor-id={editorId}
+      >
         <FormProvider {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

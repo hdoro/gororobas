@@ -1,6 +1,5 @@
 'use client'
 
-import type { Editor } from '@tiptap/react'
 import { TrashIcon } from 'lucide-react'
 import React, { useEffect, useId } from 'react'
 import { Button } from '../ui/button'
@@ -14,15 +13,9 @@ import {
 } from '../ui/dialog'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
-import type { TiptapStateMachine } from './tiptapStateMachine'
+import type { EditorUIProps } from './tiptapStateMachine'
 
-export default function LinkEditor({
-  editor,
-  send,
-}: {
-  editor: Editor
-  send: TiptapStateMachine['send']
-}) {
+export default function LinkEditor({ editor, editorId, send }: EditorUIProps) {
   const linkInputRef = React.useRef<HTMLInputElement>(null)
   const id = useId()
 
@@ -39,7 +32,11 @@ export default function LinkEditor({
         editor.commands.focus()
       }}
     >
-      <DialogContent className="max-w-lg" hasClose={false}>
+      <DialogContent
+        className="max-w-lg"
+        hasClose={false}
+        data-rich-editor-id={editorId}
+      >
         <DialogHeader>
           <DialogTitle>Editar link</DialogTitle>
         </DialogHeader>

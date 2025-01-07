@@ -2,18 +2,15 @@
 
 import useViewport from '@/hooks/useViewport'
 import { cn } from '@/utils/cn'
-import type { Editor } from '@tiptap/react'
 import { AtSignIcon, ImageUpIcon, LinkIcon, YoutubeIcon } from 'lucide-react'
 import { Button } from '../ui/button'
-import type { TiptapStateMachine } from './tiptapStateMachine'
+import type { EditorUIProps } from './tiptapStateMachine'
 
 export default function BlocksToolbar({
   editor,
+  editorId,
   send,
-}: {
-  editor: Editor
-  send: TiptapStateMachine['send']
-}) {
+}: EditorUIProps) {
   const viewport = useViewport()
 
   return (
@@ -31,6 +28,7 @@ export default function BlocksToolbar({
             viewport.visualViewport.offsetTop,
         )}px)`,
       }}
+      data-rich-editor-id={editorId}
     >
       <Button
         onClick={() => send({ type: 'EDIT_LINK' })}
@@ -47,7 +45,7 @@ export default function BlocksToolbar({
           editor.chain().focus().setTextSelection(editor.state.selection).run()
         }}
         disabled={!editor.can().chain().focus().toggleLink({ href: '' }).run()}
-        mode={editor.isActive('link') ? 'outline' : 'bleed'}
+        mode={editor.isActive('mention') ? 'outline' : 'bleed'}
         size="icon"
         aria-label="Menções"
       >

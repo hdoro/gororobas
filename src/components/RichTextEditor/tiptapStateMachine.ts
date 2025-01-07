@@ -1,14 +1,9 @@
-import { type EditorEvents, isTextSelection } from '@tiptap/core'
+import { type Editor, type EditorEvents, isTextSelection } from '@tiptap/core'
 import type { useMachine } from '@xstate/react'
 import { createMachine } from 'xstate'
 
 /**
  * TODOS:
- *
- * - simplify focused/blur logic
- *    - Especially the part on ignoring link & video state
- *    - perhaps move into state machine?
- * - further tests on blur mechanism
  * - finish mentions
  *    - open list on `@` and update the query
  *     - when list opened via button, have query input inside list instead of in the editor
@@ -16,9 +11,9 @@ import { createMachine } from 'xstate'
  *     - consider using shadcn's drawer instead than fixed div on mobile
  * - links in BlocksToolbar makes sense? Perhaps adding an URL from scratch, but that's not very useful...
  * - Images
- * - other blocks?
  * - special rendering for links to other notes?
  * - consider moving more logic into the state machine for centralization & clarity
+ * - other blocks?
  */
 
 type EditorEvent =
@@ -149,4 +144,10 @@ export const tiptapStateMachine = createMachine(
 export type TiptapStateMachine = {
   state: ReturnType<typeof useMachine<typeof tiptapStateMachine>>[0]
   send: ReturnType<typeof useMachine<typeof tiptapStateMachine>>[1]
+}
+
+export type EditorUIProps = {
+  editor: Editor
+  editorId: string
+  send: TiptapStateMachine['send']
 }
