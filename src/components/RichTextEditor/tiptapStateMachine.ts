@@ -9,11 +9,11 @@ import { createMachine } from 'xstate'
  *     - when list opened via button, have query input inside list instead of in the editor
  *     - handle up/down arrows and enter key
  *     - consider using shadcn's drawer instead than fixed div on mobile
- * - links in BlocksToolbar makes sense? Perhaps adding an URL from scratch, but that's not very useful...
  * - Images
  * - special rendering for links to other notes?
  * - consider moving more logic into the state machine for centralization & clarity
  * - other blocks?
+ * - make FloatingUI popover more responsive to cursor position
  */
 
 type EditorEvent =

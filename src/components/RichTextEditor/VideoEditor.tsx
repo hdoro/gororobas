@@ -23,7 +23,7 @@ import {
 import { Input } from '../ui/input'
 import type { EditorUIProps } from './tiptapStateMachine'
 
-export const formSchema = Schema.Struct({
+const formSchema = Schema.Struct({
   url: YoutubeURL,
 })
 
@@ -80,7 +80,10 @@ export default function VideoEditor({ editor, editorId, send }: EditorUIProps) {
       >
         <FormProvider {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={(e) => {
+              e.stopPropagation()
+              form.handleSubmit(onSubmit)(e)
+            }}
             className="max-w-4xl flex-1 space-y-4"
             aria-disabled={form.formState.disabled}
           >

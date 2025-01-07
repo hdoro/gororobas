@@ -75,10 +75,10 @@ function DesktopFloater(props: Props) {
     >
       <div
         ref={arrowRef}
-        className="absolute top-0 z-10 h-4 w-4 rounded-sm border-l bg-white"
+        className="absolute top-0 z-10 mx-3 h-4 w-4 rounded-sm border-l bg-white"
         style={{
           left: middlewareData.arrow?.x,
-          transform: 'translate(-50%, -50%) rotate(45deg)',
+          transform: 'translate(-50%, -40%) rotate(45deg)',
         }}
       />
       {props.children}
