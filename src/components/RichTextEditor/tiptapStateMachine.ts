@@ -8,7 +8,6 @@ import { findMentionMatch } from './findSuggestionMatch'
  * - Images
  * - (tiptapNodeHandlers) special rendering for links to other notes?
  * - other blocks?
- * - make FloatingUI popover more responsive to cursor position (esp. for BlockToolbar)
  */
 
 type EditorEvent =

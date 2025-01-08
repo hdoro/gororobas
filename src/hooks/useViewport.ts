@@ -1,28 +1,48 @@
 import { debounce } from '@/utils/debounce'
 import { useEffect, useState } from 'react'
 
-const getViewports = () => ({
-  window: {
-    height: window.innerHeight,
-    width: window.innerWidth,
-  },
-  viewport: {
-    width: Math.max(
-      document.documentElement.clientWidth || 0,
-      window.innerWidth || 0,
-    ),
-    height: Math.max(
-      document.documentElement.clientHeight || 0,
-      window.innerHeight || 0,
-    ),
-  },
-  visualViewport: {
-    width: window.visualViewport?.width,
-    height: window.visualViewport?.height,
-    offsetTop: window.visualViewport?.offsetTop || 0,
-    offsetLeft: window.visualViewport?.offsetLeft || 0,
-  },
-})
+const getViewports = () => {
+  if (typeof window === 'undefined' || !window)
+    return {
+      window: {
+        height: 1,
+        width: 1,
+      },
+      viewport: {
+        width: 1,
+        height: 1,
+      },
+      visualViewport: {
+        width: 1,
+        height: 1,
+        offsetTop: 1,
+        offsetLeft: 1,
+      },
+    }
+
+  return {
+    window: {
+      height: window.innerHeight,
+      width: window.innerWidth,
+    },
+    viewport: {
+      width: Math.max(
+        document.documentElement.clientWidth || 0,
+        window.innerWidth || 0,
+      ),
+      height: Math.max(
+        document.documentElement.clientHeight || 0,
+        window.innerHeight || 0,
+      ),
+    },
+    visualViewport: {
+      width: window.visualViewport?.width,
+      height: window.visualViewport?.height,
+      offsetTop: window.visualViewport?.offsetTop || 0,
+      offsetLeft: window.visualViewport?.offsetLeft || 0,
+    },
+  }
+}
 
 export default function useViewport() {
   const [state, setState] = useState(getViewports)
