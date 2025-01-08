@@ -31,9 +31,9 @@ You can learn about the project's motivation, tech stack, approach and learnings
 ## Developing locally
 
 1. Start by populating the `.env.example` file with the necessary environment variables. You can copy it to `.env.local` and fill in the values.
-    - If you're connected to the Vercel project, you can use `vercel env pull` to build the production `.env` file.
+   - If you're connected to the Vercel project, you can use `vercel env pull` to build the production `.env` file.
 1. In order to authenticate with emails locally, you need to install and run [Mailpit](https://mailpit.axllent.org/docs/install/). This will allow the EdgeDB server to send emails via your local Mailpit server.
-    - 💡 You can still authenticate with Google oAuth without it
+   - 💡 You can still authenticate with Google oAuth without it
 1. To connect to a local database, [install EdgeDB](https://docs.edgedb.com/get-started/quickstart#installation) to your machine
 1. Run `pnpm install` to install the dependencies
 1. In a separate terminal, run `edgedb project init` to start an EdgeDB instance for the current config
@@ -48,10 +48,10 @@ You can learn about the project's motivation, tech stack, approach and learnings
 1. Log into EdgeDB Cloud in your terminal with `edgedb cloud login`
 1. Migrate the current database schema to the cloud with `edgedb migrate -I ORG/INSTANCE_NAME`
 1. If you're starting a new cloud instance, you can seed it with a local dump of data with:
-    ```sh
-    edgedb dump <your-dump.dump>
-    edgedb restore -I <org>/<instance-name> <your-dump.dump>
-    ```
+   ```sh
+   edgedb dump <your-dump.dump>
+   edgedb restore -I <org>/<instance-name> <your-dump.dump>
+   ```
 1. If you're setting up a Vercel project for it the first time, refer to the [official guide on deploying to Vercel](https://docs.edgedb.com/guides/tutorials/nextjs_app_router#deploying-to-vercel)
 1. When you push a commit to main, Vercel will automatically build and deploy it to `gororobas.com` or whatever the domain for the new project you've set up
 
@@ -70,3 +70,16 @@ If you'd like to contribute to the project, please open an issue or a pull reque
 ## License
 
 This project is licensed under the Apache 2.0 License. You can read more about it in the [LICENSE](./LICENSE) file.
+
+## Restaurando backups
+
+A partir do backup baixado no S3:
+
+1. Instale o GPG:
+   - Windows: `winget install GnuPG.GnuPG`
+   - MacOS: `brew install gpg`
+   - Linux: `sudo apt-get install gpg`
+1. Decodifique a encriptação do backup com: `gpg --decrypt --output decrypted_backup.dump.gz input_file.dump.gpg `
+   - A chave de encriptação é a mesma que foi usada para criar o backup
+1. Descompacte o backup: `gunzip decrypted_backup.dump.gz`
+1. Restaure o backup: `edgedb restore decrypted_backup.dump` localmente, ou `edgedb restore -I ORG/INSTANCE_NAME decrypted_backup.dump` na nuvem

@@ -14,7 +14,7 @@ export default function BlocksToolbar({
   return (
     <ResponsiveFloater
       editor={editor}
-      className="flex justify-between gap-2"
+      className="flex gap-2"
       editorId={editorId}
       bottomOffset={bottomOffset}
     >
@@ -46,8 +46,12 @@ export default function BlocksToolbar({
         <AtSignIcon />
       </Button>
       <Button
-        onClick={() => alert('Ainda não terminamos essa parte!')}
-        disabled={true}
+        onClick={() =>
+          alert(
+            'Ainda não terminamos essa parte. Por hora não dá pra enviar imagem :(',
+          )
+        }
+        // disabled={true}
         mode={editor.isActive('image') ? 'outline' : 'bleed'}
         size="icon"
         aria-label="Imagem"

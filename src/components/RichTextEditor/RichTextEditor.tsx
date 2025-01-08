@@ -83,12 +83,6 @@ export default function RichTextEditor(
     return () => window.removeEventListener('click', handleGlobalClick)
   }, [editorId, send])
 
-  console.log({
-    _name: state.value,
-    value: props.editorState,
-    state: state.toJSON(),
-  })
-
   // @TODO - currently accounting only for NoteForm
   const bottomOffset = 72
 

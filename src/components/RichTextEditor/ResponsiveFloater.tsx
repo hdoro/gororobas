@@ -4,7 +4,7 @@ import { useFixedBottomPosition } from '@/hooks/useFixedBottomPosition'
 import useViewport from '@/hooks/useViewport'
 import { cn } from '@/utils/cn'
 import { autoPlacement, offset, useFloating } from '@floating-ui/react'
-import { type PropsWithChildren, useEffect, useRef } from 'react'
+import { type PropsWithChildren, useEffect } from 'react'
 import type { EditorUIProps } from './tiptapStateMachine'
 import { getEditorDomRect } from './tiptapUtils'
 
@@ -21,7 +21,7 @@ function MobileFloater(props: Props) {
     <div
       className={cn(
         position.className,
-        'rounded-t-md border-t bg-white p-3',
+        'rich-text--mobile-floater rounded-t-md border-t bg-white px-3 py-1',
         props.className,
       )}
       style={position.styles}
@@ -33,8 +33,6 @@ function MobileFloater(props: Props) {
 }
 
 function DesktopFloater(props: Props) {
-  const arrowRef = useRef<HTMLDivElement>(null)
-
   const { refs, floatingStyles } = useFloating({
     middleware: [
       offset(16),

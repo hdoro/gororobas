@@ -141,6 +141,14 @@ body {
   @apply ring-2;
 }
 
+.rich-text--mobile-floater > button {
+  @apply flex-1;
+}
+
+.rich-text--mobile-floater > button svg {
+  @apply size-5;
+}
+
 .p-empty {
   min-height: 1lh;
 }

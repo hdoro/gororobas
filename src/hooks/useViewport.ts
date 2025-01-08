@@ -5,18 +5,18 @@ const getViewports = () => {
   if (typeof window === 'undefined' || !window)
     return {
       window: {
-        height: 1,
-        width: 1,
+        height: 0,
+        width: 0,
       },
       viewport: {
-        width: 1,
-        height: 1,
+        width: 0,
+        height: 0,
       },
       visualViewport: {
-        width: 1,
-        height: 1,
-        offsetTop: 1,
-        offsetLeft: 1,
+        width: 0,
+        height: 0,
+        offsetTop: 0,
+        offsetLeft: 0,
       },
     }
 

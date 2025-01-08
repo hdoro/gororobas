@@ -21,7 +21,7 @@ export default function FormatToolbar({
   return (
     <ResponsiveFloater
       editor={editor}
-      className="flex justify-between gap-2"
+      className="flex gap-2"
       editorId={editorId}
       bottomOffset={bottomOffset}
     >
