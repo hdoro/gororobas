@@ -6,6 +6,7 @@ import { useMachine } from '@xstate/react'
 import { useEffect, useId, useMemo, useRef } from 'react'
 import BlocksToolbar from './BlocksToolbar'
 import FormatToolbar from './FormatToolbar'
+import ImageEditor from './ImageEditor'
 import LinkEditor from './LinkEditor'
 import MentionList from './MentionList'
 import {
@@ -111,6 +112,7 @@ export default function RichTextEditor(
       {uiProps && state.matches('link') && <LinkEditor {...uiProps} />}
       {uiProps && state.matches('mention') && <MentionList {...uiProps} />}
       {uiProps && state.matches('video') && <VideoEditor {...uiProps} />}
+      {uiProps && state.matches('image') && <ImageEditor {...uiProps} />}
     </div>
   )
 }

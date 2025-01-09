@@ -21,6 +21,8 @@ import SourceInput from './SourceInput'
 
 /**
  * Includes the image field itself and its metadata fields (optional) - sources and label.
+ *
+ * @TODO (low importance) bug: when selecting an image, clearing it, and then selecting the same image, nothing happens. You need to select a 2nd image first, then clear it, to be able to select the 1st
  */
 export default function ImageInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -30,6 +32,7 @@ export default function ImageInput<
   includeMetadata = true,
 }: {
   field: ControllerRenderProps<TFieldValues, TName>
+  /** Whether or not to render fields for sources and label */
   includeMetadata?: boolean
 }) {
   const form = useFormContext()
@@ -94,7 +97,9 @@ function ImageField<
     name: rootField.name,
   }) as typeof ImageInForm.Encoded | null | undefined
 
-  function clearValue() {
+  function clearValue(e: React.MouseEvent) {
+    e.preventDefault()
+    e.stopPropagation()
     rootField.onChange({
       label: imageData?.label,
       sources: imageData?.sources,
@@ -143,6 +148,7 @@ function ImageField<
       render={({ field: fileField }) => (
         <ImageDropzone
           field={fileField}
+          rootField={rootField}
           /** For some arcane reason with react-hook-form, this `fileField.value` is stale.
            * Passing the fresh `imageData` solves the issue. */
           value={imageData && 'file' in imageData ? imageData.file : null}

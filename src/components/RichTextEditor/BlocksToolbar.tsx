@@ -46,12 +46,9 @@ export default function BlocksToolbar({
         <AtSignIcon />
       </Button>
       <Button
-        onClick={() =>
-          alert(
-            'Ainda não terminamos essa parte. Por hora não dá pra enviar imagem :(',
-          )
-        }
-        // disabled={true}
+        onClick={() => {
+          send({ type: 'EDIT_IMAGE' })
+        }}
         mode={editor.isActive('image') ? 'outline' : 'bleed'}
         size="icon"
         aria-label="Imagem"

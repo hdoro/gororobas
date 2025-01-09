@@ -483,3 +483,27 @@ export type RichTextVideoAttributesInDB = typeof RichTextVideoAttributes.Type
 // @TODO: why is `id` showing as a plain string instead of `YoutubeIdType`?
 export type RichTextVideoAttributesInForm =
   typeof RichTextVideoAttributes.Encoded
+
+export const RichTextImageData = S.Struct({
+  version: S.Literal(1),
+  image: StoredImageInForm,
+})
+
+export const RichTextImageAttributes = S.Struct({
+  data: S.transformOrFail(RichTextImageData, S.String, {
+    strict: true,
+    encode: (stringifiedAttr, _, ast) =>
+      S.decode(RichTextImageData)(JSON.parse(stringifiedAttr)).pipe(
+        Effect.catchAll(() =>
+          ParseResult.fail(
+            new ParseResult.Type(ast, stringifiedAttr, 'invalid-image'),
+          ),
+        ),
+      ),
+    decode: (image) => ParseResult.succeed(JSON.stringify(image)),
+  }),
+})
+
+export type RichTextImageAttributesInDB = typeof RichTextImageAttributes.Type
+export type RichTextImageAttributesInForm =
+  typeof RichTextImageAttributes.Encoded

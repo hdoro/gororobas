@@ -3,6 +3,7 @@ import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import type { Extensions } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { Image } from './ImageExtension'
 import { Mention } from './MentionExtension'
 import type { richTextEditorTheme } from './RichTextEditor.theme'
 import { Video } from './VideoExtension'
@@ -62,5 +63,6 @@ export function getTiptapExtensions({
     }),
     Mention.configure(),
     Video.configure(),
+    Image.configure(),
   ]
 }

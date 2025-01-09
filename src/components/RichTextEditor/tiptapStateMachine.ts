@@ -5,9 +5,8 @@ import { findMentionMatch } from './findSuggestionMatch'
 
 /**
  * TODOS:
- * - Images
  * - (tiptapNodeHandlers) special rendering for links to other notes?
- * - other blocks?
+ * - any other blocks missing?
  */
 
 type EditorEvent =
@@ -29,6 +28,11 @@ type EditorEvent =
   // MENTIONS
   | {
       type: 'EDIT_MENTION'
+    }
+
+  // IMAGES
+  | {
+      type: 'EDIT_IMAGE'
     }
 
   // VIDEOS (YOUTUBE)
@@ -67,6 +71,7 @@ export const tiptapStateMachine = createMachine(
           EDIT_MENTION: 'mention',
           EDIT_LINK: 'link',
           EDIT_VIDEO: 'video',
+          EDIT_IMAGE: 'image',
         },
       },
       format: {
@@ -91,11 +96,6 @@ export const tiptapStateMachine = createMachine(
           EDIT_LINK: 'link',
         },
       },
-      link: {
-        on: {
-          ESCAPE: 'format',
-        },
-      },
       mention: {
         on: {
           ESCAPE: 'focused',
@@ -113,7 +113,17 @@ export const tiptapStateMachine = createMachine(
           ],
         },
       },
+      link: {
+        on: {
+          ESCAPE: 'format',
+        },
+      },
       video: {
+        on: {
+          ESCAPE: 'focused',
+        },
+      },
+      image: {
         on: {
           ESCAPE: 'focused',
         },

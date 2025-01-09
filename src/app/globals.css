@@ -137,7 +137,17 @@ body {
   z-index: -1;
 }
 
-.tiptap--video.ProseMirror-selectednode {
+.tiptap--image {
+  @apply flex w-full justify-center overflow-hidden rounded-md bg-background;
+}
+
+.tiptap--image img {
+  max-width: 100%;
+  max-height: 50dvh;
+}
+
+.tiptap--video.ProseMirror-selectednode,
+.tiptap--image.ProseMirror-selectednode {
   @apply ring-2;
 }
 
@@ -325,4 +335,10 @@ body {
     hsl(var(--background) / 0) 0%,
     hsl(var(--background)) 60%
   );
+}
+
+/* @TODO: modify ImageInput & ImageDropzone's APIs to acommodate for a less hacky way of making images forms without metadata span the whole width available of the parent */
+.image-editor .image-dropzone {
+  width: 100%;
+  aspect-ratio: 16/9;
 }

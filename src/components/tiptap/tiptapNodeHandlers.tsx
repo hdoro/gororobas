@@ -1,4 +1,5 @@
 import {
+  RichTextImageAttributes,
   RichTextMentionAttributes,
   RichTextVideoAttributes,
   type YoutubeIdType,
@@ -7,6 +8,7 @@ import { BASE_URL } from '@/utils/config'
 import { Schema } from 'effect'
 import Link from 'next/link'
 import { Children } from 'react'
+import { SanityImage } from '../SanityImage'
 import YoutubeVideo from '../YoutubeVideo'
 import { Mention } from './Mention'
 import type { NodeHandler, NodeHandlers, NodeProps } from './TipTapRender'
@@ -162,8 +164,23 @@ const MentionHandler: NodeHandler = (props) => {
 }
 
 const Image: NodeHandler = (props) => {
-  const attrs = props.node.attrs
-  return <img alt={attrs?.alt} src={attrs?.src} title={attrs?.title} />
+  const { node } = props
+
+  try {
+    const {
+      data: { image },
+    } = Schema.encodeUnknownSync(RichTextImageAttributes)(node.attrs)
+
+    return (
+      <SanityImage
+        image={image}
+        maxWidth={560}
+        className="my-6 max-h-[50dvh] max-w-full"
+      />
+    )
+  } catch (error) {
+    return <Passthrough {...props} />
+  }
 }
 
 const VideoHandler: NodeHandler = (props) => {
