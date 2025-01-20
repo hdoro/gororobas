@@ -14,6 +14,7 @@ module default {
   scalar type TipSubject extending enum<PLANTIO,CRESCIMENTO,COLHEITA>;
   scalar type VegetableWishlistStatus extending enum<QUERO_CULTIVAR,SEM_INTERESSE,JA_CULTIVEI,ESTOU_CULTIVANDO>;
   scalar type EditSuggestionStatus extending enum<PENDING_REVIEW,MERGED,REJECTED>;
+  scalar type NotePublishStatus extending enum<PRIVATE,COMMUNITY,PUBLIC>;
 
   scalar type NoteType extending enum<EXPERIMENTO,ENSINAMENTO,DESCOBERTA,PERGUNTA,INSPIRACAO>;
 
@@ -335,7 +336,19 @@ module default {
   }
 
   type Note extending WithHandle, Auditable, AdminCanDoAnything {
-    required public: bool;
+    required public: bool {
+      annotation deprecated := 'Use publish_status instead';
+    };
+
+    required publish_status: NotePublishStatus {
+      default := (SELECT (
+        CASE public
+          WHEN true THEN 'PUBLIC'
+          ELSE 'COMMUNITY'
+      END
+      ));
+    };
+
     required published_at: datetime {
       default := datetime_of_transaction();
     };
