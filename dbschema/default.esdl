@@ -336,17 +336,17 @@ module default {
   }
 
   type Note extending WithHandle, Auditable, AdminCanDoAnything {
-    required public: bool {
-      annotation deprecated := 'Use publish_status instead';
-    };
+    required public: bool;
 
     required publish_status: NotePublishStatus {
-      default := (SELECT (
-        CASE public
-          WHEN true THEN 'PUBLIC'
-          ELSE 'COMMUNITY'
-      END
-      ));
+      default := 'PRIVATE';
+
+      # default := (SELECT (
+      #   CASE public
+      #     WHEN true THEN 'PUBLIC'
+      #     ELSE 'COMMUNITY'
+      # END
+      # ));
     };
 
     required published_at: datetime {
