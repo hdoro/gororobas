@@ -20,6 +20,7 @@ import type {
 import {
   EDIBLE_PART_TO_LABEL,
   GENDER_TO_LABEL,
+  NOTE_PUBLISH_STATUS_TO_LABEL,
   NOTE_TYPE_TO_LABEL,
   PLANTING_METHOD_TO_LABEL,
   STRATUM_TO_LABEL,
@@ -30,7 +31,7 @@ import {
 import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
 import type { JSONContent } from '@tiptap/react'
 import { Effect, ParseResult, Schema as S } from 'effect'
-import type { NoteType } from './edgedb.interfaces'
+import type { NotePublishStatus, NoteType } from './edgedb.interfaces'
 import { FailedUploadingImageError } from './types/errors'
 
 /**
@@ -395,12 +396,17 @@ export const ProfileDataWithImage = S.partial(
   ),
 )
 
+// gender: Optional(S.Literal(...(Object.keys(GENDER_TO_LABEL) as Gender[]))),
+
+const NotePublishStatusLiteral = Optional(S.Literal(...(Object.keys(NOTE_PUBLISH_STATUS_TO_LABEL) as NotePublishStatus[])));
+
 export const NoteData = S.Struct({
   id: S.UUID,
   published_at: S.Union(S.Date, S.DateFromSelf),
   title: RichText,
   body: Optional(RichText),
-  public: S.Boolean,
+  public: Optional(S.Boolean),
+  publish_status: NotePublishStatusLiteral,
   types: S.NonEmptyArray(
     S.Literal(...(Object.keys(NOTE_TYPE_TO_LABEL) as NoteType[])),
   ),
