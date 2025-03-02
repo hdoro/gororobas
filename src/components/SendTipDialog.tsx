@@ -109,7 +109,7 @@ export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
           }}
           succesState={
             <div>
-              <section className="mx-auto box-content px-pageX py-pageY text-center md:max-w-lg">
+              <section className="px-pageX py-pageY mx-auto box-content text-center md:max-w-lg">
                 <SparklesIcon
                   variant="color"
                   className="mb-3 inline-block w-12"

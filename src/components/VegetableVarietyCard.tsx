@@ -24,7 +24,7 @@ export default function VegetableVarietyCard({
   if (!variety.names || variety.names.length === 0) return null
 
   return (
-    <div className="flex-[1_0_min(15rem,95vw)] @container lg:flex-[1_0_min(25rem,95vw)]">
+    <div className="@container flex-[1_0_min(15rem,95vw)] lg:flex-[1_0_min(25rem,95vw)]">
       <div className="flex flex-col gap-5 @sm:flex-row @sm:items-center">
         {variety.photos.length > 0 ? (
           <CardWithPhotoContents variety={variety} />
@@ -109,7 +109,7 @@ function CardWithPhotoContents({
                     image={photo}
                     maxWidth={250}
                     className={
-                      'block h-full w-full select-none object-cover !transition-all group-hover:scale-105'
+                      'block h-full w-full object-cover transition-all! select-none group-hover:scale-105'
                     }
                     draggable={false}
                   />
@@ -118,7 +118,7 @@ function CardWithPhotoContents({
             })}
           </CarouselContent>
           <div
-            className="absolute inset-x-0 bottom-0 z-20 flex justify-center gap-1.5 pb-2 pt-3"
+            className="absolute inset-x-0 bottom-0 z-20 flex justify-center gap-1.5 pt-3 pb-2"
             style={{
               background:
                 'linear-gradient(180deg, rgba(64, 121, 75, 0) 0%, rgba(45, 78, 52) 105%)',
@@ -137,8 +137,8 @@ function CardWithPhotoContents({
               />
             ))}
           </div>
-          <CarouselPrevious className="absolute left-2 top-1/2 z-30 -translate-y-1/2 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100" />
-          <CarouselNext className="absolute right-2 top-1/2 z-30 -translate-y-1/2 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100" />
+          <CarouselPrevious className="absolute top-1/2 left-2 z-30 -translate-y-1/2 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100" />
+          <CarouselNext className="absolute top-1/2 right-2 z-30 -translate-y-1/2 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100" />
         </Carousel>
       )}
       {photos.length === 1 && (
@@ -148,7 +148,7 @@ function CardWithPhotoContents({
             image={photos[0]}
             maxWidth={250}
             className={
-              'block h-full w-full object-cover !transition-all group-hover:scale-105'
+              'block h-full w-full object-cover transition-all! group-hover:scale-105'
             }
             draggable={false}
           />

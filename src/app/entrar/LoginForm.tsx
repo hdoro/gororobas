@@ -78,7 +78,7 @@ export default function LoginForm({
   }
 
   return (
-    <main className="flex flex-col gap-8 px-pageX py-pageY lg:flex-row lg:gap-16 lg:py-20">
+    <main className="px-pageX py-pageY flex flex-col gap-8 lg:flex-row lg:gap-16 lg:py-20">
       <form action={formAction} className="-order-1 max-w-sm flex-1 space-y-1">
         <Text as="h1" level="h2" className="pb-4">
           Entrar ou criar conta
@@ -96,11 +96,11 @@ export default function LoginForm({
           </a>
         </Button>
 
-        <div className="relative flex justify-center text-center text-muted-foreground">
+        <div className="text-muted-foreground relative flex justify-center text-center">
           <div className="absolute inset-x-0 inset-y-1/2 h-[1px] bg-current opacity-30" />
           <Text
             level="sm"
-            className="relative z-10 inline-block bg-background p-3"
+            className="bg-background relative z-10 inline-block p-3"
           >
             ou via email
           </Text>

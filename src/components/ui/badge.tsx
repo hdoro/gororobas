@@ -2,7 +2,7 @@ import { cn } from '@/utils/cn'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 const badgeVariants = tv({
-  base: 'inline-flex items-center rounded-full border px-3 py-2 text-sm leading-none whitespace-nowrap text-ellipsis font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  base: 'inline-flex items-center rounded-full border px-3 py-2 text-sm leading-none whitespace-nowrap text-ellipsis font-medium transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2',
   variants: {
     variant: {
       default: 'border-transparent bg-primary-100 text-primary-800',

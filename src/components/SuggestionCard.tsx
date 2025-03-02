@@ -16,7 +16,7 @@ export default function SuggestionCard({
     <Link
       key={suggestion.id}
       href={paths.editSuggestion(suggestion.id)}
-      className="group block space-y-2 rounded-md border bg-background-card p-3 transition-all hover:border-primary-400 hover:bg-white/80"
+      className="group bg-background-card hover:border-primary-400 block space-y-2 rounded-md border p-3 transition-all hover:bg-white/80"
     >
       {suggestion.target_object?.name && (
         <div className="flex items-center gap-2">

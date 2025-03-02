@@ -30,7 +30,7 @@ export default function NumberInput<
       </FormControl>
       {value && format !== 'none' ? (
         <div
-          className="pointer-events-none absolute inset-y-0 flex select-none items-center overflow-hidden text-ellipsis whitespace-nowrap pl-3 text-sm font-normal text-stone-600"
+          className="pointer-events-none absolute inset-y-0 flex items-center overflow-hidden pl-3 text-sm font-normal text-ellipsis whitespace-nowrap text-stone-600 select-none"
           style={{
             left: `calc(${value?.toString().length || 1} * 0.85ch)`,
             right: 0,

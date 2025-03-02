@@ -38,8 +38,8 @@ export default async function NotePage({ note }: { note: NotePageData }) {
 
   return (
     <main className="py-10">
-      <div className="flex flex-col items-start gap-10 px-pageX lg:flex-row lg:justify-center xl:gap-20">
-        <Card className="max-w-full space-y-3 lg:max-w-2xl lg:flex-[5]">
+      <div className="px-pageX flex flex-col items-start gap-10 lg:flex-row lg:justify-center xl:gap-20">
+        <Card className="max-w-full space-y-3 lg:max-w-2xl lg:flex-5">
           <CardHeader className={'flex flex-col-reverse gap-2'}>
             <div className={textVariants({ level: 'h1' })}>
               <TipTapRenderer content={titleAsHeading} />
@@ -109,7 +109,7 @@ export default async function NotePage({ note }: { note: NotePageData }) {
           <SectionTitle Icon={SeedlingIcon}>Vegetais citados</SectionTitle>
           <VegetablesGrid
             vegetables={note.related_to_vegetables}
-            className="mt-4 px-pageX"
+            className="px-pageX mt-4"
           />
         </section>
       )}

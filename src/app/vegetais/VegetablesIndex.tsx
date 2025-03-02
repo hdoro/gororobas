@@ -138,7 +138,7 @@ export default function VegetablesIndex() {
         </Text>
       </div>
       <FormProvider {...form}>
-        <form className="sticky top-0 z-30 mt-8 bg-background py-2">
+        <form className="bg-background sticky top-0 z-30 mt-8 py-2">
           <Dialog>
             <div className="xl:flex xl:items-center xl:justify-between">
               <div className="flex gap-2">
@@ -355,7 +355,7 @@ export default function VegetablesIndex() {
       <div className="relative mt-2 space-y-6">
         <VegetablesGridWrapper>
           {isFetching && !isFetchingNextPage && (
-            <div className="absolute inset-0 flex items-center justify-center gap-3 bg-background bg-opacity-50">
+            <div className="bg-background bg-opacity-50 absolute inset-0 flex items-center justify-center gap-3">
               <Carrot className="h-6 w-6 animate-spin" />
               Carregando...
             </div>

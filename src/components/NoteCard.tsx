@@ -36,10 +36,10 @@ export default function NoteCard({
     <RootElement
       id={`nota-${note.handle}`}
       className={cn(
-        'note-card--root group relative aspect-[1.15] h-auto text-left @container',
+        'note-card--root group @container relative aspect-[1.15] h-auto text-left',
         variant === 'page'
           ? 'w-[var(--card-width)] flex-[0_0_var(--card-width)]'
-          : 'min-w-[calc(var(--card-width)_*_0.75)] max-w-[var(--card-width)] flex-1',
+          : 'max-w-[var(--card-width)] min-w-[calc(var(--card-width)_*_0.75)] flex-1',
       )}
       type={note.body ? 'button' : undefined}
       onClick={note.body ? () => setFlipped(!flipped) : undefined}
@@ -54,7 +54,7 @@ export default function NoteCard({
       }}
     >
       <div className="note-card" data-flipped={flipped}>
-        <div className="note-card--front relative flex flex-col rounded-md border-2 border-yellow-200 bg-yellow-100 px-3 py-2 shadow-sm">
+        <div className="note-card--front relative flex flex-col rounded-md border-2 border-yellow-200 bg-yellow-100 px-3 py-2 shadow-xs">
           <div className="note-card--content order-1 flex-1 leading-relaxed text-yellow-950 opacity-90 @xs:text-xl">
             <DefaultTipTapRenderer content={title as any} />
           </div>
@@ -105,7 +105,7 @@ export default function NoteCard({
                     e.stopPropagation()
                   }}
                 >
-                  <span className="select-none opacity-0 transition-opacity group-hover:opacity-100">
+                  <span className="opacity-0 transition-opacity select-none group-hover:opacity-100">
                     Compartilhar
                   </span>
                   <Share2Icon className="stroke-current" />
@@ -115,10 +115,10 @@ export default function NoteCard({
           )}
         </div>
         {note.body ? (
-          <div className="note-card--back flex flex-col rounded-md border-2 border-amber-200 bg-amber-100 pb-2 shadow-sm">
+          <div className="note-card--back flex flex-col rounded-md border-2 border-amber-200 bg-amber-100 pb-2 shadow-xs">
             <pre
               aria-hidden
-              className="w-full flex-1 overflow-x-hidden text-ellipsis whitespace-nowrap rounded-t-md bg-amber-300 bg-opacity-50 px-3 py-2 text-amber-800"
+              className="bg-opacity-50 w-full flex-1 overflow-x-hidden rounded-t-md bg-amber-300 px-3 py-2 text-ellipsis whitespace-nowrap text-amber-800"
             >
               {truncate(tiptapJSONtoPlainText(note.title as any) || '', 60)}
             </pre>

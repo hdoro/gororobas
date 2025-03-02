@@ -16,7 +16,7 @@ export function Mention(props: RichTextMentionAttributesInForm['data']) {
     return (
       <span
         className={cn(
-          'relative px-1 font-medium text-primary-700',
+          'text-primary-700 relative px-1 font-medium',
           isLoading && 'animate-pulse',
         )}
       >
@@ -39,7 +39,7 @@ export function Mention(props: RichTextMentionAttributesInForm['data']) {
   return (
     <Link
       href={href}
-      className="px-1 font-medium text-primary-700 underline"
+      className="text-primary-700 px-1 font-medium underline"
       onClick={(e) => {
         // Prevent an eventual parent NoteCard from flipping
         e.stopPropagation()

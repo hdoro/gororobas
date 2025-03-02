@@ -116,12 +116,12 @@ function ImageField<
         hideLabel
         name={rootField.name}
         render={({ field }) => (
-          <div className="relative flex aspect-square w-[12.5rem] flex-[0_0_max-content] items-center justify-center rounded-lg border-2 border-border bg-card">
+          <div className="border-border bg-card relative flex aspect-square w-[12.5rem] flex-[0_0_max-content] items-center justify-center rounded-lg border-2">
             {!field.disabled && (
               <FormControl>
                 <Button
                   onClick={clearValue}
-                  className="absolute right-2 top-2 rounded-full"
+                  className="absolute top-2 right-2 rounded-full"
                   aria-label="Remover imagem"
                   tone="destructive"
                   mode="outline"

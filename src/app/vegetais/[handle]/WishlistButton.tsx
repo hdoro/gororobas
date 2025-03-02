@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogBody,
   DialogContent,
+  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
 import {
@@ -73,7 +74,9 @@ export default function WishlistButton(
         </DialogTrigger>
         <DialogContent className="max-w-lg">
           <DialogBody className="space-y-2 pt-10">
-            <Text level="h2">Crie uma conta no Gororobas</Text>
+            <DialogTitle asChild>
+              <Text level="h2">Crie uma conta no Gororobas</Text>
+            </DialogTitle>
             <Text level="p">
               Para salvar sua listinha de plantas você precisa ter uma conta. Só
               assim podemos lembrar suas escolhas sem embolar quem escolheu o

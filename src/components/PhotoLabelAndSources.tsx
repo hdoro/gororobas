@@ -26,7 +26,7 @@ export default function PhotoLabelAndSources({
         </div>
       )}
       {photo.sources && photo.sources.length > 0 && (
-        <div className="max-w-full overflow-hidden text-ellipsis text-[0.75em] font-normal leading-tight text-muted-foreground">
+        <div className="text-muted-foreground max-w-full overflow-hidden text-[0.75em] leading-tight font-normal text-ellipsis">
           Por{' '}
           {(photo.sources || []).map((source) => {
             if (source.type === 'GOROROBAS') {

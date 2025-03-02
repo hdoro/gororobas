@@ -69,7 +69,7 @@ const TextRender: NodeHandler = (props: NodeProps) => {
         style={style}
         target="_blank"
         rel="noopener noreferrer"
-        className="font-medium text-primary-700 underline"
+        className="text-primary-700 font-medium underline"
       >
         {payload}
       </Comp>

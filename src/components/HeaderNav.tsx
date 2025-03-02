@@ -14,7 +14,7 @@ export default async function HeaderNav({ signedIn }: { signedIn: boolean }) {
     <>
       <nav
         aria-label="Navegação do cabeçalho"
-        className="flex w-full flex-wrap items-center justify-between gap-3 px-pageX pt-4"
+        className="px-pageX flex w-full flex-wrap items-center justify-between gap-3 pt-4"
       >
         <Link href={paths.home()} rel="home" title="Página inicial">
           <GororobasLogo className="h-[1em] md:h-[1.5em]" />
@@ -25,7 +25,7 @@ export default async function HeaderNav({ signedIn }: { signedIn: boolean }) {
             <Link
               key={link.href}
               href={link.href}
-              className="hidden text-lg text-primary-800 md:block"
+              className="text-primary-800 hidden text-lg md:block"
             >
               {link.text}
             </Link>

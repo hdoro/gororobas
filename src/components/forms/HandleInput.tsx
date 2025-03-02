@@ -17,10 +17,10 @@ export default function HandleInput<
   path: string
 }) {
   return (
-    <div className="flex @container">
+    <div className="@container flex">
       <div
         className={
-          'hidden h-10 flex-[0_0_max-content] items-center rounded-l-md rounded-r-none border bg-foreground/5 px-3 py-2 text-sm @xs:block'
+          'bg-foreground/5 hidden h-10 flex-[0_0_max-content] items-center rounded-l-md rounded-r-none border px-3 py-2 text-sm @xs:block'
         }
       >
         gororobas.com/{path}/

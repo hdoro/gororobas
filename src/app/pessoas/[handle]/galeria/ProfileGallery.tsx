@@ -52,7 +52,7 @@ export default function ProfileGallery({
         </SectionTitle>
 
         {images && images.length > 0 ? (
-          <div className="mt-6 grid grid-cols-2 gap-x-2 gap-y-2 px-pageX lg:grid-cols-3">
+          <div className="px-pageX mt-6 grid grid-cols-2 gap-x-2 gap-y-2 lg:grid-cols-3">
             {/* @TODO: infinite scrolling ao invés de puxar tudo */}
             {images.map((image, index) => (
               <ImageInGallery key={image.id} image={image} index={index} />
@@ -62,7 +62,7 @@ export default function ProfileGallery({
           <Text
             level="h3"
             as="p"
-            className="mt-3 px-pageX text-muted-foreground"
+            className="px-pageX text-muted-foreground mt-3"
           >
             {is_owner
               ? 'Você ainda não fez nenhuma contribuição'

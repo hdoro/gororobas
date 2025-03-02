@@ -34,7 +34,7 @@ export default function CheckboxesInput<
               mode: 'outline',
               size: 'xs',
               className:
-                'relative focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2',
+                'focus-within:ring-ring relative focus-within:ring-2 focus-within:ring-offset-2',
             })}
           >
             <div className={isChecked ? '' : 'sr-only'}>
@@ -66,7 +66,7 @@ export default function CheckboxesInput<
                 {option.label}
               </FormLabel>
               {option.description && (
-                <FormDescription className="text-sm text-muted-foreground">
+                <FormDescription className="text-muted-foreground text-sm">
                   {option.description}
                 </FormDescription>
               )}

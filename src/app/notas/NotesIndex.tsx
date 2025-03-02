@@ -91,7 +91,7 @@ export default function NotesIndex() {
       !data.pages[0].notes ||
       data.pages[0].notes.length === 0)
   return (
-    <main className="space-y-6 px-pageX py-10">
+    <main className="px-pageX space-y-6 py-10">
       <div className="space-y-1">
         <Text
           level="h1"
@@ -141,7 +141,7 @@ export default function NotesIndex() {
       </FormProvider>
       <NotesGridWrapper className="hide-scrollbar relative justify-start overflow-x-hidden py-4">
         {isFetching && !isFetchingNextPage && (
-          <div className="absolute inset-0 flex items-center justify-center gap-3 bg-background bg-opacity-50">
+          <div className="bg-background bg-opacity-50 absolute inset-0 flex items-center justify-center gap-3">
             <Carrot className="h-6 w-6 animate-spin" />
             Carregando...
           </div>

@@ -30,7 +30,7 @@ function ActionBar(props: PropsWithChildren) {
     <div
       className={cn(
         position.className,
-        'flex items-center justify-between gap-4 border-t border-t-primary-100 bg-background-card px-pageX py-4',
+        'border-t-primary-100 bg-background-card px-pageX flex items-center justify-between gap-4 border-t py-4',
         'md:relative md:flex-col-reverse md:items-start md:border-t-0 md:bg-transparent md:p-0',
       )}
       style={position.styles}
@@ -139,9 +139,9 @@ export default function NoteForm(props: {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           aria-disabled={form.formState.disabled}
-          className="flex h-full flex-col gap-6 md:flex-row md:items-start md:px-pageX"
+          className="md:px-pageX flex h-full flex-col gap-6 md:flex-row md:items-start"
         >
-          <div className="flex max-w-3xl flex-[5] flex-col gap-6 px-pageX pb-24 md:rounded-lg md:border md:bg-card md:p-6 md:pb-6 md:text-card-foreground md:shadow-sm">
+          <div className="px-pageX md:bg-card md:text-card-foreground flex max-w-3xl flex-5 flex-col gap-6 pb-24 md:rounded-lg md:border md:p-6 md:pb-6 md:shadow-xs">
             <Field
               form={form}
               name="title"

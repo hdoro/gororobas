@@ -44,7 +44,7 @@ export default async function WishlistedBy(props: { vegetable_id: string }) {
   return (
     <>
       {plantedBy.length > 0 && (
-        <div className="-mr-[var(--page-padding-x)] mt-10 space-y-3">
+        <div className="mt-10 -mr-[var(--page-padding-x)] space-y-3">
           <Text as="h2" level="h3" className="flex gap-1">
             <SeedlingIcon variant="color" className="w-[1.5em]" />
             Quem já planta
@@ -53,7 +53,7 @@ export default async function WishlistedBy(props: { vegetable_id: string }) {
         </div>
       )}
       {desiredBy.length > 0 && (
-        <div className="-mr-[var(--page-padding-x)] mt-10 space-y-3">
+        <div className="mt-10 -mr-[var(--page-padding-x)] space-y-3">
           <Text as="h2" level="h3" className="flex gap-1">
             <SeedlingIcon variant="color" className="w-[1.5em]" />
             Quem quer plantar

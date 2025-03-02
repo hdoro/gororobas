@@ -142,7 +142,7 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn('text-sm text-muted-foreground', className)}
+      className={cn('text-muted-foreground text-sm', className)}
       {...props}
     />
   )
@@ -177,7 +177,7 @@ const FormMessage = React.forwardRef<
       id={formMessageId}
       weight="normal"
       level="sm"
-      className={cn('mt-1 flex items-center gap-1 text-destructive', className)}
+      className={cn('text-destructive mt-1 flex items-center gap-1', className)}
       {...props}
     >
       <CircleAlertIcon className="size-[1.25em] flex-[0_0_1.25em]" />

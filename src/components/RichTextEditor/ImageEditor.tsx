@@ -111,7 +111,7 @@ export default function ImageEditor({ editor, editorId, send }: EditorUIProps) {
             aria-disabled={form.formState.disabled}
           >
             {form.formState.isSubmitting && (
-              <Text className="absolute inset-0 z-50 flex items-center justify-center gap-3 bg-white text-muted-foreground">
+              <Text className="text-muted-foreground absolute inset-0 z-50 flex items-center justify-center gap-3 bg-white">
                 <Carrot className="h-5 w-5 animate-spin" />
                 <span className="animate-pulse">Subindo imagem...</span>
               </Text>

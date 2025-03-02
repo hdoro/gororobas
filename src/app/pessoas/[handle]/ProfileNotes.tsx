@@ -38,7 +38,7 @@ export default function ProfileNotes({
       {notes && notes.length > 0 ? (
         <NotesGrid notes={notes} />
       ) : (
-        <Text level="h3" as="p" className="mt-3 px-pageX text-muted-foreground">
+        <Text level="h3" as="p" className="px-pageX text-muted-foreground mt-3">
           {is_owner
             ? 'Compartilhe suas experiências e aprendizados com a comunidade'
             : `${name} ainda não compartilhou nenhuma notinha`}

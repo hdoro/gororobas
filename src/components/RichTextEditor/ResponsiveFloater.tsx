@@ -76,7 +76,7 @@ function DesktopFloater(props: Props) {
     <div
       ref={refs.setFloating}
       className={cn(
-        'z-10 rounded-md border bg-white p-3 shadow-sm',
+        'z-10 rounded-md border bg-white p-3 shadow-xs',
         props.className,
       )}
       style={floatingStyles}

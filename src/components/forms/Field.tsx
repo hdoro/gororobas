@@ -35,7 +35,7 @@ export function ArrayField<
       }
     : {
         root: 'relative',
-        error: 'absolute right-0 top-0 !mt-0.5 text-sm',
+        error: 'absolute right-0 top-0 mt-0.5! text-sm',
       }
   return <Field classNames={classNames} {...props} />
 }

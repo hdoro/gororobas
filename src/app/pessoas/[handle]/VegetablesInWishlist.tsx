@@ -24,23 +24,23 @@ function VegetableBadge({
       <TooltipTrigger asChild>
         <Link
           href={paths.vegetable(vegetable.handle)}
-          className="group relative inline-block size-10 flex-[0_0_2.5rem] rounded-full outline-none ring-primary-300 transition-transform hover:z-10 focus-visible:z-10 focus-visible:ring"
+          className="group ring-primary-300 relative inline-block size-10 flex-[0_0_2.5rem] rounded-full outline-hidden transition-transform hover:z-10 focus-visible:z-10 focus-visible:ring-3"
         >
           {vegetable.photos[0] ? (
             <SanityImage
               image={vegetable.photos[0]}
               maxWidth={40}
-              className="block size-10 rounded-full border-2 border-background object-cover transition-transform group-hover:scale-110 group-focus-visible:scale-110"
+              className="border-background block size-10 rounded-full border-2 object-cover transition-transform group-hover:scale-110 group-focus-visible:scale-110"
             />
           ) : (
-            <div className="flex size-10 items-center justify-center overflow-hidden rounded-full border-2 border-background bg-stone-200 transition-transform group-hover:scale-110 group-focus-visible:scale-110">
+            <div className="border-background flex size-10 items-center justify-center overflow-hidden rounded-full border-2 bg-stone-200 transition-transform group-hover:scale-110 group-focus-visible:scale-110">
               <SeedlingIcon variant="monochrome" className="size-4" />
             </div>
           )}
         </Link>
       </TooltipTrigger>
       <TooltipContent
-        className="border bg-card"
+        className="bg-card border"
         side="bottom"
         sideOffset={8}
         align="start"
@@ -77,7 +77,7 @@ export function VegetablesInWishlist(props: {
           {props.count > props.list.length && (
             <Text
               level="sm"
-              className="inline-block pl-4 text-muted-foreground"
+              className="text-muted-foreground inline-block pl-4"
             >
               e {props.count - props.list.length} outros
             </Text>

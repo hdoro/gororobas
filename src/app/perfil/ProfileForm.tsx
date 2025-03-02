@@ -120,7 +120,7 @@ export default function ProfileForm({
   }
 
   return (
-    <main className="flex flex-wrap gap-8 px-pageX py-pageY">
+    <main className="px-pageX py-pageY flex flex-wrap gap-8">
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -128,13 +128,13 @@ export default function ProfileForm({
           aria-disabled={form.formState.disabled}
         >
           <Card>
-            <CardHeader className="flex !flex-row flex-wrap items-center justify-between">
+            <CardHeader className="flex flex-row! flex-wrap items-center justify-between">
               <CardTitle>Modifique seu perfil</CardTitle>
               <Button type="submit" disabled={form.formState.disabled}>
                 Salvar alterações
               </Button>
             </CardHeader>
-            <CardContent className="space-y-6 @container">
+            <CardContent className="@container space-y-6">
               <TwoColumnFields>
                 <Field
                   form={form}

@@ -30,13 +30,13 @@ export default async function PeopleIndexRoute() {
   }
 
   return (
-    <section className="mb-32 mt-12">
+    <section className="mt-12 mb-32">
       <SectionTitle Icon={RainbowIcon}>Quem se envolve</SectionTitle>
       <Text level="h3" className="px-pageX font-normal">
         Cultivando sabedoria e compartilhando experiências para agroecologizar o
         mundo ✨
       </Text>
-      <ProfilesGrid profiles={data} className="mt-8 px-pageX" />
+      <ProfilesGrid profiles={data} className="px-pageX mt-8" />
     </section>
   )
 }

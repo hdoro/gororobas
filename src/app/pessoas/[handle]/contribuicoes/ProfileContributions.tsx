@@ -22,10 +22,10 @@ export default function ProfileContributions({
       {contributions && contributions.length > 0 ? (
         <SuggestionsGrid
           suggestions={contributions}
-          className="mt-6 px-pageX"
+          className="px-pageX mt-6"
         />
       ) : (
-        <Text level="h3" as="p" className="mt-3 px-pageX text-muted-foreground">
+        <Text level="h3" as="p" className="px-pageX text-muted-foreground mt-3">
           {is_owner
             ? 'Você ainda não fez nenhuma contribuição'
             : `${name} ainda não fez nenhuma contribuição`}

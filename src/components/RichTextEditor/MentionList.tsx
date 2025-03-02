@@ -110,11 +110,11 @@ export default function MentionList({
       editor={editor}
       editorId={editorId}
       bottomOffset={bottomOffset}
-      className="max-h-[30dvh] overflow-y-auto overflow-x-hidden p-2"
+      className="max-h-[30dvh] overflow-x-hidden overflow-y-auto p-2"
     >
       <div ref={containerRef} className="space-y-5">
         {isLoading ? (
-          <Text className="flex h-full items-center justify-center gap-3 text-muted-foreground">
+          <Text className="text-muted-foreground flex h-full items-center justify-center gap-3">
             <Carrot className="h-5 w-5 animate-spin" />
             <span className="animate-pulse">Carregando menções...</span>
           </Text>
@@ -124,7 +124,7 @@ export default function MentionList({
 
             return (
               <div className="space-y-2" key={objectType}>
-                <Text level="sm" className="px-3 text-muted-foreground">
+                <Text level="sm" className="text-muted-foreground px-3">
                   {objectType === 'UserProfile' ? 'Pessoas' : 'Vegetais'}
                 </Text>
                 <div className="flex flex-col">
@@ -141,7 +141,7 @@ export default function MentionList({
                       onClick={() => selectItem(item.id)}
                       type="button"
                       size="sm"
-                      className="!justify-start"
+                      className="justify-start!"
                       data-id={item.id}
                     >
                       {item.image && (
@@ -160,7 +160,7 @@ export default function MentionList({
             )
           })
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
             Nenhuma pessoa ou vegetal encontrado
           </div>
         )}

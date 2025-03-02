@@ -32,7 +32,7 @@ export default function NotesGrid(props: { notes: NoteCardData[] }) {
   if (!props.notes || props.notes.length === 0) return null
 
   return (
-    <NotesGridWrapper className="overflow-hidden px-pageX">
+    <NotesGridWrapper className="px-pageX overflow-hidden">
       {props.notes.map((note) => (
         <NoteCard
           key={note.handle}

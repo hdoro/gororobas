@@ -32,7 +32,7 @@ export default function RadioGroupInput<
             <div className="space-y-1.5 leading-none">
               <FormLabel className="font-normal">{option.label}</FormLabel>
               {option.description && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {option.description}
                 </p>
               )}

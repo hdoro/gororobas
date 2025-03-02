@@ -26,16 +26,16 @@ export default async function HomePage(data: Partial<HomePageData>) {
 
   return (
     <>
-      <section className="flex flex-col items-center gap-[0.33em] px-2 pb-12 pt-8 text-center text-4xl md:pt-16 md:text-5xl lg:text-6xl xl:pt-24">
-        <h1 className="max-w-xl font-normal leading-none text-primary-800">
+      <section className="flex flex-col items-center gap-[0.33em] px-2 pt-8 pb-12 text-center text-4xl md:pt-16 md:text-5xl lg:text-6xl xl:pt-24">
+        <h1 className="text-primary-800 max-w-xl leading-none font-normal">
           Por terra, território,
           <br /> e{' '}
-          <strong className="font-normal text-secondary-400">gororobas</strong>
+          <strong className="text-secondary-400 font-normal">gororobas</strong>
         </h1>
         <Text
           level="h1"
           as="p"
-          className="max-w-3xl !text-[0.5em] font-normal leading-snug text-primary-800 md:opacity-90"
+          className="text-primary-800 max-w-3xl text-[0.5em]! leading-snug font-normal md:opacity-90"
         >
           Enciclopédia colaborativa de conhecimento em agroecologia sobre mais
           de 400 vegetais
@@ -81,7 +81,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
       )}
       {notes && notes.length > 0 && (
         <section className="mt-36 flex flex-col xl:flex-row xl:items-start xl:gap-2.5">
-          <div className="box-content flex flex-col items-start gap-1 pl-pageX pr-pageX lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pl-[calc(var(--page-padding-x)_-_2.625rem)] xl:pr-0">
+          <div className="pl-pageX pr-pageX box-content flex flex-col items-start gap-1 lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pr-0 xl:pl-[calc(var(--page-padding-x)_-_2.625rem)]">
             <NoteIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
             <div>
               <Text level="h2" as="h2">
@@ -109,7 +109,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
       )}
 
       <section className="mt-36 flex flex-col gap-4 xl:flex-row xl:items-start xl:gap-2.5">
-        <div className="box-content flex flex-col items-start gap-1 pl-pageX pr-pageX lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pl-[calc(var(--page-padding-x)_-_2.625rem)] xl:pr-0">
+        <div className="pl-pageX pr-pageX box-content flex flex-col items-start gap-1 lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pr-0 xl:pl-[calc(var(--page-padding-x)_-_2.625rem)]">
           <BulbIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
           <div>
             <Text level="h2" as="h2">
@@ -145,7 +145,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
           <SectionTitle Icon={HistoryIcon}>Contribuições recentes</SectionTitle>
           <SuggestionsGrid
             suggestions={data.recent_contributions}
-            className="mt-6 px-pageX"
+            className="px-pageX mt-6"
           />
         </section>
       )}
@@ -157,7 +157,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
             Cultivando sabedoria e compartilhando experiências para
             agroecologizar o mundo ✨
           </Text>
-          <ProfilesGrid profiles={profiles} className="mt-8 px-pageX" />
+          <ProfilesGrid profiles={profiles} className="px-pageX mt-8" />
         </section>
       )}
 

@@ -68,7 +68,7 @@ export function EditTipDialog({
           title="Editar dica"
           size="icon"
           tone="neutral"
-          className="absolute right-1.5 top-1.5 text-muted-foreground"
+          className="text-muted-foreground absolute top-1.5 right-1.5"
         >
           <Edit2Icon className="w-[1.25em]" />
         </Button>
@@ -90,7 +90,7 @@ export function EditTipDialog({
           initialValue={initialValue}
           succesState={
             <div>
-              <section className="mx-auto box-content px-pageX py-pageY text-center md:max-w-lg">
+              <section className="px-pageX py-pageY mx-auto box-content text-center md:max-w-lg">
                 <SparklesIcon
                   variant="color"
                   className="mb-3 inline-block w-12"

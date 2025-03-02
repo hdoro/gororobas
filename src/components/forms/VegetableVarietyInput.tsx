@@ -49,13 +49,13 @@ export default function VegetableVarietyInput<
   return (
     <Dialog>
       <DialogTrigger
-        className="block h-full w-full rounded-md border bg-background p-3 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        className="bg-background ring-offset-background focus-visible:ring-ring block h-full w-full rounded-md border p-3 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden"
         data-array-item-field-name={rootField.name}
       >
         <div className="flex items-center gap-3">
           <div
             className={cn(
-              'h-[6.25rem] w-[6.25rem] flex-[0_0_6.25rem] overflow-hidden rounded-lg bg-card-foreground/5 text-primary-700',
+              'bg-card-foreground/5 text-primary-700 h-[6.25rem] w-[6.25rem] flex-[0_0_6.25rem] overflow-hidden rounded-lg',
               validPhoto ? '' : 'flex items-center justify-center',
             )}
           >
