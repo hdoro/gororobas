@@ -1,11 +1,11 @@
 import { insertNotesMutation } from '@/mutations'
 import { NoteDataArray, type NotesForDB } from '@/schemas'
 import { buildTraceAndMetrics } from '@/services/runtime'
-import { UnknownEdgeDBError } from '@/types/errors'
+import { UnknownGelDBError } from '@/types/errors'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { getStandardHandle } from '@/utils/urls'
-import type { Client } from 'edgedb'
 import { Effect, Schema, pipe } from 'effect'
+import type { Client } from 'gel'
 
 export function createNotes(input: NotesForDB, client: Client) {
   return pipe(
@@ -15,7 +15,7 @@ export function createNotes(input: NotesForDB, client: Client) {
         try: () => getTransaction(notes, client),
         catch: (error) => {
           console.log('Failed creating notes', error)
-          return new UnknownEdgeDBError(error)
+          return new UnknownGelDBError(error)
         },
       }),
     ),

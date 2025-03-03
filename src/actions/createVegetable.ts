@@ -9,7 +9,7 @@ import {
   VegetableWithUploadedImages,
 } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { InvalidInputError, UnknownEdgeDBError } from '@/types/errors'
+import { InvalidInputError, UnknownGelDBError } from '@/types/errors'
 import {
   photosToReferences,
   referencesInFormToParam,
@@ -18,8 +18,8 @@ import {
   varietiesToParam,
 } from '@/utils/mutation.utils'
 import { paths } from '@/utils/urls'
-import type { Client } from 'edgedb'
 import { Effect, Schema, pipe } from 'effect'
+import type { Client } from 'gel'
 import { formatVegetableFriendForDB } from './formatVegetableFriendForDB'
 
 export function createVegetable(
@@ -39,7 +39,7 @@ export function createVegetable(
           try: () => getTransaction(input, client),
           catch: (error) => {
             console.log('Failed creating vegetable', error)
-            return new UnknownEdgeDBError(error)
+            return new UnknownGelDBError(error)
           },
         }),
         Effect.tap(Effect.logInfo),

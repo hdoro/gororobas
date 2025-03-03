@@ -1,4 +1,4 @@
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { editProfileQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { getAuthRedirect, paths } from '@/utils/urls'

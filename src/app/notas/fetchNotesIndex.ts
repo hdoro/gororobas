@@ -1,4 +1,4 @@
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { notesIndexQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { NextSearchParams } from '@/types'

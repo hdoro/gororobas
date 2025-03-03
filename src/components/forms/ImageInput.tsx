@@ -103,7 +103,7 @@ function ImageField<
     rootField.onChange({
       label: imageData?.label,
       sources: imageData?.sources,
-      // As we're changing images, we need to generate a new ID for EdgeDB
+      // As we're changing images, we need to generate a new ID for GelDB
       id: generateId(),
     })
   }

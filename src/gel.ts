@@ -1,5 +1,5 @@
-import createAuth from '@edgedb/auth-nextjs/app'
-import { createClient } from 'edgedb'
+import createAuth from '@gel/auth-nextjs/app'
+import { createClient } from 'gel'
 import { BASE_URL } from './utils/config'
 
 export const client = createClient({

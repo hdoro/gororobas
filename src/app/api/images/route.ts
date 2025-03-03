@@ -1,4 +1,4 @@
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { FailedUploadingImageError } from '@/types/errors'
 import { BASE_URL } from '@/utils/config'

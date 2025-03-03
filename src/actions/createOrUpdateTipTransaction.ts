@@ -1,7 +1,7 @@
 import { upsertSourcesMutation, upsertVegetableTipsMutation } from '@/mutations'
 import type { VegetableTipForDB } from '@/schemas'
 import { sourcesToParam, tipsToParam } from '@/utils/mutation.utils'
-import type { Client } from 'edgedb'
+import type { Client } from 'gel'
 
 export function createOrUpdateTipTransaction(
   { tip }: { tip: VegetableTipForDB },

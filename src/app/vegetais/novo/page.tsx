@@ -1,4 +1,4 @@
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { paths } from '@/utils/urls'
 import { redirect } from 'next/navigation'
 import NewVegetableForm from './NewVegetableForm'

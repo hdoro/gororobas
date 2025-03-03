@@ -10,7 +10,7 @@ import type {
   VegetableLifeCycle,
   VegetableUsage,
   VegetableWishlistStatus,
-} from '@/edgedb.interfaces'
+} from '@/gel.interfaces'
 import type { VegetableData } from '@/schemas'
 
 export const STRATUM_TO_LABEL = {

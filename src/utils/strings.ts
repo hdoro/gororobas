@@ -1,4 +1,4 @@
-import type { Gender } from '@/edgedb.interfaces'
+import type { Gender } from '@/gel.interfaces'
 
 /**
  * Limits a string to a certain length for UI or SEO purposes.

@@ -1,4 +1,4 @@
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { EmailNotVerifiedError, SigninFailedError } from '@/types/errors'
 import { paths } from '@/utils/urls'
@@ -42,7 +42,11 @@ export const { GET, POST } = auth.createAuthRouteHandlers({
 
           return yield* createUserProfile(false, name).pipe(
             Effect.map(
-              () => ({ success: true, redirect: paths.editProfile() }) as const,
+              () =>
+                ({
+                  success: true,
+                  redirect: paths.editProfile(),
+                }) as const,
             ),
           )
         }
@@ -78,7 +82,11 @@ export const { GET, POST } = auth.createAuthRouteHandlers({
         if (props.isSignUp) {
           return yield* createUserProfile().pipe(
             Effect.map(
-              () => ({ success: true, redirect: paths.editProfile() }) as const,
+              () =>
+                ({
+                  success: true,
+                  redirect: paths.editProfile(),
+                }) as const,
             ),
           )
         }

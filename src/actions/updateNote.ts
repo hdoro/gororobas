@@ -1,9 +1,9 @@
 import { updateNotesMutation } from '@/mutations'
 import { NoteData, type NoteInForm } from '@/schemas'
 import { buildTraceAndMetrics } from '@/services/runtime'
-import { UnknownEdgeDBError } from '@/types/errors'
-import type { Client } from 'edgedb'
+import { UnknownGelDBError } from '@/types/errors'
 import { Effect, Schema, pipe } from 'effect'
+import type { Client } from 'gel'
 
 export function updateNote(
   input: {
@@ -29,7 +29,7 @@ export function updateNote(
           }),
         catch: (error) => {
           console.log('Failed creating notes', error)
-          return new UnknownEdgeDBError(error)
+          return new UnknownGelDBError(error)
         },
       }),
     ),

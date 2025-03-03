@@ -1,5 +1,5 @@
 import type { NextSearchParams } from '@/types'
-import type { BuiltinOAuthProviderNames } from '@edgedb/auth-core'
+import type { BuiltinOAuthProviderNames } from '@gel/auth-core'
 import type { ReadonlyURLSearchParams } from 'next/navigation'
 import { BASE_URL, PRODUCTION_URL } from './config'
 import { slugify, truncate } from './strings'

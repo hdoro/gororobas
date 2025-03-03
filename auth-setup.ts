@@ -1,5 +1,5 @@
 import { APP_NAME } from '@/utils/config'
-import { createClient } from 'edgedb'
+import { createClient } from 'gel'
 import crypto from 'node:crypto'
 import process from 'node:process'
 

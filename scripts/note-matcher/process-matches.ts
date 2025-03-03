@@ -1,4 +1,4 @@
-import type { Note } from '@/edgedb.interfaces'
+import type { Note } from '@/gel.interfaces'
 import {
   insertVegetableMutation,
   relate_note_to_vegetable_mutation,

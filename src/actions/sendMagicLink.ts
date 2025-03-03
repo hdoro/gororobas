@@ -2,7 +2,7 @@
 
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
-import { magicLinkSignIn, magicLinkSignUp } from './edgedbAuthActions'
+import { magicLinkSignIn, magicLinkSignUp } from './gelAuthActions'
 
 export type SendMagicLinkState = {
   status: 'idle' | 'loading' | 'success' | 'error'

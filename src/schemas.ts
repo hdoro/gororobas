@@ -30,12 +30,12 @@ import {
 import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
 import type { JSONContent } from '@tiptap/react'
 import { Effect, ParseResult, Schema as S } from 'effect'
-import type { NoteType } from './edgedb.interfaces'
+import type { NoteType } from './gel.interfaces'
 import { FailedUploadingImageError } from './types/errors'
 
 /**
- * Custom optional schema to handle both EdgeDB and client-side forms:
- * - EdgeDB returns `null` instead of `undefined` for missing values
+ * Custom optional schema to handle both GelDB and client-side forms:
+ * - GelDB returns `null` instead of `undefined` for missing values
  * - Client-side forms return `undefined` for missing values
  */
 const Optional = <A, I, R>(schema: S.Schema<A, I, R>) =>
@@ -131,7 +131,7 @@ export type NewImageData = typeof NewImageInForm.Type
 export const StoredImageInForm = ImageMetadata.pipe(
   S.extend(StoredImageDataInForm),
 )
-/** What gets stored as an `Image` Object in EdgeDB */
+/** What gets stored as an `Image` Object in GelDB */
 export const ImageObjectInDB = StoredImageInForm
 export type StoredImageInFormType = typeof StoredImageInForm.Type
 

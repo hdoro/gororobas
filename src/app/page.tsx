@@ -1,5 +1,5 @@
 import HomePage from '@/components/HomePage'
-import { client } from '@/edgedb'
+import { client } from '@/gel'
 import { homePageQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { shuffleArray } from '@/utils/arrays'

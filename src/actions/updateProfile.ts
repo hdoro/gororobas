@@ -1,6 +1,6 @@
 'use server'
 
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { updateProfileMutation, upsertSourcesMutation } from '@/mutations'
 import { ProfileDataWithImage } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
@@ -8,8 +8,8 @@ import {
   sourcesToParam,
   upsertImagesInTransaction,
 } from '@/utils/mutation.utils'
-import type { Client } from 'edgedb'
 import { Effect, Schema, pipe } from 'effect'
+import type { Client } from 'gel'
 
 export async function updateProfileAction(
   input: typeof ProfileDataWithImage.Type,

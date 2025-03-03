@@ -21,8 +21,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
-import { auth } from '@/edgedb'
-import type { EditSuggestionStatus } from '@/edgedb.interfaces'
+import { auth } from '@/gel'
+import type { EditSuggestionStatus } from '@/gel.interfaces'
 import { type VegetableCardData, vegetableCardsByIdQuery } from '@/queries'
 import {
   EDIT_SUGGESTION_STATUS_TO_LABEL,

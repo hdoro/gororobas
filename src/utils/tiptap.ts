@@ -33,9 +33,8 @@ export function isRenderableRichText(
   return (
     // Must be a TipTap object
     Schema.is(RichText)(json) &&
-    // Have content
-    !!json.content &&
     // Of at least one element
+    !!json.content &&
     (json.content.length > 1 ||
       // Which is either not a paragraph
       json.content[0].type !== 'paragraph' ||

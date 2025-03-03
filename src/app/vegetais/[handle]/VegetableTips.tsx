@@ -1,6 +1,6 @@
 import VegetableTipCard from '@/components/VegetableTipCard'
 import { Text } from '@/components/ui/text'
-import type { TipSubject } from '@/edgedb.interfaces'
+import type { TipSubject } from '@/gel.interfaces'
 import type { VegetablePageData, VegetableTipCardData } from '@/queries'
 import { cn } from '@/utils/cn'
 import { TIP_SUBJECT_TO_LABEL } from '@/utils/labels'

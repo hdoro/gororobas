@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
-import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
+import type { VegetableWishlistStatus } from '@/gel.interfaces'
 import { WISHLIST_STATUS_TO_LABEL } from '@/utils/labels'
 import { paths } from '@/utils/urls'
 import { ChevronDownIcon } from 'lucide-react'

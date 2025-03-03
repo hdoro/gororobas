@@ -1,0 +1,7 @@
+[instance]
+server-version = "5.8"
+
+[hooks]
+schema.update.after = """
+npm run generate:all
+"""

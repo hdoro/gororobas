@@ -7,9 +7,9 @@ export class FailedUploadingImageError {
   ) {}
 }
 
-// @TODO differentiate errors from EdgeDB
-export class UnknownEdgeDBError {
-  readonly _tag = 'EdgeDBError'
+// @TODO differentiate errors from GelDB
+export class UnknownGelDBError {
+  readonly _tag = 'GelDBError'
 
   constructor(
     readonly error: unknown,

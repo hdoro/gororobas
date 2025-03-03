@@ -1,4 +1,4 @@
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { noteEditingQuery } from '@/queries'
 import { NoteData, type RichTextValue } from '@/schemas'
 import { runQuery } from '@/services/runQuery'

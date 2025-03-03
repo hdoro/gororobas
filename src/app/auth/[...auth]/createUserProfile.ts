@@ -1,6 +1,6 @@
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { buildTraceAndMetrics } from '@/services/runtime'
-import { UnknownEdgeDBError } from '@/types/errors'
+import { UnknownGelDBError } from '@/types/errors'
 import { generateId } from '@/utils/ids'
 import { getStandardHandle } from '@/utils/urls'
 import { Effect } from 'effect'
@@ -67,7 +67,7 @@ export default function createUserProfile(
         ),
       catch: (error) => {
         console.error('Failed creating user profile', error)
-        return new UnknownEdgeDBError(error)
+        return new UnknownGelDBError(error)
       },
     }).pipe(
       ...buildTraceAndMetrics('create_user_profile', {

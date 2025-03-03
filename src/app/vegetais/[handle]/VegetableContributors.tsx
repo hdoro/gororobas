@@ -3,7 +3,7 @@ import SourcesGrid from '@/components/SourcesGrid'
 import SuggestionsGrid from '@/components/SuggestionsGrid'
 import SparklesIcon from '@/components/icons/SparklesIcon'
 import { Text } from '@/components/ui/text'
-import { client } from '@/edgedb'
+import { client } from '@/gel'
 import {
   type SourceCardData,
   type VegetablePageData,

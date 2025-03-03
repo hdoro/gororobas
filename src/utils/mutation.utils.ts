@@ -12,8 +12,8 @@ import type {
   VegetableTipForDB,
   VegetableVarietyForDBWithImages,
 } from '@/schemas'
-import type { Transaction } from 'edgedb/dist/transaction'
 import type { DeepMutable } from 'effect/Types'
+import type { Transaction } from 'gel/dist/transaction'
 import { generateId } from './ids'
 import { tiptapJSONtoPlainText } from './tiptap'
 import { getStandardHandle } from './urls'

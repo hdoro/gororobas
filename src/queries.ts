@@ -6,7 +6,7 @@ import type {
   Stratum,
   VegetableLifeCycle,
   VegetableUsage,
-} from './edgedb.interfaces'
+} from './gel.interfaces'
 import { NOTES_PER_PAGE, VEGETABLES_PER_PAGE } from './utils/config'
 
 const sourceForCard = e.shape(e.Source, () => ({
@@ -465,7 +465,7 @@ export const currentUserQuery = e.select(e.UserProfile, (profile) => ({
   filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
 }))
 
-/** EdgeDB's float32 max value */
+/** GelDB's float32 max value */
 const MAX_FLOAT = 3.4e38
 const MIN_FLOAT = MAX_FLOAT * -1
 
