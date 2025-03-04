@@ -2,7 +2,12 @@
 
 import PhotoLabelAndSources from '@/components/PhotoLabelAndSources'
 import { SanityImage } from '@/components/SanityImage'
-import { Dialog, DialogBody, DialogContent } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import type { ImageForRenderingData } from '@/queries'
 import { cn } from '@/utils/cn'
 import {
@@ -89,6 +94,7 @@ function FullscreenPhotosInner({
         }}
         className="block! h-screen max-h-[var(--dialog-h)] w-screen max-w-[var(--dialog-w)]"
       >
+        <DialogTitle className="sr-only">Fotos em tela cheia</DialogTitle>
         <DialogBody className="h-full overflow-hidden px-0 pb-0">
           {activePhoto && (
             <div className="w-ful relative h-[var(--photo-height)]">

@@ -11,3 +11,10 @@ export const NOTES_PER_PAGE = 24
 if (!BASE_URL) {
   throw new Error('NEXT_PUBLIC_BASE_URL environment variable is not set')
 }
+
+export const SANITY_BASE_CONFIG = {
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID as string,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET as string,
+  apiVersion: '2025-03-04',
+  useCdn: process.env.NODE_ENV === 'production',
+}
