@@ -26,7 +26,7 @@ This is a Typescript project built leveraging the following technologies:
 
 ![Screenshot of the app](./public/presentation-peek.png)
 
-You can learn about the project's motivation, tech stack, approach and learnings here: https://hdoro.mmm.page/edgedb-hackathon
+You can learn about the project's motivation, tech stack, approach and learnings here: https://gororobas.com/hackathon
 
 ## Developing locally
 

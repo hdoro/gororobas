@@ -40,7 +40,7 @@ next-env.d.ts
 dbschema/edgeql-js
 dbschema/interfaces.ts
 src/edgeql
-src/edgedb.interfaces.ts
+src/gel.interfaces.ts
 
 src/playground
 gitignored

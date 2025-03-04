@@ -10,7 +10,7 @@
       "./tailwind.config.ts",
       "./package.json"
     ],
-    "ignore": ["src/edgeql/**/*", "src/edgedb.interfaces.ts"]
+    "ignore": ["src/edgeql/**/*", "src/gel.interfaces.ts"]
   },
   "linter": {
     "enabled": true,
