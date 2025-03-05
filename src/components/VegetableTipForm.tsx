@@ -31,6 +31,7 @@ export default function VegetableTipForm(props: {
   >
   succesState: JSX.Element
   initialValue?: Partial<VegetableTipInForm>
+  operation: 'create' | 'edit'
 }) {
   const router = useRouter()
   const { toast } = useToast()
@@ -67,19 +68,21 @@ export default function VegetableTipForm(props: {
 
         toast({
           variant: 'default',
-          title: result.message?.title || 'Dica salva com sucesso ✨',
+          title:
+            result.message?.title ||
+            `Dica ${props.operation === 'create' ? 'criada' : 'atualizada'} com sucesso ✨`,
         })
         setStatus('success')
       } else {
         toast({
           variant: 'destructive',
-          title: 'Erro ao salvar dica',
+          title: `Erro ao ${props.operation === 'create' ? 'criar' : 'editar'} dica`,
           description: 'Por favor, tente novamente.',
         })
         setStatus('idle')
       }
     },
-    [router, toast, props.onSubmit],
+    [router, toast, props.onSubmit, props.operation],
   )
 
   if (status === 'success') {
@@ -142,7 +145,7 @@ export default function VegetableTipForm(props: {
         </DialogBody>
         <DialogFooter>
           <Button type="submit" disabled={form.formState.disabled} size="lg">
-            {props.initialValue ? 'Atualizar' : 'Enviar'}
+            {props.operation === 'edit' ? 'Atualizar' : 'Enviar'}
           </Button>
           {status === 'idle' && (
             <DialogClose asChild>

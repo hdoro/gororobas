@@ -406,7 +406,7 @@ export const NoteData = S.Struct({
   public: S.Boolean,
   types: S.NonEmptyArray(
     S.Literal(...(Object.keys(NOTE_TYPE_TO_LABEL) as NoteType[])),
-  ),
+  ).annotations({ message: () => 'Escolha ao menos um tipo para esta nota' }),
   handle: Optional(Handle),
   created_by: Optional(S.UUID),
 })

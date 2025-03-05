@@ -73,7 +73,10 @@ export function EditTipDialog({
           <Edit2Icon className="w-[1.25em]" />
         </Button>
       </DialogTrigger>
-      <DialogContent hasClose={false}>
+      <DialogContent
+        hasClose={false}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>
             Enviar uma dica sobre{' '}
@@ -87,6 +90,7 @@ export function EditTipDialog({
               tip: { ...data, id: tip.id },
             })
           }}
+          operation="edit"
           initialValue={initialValue}
           succesState={
             <div>

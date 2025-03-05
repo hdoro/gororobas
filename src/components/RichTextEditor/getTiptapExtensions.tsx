@@ -32,6 +32,11 @@ export function getTiptapExtensions({
           class: classes.tiptapListOl(),
         },
       },
+      listItem: {
+        HTMLAttributes: {
+          class: classes.tiptapListItem(),
+        },
+      },
       bold: {
         HTMLAttributes: {
           class: classes.tiptapBold(),

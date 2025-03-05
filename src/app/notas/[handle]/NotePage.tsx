@@ -45,7 +45,7 @@ export default async function NotePage({ note }: { note: NotePageData }) {
               <TipTapRenderer content={titleAsHeading} />
             </div>
             <div className="mb-3 flex flex-wrap items-center gap-3">
-              <div>
+              <div className="space-x-1">
                 {note.types.map((type) => (
                   <Badge key={type} variant="note">
                     {NOTE_TYPE_TO_LABEL[type]}
@@ -79,7 +79,7 @@ export default async function NotePage({ note }: { note: NotePageData }) {
             <CardContent
               className={textVariants({
                 level: 'h3',
-                className: 'overflow-x-hidden font-normal',
+                className: 'space-y-[0.5em] overflow-x-hidden font-normal',
               })}
             >
               <TipTapRenderer content={note.body as TiptapNode} />

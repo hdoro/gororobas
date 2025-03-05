@@ -278,6 +278,33 @@ body {
   @apply ring-2;
 }
 
+.tiptap--ul,
+.tiptap--ol {
+  @apply py-2;
+}
+
+.tiptap--ul {
+  @apply list-disc space-y-[0.35em] pl-[1em];
+}
+
+.tiptap--ol {
+  @apply list-decimal space-y-[0.35em] pl-[1em];
+}
+
+.tiptap--li > .tiptap--ol,
+.tiptap--li > .tiptap--ul {
+  padding-top: 0.25em;
+  padding-bottom: 0.5em;
+}
+
+.tiptap--li > .tiptap--ul {
+  list-style: circle;
+}
+
+.tiptap--li > .tiptap--ol {
+  list-style: lower-alpha;
+}
+
 .rich-text--mobile-floater > button {
   @apply flex-1;
 }

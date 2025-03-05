@@ -9,8 +9,9 @@ export const richTextEditorTheme = tv({
     tiptapStrikethrough: 'strikethrough',
     tiptapItalic: 'italic',
     tiptapBold: '',
-    tiptapListUl: 'list-disc pl-[1em] space-y-[0.25em]',
-    tiptapListOl: 'list-decimal pl-[1em] space-y-[0.25em]',
+    tiptapListUl: 'tiptap--ul',
+    tiptapListOl: 'tiptap--ol',
+    tiptapListItem: 'tiptap--li',
     tiptapLink: 'link',
   },
   variants: {

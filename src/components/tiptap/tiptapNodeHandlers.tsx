@@ -126,19 +126,15 @@ const Heading: NodeHandler = (props) => {
 }
 
 const BulletList: NodeHandler = (props) => {
-  return (
-    <ul className="list-disc space-y-[0.5em] pl-[1em]">{props.children}</ul>
-  )
+  return <ul className="tiptap--ul">{props.children}</ul>
 }
 
 const OrderedList: NodeHandler = (props) => {
-  return (
-    <ol className="list-decimal space-y-[0.5em] pl-[1em]">{props.children}</ol>
-  )
+  return <ol className="tiptap--ol">{props.children}</ol>
 }
 
 const ListItem: NodeHandler = (props) => {
-  return <li>{props.children}</li>
+  return <li className="tiptap--li">{props.children}</li>
 }
 
 const HardBreak: NodeHandler = (props) => {
