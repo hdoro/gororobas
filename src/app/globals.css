@@ -120,9 +120,7 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
-}
 
-@layer base {
   :root {
     --background: var(--background-base);
     --background-base: 27 82% 98%;
@@ -181,9 +179,7 @@
   /* .dark {
     --background: 20 14.3% 4.1%;
   } */
-}
 
-@layer base {
   * {
     @apply border-border;
   }
@@ -192,6 +188,17 @@
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
   }
 }
 
@@ -286,15 +293,6 @@ body {
 /* Only allow users to visually skip up to 2 paragraphs to prevent abuse */
 .p-empty + .p-empty + .p-empty {
   min-height: 0;
-}
-
-.hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
 }
 
 .note-card {
@@ -395,29 +393,6 @@ body {
   }
   to {
     transform: translateX(var(--scroll-length));
-  }
-}
-
-.vegetables-strip {
-  --animation-duration: 35s;
-  --scroll-length: 50%;
-  animation: auto-scroll var(--animation-duration)
-    cubic-bezier(0.15, 0, 0.85, 1) forwards infinite alternate;
-  animation-play-state: playing;
-  animation-delay: calc(var(--animation-duration) * -0.45);
-}
-
-.vegetables-strip--wrapper + .vegetables-strip--wrapper .vegetables-strip {
-  animation-direction: alternate-reverse;
-}
-
-.vegetables-strip:hover {
-  animation-play-state: paused;
-}
-
-@media screen and (min-width: 1920px) {
-  .vegetables-strip {
-    --scroll-length: 10vw;
   }
 }
 

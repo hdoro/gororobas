@@ -41,9 +41,10 @@ export function SanityImage({
               : undefined,
         }
       : {}
-  const style = {
+  const style: React.CSSProperties = {
     opacity: loaded ? 1 : 0,
     transition: 'opacity 0.15s',
+    userSelect: 'none',
     ...hotspotStyle,
     ...imageProps.style,
     ...props.style,
@@ -69,6 +70,7 @@ export function SanityImage({
     image: _i,
     ...elProps
   } = props
+
   return (
     // biome-ignore lint: alt already provided
     <img

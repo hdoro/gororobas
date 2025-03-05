@@ -55,7 +55,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
       </section>
       {featured_vegetables && featured_vegetables.length > 0 && (
         <>
-          <section className="-ml-[calc(var(--vegetable-card-width)_/_2)] space-y-9 overflow-x-hidden">
+          <section className="space-y-9 overflow-x-hidden">
             <VegetablesStrip
               vegetables={featured_vegetables.slice(
                 0,
@@ -66,7 +66,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
               vegetables={featured_vegetables.slice(
                 Math.min(featured_vegetables.length / 2),
               )}
-              offset
+              inverted
             />
           </section>
           <div className="mt-8 text-center">

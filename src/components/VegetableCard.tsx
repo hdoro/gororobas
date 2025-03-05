@@ -78,7 +78,10 @@ function CardWithPhotoContents({
 
   return (
     <>
-      <Badge className="absolute top-2 left-2 z-20 max-w-3/4" variant="outline">
+      <Badge
+        className="absolute top-2 left-2 z-20 max-w-3/4 select-none"
+        variant="outline"
+      >
         {vegetable.name}
       </Badge>
       {photos.length > 1 && (
