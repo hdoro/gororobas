@@ -5,7 +5,7 @@ import type { PropsWithChildren } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import VegetableCard from './VegetableCard'
 
-const SPEED = 0.15 // pixels per millisecond
+const SPEED = 0.08 // pixels per millisecond
 
 function useHorizontalScrolling(initialDirection: 'ltr' | 'rtl' = 'ltr') {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
