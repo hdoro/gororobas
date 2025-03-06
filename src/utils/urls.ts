@@ -76,8 +76,6 @@ export const paths = {
   userGallery: (handle: string) => formatPath(`/pessoas/${handle}/galeria`),
   userContributions: (handle: string) =>
     formatPath(`/pessoas/${handle}/contribuicoes`),
-
-  // Refer to `src/app/redirecionar/route.ts` for why this redirect is needed
   signInOrSignUp: (onAuthRedirectTo?: string) =>
     `/entrar${onAuthRedirectTo ? `?redirecionar=${encodeURIComponent(onAuthRedirectTo)}` : ''}` as const,
   signout: () => '/auth/signout',

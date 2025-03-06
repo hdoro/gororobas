@@ -1,7 +1,9 @@
 'use server'
 
+import { setAuthRedirectCookie } from '@/app/auth/[...auth]/authRedirects'
+import { EmailSchema } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { Effect, pipe } from 'effect'
+import { Effect, Schema, pipe } from 'effect'
 import { magicLinkSignIn, magicLinkSignUp } from './gelAuthActions'
 
 export type SendMagicLinkState = {
@@ -17,7 +19,12 @@ export async function sendMagicLink(
     Effect.gen(function* () {
       if (prevState.status === 'success') return prevState
 
-      const email = formData.get('email') as string
+      const email = yield* Schema.decodeUnknown(EmailSchema)(
+        formData.get('email'),
+      )
+      yield* Effect.tryPromise(() =>
+        setAuthRedirectCookie(formData.get('redirect-to')),
+      )
 
       yield* pipe(
         // First try signing up

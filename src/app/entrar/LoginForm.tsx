@@ -15,7 +15,13 @@ import { SendIcon } from 'lucide-react'
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
 
-function MagicLinkForm({ state }: { state: SendMagicLinkState }) {
+function MagicLinkForm({
+  state,
+  redirectTo,
+}: {
+  state: SendMagicLinkState
+  redirectTo?: string | undefined
+}) {
   const { pending } = useFormStatus()
 
   if (state.status === 'success') {
@@ -24,6 +30,14 @@ function MagicLinkForm({ state }: { state: SendMagicLinkState }) {
 
   return (
     <>
+      <input
+        hidden
+        id="redirect-to"
+        name="redirect-to"
+        type="text"
+        value={redirectTo || '/'}
+        readOnly
+      />
       {state.status === 'error' && <div>Erro ao enviar email</div>}
       <div className="flex items-end gap-2">
         <div className="flex-1 space-y-1">
@@ -106,7 +120,7 @@ export default function LoginForm({
           </Text>
         </div>
 
-        <MagicLinkForm state={magicLinkState} />
+        <MagicLinkForm state={magicLinkState} redirectTo={redirectTo} />
       </form>
       <Card className="max-w-md">
         <CardHeader className="md:py-4">

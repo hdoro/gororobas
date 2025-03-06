@@ -32,6 +32,7 @@ import type { JSONContent } from '@tiptap/react'
 import { Effect, ParseResult, Schema as S } from 'effect'
 import type { NoteType } from './gel.interfaces'
 import { FailedUploadingImageError } from './types/errors'
+import { pathToAbsUrl } from './utils/urls'
 
 /**
  * Custom optional schema to handle both GelDB and client-side forms:
@@ -507,3 +508,23 @@ export const RichTextImageAttributes = S.Struct({
 export type RichTextImageAttributesInDB = typeof RichTextImageAttributes.Type
 export type RichTextImageAttributesInForm =
   typeof RichTextImageAttributes.Encoded
+
+// Copied from zod:
+// https://github.com/colinhacks/zod/blob/850871defc2c98928f1c7e8e05e93d4a84ed3c5f/src/types.ts#L660C1-L661C88
+const emailRegex =
+  /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i
+
+export const EmailSchema = S.String.pipe(
+  S.pattern(emailRegex, { message: () => 'Email inválido' }),
+)
+
+export const PathSchema = S.String.pipe(
+  // Can't have whitespace
+  S.pattern(/[^\s]/i, { message: () => 'Caminho inválido' }),
+  // Must form a correct URL
+  S.filter((input) => {
+    if (!URL.canParse(pathToAbsUrl(input))) return 'Caminho inválido'
+
+    return true
+  }),
+)

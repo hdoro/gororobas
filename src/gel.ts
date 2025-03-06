@@ -13,4 +13,6 @@ export const auth = createAuth(client, {
   baseUrl: BASE_URL,
   magicLinkFailurePath: '/entrar?error=magic-link',
   authRoutesPath: '/auth',
+  authCookieName: 'gororobas--session',
+  pkceVerifierCookieName: 'gororobas--pkce-verifier',
 })

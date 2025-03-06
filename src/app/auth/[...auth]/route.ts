@@ -4,10 +4,15 @@ import { EmailNotVerifiedError, SigninFailedError } from '@/types/errors'
 import { paths } from '@/utils/urls'
 import { Effect } from 'effect'
 import { RedirectType, redirect } from 'next/navigation'
+import {
+  clearAuthRedirectCookie,
+  getAuthRedirectCookie,
+  setAuthRedirectCookie,
+} from './authRedirects'
 import createUserProfile from './createUserProfile'
 import getGoogleName from './getGoogleName'
 
-export const { GET, POST } = auth.createAuthRouteHandlers({
+const gelAuthHandlers = auth.createAuthRouteHandlers({
   async onOAuthCallback(props) {
     const response = await runServerEffect(
       Effect.gen(function* (_) {
@@ -51,8 +56,10 @@ export const { GET, POST } = auth.createAuthRouteHandlers({
           )
         }
 
-        // Users that had already signed up are taken to the home page
-        return { success: true, redirect: paths.home() } as const
+        const redirectTo = yield* Effect.promise(getAuthRedirectCookie)
+        yield* Effect.promise(clearAuthRedirectCookie)
+
+        return { success: true, redirect: redirectTo } as const
       })
         .pipe(...buildTraceAndMetrics('auth.onOAuthCallback'))
         .pipe(
@@ -91,8 +98,10 @@ export const { GET, POST } = auth.createAuthRouteHandlers({
           )
         }
 
-        // Users that had already signed up are taken to the home page
-        return { success: true, redirect: paths.home() } as const
+        const redirectTo = yield* Effect.promise(getAuthRedirectCookie)
+        yield* Effect.promise(clearAuthRedirectCookie)
+
+        return { success: true, redirect: redirectTo } as const
       })
         .pipe(...buildTraceAndMetrics('auth.onMagicLinkCallback'))
         .pipe(
@@ -106,7 +115,20 @@ export const { GET, POST } = auth.createAuthRouteHandlers({
       redirect(`${paths.signInOrSignUp()}?error=magic-link`)
     }
   },
-  onSignout() {
+  async onSignout() {
+    // @TODO remove once @gel/auth-nextjs fixes sign-out not working on Next dev
+    await auth.deleteAuthCookie()
+    // @TODO UserNav remains with the user's avatar after sign-out. Can we do a hard refresh
     redirect(paths.home(), RedirectType.replace)
   },
 })
+
+export const POST = gelAuthHandlers.POST
+
+/** Superset of @gel/auth-nextjs handler to ensure redirect mechanism works */
+export const GET: typeof gelAuthHandlers.GET = async (...props) => {
+  const url = new URL(props[0].url)
+  await setAuthRedirectCookie(url.searchParams.get('redirecionar'))
+
+  return await gelAuthHandlers.GET(...props)
+}
