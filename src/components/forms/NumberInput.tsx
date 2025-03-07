@@ -32,7 +32,10 @@ export default function NumberInput<
         <div
           className="pointer-events-none absolute inset-y-0 flex items-center overflow-hidden pl-3 text-sm font-normal text-ellipsis whitespace-nowrap text-stone-600 select-none"
           style={{
-            left: `calc(${value?.toString().length || 1} * 0.85ch)`,
+            left: `calc(${
+              // Incrementally reduce the multiplier because, otherwise, for some reason the format gets further and further from the input as the number grows
+              (value?.toString().length || 1) ** 0.9
+            } * 1ch)`,
             right: 0,
           }}
         >

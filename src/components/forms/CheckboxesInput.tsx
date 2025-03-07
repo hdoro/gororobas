@@ -16,14 +16,22 @@ export default function CheckboxesInput<
   field,
   options,
   className,
+  layout = 'pills',
 }: {
   field: ControllerRenderProps<TFieldValues, TName>
   options: FormOption[]
   className?: string
+  layout?: 'pills' | 'checkbox-stack'
 }) {
   const value = (field.value || []) as string[]
   return (
-    <div className={cn('flex flex-wrap gap-2', className)}>
+    <div
+      className={cn(
+        layout === 'pills' && 'flex flex-wrap gap-2',
+        layout === 'checkbox-stack' && 'space-y-2',
+        className,
+      )}
+    >
       {options.map((option) => {
         const isChecked = value.includes?.(option.value) || false
         return (
@@ -31,13 +39,20 @@ export default function CheckboxesInput<
             key={option.value}
             className={buttonVariants({
               tone: isChecked ? 'primary' : 'neutral',
-              mode: 'outline',
+              mode:
+                layout === 'pills'
+                  ? 'outline'
+                  : isChecked
+                    ? 'outline'
+                    : 'bleed',
               size: 'xs',
-              className:
+              className: cn(
                 'focus-within:ring-ring relative focus-within:ring-2 focus-within:ring-offset-2',
+                layout === 'checkbox-stack' && 'group flex justify-start',
+              ),
             })}
           >
-            <div className={isChecked ? '' : 'sr-only'}>
+            <div className={cn(layout === 'pills' && !isChecked && 'sr-only')}>
               <FormControl>
                 <Checkbox
                   name={field.name}

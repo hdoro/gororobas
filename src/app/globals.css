@@ -234,6 +234,10 @@ body {
   height: 100%;
 }
 
+label {
+  display: block;
+}
+
 .note-body--content > .tiptap {
   height: 100%;
 }

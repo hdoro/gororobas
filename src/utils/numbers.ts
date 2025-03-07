@@ -1,4 +1,4 @@
-export const MAX_ACCEPTED_HEIGHT = 30_000 // 300m
+export const MAX_ACCEPTED_HEIGHT = 6_000 // 60m
 
 export function formatCentimeters(cm: number) {
   /** If over 1 meter, return in meters */
@@ -23,7 +23,17 @@ export function formatDays(days: number) {
       style: 'unit',
       unit: 'year',
       unitDisplay: 'narrow',
+      maximumFractionDigits: 1,
     }).format(days / 365)
+  }
+
+  if (days >= 60) {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'unit',
+      unit: 'month',
+      unitDisplay: 'narrow',
+      maximumFractionDigits: 1,
+    }).format(days / 30)
   }
 
   return new Intl.NumberFormat('pt-BR', {
@@ -47,19 +57,32 @@ export function randomBetween(min: number, max: number): number {
 
 export type NumberFormat = 'none' | 'centimeters' | 'temperature' | 'days'
 
-export function formatNumber(value: number, format: NumberFormat) {
+export function formatNumber(
+  value: number,
+  format: NumberFormat,
+  /** When inputting data, it's important for users to know the exact number.
+   * However, for displaying it's usually better to only show the more readable unit (e.g. 1.8 years instead of 658 days)
+   */
+  precision: 'full' | 'approximate' = 'full',
+) {
   if (typeof value !== 'number' || Number.isNaN(value) || format === 'none')
     return String(value)
 
-  if (format === 'centimeters')
+  if (format === 'centimeters') {
+    if (precision === 'approximate') return formatCentimeters(value)
+
     return `${value} cm ${value >= 100 ? `(${formatCentimeters(value)})` : ''}`
+  }
 
   if (format === 'temperature') return `${value} ºC`
 
-  if (format === 'days')
+  if (format === 'days') {
+    if (precision === 'approximate') return formatDays(value)
+
     return `${value} dia${value > 1 ? 's' : ''} ${
       value >= 365 ? `(${formatDays(value)})` : ''
     }`
+  }
 
   return String(value)
 }

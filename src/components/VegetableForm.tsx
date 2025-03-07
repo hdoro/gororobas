@@ -305,7 +305,26 @@ export default function VegetableForm(props: {
                       )}
                     />
                   </div>
-                  <DevelopmentCycleFields />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Field
+                      form={form}
+                      name="development_cycle_min"
+                      label={VEGETABLE_FIELD_LABELS_MAP.development_cycle_min}
+                      description="Quantos meses até produzir a 1ª vez?"
+                      render={({ field }) => (
+                        <NumberInput field={field} format="days" />
+                      )}
+                    />
+                    <Field
+                      form={form}
+                      name="development_cycle_max"
+                      label={VEGETABLE_FIELD_LABELS_MAP.development_cycle_max}
+                      render={({ field }) => (
+                        <NumberInput field={field} format="days" />
+                      )}
+                    />
+                  </div>
                   <Field
                     form={form}
                     name="friends"
@@ -524,8 +543,6 @@ export default function VegetableForm(props: {
 function DevelopmentCycleFields() {
   const form = useFormContext()
   const lifecycles = (form.watch('lifecycles') || []) as VegetableLifeCycle[]
-
-  if (lifecycles.includes('PERENE')) return null
 
   return (
     <div className="grid grid-cols-2 gap-4">

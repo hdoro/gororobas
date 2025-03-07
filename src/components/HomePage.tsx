@@ -79,35 +79,6 @@ export default async function HomePage(data: Partial<HomePageData>) {
           </div>
         </>
       )}
-      {notes && notes.length > 0 && (
-        <section className="mt-36 flex flex-col xl:flex-row xl:items-start xl:gap-2.5">
-          <div className="pl-pageX pr-pageX box-content flex flex-col items-start gap-1 lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pr-0 xl:pl-[calc(var(--page-padding-x)_-_2.625rem)]">
-            <NoteIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
-            <div>
-              <Text level="h2" as="h2">
-                Aprendizados e experimentos
-              </Text>
-              <Text level="h3" className="max-w-lg font-normal">
-                Na cozinha, no plantio e no sacolão. <br />
-                Uma rede social agroecológica, por assim dizer
-              </Text>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 lg:pt-10">
-                <Button asChild>
-                  <Link href={paths.newNote()}>Enviar sua nota</Link>
-                </Button>
-                <Link href={paths.notesIndex()} className="link font-medium">
-                  Todas as notas
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="hide-scrollbar flex-1 overflow-x-auto px-4 py-10 lg:overflow-x-hidden lg:px-10 xl:-mt-5">
-            <NotesStrip notes={notes} />
-          </div>
-        </section>
-      )}
-
       <section className="mt-36 flex flex-col gap-4 xl:flex-row xl:items-start xl:gap-2.5">
         <div className="pl-pageX pr-pageX box-content flex flex-col items-start gap-1 lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pr-0 xl:pl-[calc(var(--page-padding-x)_-_2.625rem)]">
           <BulbIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
@@ -139,6 +110,35 @@ export default async function HomePage(data: Partial<HomePageData>) {
           />
         </div>
       </section>
+
+      {notes && notes.length > 0 && (
+        <section className="mt-36 flex flex-col xl:flex-row xl:items-start xl:gap-2.5">
+          <div className="pl-pageX pr-pageX box-content flex flex-col items-start gap-1 lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pr-0 xl:pl-[calc(var(--page-padding-x)_-_2.625rem)]">
+            <NoteIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
+            <div>
+              <Text level="h2" as="h2">
+                Aprendizados e experimentos
+              </Text>
+              <Text level="h3" className="max-w-lg font-normal">
+                Na cozinha, no plantio e no sacolão. <br />
+                Uma rede social agroecológica, por assim dizer
+              </Text>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 lg:pt-10">
+                <Button asChild>
+                  <Link href={paths.newNote()}>Enviar sua nota</Link>
+                </Button>
+                <Link href={paths.notesIndex()} className="link font-medium">
+                  Todas as notas
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="hide-scrollbar flex-1 overflow-x-auto px-4 py-10 lg:overflow-x-hidden lg:px-10 xl:-mt-5">
+            <NotesStrip notes={notes} />
+          </div>
+        </section>
+      )}
 
       {data.recent_contributions && data.recent_contributions.length > 0 && (
         <section className="mt-36">

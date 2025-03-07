@@ -188,7 +188,7 @@ export function VegetablePageHero({
           {(vegetable.development_cycle_min ||
             vegetable.development_cycle_max) && (
             <TwoColInfo
-              left={'Ciclo de desenvolvimento (referência)'}
+              left={'Tempo até produzir'}
               leftDescription="Quanto tempo até começarmos a colher"
               right={
                 vegetable.development_cycle_min &&

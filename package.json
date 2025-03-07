@@ -83,6 +83,7 @@
     "json-diff-ts": "^4.1.0",
     "lucide-react": "^0.477.0",
     "match-sorter": "^8.0.0",
+    "motion": "^12.4.10",
     "next": "^15.2.0",
     "react": "^19.0.0",
     "react-day-picker": "^9.5.1",

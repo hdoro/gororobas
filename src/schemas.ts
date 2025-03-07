@@ -271,11 +271,13 @@ const Temperature = S.Int.pipe(
   }),
 )
 
+export const MAX_ACCEPTED_DEVELOPMENT_CYCLE_DAYS = 1095
+export const MIN_ACCEPTED_DEVELOPMENT_CYCLE_DAYS = 5
 const DevelopmentCycleDays = S.Int.pipe(
-  S.greaterThan(5, {
+  S.greaterThan(MIN_ACCEPTED_DEVELOPMENT_CYCLE_DAYS, {
     message: () => 'Que vegetal de crescimento supersônico é esse?! 😱',
   }),
-  S.lessThan(1095, {
+  S.lessThan(MAX_ACCEPTED_DEVELOPMENT_CYCLE_DAYS, {
     message: () =>
       'Se leva mais de 3 anos para crescer, é um vegetal perene e não deveria ter esse campo preenchido',
   }),
