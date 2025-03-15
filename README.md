@@ -34,7 +34,7 @@ You can learn about the project's motivation, tech stack, approach and learnings
    - If you're connected to the Vercel project, you can use `vercel env pull` to build the production `.env` file.
 1. In order to authenticate with emails locally, you need to install and run [Mailpit](https://mailpit.axllent.org/docs/install/). This will allow the Gel server to send emails via your local Mailpit server.
    - 💡 You can still authenticate with Google oAuth without it
-1. To connect to a local database, [install Gel](https://docs.geldata.com/get-started/quickstart#installation) to your machine
+1. To connect to a local database, [install Gel](https://docs.geldata.com/learn/cli#installation) to your machine
 1. Run `pnpm install` to install the dependencies
 1. In a separate terminal, run `gel project init` to start an Gel instance for the current config
 1. Run `gel ui` to open the Gel Studio
