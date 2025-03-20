@@ -341,7 +341,9 @@ module default {
     };
 
     required publish_status: NotePublishStatus {
-      default := 'PRIVATE';
+      default := (
+        select 'PUBLIC' if .public else 'PRIVATE'
+      );
     };
 
     required published_at: datetime {

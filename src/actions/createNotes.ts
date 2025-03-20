@@ -44,7 +44,8 @@ function getTransaction(input: NotesForDB, inputClient: Client) {
           note.id,
         ),
       title: note.title,
-      public: note.public,
+      public: note.public ?? true,
+      publish_status: note.publish_status ?? 'PRIVATE',
       published_at: note.published_at,
       types: note.types,
       optional_properties: {
