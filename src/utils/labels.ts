@@ -2,6 +2,7 @@ import type {
   EdiblePart,
   EditSuggestionStatus,
   Gender,
+  NotePublishStatus,
   NoteType,
   PlantingMethod,
   SourceType,
@@ -146,6 +147,12 @@ export const EDIT_SUGGESTION_STATUS_TO_LABEL = {
   MERGED: 'Aprovadas',
   REJECTED: 'Rejeitadas',
 } as const satisfies Record<EditSuggestionStatus, string>
+
+export const NOTE_PUBLISH_STATUS_TO_LABEL = {
+  PRIVATE: 'Nota Privada',
+  COMMUNITY: 'Nota da comunidade',
+  PUBLIC: 'Nota Pública',
+} as const satisfies Record<NotePublishStatus, string>
 
 export const VEGETABLE_FIELD_LABELS_MAP: Record<
   Exclude<keyof typeof VegetableData.Encoded, 'id'>,

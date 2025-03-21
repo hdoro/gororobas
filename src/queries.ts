@@ -217,6 +217,11 @@ const vegetablePageShape = e.shape(e.Vegetable, (vegetable) => ({
   sources: sourceForCard,
   related_notes: (note) => ({
     ...noteForCard(note),
+    filter: e.op(
+      e.op('exists', e.global.current_user_profile), // Check if user is signed in. Será que vale usar isso em todas?
+      'or',
+      e.op(note.publish_status, '=', 'PUBLIC'),
+    ),
 
     limit: 12,
   }),
@@ -440,6 +445,11 @@ export const notePageQuery = e.params(
 
       related_notes: (note) => ({
         ...noteForCard(note),
+        filter: e.op(
+          e.op('exists', e.global.current_user_profile),
+          'or',
+          e.op(note.publish_status, '=', 'PUBLIC'),
+        ),
 
         limit: 12,
       }),
@@ -663,12 +673,18 @@ export const notesIndexQuery = e.params(
     types: e.optional(e.array(e.str)),
     search_query: e.str,
     offset: e.int32,
+    // isSignedIn: e.bool,
   },
   (params) =>
     e.select(e.Note, (note) => {
       const filterOps = [
         // Only public notes
         e.op(note.public, '=', true),
+        e.op(
+          e.op('exists', e.global.current_user_profile),
+          'or',
+          e.op(note.publish_status, '=', 'PUBLIC'),
+        ),
 
         // That match the selected types
         e.op(
@@ -812,6 +828,11 @@ export const homePageQuery = e.select({
 
   notes: e.select(e.Note, (note) => ({
     ...noteForCard(note),
+    filter: e.op(
+      e.op('exists', e.global.current_user_profile),
+      'or',
+      e.op(note.publish_status, '=', 'PUBLIC'),
+    ),
     order_by: {
       expression: note.published_at,
       direction: e.DESC, // newest first

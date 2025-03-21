@@ -1,6 +1,6 @@
 'use client'
 
-import BooleanInput, {
+import {
   BOOLEAN_FIELD_CLASSNAMES,
 } from '@/components/forms/BooleanInput'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
@@ -16,12 +16,13 @@ import { useFixedBottomPosition } from '@/hooks/useFixedBottomPosition'
 import { NoteData, type NoteForDB, type NoteInForm } from '@/schemas'
 import { cn } from '@/utils/cn'
 import { generateId } from '@/utils/ids'
-import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
+import { NOTE_PUBLISH_STATUS_TO_LABEL, NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Effect, Schema, pipe } from 'effect'
 import { useRouter } from 'next/navigation'
 import { type PropsWithChildren, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
+import RadioGroupInput from './forms/RadioGroupInput'; 
 
 function ActionBar(props: PropsWithChildren) {
   const position = useFixedBottomPosition(0)
@@ -65,7 +66,8 @@ export default function NoteForm(props: {
         ? props.initialValue
         : {
             id: generateId(),
-            public: true,
+            // public: true,
+            publish_status: 'PUBLIC',
             published_at: new Date().toISOString(),
           },
     disabled: status === 'submitting',
@@ -197,12 +199,22 @@ export default function NoteForm(props: {
                 name="public"
                 label="Pública"
                 classNames={BOOLEAN_FIELD_CLASSNAMES}
-                render={({ field }) => <BooleanInput field={field} />}
+                render={({ field }) => (
+                  <RadioGroupInput
+                    field={field}
+                    options={Object.entries(NOTE_PUBLISH_STATUS_TO_LABEL).map(
+                      ([value, label]) => ({
+                        value,
+                        label,
+                      }),
+                    )}
+                  />
+                )}
               />
               <Field
                 form={form}
                 name="published_at"
-                label="Publicada em"
+                label="Enviada em"
                 classNames={{
                   label: 'sr-only',
                   root: 'space-y-0 md:-ml-3',
