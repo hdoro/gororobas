@@ -1,135 +1,120 @@
 'use client'
 
-import type { ReferenceObjectType, ReferenceOption } from '@/types'
-import type { SuggestionProps } from '@tiptap/suggestion'
-import { matchSorter } from 'match-sorter'
+import useGlobalKeyDown from '@/hooks/useGlobalKeyDown'
 import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+  RichTextMentionAttributes,
+  type RichTextMentionAttributesInForm,
+} from '@/schemas'
+import { Schema } from 'effect'
 import { SanityImage } from '../SanityImage'
-import { useReferenceOptions } from '../forms/ReferenceListInput'
 import Carrot from '../icons/Carrot'
 import { Button } from '../ui/button'
 import { Text } from '../ui/text'
+import ResponsiveFloater from './ResponsiveFloater'
+import { findMentionMatch } from './findSuggestionMatch'
+import type { EditorUIProps } from './tiptapStateMachine'
+import useMentionOptions from './useMentionOptions'
 
-const OBJECT_TYPES: ReferenceObjectType[] = ['UserProfile', 'Vegetable']
+export default function MentionList({
+  editor,
+  editorId,
+  send,
+  bottomOffset,
+}: EditorUIProps) {
+  const match = findMentionMatch(editor.state.selection.$from)
+  const query = match?.query || ''
 
-type Selection = {
-  index: number
-  objectType: ReferenceObjectType
-}
+  const {
+    arrowHandler,
+    byObjectType,
+    containerRef,
+    isLoading,
+    matches,
+    selectedItem,
+    selection,
+  } = useMentionOptions(query)
 
-export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
-  (props, ref) => {
-    const [selection, setSelection] = useState({
-      index: 0,
-      objectType: 'UserProfile' as ReferenceObjectType,
-    })
-    const containerRef = useRef<HTMLDivElement>(null)
-    const { options, isLoading } = useReferenceOptions(OBJECT_TYPES)
+  const selectItem = (id: string) => {
+    const item = matches.find((item) => item.id === id)
 
-    const { query } = props
-    const matches = useMemo(() => {
-      if (!options?.length) return []
-      if (!query) return options
-      return matchSorter(options, query, { keys: ['label'] })
-    }, [options, query])
+    if (item && match) {
+      const range = match.range
+      const nodeAfter = editor.view.state.selection.$to.nodeAfter
+      const overrideSpace = nodeAfter?.text?.startsWith(' ')
 
-    const byObjectType = useMemo(() => {
-      return OBJECT_TYPES.reduce(
-        (acc, objectType) => {
-          acc[objectType] = (matches || []).filter(
-            (option) => option.objectType === objectType,
-          )
-          return acc
-        },
-        {} as Record<ReferenceObjectType, ReferenceOption[]>,
-      )
-    }, [matches])
-
-    // Reset selection when query changes
-    // biome-ignore lint: really only run effect on query changes
-    useEffect(() => {
-      setSelection({
-        index: 0,
-        objectType:
-          OBJECT_TYPES.find(
-            (objectType) => byObjectType[objectType].length > 0,
-          ) || OBJECT_TYPES[0],
-      })
-    }, [props.query])
-
-    const selectedItem = byObjectType[selection.objectType]?.[selection.index]
-
-    // Scroll to selected item when it changes
-    useEffect(() => {
-      if (selectedItem?.id)
-        containerRef?.current
-          ?.querySelector(`[data-id="${selectedItem?.id}"]`)
-          ?.scrollIntoView({ block: 'nearest' })
-    }, [selectedItem])
-
-    const selectItem = (id: string) => {
-      const item = matches.find((item) => item.id === id)
-
-      if (item) {
-        props.command({
-          ...item,
-          label: JSON.stringify({
-            label: item.label,
-            image: item.image,
-            objectType: item.objectType,
-          }),
-        })
+      if (overrideSpace) {
+        range.to += 1
       }
+
+      editor
+        .chain()
+        .focus()
+        .insertContentAt(range, [
+          {
+            type: 'mention',
+            attrs: Schema.decodeSync(RichTextMentionAttributes)({
+              data: {
+                id: item.id,
+                version: 1,
+                label: item.label,
+                objectType: item.objectType,
+                image:
+                  item.image as RichTextMentionAttributesInForm['data']['image'],
+              },
+            }),
+          },
+          {
+            type: 'text',
+            text: ' ',
+          },
+        ])
+        .run()
+
+      editor.view.dom.ownerDocument.defaultView?.getSelection()?.collapseToEnd()
     }
 
-    const arrowHandler = (direction: 'up' | 'down') =>
-      setSelection(
-        parseNextSelection({
-          direction,
-          byObjectType,
-          selection,
-        }),
-      )
+    send({
+      type: 'ESCAPE',
+    })
+  }
 
-    const enterHandler = () => {
-      if (selectedItem?.id) selectItem(selectedItem?.id)
-    }
+  useGlobalKeyDown(
+    (event) => {
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        event.stopPropagation()
+        arrowHandler('up', event)
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault()
+        event.stopPropagation()
+        arrowHandler('down', event)
+      }
+    },
+    [arrowHandler],
+  )
 
-    useImperativeHandle(ref, () => ({
-      onKeyDown: ({ event }: { event: KeyboardEvent }) => {
-        if (event.key === 'ArrowUp') {
-          arrowHandler('up')
-          return true
-        }
+  useGlobalKeyDown(
+    (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault()
+        event.stopPropagation()
+        if (selectedItem?.id) selectItem(selectedItem.id)
+      }
+    },
+    [selectedItem, selectItem],
+    { capture: true },
+  )
 
-        if (event.key === 'ArrowDown') {
-          arrowHandler('down')
-          return true
-        }
-
-        if (event.key === 'Enter') {
-          enterHandler()
-          return true
-        }
-
-        return false
-      },
-    }))
-
-    return (
-      <div
-        className="max-h-[30dvh] space-y-5 overflow-y-auto overflow-x-hidden rounded-md border bg-white p-2 shadow-sm"
-        ref={containerRef}
-      >
+  return (
+    <ResponsiveFloater
+      editor={editor}
+      editorId={editorId}
+      bottomOffset={bottomOffset}
+      className="max-h-[30dvh] overflow-x-hidden overflow-y-auto p-2"
+    >
+      <div ref={containerRef} className="space-y-5">
         {isLoading ? (
-          <Text className="flex h-full items-center justify-center gap-3 text-muted-foreground">
+          <Text className="text-muted-foreground flex h-full items-center justify-center gap-3">
             <Carrot className="h-5 w-5 animate-spin" />
             <span className="animate-pulse">Carregando menções...</span>
           </Text>
@@ -139,7 +124,7 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
 
             return (
               <div className="space-y-2" key={objectType}>
-                <Text level="sm" className="px-3 text-muted-foreground">
+                <Text level="sm" className="text-muted-foreground px-3">
                   {objectType === 'UserProfile' ? 'Pessoas' : 'Vegetais'}
                 </Text>
                 <div className="flex flex-col">
@@ -156,7 +141,7 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
                       onClick={() => selectItem(item.id)}
                       type="button"
                       size="sm"
-                      className="!justify-start"
+                      className="justify-start!"
                       data-id={item.id}
                     >
                       {item.image && (
@@ -175,66 +160,11 @@ export default forwardRef<unknown, SuggestionProps<ReferenceOption, any>>(
             )
           })
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
             Nenhuma pessoa ou vegetal encontrado
           </div>
         )}
       </div>
-    )
-  },
-)
-
-function parseNextSelection({
-  direction,
-  byObjectType,
-  selection: current,
-}: {
-  direction: 'up' | 'down'
-  byObjectType: Record<ReferenceObjectType, ReferenceOption[]>
-  selection: Selection
-}): Selection {
-  const objectTypeIndex = OBJECT_TYPES.findIndex(
-    (objectType) => objectType === current.objectType,
+    </ResponsiveFloater>
   )
-  const objectTypesWithItems = OBJECT_TYPES.filter(
-    (objectType) => byObjectType[objectType].length > 0,
-  )
-
-  if (direction === 'up') {
-    if (current.index === 0) {
-      const newObjectType =
-        objectTypeIndex === 0
-          ? objectTypesWithItems.slice(-1)[0]
-          : objectTypesWithItems[objectTypeIndex - 1]
-      return {
-        index: byObjectType[newObjectType].length - 1,
-        objectType: newObjectType,
-      }
-    }
-
-    return {
-      index: current.index - 1,
-      objectType: current.objectType,
-    }
-  }
-
-  if (direction === 'down') {
-    if (current.index === byObjectType[current.objectType].length - 1) {
-      const newObjectType =
-        objectTypeIndex === OBJECT_TYPES.length - 1
-          ? objectTypesWithItems[0]
-          : objectTypesWithItems[objectTypeIndex + 1]
-      return {
-        index: 0,
-        objectType: newObjectType,
-      }
-    }
-
-    return {
-      index: current.index + 1,
-      objectType: current.objectType,
-    }
-  }
-
-  return current
 }

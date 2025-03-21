@@ -2,7 +2,7 @@ import ProfilesGrid from '@/components/ProfilesGrid'
 import SectionTitle from '@/components/SectionTitle'
 import RainbowIcon from '@/components/icons/RainbowIcon'
 import { Text } from '@/components/ui/text'
-import { auth, client } from '@/edgedb'
+import { auth, client } from '@/gel'
 import { peopleIndexQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
@@ -30,13 +30,13 @@ export default async function PeopleIndexRoute() {
   }
 
   return (
-    <section className="mb-32 mt-12">
+    <section className="mt-12 mb-32">
       <SectionTitle Icon={RainbowIcon}>Quem se envolve</SectionTitle>
       <Text level="h3" className="px-pageX font-normal">
         Cultivando sabedoria e compartilhando experiências para agroecologizar o
         mundo ✨
       </Text>
-      <ProfilesGrid profiles={data} className="mt-8 px-pageX" />
+      <ProfilesGrid profiles={data} className="px-pageX mt-8" />
     </section>
   )
 }

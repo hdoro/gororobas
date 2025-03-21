@@ -176,13 +176,13 @@ export default function VegetableForm(props: {
   }
 
   return (
-    <main className="relative px-pageX py-pageY">
+    <main className="px-pageX py-pageY relative">
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex max-w-[90rem] flex-wrap gap-4"
         >
-          <div className="fixed inset-x-0 bottom-0 z-20 w-full border-t bg-background-card px-pageX py-4">
+          <div className="bg-background-card px-pageX fixed inset-x-0 bottom-0 z-20 w-full border-t py-4">
             <div className="m-auto flex max-w-[90rem] items-center justify-between gap-4">
               <Text as="h1" level="h3">
                 {props.initialValue
@@ -305,7 +305,26 @@ export default function VegetableForm(props: {
                       )}
                     />
                   </div>
-                  <DevelopmentCycleFields />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Field
+                      form={form}
+                      name="development_cycle_min"
+                      label={VEGETABLE_FIELD_LABELS_MAP.development_cycle_min}
+                      description="Quantos meses até produzir a 1ª vez?"
+                      render={({ field }) => (
+                        <NumberInput field={field} format="days" />
+                      )}
+                    />
+                    <Field
+                      form={form}
+                      name="development_cycle_max"
+                      label={VEGETABLE_FIELD_LABELS_MAP.development_cycle_max}
+                      render={({ field }) => (
+                        <NumberInput field={field} format="days" />
+                      )}
+                    />
+                  </div>
                   <Field
                     form={form}
                     name="friends"
@@ -524,8 +543,6 @@ export default function VegetableForm(props: {
 function DevelopmentCycleFields() {
   const form = useFormContext()
   const lifecycles = (form.watch('lifecycles') || []) as VegetableLifeCycle[]
-
-  if (lifecycles.includes('PERENE')) return null
 
   return (
     <div className="grid grid-cols-2 gap-4">

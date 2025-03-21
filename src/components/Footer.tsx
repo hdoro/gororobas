@@ -12,7 +12,7 @@ const FOOTER_LINKS = [
 export default function Footer() {
   return (
     <footer
-      className="flex flex-col items-center gap-[var(--page-padding-x)] border-t border-t-primary-100 bg-background-card px-pageX py-10 md:flex-row md:items-start md:justify-start md:py-16 lg:py-24"
+      className="border-t-primary-100 bg-background-card px-pageX flex flex-col items-center gap-[var(--page-padding-x)] border-t py-10 md:flex-row md:items-start md:justify-start md:py-16 lg:py-24"
       aria-label="Rodapé"
       id="global-footer"
     >
@@ -27,13 +27,13 @@ export default function Footer() {
           <Link
             key={link.href}
             href={link.href}
-            className="text-lg text-primary-800"
+            className="text-primary-800 text-lg"
           >
             {link.text}
           </Link>
         ))}
         <a
-          className="inline-flex gap-2 text-lg text-primary-800"
+          className="text-primary-800 inline-flex gap-2 text-lg"
           href={SOURCE_CODE_URL}
           rel="noopener noreferrer"
           target="_blank"

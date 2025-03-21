@@ -1,7 +1,7 @@
 import ProfilesStrip from '@/components/ProfilesStrip'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import { Text } from '@/components/ui/text'
-import { client } from '@/edgedb'
+import { client } from '@/gel'
 import { wishlistedByQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
@@ -44,7 +44,7 @@ export default async function WishlistedBy(props: { vegetable_id: string }) {
   return (
     <>
       {plantedBy.length > 0 && (
-        <div className="-mr-[var(--page-padding-x)] mt-10 space-y-3">
+        <div className="mt-10 -mr-[var(--page-padding-x)] space-y-3">
           <Text as="h2" level="h3" className="flex gap-1">
             <SeedlingIcon variant="color" className="w-[1.5em]" />
             Quem já planta
@@ -53,7 +53,7 @@ export default async function WishlistedBy(props: { vegetable_id: string }) {
         </div>
       )}
       {desiredBy.length > 0 && (
-        <div className="-mr-[var(--page-padding-x)] mt-10 space-y-3">
+        <div className="mt-10 -mr-[var(--page-padding-x)] space-y-3">
           <Text as="h2" level="h3" className="flex gap-1">
             <SeedlingIcon variant="color" className="w-[1.5em]" />
             Quem quer plantar

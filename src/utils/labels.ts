@@ -11,7 +11,7 @@ import type {
   VegetableLifeCycle,
   VegetableUsage,
   VegetableWishlistStatus,
-} from '@/edgedb.interfaces'
+} from '@/gel.interfaces'
 import type { VegetableData } from '@/schemas'
 
 export const STRATUM_TO_LABEL = {
@@ -47,7 +47,8 @@ export const VEGETABLE_LIFECYCLE_EXPLAINERS = {
     'Plantas que removemos ou colhemos entre 6 meses e 1 ano ou que morrem naturalmente nesse período',
   BIENAL:
     'Plantas que removemos ou colhemos em 1 a 2 anos ou que morrem naturalmente nesse período',
-  PERENE: 'Plantas que cultivamos por mais de 2 anos, como árvores frutíferas',
+  PERENE:
+    'Plantas que cultivamos por mais de 2 anos, como árvores frutíferas. "Perene" não significa pra sempre: muitas delas replantamos eventualmente para maximizar a produção, como o café, a banana, a parreira, etc.',
 } as const satisfies Record<VegetableLifeCycle, string>
 
 export const USAGE_TO_LABEL = {

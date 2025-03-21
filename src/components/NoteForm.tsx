@@ -12,15 +12,34 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
+import { useFixedBottomPosition } from '@/hooks/useFixedBottomPosition'
 import { NoteData, type NoteForDB, type NoteInForm } from '@/schemas'
+import { cn } from '@/utils/cn'
 import { generateId } from '@/utils/ids'
 import { NOTE_PUBLISH_STATUS_TO_LABEL, NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Effect, Schema, pipe } from 'effect'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { type PropsWithChildren, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import RadioGroupInput from './forms/RadioGroupInput'; 
+
+function ActionBar(props: PropsWithChildren) {
+  const position = useFixedBottomPosition(0)
+
+  return (
+    <div
+      className={cn(
+        position.className,
+        'border-t-primary-100 bg-background-card px-pageX flex items-center justify-between gap-4 border-t py-4',
+        'md:relative md:flex-col-reverse md:items-start md:border-t-0 md:bg-transparent md:p-0',
+      )}
+      style={position.styles}
+    >
+      {props.children}
+    </div>
+  )
+}
 
 export default function NoteForm(props: {
   onSubmit: (note: NoteForDB) => Promise<
@@ -122,9 +141,9 @@ export default function NoteForm(props: {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           aria-disabled={form.formState.disabled}
-          className="flex h-full flex-col gap-6 md:flex-row md:items-start md:px-pageX"
+          className="md:px-pageX flex h-full flex-col gap-6 md:flex-row md:items-start"
         >
-          <div className="flex max-w-3xl flex-[5] flex-col gap-6 px-pageX md:rounded-lg md:border md:bg-card md:p-6 md:text-card-foreground md:shadow-sm">
+          <div className="px-pageX md:bg-card md:text-card-foreground flex max-w-3xl flex-5 flex-col gap-6 pb-24 md:rounded-lg md:border md:p-6 md:pb-6 md:shadow-xs">
             <Field
               form={form}
               name="title"
@@ -173,7 +192,7 @@ export default function NoteForm(props: {
             />
           </div>
 
-          <div className="fixed inset-x-0 bottom-0 flex items-center justify-between gap-4 border-t border-t-primary-100 bg-background-card px-pageX py-4 md:relative md:flex-col-reverse md:items-start md:border-t-0 md:bg-transparent md:p-0">
+          <ActionBar>
             <div className="flex items-center gap-2 md:flex-col md:items-start">
               <Field
                 form={form}
@@ -212,7 +231,7 @@ export default function NoteForm(props: {
             >
               Enviar
             </Button>
-          </div>
+          </ActionBar>
         </form>
       </FormProvider>
     </main>

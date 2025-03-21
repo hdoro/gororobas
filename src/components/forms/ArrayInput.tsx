@@ -81,7 +81,7 @@ export default function ArrayInput<
           ))}
         </SortableContext>
       </DndContext>
-      <div className="!mt-4 flex items-center gap-2">
+      <div className="mt-4! flex items-center gap-2">
         <Separator className="w-auto flex-1" />
         <Button
           onClick={() => {
@@ -168,7 +168,7 @@ export function SortableItem(
         {...listeners}
         className="group h-10 w-8"
       >
-        <GripVerticalIcon className="size-5 stroke-muted-foreground group-hover:stroke-foreground" />
+        <GripVerticalIcon className="stroke-muted-foreground group-hover:stroke-foreground size-5" />
       </Button>
       <div className="flex-1">{props.children}</div>
       <Button
@@ -180,7 +180,7 @@ export function SortableItem(
         disabled={props.disabled}
         className="group h-10 w-8"
       >
-        <TrashIcon className="size-5 stroke-muted-foreground group-hover:stroke-current" />
+        <TrashIcon className="stroke-muted-foreground size-5 group-hover:stroke-current" />
       </Button>
     </div>
   )

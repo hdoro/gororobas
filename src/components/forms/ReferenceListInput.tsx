@@ -69,7 +69,7 @@ export default function ReferenceListInput<
         </FormControl>
         <CommandList
           className={cn(
-            'absolute left-0 top-full z-10 w-full translate-y-2 rounded-md border bg-card p-2',
+            'bg-card absolute top-full left-0 z-10 w-full translate-y-2 rounded-md border p-2',
             focused && !field.disabled ? '' : 'sr-only',
           )}
         >

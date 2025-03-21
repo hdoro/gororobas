@@ -1,5 +1,5 @@
-import { auth } from '@/edgedb'
 import type { $infer } from '@/edgeql'
+import { auth } from '@/gel'
 import { Effect, pipe } from 'effect'
 import { buildTraceAndMetrics } from './runtime'
 
@@ -16,8 +16,8 @@ class AuthSessionError {
 }
 
 /**
- * Runs an EdgeDB query with Effect, handling session management and error cases
- * @param query EdgeDB query object from codegen
+ * Runs an GelDB query with Effect, handling session management and error cases
+ * @param query GelDB query object from codegen
  * @param params Query parameters
  * @param options Additional options like metrics
  */

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default async function NotFoundRoute() {
   return (
-    <main className="relative mt-4 flex min-h-full items-center justify-center overflow-hidden px-pageX">
+    <main className="px-pageX relative mt-4 flex min-h-full items-center justify-center overflow-hidden">
       <div className="z-10 max-w-md space-y-2 text-center">
         <Text level="h1" as="h1">
           Página não

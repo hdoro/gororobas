@@ -38,14 +38,14 @@ export default async function NotePage({ note }: { note: NotePageData }) {
 
   return (
     <main className="py-10">
-      <div className="flex flex-col items-start gap-10 px-pageX lg:flex-row lg:justify-center xl:gap-20">
-        <Card className="max-w-full space-y-3 lg:max-w-2xl lg:flex-[5]">
+      <div className="px-pageX flex flex-col items-start gap-10 lg:flex-row lg:justify-center xl:gap-20">
+        <Card className="max-w-full space-y-3 lg:max-w-2xl lg:flex-5">
           <CardHeader className={'flex flex-col-reverse gap-2'}>
             <div className={textVariants({ level: 'h1' })}>
               <TipTapRenderer content={titleAsHeading} />
             </div>
             <div className="mb-3 flex flex-wrap items-center gap-3">
-              <div>
+              <div className="space-x-1">
                 {note.types.map((type) => (
                   <Badge key={type} variant="note">
                     {NOTE_TYPE_TO_LABEL[type]}
@@ -79,7 +79,7 @@ export default async function NotePage({ note }: { note: NotePageData }) {
             <CardContent
               className={textVariants({
                 level: 'h3',
-                className: 'overflow-x-hidden font-normal',
+                className: 'space-y-[0.5em] overflow-x-hidden font-normal',
               })}
             >
               <TipTapRenderer content={note.body as TiptapNode} />
@@ -87,7 +87,7 @@ export default async function NotePage({ note }: { note: NotePageData }) {
           ) : null}
         </Card>
 
-        {note.created_by && (
+        {note.created_by?.name && (
           <div className="lg:flex-1">
             <Text level="h2" as="h2" className="mb-2">
               Enviada por:
@@ -109,7 +109,7 @@ export default async function NotePage({ note }: { note: NotePageData }) {
           <SectionTitle Icon={SeedlingIcon}>Vegetais citados</SectionTitle>
           <VegetablesGrid
             vegetables={note.related_to_vegetables}
-            className="mt-4 px-pageX"
+            className="px-pageX mt-4"
           />
         </section>
       )}

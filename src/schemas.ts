@@ -31,12 +31,13 @@ import {
 import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
 import type { JSONContent } from '@tiptap/react'
 import { Effect, ParseResult, Schema as S } from 'effect'
-import type { NotePublishStatus, NoteType } from './edgedb.interfaces'
+import type { NotePublishStatus, NoteType } from './gel.interfaces'
 import { FailedUploadingImageError } from './types/errors'
+import { pathToAbsUrl } from './utils/urls'
 
 /**
- * Custom optional schema to handle both EdgeDB and client-side forms:
- * - EdgeDB returns `null` instead of `undefined` for missing values
+ * Custom optional schema to handle both GelDB and client-side forms:
+ * - GelDB returns `null` instead of `undefined` for missing values
  * - Client-side forms return `undefined` for missing values
  */
 const Optional = <A, I, R>(schema: S.Schema<A, I, R>) =>
@@ -44,7 +45,10 @@ const Optional = <A, I, R>(schema: S.Schema<A, I, R>) =>
 
 const isFile = (input: unknown): input is File => input instanceof File
 
-const FileSchema = S.declare(isFile)
+const FileSchema = S.declare(isFile, {
+  identifier: 'FileSchema',
+  description: 'Um arquivo (`File` no Javascript)',
+})
 
 export type RichTextValue = JSONContent & { version: 1 }
 const isTipTapJSON = (input: unknown): input is RichTextValue =>
@@ -129,7 +133,7 @@ export type NewImageData = typeof NewImageInForm.Type
 export const StoredImageInForm = ImageMetadata.pipe(
   S.extend(StoredImageDataInForm),
 )
-/** What gets stored as an `Image` Object in EdgeDB */
+/** What gets stored as an `Image` Object in GelDB */
 export const ImageObjectInDB = StoredImageInForm
 export type StoredImageInFormType = typeof StoredImageInForm.Type
 
@@ -268,11 +272,13 @@ const Temperature = S.Int.pipe(
   }),
 )
 
+export const MAX_ACCEPTED_DEVELOPMENT_CYCLE_DAYS = 1095
+export const MIN_ACCEPTED_DEVELOPMENT_CYCLE_DAYS = 5
 const DevelopmentCycleDays = S.Int.pipe(
-  S.greaterThan(5, {
+  S.greaterThan(MIN_ACCEPTED_DEVELOPMENT_CYCLE_DAYS, {
     message: () => 'Que vegetal de crescimento supersônico é esse?! 😱',
   }),
-  S.lessThan(1095, {
+  S.lessThan(MAX_ACCEPTED_DEVELOPMENT_CYCLE_DAYS, {
     message: () =>
       'Se leva mais de 3 anos para crescer, é um vegetal perene e não deveria ter esse campo preenchido',
   }),
@@ -398,7 +404,11 @@ export const ProfileDataWithImage = S.partial(
 
 // gender: Optional(S.Literal(...(Object.keys(GENDER_TO_LABEL) as Gender[]))),
 
-const NotePublishStatusLiteral = Optional(S.Literal(...(Object.keys(NOTE_PUBLISH_STATUS_TO_LABEL) as NotePublishStatus[])));
+const NotePublishStatusLiteral = Optional(
+  S.Literal(
+    ...(Object.keys(NOTE_PUBLISH_STATUS_TO_LABEL) as NotePublishStatus[]),
+  ),
+)
 
 export const NoteData = S.Struct({
   id: S.UUID,
@@ -409,7 +419,7 @@ export const NoteData = S.Struct({
   publish_status: NotePublishStatusLiteral,
   types: S.NonEmptyArray(
     S.Literal(...(Object.keys(NOTE_TYPE_TO_LABEL) as NoteType[])),
-  ),
+  ).annotations({ message: () => 'Escolha ao menos um tipo para esta nota' }),
   handle: Optional(Handle),
   created_by: Optional(S.UUID),
 })
@@ -423,3 +433,110 @@ export type NotesForDB = typeof NoteDataArray.Type
 const RangeBoundValue = S.NullishOr(S.Int)
 /** [min, max] */
 export const RangeFormValue = S.Tuple(RangeBoundValue, RangeBoundValue)
+
+export const RichTextMentionData = S.Struct({
+  version: S.Literal(1),
+  label: S.String,
+  objectType: S.Literal('Vegetable', 'UserProfile'),
+  image: Optional(StoredImageDataInForm),
+  id: S.String,
+})
+
+export const RichTextMentionAttributes = S.Struct({
+  data: S.transform(RichTextMentionData, S.String, {
+    encode: (stringifiedAttr) => JSON.parse(stringifiedAttr),
+    decode: (mention) => JSON.stringify(mention),
+  }),
+})
+
+export type RichTextMentionAttributesInDB =
+  typeof RichTextMentionAttributes.Type
+export type RichTextMentionAttributesInForm =
+  typeof RichTextMentionAttributes.Encoded
+
+export const YOUTUBE_REGEX =
+  /^((?:https?:)?\/\/)?((?:www|m|music)\.)?(?:youtube(?:-nocookie)?\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})(\S+)?$/g
+
+export const YoutubeURL = S.String.pipe(
+  S.pattern(/youtu\.?be/, { message: () => 'Link de vídeo inválido' }),
+  S.brand('YoutubeURL'),
+)
+
+export type YoutubeURLType = typeof YoutubeURL.Type
+
+export const YoutubeId = S.String.pipe(
+  S.pattern(/[a-zA-Z0-9_-]{6,11}/, { message: () => 'Link de vídeo inválido' }),
+  S.brand('YoutubeId'),
+)
+
+export type YoutubeIdType = typeof YoutubeId.Type
+
+export const RichTextVideoData = S.Struct({
+  version: S.Literal(1),
+  type: S.Literal('youtube'),
+  id: YoutubeId,
+})
+
+export const RichTextVideoAttributes = S.Struct({
+  data: S.transformOrFail(RichTextVideoData, S.String, {
+    strict: true,
+    encode: (stringifiedAttr, _, ast) =>
+      S.decode(RichTextVideoData)(JSON.parse(stringifiedAttr)).pipe(
+        Effect.catchAll(() =>
+          ParseResult.fail(
+            new ParseResult.Type(ast, stringifiedAttr, 'invalid-video'),
+          ),
+        ),
+      ),
+    decode: (video) => ParseResult.succeed(JSON.stringify(video)),
+  }),
+})
+
+export type RichTextVideoAttributesInDB = typeof RichTextVideoAttributes.Type
+// @TODO: why is `id` showing as a plain string instead of `YoutubeIdType`?
+export type RichTextVideoAttributesInForm =
+  typeof RichTextVideoAttributes.Encoded
+
+export const RichTextImageData = S.Struct({
+  version: S.Literal(1),
+  image: StoredImageInForm,
+})
+
+export const RichTextImageAttributes = S.Struct({
+  data: S.transformOrFail(RichTextImageData, S.String, {
+    strict: true,
+    encode: (stringifiedAttr, _, ast) =>
+      S.decode(RichTextImageData)(JSON.parse(stringifiedAttr)).pipe(
+        Effect.catchAll(() =>
+          ParseResult.fail(
+            new ParseResult.Type(ast, stringifiedAttr, 'invalid-image'),
+          ),
+        ),
+      ),
+    decode: (image) => ParseResult.succeed(JSON.stringify(image)),
+  }),
+})
+
+export type RichTextImageAttributesInDB = typeof RichTextImageAttributes.Type
+export type RichTextImageAttributesInForm =
+  typeof RichTextImageAttributes.Encoded
+
+// Copied from zod:
+// https://github.com/colinhacks/zod/blob/850871defc2c98928f1c7e8e05e93d4a84ed3c5f/src/types.ts#L660C1-L661C88
+const emailRegex =
+  /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i
+
+export const EmailSchema = S.String.pipe(
+  S.pattern(emailRegex, { message: () => 'Email inválido' }),
+)
+
+export const PathSchema = S.String.pipe(
+  // Can't have whitespace
+  S.pattern(/[^\s]/i, { message: () => 'Caminho inválido' }),
+  // Must form a correct URL
+  S.filter((input) => {
+    if (!URL.canParse(pathToAbsUrl(input))) return 'Caminho inválido'
+
+    return true
+  }),
+)

@@ -9,7 +9,7 @@ import { Text } from './ui/text'
 
 export function ContributionCTA({ customCTA }: { customCTA?: JSX.Element }) {
   return (
-    <section className="mx-auto my-36 box-content px-pageX text-center md:max-w-lg">
+    <section className="px-pageX mx-auto my-36 box-content text-center md:max-w-lg">
       <SparklesIcon variant="color" className="mb-3 inline-block w-12" />
       <Text level="h2" as="h2">
         Gororobas é um espaço colaborativo

@@ -38,12 +38,12 @@ export default function VegetableTipCard({
   return (
     <div
       key={tip.handle}
-      className="relative rounded-lg border-2 bg-background-card px-4 py-3 text-xl"
+      className="bg-background-card relative rounded-lg border-2 px-4 py-3 text-xl"
     >
       <DefaultTipTapRenderer content={tip.content} />
       {orderedSources.length > 0 && (
         <div className="mt-2 flex items-start gap-2">
-          <Text className="pt-0.5 text-muted-foreground" level="sm">
+          <Text className="text-muted-foreground pt-0.5" level="sm">
             Fonte{orderedSources.length > 1 ? 's' : ''}{' '}
           </Text>
           <div className="space-y-3 text-base">

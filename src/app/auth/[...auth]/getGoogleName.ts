@@ -1,4 +1,4 @@
-import type { TokenData } from '@edgedb/auth-nextjs/app'
+import type { TokenData } from '@gel/auth-nextjs/app'
 import { Effect, Schema } from 'effect'
 
 /**

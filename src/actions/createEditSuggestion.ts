@@ -1,13 +1,13 @@
 'use server'
 
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { insertEditSuggestionMutation } from '@/mutations'
 import {
   type VegetableForDBWithImages,
   VegetableWithUploadedImages,
 } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { UnknownEdgeDBError } from '@/types/errors'
+import { UnknownGelDBError } from '@/types/errors'
 import { paths } from '@/utils/urls'
 import { Effect, Schema, pipe } from 'effect'
 import { diff as jsonDiff } from 'json-diff-ts'
@@ -73,13 +73,14 @@ export async function createEditSuggestionAction({
             target_id: current.id,
             snapshot: current,
           }),
-        catch: (error) => new UnknownEdgeDBError(error),
+        catch: (error) => new UnknownGelDBError(error),
       }),
       Effect.map(
         (createdObject) =>
           ({
             success: true,
             redirectTo: paths.editSuggestion(createdObject.id),
+
             message: {
               title: 'Sugestão de edição enviada',
               description:

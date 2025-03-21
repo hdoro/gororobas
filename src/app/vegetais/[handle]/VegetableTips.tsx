@@ -1,6 +1,6 @@
 import VegetableTipCard from '@/components/VegetableTipCard'
 import { Text } from '@/components/ui/text'
-import type { TipSubject } from '@/edgedb.interfaces'
+import type { TipSubject } from '@/gel.interfaces'
 import type { VegetablePageData, VegetableTipCardData } from '@/queries'
 import { cn } from '@/utils/cn'
 import { TIP_SUBJECT_TO_LABEL } from '@/utils/labels'
@@ -15,7 +15,7 @@ export default function VegetableTips({
   if (!Array.isArray(tips) || tips.length === 0) return null
 
   return (
-    <div className="box-content px-pageX">
+    <div className="px-pageX box-content">
       {Object.entries(TIP_SUBJECT_TO_LABEL).map(
         ([subject, label], idx, arr) => {
           const subjectTips = tips.filter((tip) =>
@@ -29,13 +29,13 @@ export default function VegetableTips({
               key={subject}
               className={cn(
                 'mt-10 flex flex-wrap gap-10 pb-10',
-                idx + 1 < arr.length && 'border-b-2 border-b-secondary-50',
+                idx + 1 < arr.length && 'border-b-secondary-50 border-b-2',
               )}
             >
               <Text
                 weight="semibold"
                 level="h3"
-                className="w-[12.5rem] flex-shrink-0"
+                className="w-[12.5rem] shrink-0"
               >
                 {label}
               </Text>

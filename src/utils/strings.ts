@@ -1,4 +1,4 @@
-import type { Gender } from '@/edgedb.interfaces'
+import type { Gender } from '@/gel.interfaces'
 
 /**
  * Limits a string to a certain length for UI or SEO purposes.
@@ -65,7 +65,7 @@ export function semanticListItems(items: string[], maxDisplay?: number) {
   if (maxDisplay && items.length > maxDisplay) {
     return formatter.format([
       ...items.slice(0, maxDisplay),
-      `${items.length - maxDisplay} more`,
+      `e mais ${items.length - maxDisplay}`,
     ])
   }
   return formatter.format(items)

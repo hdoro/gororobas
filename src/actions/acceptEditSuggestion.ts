@@ -1,6 +1,6 @@
 'use server'
 
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import {
   acceptSuggestionMutation,
   updateVegetableMutation,
@@ -17,8 +17,8 @@ import {
   varietiesToParam,
 } from '@/utils/mutation.utils'
 import { paths } from '@/utils/urls'
-import type { Client } from 'edgedb'
 import { Effect, Schema, pipe } from 'effect'
+import type { Client } from 'gel'
 import { formatVegetableFriendForDB } from './formatVegetableFriendForDB'
 import {
   type EditSuggestionData,

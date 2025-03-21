@@ -1,8 +1,126 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin "@tailwindcss/forms";
+@plugin "tailwindcss-animate";
 
+@theme {
+  --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
+
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-background: hsl(var(--background));
+  --color-background-base: hsl(var(--background-base));
+  --color-background-card: hsl(var(--background-card));
+
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary-50: hsl(var(--primary-50));
+  --color-primary-100: hsl(var(--primary-100));
+  --color-primary-200: hsl(var(--primary-200));
+  --color-primary-300: hsl(var(--primary-300));
+  --color-primary-400: hsl(var(--primary-400));
+  --color-primary-500: hsl(var(--primary-500));
+  --color-primary-600: hsl(var(--primary-600));
+  --color-primary-700: hsl(var(--primary-700));
+  --color-primary-800: hsl(var(--primary-800));
+  --color-primary-900: hsl(var(--primary-900));
+  --color-primary-950: hsl(var(--primary-950));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary-50: hsl(var(--secondary-50));
+  --color-secondary-100: hsl(var(--secondary-100));
+  --color-secondary-200: hsl(var(--secondary-200));
+  --color-secondary-300: hsl(var(--secondary-300));
+  --color-secondary-400: hsl(var(--secondary-400));
+  --color-secondary-500: hsl(var(--secondary-500));
+  --color-secondary-600: hsl(var(--secondary-600));
+  --color-secondary-700: hsl(var(--secondary-700));
+  --color-secondary-800: hsl(var(--secondary-800));
+  --color-secondary-900: hsl(var(--secondary-900));
+  --color-secondary-950: hsl(var(--secondary-950));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-customgreen-50: #f4f9f4;
+  --color-customgreen-100: #e6f2e8;
+  --color-customgreen-200: #cde5d1;
+  --color-customgreen-300: #a5d0ad;
+  --color-customgreen-400: #76b281;
+  --color-customgreen-500: #52955f;
+  --color-customgreen-600: #40794b;
+  --color-customgreen-700: #386641;
+  --color-customgreen-800: #2d4e34;
+  --color-customgreen-900: #27402d;
+  --color-customgreen-950: #112215;
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  --padding-page-x: var(--page-padding-x);
+  --padding-page-y: var(--page-padding-y);
+  --spacing-pageX: var(--page-padding-x);
+  --spacing-pageY: var(--page-padding-y);
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
 @layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
   :root {
     --background: var(--background-base);
     --background-base: 27 82% 98%;
@@ -61,9 +179,7 @@
   /* .dark {
     --background: 20 14.3% 4.1%;
   } */
-}
 
-@layer base {
   * {
     @apply border-border;
   }
@@ -72,6 +188,17 @@
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
   }
 }
 
@@ -107,6 +234,10 @@ body {
   height: 100%;
 }
 
+label {
+  display: block;
+}
+
 .note-body--content > .tiptap {
   height: 100%;
 }
@@ -128,7 +259,62 @@ body {
 }
 
 .tiptap[contenteditable='true'] {
-  @apply space-y-[0.5em] outline-none;
+  @apply space-y-[0.5em] outline-hidden;
+}
+
+/* Because YouTube embeds have `z-index: 10`, we need to lower the index of its parent container to impede it from showing above the rich text editor UI */
+.tiptap--video {
+  position: relative;
+  z-index: -1;
+}
+
+.tiptap--image {
+  @apply bg-background flex w-full justify-center overflow-hidden rounded-md;
+}
+
+.tiptap--image img {
+  max-width: 100%;
+  max-height: 50dvh;
+}
+
+.tiptap--video.ProseMirror-selectednode,
+.tiptap--image.ProseMirror-selectednode {
+  @apply ring-2;
+}
+
+.tiptap--ul,
+.tiptap--ol {
+  @apply py-2;
+}
+
+.tiptap--ul {
+  @apply list-disc space-y-[0.35em] pl-[1em];
+}
+
+.tiptap--ol {
+  @apply list-decimal space-y-[0.35em] pl-[1em];
+}
+
+.tiptap--li > .tiptap--ol,
+.tiptap--li > .tiptap--ul {
+  padding-top: 0.25em;
+  padding-bottom: 0.5em;
+}
+
+.tiptap--li > .tiptap--ul {
+  list-style: circle;
+}
+
+.tiptap--li > .tiptap--ol {
+  list-style: lower-alpha;
+}
+
+.rich-text--mobile-floater > button {
+  @apply flex-1;
+}
+
+.rich-text--mobile-floater > button svg {
+  @apply size-5;
 }
 
 .p-empty {
@@ -140,22 +326,13 @@ body {
   min-height: 0;
 }
 
-.hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
-}
-
 .note-card {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
-.note-card[data-flipped='false'] {
+.note-card--root[data-flipped='false'] {
   --front-index: 3;
   --front-translate: translate(0);
 
@@ -163,7 +340,7 @@ body {
   --back-translate: translate(5%, 5%);
 }
 
-.note-card[data-flipped='true'] {
+.note-card--root[data-flipped='true'] {
   --front-index: 2;
   --front-translate: translate(5%, 5%);
 
@@ -206,11 +383,11 @@ body {
   background: var(--scrollbar-color);
 }
 
-.note-card[data-flipped='false'] .note-card--front .note-card--content {
+.note-card--root[data-flipped='false'] .note-card--front .note-card--content {
   overflow-y: auto;
 }
 
-.note-card[data-flipped='true'] .note-card--back .note-card--content {
+.note-card--root[data-flipped='true'] .note-card--back .note-card--content {
   overflow-y: auto;
 }
 
@@ -226,7 +403,7 @@ body {
 
 .note-card--root:target .note-card--front,
 .note-card--root:target .note-card--back {
-  @apply ring-2 ring-primary-300 ring-offset-2 ring-offset-background;
+  @apply ring-primary-300 ring-offset-background ring-2 ring-offset-2;
 }
 
 .note-card--back pre {
@@ -247,29 +424,6 @@ body {
   }
   to {
     transform: translateX(var(--scroll-length));
-  }
-}
-
-.vegetables-strip {
-  --animation-duration: 35s;
-  --scroll-length: 50%;
-  animation: auto-scroll var(--animation-duration)
-    cubic-bezier(0.15, 0, 0.85, 1) forwards infinite alternate;
-  animation-play-state: playing;
-  animation-delay: calc(var(--animation-duration) * -0.45);
-}
-
-.vegetables-strip--wrapper + .vegetables-strip--wrapper .vegetables-strip {
-  animation-direction: alternate-reverse;
-}
-
-.vegetables-strip:hover {
-  animation-play-state: paused;
-}
-
-@media screen and (min-width: 1920px) {
-  .vegetables-strip {
-    --scroll-length: 10vw;
   }
 }
 
@@ -309,9 +463,8 @@ body {
   );
 }
 
-/* Used by MentionList to make a bottom drawer for mentions instead of the usual popover, which is hard to read & browse */
-@media screen and (max-width: 767px) {
-  [id^='tippy-']:has(.tippy-bottom-drawer) {
-    transform: none !important;
-  }
+/* @TODO: modify ImageInput & ImageDropzone's APIs to acommodate for a less hacky way of making images forms without metadata span the whole width available of the parent */
+.image-editor .image-dropzone {
+  width: 100%;
+  aspect-ratio: 16/9;
 }

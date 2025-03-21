@@ -1,5 +1,5 @@
 import createUserProfile from '@/app/auth/[...auth]/createUserProfile'
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { profileForNavQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { paths } from '@/utils/urls'

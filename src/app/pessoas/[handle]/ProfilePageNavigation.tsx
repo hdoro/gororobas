@@ -25,7 +25,7 @@ export function ProfilePageNavigation(props: { handle: string }) {
   ]
 
   return (
-    <div className="hide-scrollbar mt-10 flex overflow-x-auto overflow-y-visible border-b-2 border-stone-200 px-pageX">
+    <div className="hide-scrollbar px-pageX mt-10 flex overflow-x-auto overflow-y-visible border-b-2 border-stone-200">
       {links.map((link) => {
         const isActive = pathname === link.href
         return (
@@ -45,7 +45,7 @@ export function ProfilePageNavigation(props: { handle: string }) {
             {isActive && (
               <div
                 aria-hidden
-                className="absolute inset-x-0 -bottom-0.5 h-1 rounded-full bg-primary-500"
+                className="bg-primary-500 absolute inset-x-0 -bottom-0.5 h-1 rounded-full"
               />
             )}
           </Link>

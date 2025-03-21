@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogBody,
   DialogContent,
+  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
 import {
@@ -19,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
-import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
+import type { VegetableWishlistStatus } from '@/gel.interfaces'
 import { WISHLIST_STATUS_TO_LABEL } from '@/utils/labels'
 import { paths } from '@/utils/urls'
 import { ChevronDownIcon } from 'lucide-react'
@@ -73,7 +74,9 @@ export default function WishlistButton(
         </DialogTrigger>
         <DialogContent className="max-w-lg">
           <DialogBody className="space-y-2 pt-10">
-            <Text level="h2">Crie uma conta no Gororobas</Text>
+            <DialogTitle asChild>
+              <Text level="h2">Crie uma conta no Gororobas</Text>
+            </DialogTitle>
             <Text level="p">
               Para salvar sua listinha de plantas você precisa ter uma conta. Só
               assim podemos lembrar suas escolhas sem embolar quem escolheu o

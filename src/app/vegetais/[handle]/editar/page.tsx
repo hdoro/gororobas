@@ -1,4 +1,4 @@
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import {
   type ImageForRenderingData,
   type SourceCardData,

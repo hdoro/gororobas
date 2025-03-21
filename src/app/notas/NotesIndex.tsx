@@ -7,6 +7,7 @@ import Field from '@/components/forms/Field'
 import Carrot from '@/components/icons/Carrot'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import type { NotesIndexFilterParams } from '@/queries'
 import { NOTES_PER_PAGE } from '@/utils/config'
@@ -91,7 +92,7 @@ export default function NotesIndex() {
       !data.pages[0].notes ||
       data.pages[0].notes.length === 0)
   return (
-    <main className="space-y-6 px-pageX py-10">
+    <main className="px-pageX space-y-6 py-10">
       <div className="space-y-1">
         <Text
           level="h1"
@@ -108,8 +109,23 @@ export default function NotesIndex() {
         </Text>
       </div>
       <FormProvider {...form}>
-        <form className="sticky top-2 z-10">
-          <Card className="pr-0">
+        <form className="bg-background sticky top-0 z-10 flex flex-wrap items-center gap-2 py-2">
+          <Field
+            form={form}
+            name="search_query"
+            label="Conteúdo"
+            render={({ field }) => (
+              <Input
+                {...field}
+                value={field.value || ''}
+                type="text"
+                placeholder="Buscar por texto nas notas"
+                className="min-w-2xs"
+              />
+            )}
+            hideLabel
+          />
+          <Card className="flex-1 pr-0">
             <CardHeader className="sr-only">
               <CardTitle>Filtre os resultados</CardTitle>
             </CardHeader>
@@ -119,7 +135,7 @@ export default function NotesIndex() {
                 name="types"
                 label="Tipo(s) de nota"
                 classNames={{
-                  root: 'flex space-y-0 gap-2 items-center flex-wrap pt-3',
+                  root: 'flex space-y-0 gap-x-2 gap-y-3 items-center flex-wrap py-2',
                   label: 'flex-[0_0_max-content]',
                 }}
                 render={({ field }) => (
@@ -131,7 +147,7 @@ export default function NotesIndex() {
                         label,
                       }),
                     )}
-                    className="hide-scrollbar scrollbar-gradient-x w-full flex-nowrap overflow-x-auto overflow-y-visible px-1 py-2"
+                    className="hide-scrollbar scrollbar-gradient-x flex-nowrap overflow-x-auto overflow-y-visible px-1"
                   />
                 )}
               />
@@ -141,7 +157,7 @@ export default function NotesIndex() {
       </FormProvider>
       <NotesGridWrapper className="hide-scrollbar relative justify-start overflow-x-hidden py-4">
         {isFetching && !isFetchingNextPage && (
-          <div className="absolute inset-0 flex items-center justify-center gap-3 bg-background bg-opacity-50">
+          <div className="bg-background bg-opacity-50 absolute inset-0 flex items-center justify-center gap-3">
             <Carrot className="h-6 w-6 animate-spin" />
             Carregando...
           </div>

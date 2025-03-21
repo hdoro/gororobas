@@ -10,7 +10,7 @@ import { Text } from './ui/text'
 
 const profileCardVariants = tv({
   slots: {
-    root: 'flex-shrink-0 flex items-center flex-wrap',
+    root: 'shrink-0 flex items-center flex-wrap',
     image:
       'block object-cover rounded-full bg-background-card text-xs overflow-hidden',
     name: 'max-w-[16ch] truncate',

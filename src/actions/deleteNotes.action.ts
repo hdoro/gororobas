@@ -1,6 +1,6 @@
 'use server'
 
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { type DeleteNotesInput, deleteNotes } from './deleteNotes'
 
 export async function deleteNotesAction(input: typeof DeleteNotesInput.Type) {

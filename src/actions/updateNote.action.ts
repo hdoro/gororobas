@@ -1,6 +1,6 @@
 'use server'
 
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import type { NoteInForm } from '@/schemas'
 import { runServerEffect } from '@/services/runtime'
 import { NoteUpdateFailedError } from '@/types/errors'

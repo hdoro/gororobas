@@ -95,6 +95,7 @@ export const insertNotesMutation = e.params(
         publish_status: e.NotePublishStatus,
         published_at: e.datetime,
         types: e.array(e.str),
+        content_plain_text: e.str,
 
         /** { body: e.optional(e.json), created_by: e.uuid } */
         optional_properties: e.json,
@@ -108,8 +109,9 @@ export const insertNotesMutation = e.params(
         handle: note.handle,
         title: note.title,
         body: e.cast(e.json, e.json_get(note.optional_properties, 'body')),
-        public: note.public ?? true,
+        public: note.public,
         publish_status: note.publish_status,
+        content_plain_text: note.content_plain_text,
         types: e.array_unpack(e.cast(e.array(e.NoteType), note.types)),
         published_at: note.published_at,
         created_by: e.assert_single(
@@ -149,6 +151,7 @@ export const updateNotesMutation = e.params(
      * public: e.bool,
      * published_at: e.datetime,
      * types: e.array(e.str),
+     * content_plain_text: e.str,
      * }
      **/
     optional_properties: e.json,
@@ -168,13 +171,24 @@ export const updateNotesMutation = e.params(
           '??',
           note.body,
         ),
+        content_plain_text: e.op(
+          e.cast(
+            e.str,
+            e.json_get(params.optional_properties, 'content_plain_text'),
+          ),
+          '??',
+          note.content_plain_text,
+        ),
         public: e.op(
           e.cast(e.bool, e.json_get(params.optional_properties, 'public')),
           '??',
           note.public,
         ),
         publish_status: e.op(
-          e.cast(e.NotePublishStatus, e.json_get(params.optional_properties, 'publish_status')),
+          e.cast(
+            e.NotePublishStatus,
+            e.json_get(params.optional_properties, 'publish_status'),
+          ),
           '??',
           note.publish_status,
         ),

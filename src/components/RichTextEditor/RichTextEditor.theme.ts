@@ -3,14 +3,15 @@ import { type VariantProps, tv } from 'tailwind-variants'
 export const richTextEditorTheme = tv({
   slots: {
     root: 'grid grid-rows-1 grid-cols-1',
-    contentEditable: '*:outline-none *:caret-primary-700 *:space-y-6',
+    contentEditable: '*:outline-hidden *:caret-primary-700 *:space-y-6',
     placeholder:
       'pointer-events-none row-start-1 row-end-1 col-start-1 col-end-1',
     tiptapStrikethrough: 'strikethrough',
     tiptapItalic: 'italic',
     tiptapBold: '',
-    tiptapListUl: 'list-disc pl-[1em] space-y-[0.25em]',
-    tiptapListOl: 'list-decimal pl-[1em] space-y-[0.25em]',
+    tiptapListUl: 'tiptap--ul',
+    tiptapListOl: 'tiptap--ol',
+    tiptapListItem: 'tiptap--li',
     tiptapLink: 'link',
   },
   variants: {
@@ -28,7 +29,7 @@ export const richTextEditorTheme = tv({
       },
       formTextarea: {
         contentEditable:
-          'text-sm leading-tight font-normal *:w-full rounded-md *:rounded-md *:border *:border-input *:bg-white *:px-3 *:py-2 *:ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 *:disabled:cursor-not-allowed *:disabled:opacity-50 min-h-[4lh] *:min-h-[4lh]',
+          'text-sm leading-tight font-normal *:w-full rounded-md *:rounded-md *:border *:border-input *:bg-white *:px-3 *:py-2 *:ring-offset-background focus-within:outline-hidden focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:*:cursor-not-allowed disabled:*:opacity-50 min-h-[4lh] *:min-h-[4lh]',
         placeholder: 'pt-0.5 text-muted-foreground',
         tiptapBold: 'font-semibold',
       },

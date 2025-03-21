@@ -45,7 +45,7 @@ export default function ProfilePageHeader({
   return (
     <>
       <div ref={headerRef}>
-        <div className="flex flex-wrap items-start gap-6 px-pageX">
+        <div className="px-pageX flex flex-wrap items-start gap-6">
           <ProfilePhoto profile={profile} size="lg" />
 
           <div className="self-center">
@@ -106,9 +106,9 @@ export default function ProfilePageHeader({
       {!headerVisible && (
         <div
           aria-hidden
-          className="fixed inset-x-0 top-0 z-50 border-b bg-white py-1 animate-in"
+          className="animate-in fixed inset-x-0 top-0 z-50 border-b bg-white py-1"
         >
-          <div className="flex items-center gap-4 px-pageX">
+          <div className="px-pageX flex items-center gap-4">
             <ProfilePhoto profile={profile} size="sm" />
             <div className="-space-y-1">
               <Text level="h3" as="p">

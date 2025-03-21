@@ -1,6 +1,6 @@
 'use server'
 
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { findUsersToMentionQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'

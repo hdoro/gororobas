@@ -1,6 +1,6 @@
 'use server'
 
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import type { VegetableForDBWithImages } from '@/schemas'
 import { createVegetable } from './createVegetable'
 

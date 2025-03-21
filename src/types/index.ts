@@ -1,4 +1,4 @@
-import type { Image } from '@/edgedb.interfaces'
+import type { Image } from '@/gel.interfaces'
 import type {
   SanityImageCrop,
   SanityImageHotspot,
@@ -14,7 +14,7 @@ export type {
   TipSubject,
   VegetableLifeCycle,
   VegetableUsage,
-} from '@/edgedb.interfaces'
+} from '@/gel.interfaces'
 
 export type FormOption = {
   value: string

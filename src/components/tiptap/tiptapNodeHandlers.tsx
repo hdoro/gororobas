@@ -1,7 +1,15 @@
-import type { ImageForRendering } from '@/types'
+import {
+  RichTextImageAttributes,
+  RichTextMentionAttributes,
+  RichTextVideoAttributes,
+  type YoutubeIdType,
+} from '@/schemas'
 import { BASE_URL } from '@/utils/config'
+import { Schema } from 'effect'
 import Link from 'next/link'
 import { Children } from 'react'
+import { SanityImage } from '../SanityImage'
+import YoutubeVideo from '../YoutubeVideo'
 import { Mention } from './Mention'
 import type { NodeHandler, NodeHandlers, NodeProps } from './TipTapRender'
 
@@ -61,7 +69,7 @@ const TextRender: NodeHandler = (props: NodeProps) => {
         style={style}
         target="_blank"
         rel="noopener noreferrer"
-        className="font-medium text-primary-700 underline"
+        className="text-primary-700 font-medium underline"
       >
         {payload}
       </Comp>
@@ -118,19 +126,15 @@ const Heading: NodeHandler = (props) => {
 }
 
 const BulletList: NodeHandler = (props) => {
-  return (
-    <ul className="list-disc space-y-[0.5em] pl-[1em]">{props.children}</ul>
-  )
+  return <ul className="tiptap--ul">{props.children}</ul>
 }
 
 const OrderedList: NodeHandler = (props) => {
-  return (
-    <ol className="list-decimal space-y-[0.5em] pl-[1em]">{props.children}</ol>
-  )
+  return <ol className="tiptap--ol">{props.children}</ol>
 }
 
 const ListItem: NodeHandler = (props) => {
-  return <li>{props.children}</li>
+  return <li className="tiptap--li">{props.children}</li>
 }
 
 const HardBreak: NodeHandler = (props) => {
@@ -143,24 +147,50 @@ const Passthrough: NodeHandler = (props) => {
 
 const MentionHandler: NodeHandler = (props) => {
   const { node } = props
-  if (!node?.attrs) return <Passthrough {...props} />
 
-  let label = node.attrs.label
-  let image: ImageForRendering | null = null
   try {
-    // Tiptap/Prosemirror doesn't allow us to include custom data in mentions - only `id` and `label`
-    // As a result, in MentionList we set the label as a JSON string (refer to @selectItem in that component)
-    const labelAsJSON = JSON.parse(node.attrs.label)
-    label = labelAsJSON.label
-    image = labelAsJSON.image
-  } catch (error) {}
+    const { data } = Schema.encodeUnknownSync(RichTextMentionAttributes)(
+      node.attrs,
+    )
 
-  return <Mention id={node.attrs.id as string} label={label} image={image} />
+    return <Mention {...data} />
+  } catch (error) {
+    return <Passthrough {...props} />
+  }
 }
 
 const Image: NodeHandler = (props) => {
-  const attrs = props.node.attrs
-  return <img alt={attrs?.alt} src={attrs?.src} title={attrs?.title} />
+  const { node } = props
+
+  try {
+    const {
+      data: { image },
+    } = Schema.encodeUnknownSync(RichTextImageAttributes)(node.attrs)
+
+    return (
+      <SanityImage
+        image={image}
+        maxWidth={560}
+        className="my-6 max-h-[50dvh] max-w-full"
+      />
+    )
+  } catch (error) {
+    return <Passthrough {...props} />
+  }
+}
+
+const VideoHandler: NodeHandler = (props) => {
+  const { node } = props
+
+  try {
+    const { data } = Schema.encodeUnknownSync(RichTextVideoAttributes)(
+      node.attrs,
+    )
+
+    return <YoutubeVideo id={data.id as YoutubeIdType} />
+  } catch (error) {
+    return <Passthrough {...props} />
+  }
 }
 
 export const tiptapNodeHandlers: NodeHandlers = {
@@ -174,4 +204,5 @@ export const tiptapNodeHandlers: NodeHandlers = {
   orderedList: OrderedList,
   listItem: ListItem,
   mention: MentionHandler,
+  video: VideoHandler,
 }

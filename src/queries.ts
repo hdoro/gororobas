@@ -6,7 +6,7 @@ import type {
   Stratum,
   VegetableLifeCycle,
   VegetableUsage,
-} from './edgedb.interfaces'
+} from './gel.interfaces'
 import { NOTES_PER_PAGE, VEGETABLES_PER_PAGE } from './utils/config'
 
 const sourceForCard = e.shape(e.Source, () => ({
@@ -218,7 +218,7 @@ const vegetablePageShape = e.shape(e.Vegetable, (vegetable) => ({
   related_notes: (note) => ({
     ...noteForCard(note),
     filter: e.op(
-      e.op('exists', (e.global.current_user_profile)), // Check if user is signed in. Será que vale usar isso em todas?
+      e.op('exists', e.global.current_user_profile), // Check if user is signed in. Será que vale usar isso em todas?
       'or',
       e.op(note.publish_status, '=', 'PUBLIC'),
     ),
@@ -446,10 +446,10 @@ export const notePageQuery = e.params(
       related_notes: (note) => ({
         ...noteForCard(note),
         filter: e.op(
-            e.op('exists', (e.global.current_user_profile)),
-            'or',
-            e.op(note.publish_status, '=', 'PUBLIC'),
-          ),
+          e.op('exists', e.global.current_user_profile),
+          'or',
+          e.op(note.publish_status, '=', 'PUBLIC'),
+        ),
 
         limit: 12,
       }),
@@ -475,7 +475,7 @@ export const currentUserQuery = e.select(e.UserProfile, (profile) => ({
   filter_single: e.op(profile.id, '=', e.global.current_user_profile.id),
 }))
 
-/** EdgeDB's float32 max value */
+/** GelDB's float32 max value */
 const MAX_FLOAT = 3.4e38
 const MIN_FLOAT = MAX_FLOAT * -1
 
@@ -671,40 +671,62 @@ export type VegetablesIndexFilterParams = Omit<
 export const notesIndexQuery = e.params(
   {
     types: e.optional(e.array(e.str)),
+    search_query: e.str,
     offset: e.int32,
     // isSignedIn: e.bool,
   },
   (params) =>
     e.select(e.Note, (note) => {
-      return {
-        ...noteForCard(note),
+      const filterOps = [
+        // Only public notes
+        e.op(note.public, '=', true),
+        e.op(
+          e.op('exists', e.global.current_user_profile),
+          'or',
+          e.op(note.publish_status, '=', 'PUBLIC'),
+        ),
 
-        filter: e.op(
+        // That match the selected types
+        e.op(
+          // Either the param doesn't exist
+          e.op('not', e.op('exists', params.types)),
+          'or',
+          // Or the note has at least one of the type values
           e.op(
-            e.op('exists', (e.global.current_user_profile)),
-            'or',
-            e.op(note.publish_status, '=', 'PUBLIC'),
-          ),
-          'and',
-          e.op(
-            // Either the param doesn't exist
-            e.op('not', e.op('exists', params.types)),
-            'or',
-            // Or the note has at least one of the type values
-            e.op(
-              e.count(
-                e.op(
-                  note.types,
-                  'intersect',
-                  e.array_unpack(e.cast(e.array(e.NoteType), params.types)),
-                ),
+            e.count(
+              e.op(
+                note.types,
+                'intersect',
+                e.array_unpack(e.cast(e.array(e.NoteType), params.types)),
               ),
-              '>',
-              0,
             ),
+            '>',
+            0,
           ),
         ),
 
+        // And the search query
+        e.op(
+          // Either there's no search query
+          e.op(e.len(params.search_query), '=', 0),
+          'or',
+          // Or the vegetable matches it
+          e.ext.pg_trgm.word_similar(
+            params.search_query,
+            note.content_plain_text,
+          ),
+        ),
+      ]
+
+      const finalFilter = filterOps.reduce((finalFilter, op) => {
+        if (finalFilter === null) return op
+        return e.op(finalFilter, 'and', op)
+      })
+
+      return {
+        ...noteForCard(note),
+
+        filter: finalFilter,
         limit: NOTES_PER_PAGE,
         offset: params.offset,
         order_by: {
@@ -723,6 +745,7 @@ export type NotesIndexQueryParams = Pick<
   'offset'
 > & {
   types?: NoteType[] | null
+  search_query?: string | null
 }
 
 export type NotesIndexFilterParams = Omit<NotesIndexQueryParams, 'offset'>
@@ -806,7 +829,7 @@ export const homePageQuery = e.select({
   notes: e.select(e.Note, (note) => ({
     ...noteForCard(note),
     filter: e.op(
-      e.op('exists', (e.global.current_user_profile)),
+      e.op('exists', e.global.current_user_profile),
       'or',
       e.op(note.publish_status, '=', 'PUBLIC'),
     ),

@@ -82,7 +82,10 @@ export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
           <MessageSquarePlus className="w-[1.25em]" /> Envie uma dica
         </Button>
       </DialogTrigger>
-      <DialogContent hasClose={false}>
+      <DialogContent
+        hasClose={false}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle>
             Enviar uma dica sobre{' '}
@@ -92,6 +95,7 @@ export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
         </DialogHeader>
         <VegetableTipForm
           key={rerenderFormKey}
+          operation="create"
           onSubmit={async (data) => {
             return await createVegetableTipAction({
               tip: data,
@@ -109,7 +113,7 @@ export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
           }}
           succesState={
             <div>
-              <section className="mx-auto box-content px-pageX py-pageY text-center md:max-w-lg">
+              <section className="px-pageX py-pageY mx-auto box-content text-center md:max-w-lg">
                 <SparklesIcon
                   variant="color"
                   className="mb-3 inline-block w-12"

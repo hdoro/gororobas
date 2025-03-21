@@ -1,4 +1,4 @@
-# Gororobas, an agroecology wiki for EdgeDB's hackathon
+# Gororobas, collaborative agroecology wiki
 
 ![Screenshot of the app](./public/default-og.png)
 
@@ -6,7 +6,7 @@
 
 This is a Typescript project built leveraging the following technologies:
 
-- [EdgeDB](https://edgedb.com): database and authentication
+- [Gel](https://geldata.com): database and authentication
 - [NextJS](https://nextjs.org) and [React](https://react.dev/): frontend frameworks
 - [Vercel](https://vercel.com): deployment
 - [TailwindCSS](https://tailwindcss.com), [RadixUI](https://www.radix-ui.com/) and [Shadcn/UI](https://ui.shadcn.com/): styling and component primitives
@@ -26,33 +26,33 @@ This is a Typescript project built leveraging the following technologies:
 
 ![Screenshot of the app](./public/presentation-peek.png)
 
-You can learn about the project's motivation, tech stack, approach and learnings here: https://hdoro.mmm.page/edgedb-hackathon
+You can learn about the project's motivation, tech stack, approach and learnings here: https://gororobas.com/hackathon
 
 ## Developing locally
 
 1. Start by populating the `.env.example` file with the necessary environment variables. You can copy it to `.env.local` and fill in the values.
-    - If you're connected to the Vercel project, you can use `vercel env pull` to build the production `.env` file.
-1. In order to authenticate with emails locally, you need to install and run [Mailpit](https://mailpit.axllent.org/docs/install/). This will allow the EdgeDB server to send emails via your local Mailpit server.
-    - 💡 You can still authenticate with Google oAuth without it
-1. To connect to a local database, [install EdgeDB](https://docs.edgedb.com/get-started/quickstart#installation) to your machine
+   - If you're connected to the Vercel project, you can use `vercel env pull` to build the production `.env` file.
+1. In order to authenticate with emails locally, you need to install and run [Mailpit](https://mailpit.axllent.org/docs/install/). This will allow the Gel server to send emails via your local Mailpit server.
+   - 💡 You can still authenticate with Google oAuth without it
+1. To connect to a local database, [install Gel](https://docs.geldata.com/learn/cli#installation) to your machine
 1. Run `pnpm install` to install the dependencies
-1. In a separate terminal, run `edgedb project init` to start an EdgeDB instance for the current config
-1. Run `edgedb ui` to open the EdgeDB Studio
-1. Then, in the same EdgeDB terminal, run `edgedb watch` to have it watch changes to your schema
-1. After EdgeDB has applied the necessary migrations, run `bun run generate:all` to have the types and our custom EdgeQL SDK generated. This is necessary to interact with the database and the project won't run without it.
-1. After generating types, run `bun run auth:setup` to configure EdgeDB with the proper authentication settings
+1. In a separate terminal, run `gel project init` to start an Gel instance for the current config
+1. Run `gel ui` to open the Gel Studio
+1. Then, in the same Gel terminal, run `gel watch` to have it watch changes to your schema
+1. After Gel has applied the necessary migrations, run `bun run generate:all` to have the types and our custom EdgeQL SDK generated. This is necessary to interact with the database and the project won't run without it.
+1. After generating types, run `bun run auth:setup` to configure Gel with the proper authentication settings
 1. Finally, run `bun run dev` to start the development server and access the app at `http://localhost:3000`
 
 ## Deploying the app and database
 
-1. Log into EdgeDB Cloud in your terminal with `edgedb cloud login`
-1. Migrate the current database schema to the cloud with `edgedb migrate -I ORG/INSTANCE_NAME`
+1. Log into Gel Cloud in your terminal with `gel cloud login`
+1. Migrate the current database schema to the cloud with `gel migrate -I ORG/INSTANCE_NAME`
 1. If you're starting a new cloud instance, you can seed it with a local dump of data with:
-    ```sh
-    edgedb dump <your-dump.dump>
-    edgedb restore -I <org>/<instance-name> <your-dump.dump>
-    ```
-1. If you're setting up a Vercel project for it the first time, refer to the [official guide on deploying to Vercel](https://docs.edgedb.com/guides/tutorials/nextjs_app_router#deploying-to-vercel)
+   ```sh
+   gel dump <your-dump.dump>
+   gel restore -I <org>/<instance-name> <your-dump.dump>
+   ```
+1. If you're setting up a Vercel project for it the first time, refer to the [official guide on deploying to Vercel](https://docs.geldata.com/guides/tutorials/nextjs_app_router#deploying-to-vercel)
 1. When you push a commit to main, Vercel will automatically build and deploy it to `gororobas.com` or whatever the domain for the new project you've set up
 
 ## Credits
@@ -71,3 +71,15 @@ If you'd like to contribute to the project, please open an issue or a pull reque
 
 This project is licensed under the Apache 2.0 License. You can read more about it in the [LICENSE](./LICENSE) file.
 
+## Restaurando backups
+
+A partir do backup baixado no S3:
+
+1. Instale o GPG:
+   - Windows: `winget install GnuPG.GnuPG`
+   - MacOS: `brew install gpg`
+   - Linux: `sudo apt-get install gpg`
+1. Decodifique a encriptação do backup com: `gpg --decrypt --output decrypted_backup.dump.gz input_file.dump.gpg `
+   - A chave de encriptação é a mesma que foi usada para criar o backup
+1. Descompacte o backup: `gunzip decrypted_backup.dump.gz`
+1. Restaure o backup: `gel restore decrypted_backup.dump` localmente, ou `gel restore -I ORG/INSTANCE_NAME decrypted_backup.dump` na nuvem

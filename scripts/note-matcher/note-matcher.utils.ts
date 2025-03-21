@@ -1,6 +1,6 @@
-import type { Vegetable } from '@/edgedb.interfaces'
-import createClient from 'edgedb'
+import type { Vegetable } from '@/gel.interfaces'
 import { existsSync, mkdirSync } from 'fs'
+import createClient from 'gel'
 import type { VEGETABLES } from './ai-analysis'
 
 export const BASE_FOLDER = 'scripts/note-matcher/results'
@@ -23,7 +23,7 @@ export const noteMatcherClient = createClient({
   // insecure, because the development server uses self-signed certificates
   // which will cause api calls with the fetch api to fail.
   tlsSecurity: process.env.NODE_ENV === 'development' ? 'insecure' : 'default',
-  instanceName: 'hdoro/gororobas',
+  instanceName: process.env.EDGEDB_INSTANCE as string,
 })
 
 export type SuggestedMutation =

@@ -62,26 +62,26 @@ export default function VegetablePageSidebar({
             key={link.href}
             href={link.href}
             className={cn(
-              'relative block border-l-2 border-l-primary-100 py-2 pl-2 text-sm text-primary-900 hover:border-l-primary-500',
+              'border-l-primary-100 text-primary-900 hover:border-l-primary-500 relative block border-l-2 py-2 pl-2 text-sm',
               link.active && 'font-medium',
             )}
           >
             {index === 0 && (
               <div
                 aria-hidden
-                className="absolute right-full top-0 h-1/2 w-0.5 bg-background"
+                className="bg-background absolute top-0 right-full h-1/2 w-0.5"
               />
             )}
             {index === links.length - 1 && link.active && (
               <div
                 aria-hidden
-                className="absolute bottom-0 right-full h-1/2 w-0.5 bg-background"
+                className="bg-background absolute right-full bottom-0 h-1/2 w-0.5"
               />
             )}
             {link.active && (
               <div
                 aria-hidden
-                className="absolute left-0 top-1/2 h-1.5 w-1.5 -translate-x-[calc(50%_+_1px)] -translate-y-1/2 rounded-full bg-primary-500"
+                className="bg-primary-500 absolute top-1/2 left-0 h-1.5 w-1.5 -translate-x-[calc(50%_+_1px)] -translate-y-1/2 rounded-full"
               />
             )}
             {link.label}

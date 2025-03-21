@@ -1,7 +1,7 @@
 'use server'
 
-import { auth } from '@/edgedb'
-import type { VegetableWishlistStatus } from '@/edgedb.interfaces'
+import { auth } from '@/gel'
+import type { VegetableWishlistStatus } from '@/gel.interfaces'
 import { updateWishlistStatusMutation } from '@/mutations'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'

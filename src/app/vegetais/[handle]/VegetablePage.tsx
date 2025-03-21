@@ -61,7 +61,7 @@ export default function VegetablePage({
     <FullscreenPhotos photos={carouselPhotos}>
       <main className="py-12">
         <div
-          className="relative flex flex-col gap-[4.5rem] overflow-x-hidden px-pageX lg:flex-row lg:items-start lg:overflow-x-visible"
+          className="px-pageX relative flex flex-col gap-[4.5rem] overflow-x-hidden lg:flex-row lg:items-start lg:overflow-x-visible"
           id="visao-geral"
         >
           <VegetablePageHero vegetable={vegetable} />
@@ -84,7 +84,7 @@ export default function VegetablePage({
           {vegetable.tips.length > 0 ? (
             <VegetableTips tips={vegetable.tips} vegetable={vegetable} />
           ) : (
-            <div className="mt-1 space-y-2 px-pageX">
+            <div className="px-pageX mt-1 space-y-2">
               <Text level="p">
                 Ainda não temos dicas sobre esse vegetal. Que tal enviar a sua?
               </Text>
@@ -96,7 +96,7 @@ export default function VegetablePage({
           vegetable.varieties.length > 0 && (
             <section className="my-36" id="variedades">
               <SectionTitle Icon={RainbowIcon}>Variedades</SectionTitle>
-              <div className="hide-scrollbar mt-3 flex gap-6 overflow-x-auto px-pageX xl:gap-20">
+              <div className="hide-scrollbar px-pageX mt-3 flex gap-6 overflow-x-auto xl:gap-20">
                 {vegetable.varieties.map((variety) => (
                   <VegetableVarietyCard
                     key={variety.handle}
@@ -112,7 +112,7 @@ export default function VegetablePage({
               Sobre {gender.article(vegetable.gender || 'NEUTRO', 'both')}
               {names[0]}
             </SectionTitle>
-            <div className="mt-5 box-content max-w-[39.375rem] space-y-3 px-pageX text-base">
+            <div className="px-pageX mt-5 box-content max-w-[39.375rem] space-y-3 text-base">
               <TipTapRenderer content={vegetable.content} />
             </div>
           </section>
@@ -126,7 +126,7 @@ export default function VegetablePage({
               Plantas que gostam de serem plantadas e estarem próximas a
               {gender.suffix(vegetable.gender || 'NEUTRO')} {names[0]}
             </Text>
-            <VegetablesGrid vegetables={friends} className="mt-6 px-pageX" />
+            <VegetablesGrid vegetables={friends} className="px-pageX mt-6" />
           </section>
         )}
         {externalSources.length > 0 && (
@@ -135,7 +135,7 @@ export default function VegetablePage({
             <Text level="h3" className="px-pageX font-normal">
               Materiais que embasaram essas informações
             </Text>
-            <SourcesGrid sources={externalSources} className="mt-6 px-pageX" />
+            <SourcesGrid sources={externalSources} className="px-pageX mt-6" />
           </section>
         )}
         <section className="my-36" id="notas">
@@ -154,7 +154,7 @@ export default function VegetablePage({
           {vegetable.related_notes.length > 0 ? (
             <NotesGrid notes={vegetable.related_notes} />
           ) : (
-            <Text level="p" className="mt-1 px-pageX">
+            <Text level="p" className="px-pageX mt-1">
               Ainda não temos notas sobre esse vegetal. Que tal{' '}
               <Link href={paths.newNote()} className="link">
                 enviar uma

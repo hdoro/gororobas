@@ -71,9 +71,9 @@ export function VegetableHeroPhotos({
               )
             })}
           </CarouselContent>
-          <div className="absolute bottom-4 right-2 flex items-center gap-2.5">
-            <CarouselPrevious className="relative left-0 top-0 translate-x-0 translate-y-0 bg-white" />
-            <CarouselNext className="relative left-0 top-0 translate-x-0 translate-y-0 bg-white" />
+          <div className="absolute right-2 bottom-4 flex items-center gap-2.5">
+            <CarouselPrevious className="relative top-0 left-0 translate-x-0 translate-y-0 bg-white" />
+            <CarouselNext className="relative top-0 left-0 translate-x-0 translate-y-0 bg-white" />
           </div>
         </Carousel>
       )}

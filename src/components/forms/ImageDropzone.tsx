@@ -1,7 +1,9 @@
 'use client'
 
 import { cn } from '@/utils/cn'
+import { generateId } from '@/utils/ids'
 import { CircleXIcon, UploadCloudIcon } from 'lucide-react'
+import type React from 'react'
 import { useDropzone } from 'react-dropzone'
 import type {
   ControllerRenderProps,
@@ -19,12 +21,14 @@ export default function ImageDropzone<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   field,
+  rootField,
   value,
   clearValue,
 }: {
   field: ControllerRenderProps<TFieldValues, TName>
+  rootField: ControllerRenderProps<any, any>
   value: File | null | undefined
-  clearValue: () => void
+  clearValue: (e: React.MouseEvent) => void
 }) {
   const { toast } = useToast()
 
@@ -58,13 +62,17 @@ export default function ImageDropzone<
       }
     },
     onDropAccepted: (files) => {
+      // initialize the ID when there's no value
+      if (!value) {
+        rootField.onChange({ id: generateId(), ...(rootField.value || {}) })
+      }
       field.onChange(files[0])
       field.onBlur()
     },
   })
 
-  function clearField() {
-    clearValue()
+  function clearField(e: React.MouseEvent) {
+    clearValue(e)
     rootRef.current?.focus()
   }
 
@@ -72,7 +80,7 @@ export default function ImageDropzone<
     <div
       {...getRootProps()}
       className={cn(
-        'relative flex aspect-square w-[12.5rem] flex-[0_0_max-content] items-center justify-center rounded-lg border-2 border-border bg-card',
+        'image-dropzone border-border bg-card relative flex aspect-square w-[12.5rem] flex-[0_0_max-content] items-center justify-center rounded-lg border-2',
         isDragActive && 'border-dotted',
         isDragAccept && 'border-primary/30 bg-primary/15',
         isDragReject && 'border-destructive/30 bg-destructive/15',
@@ -108,7 +116,7 @@ export default function ImageDropzone<
           {!field.disabled && (
             <Button
               onClick={clearField}
-              className="absolute right-2 top-2 rounded-full"
+              className="absolute top-2 right-2 rounded-full"
               aria-label="Remover imagem"
               tone="destructive"
               mode="outline"

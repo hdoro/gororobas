@@ -3,7 +3,7 @@ import SourcesGrid from '@/components/SourcesGrid'
 import SuggestionsGrid from '@/components/SuggestionsGrid'
 import SparklesIcon from '@/components/icons/SparklesIcon'
 import { Text } from '@/components/ui/text'
-import { client } from '@/edgedb'
+import { client } from '@/gel'
 import {
   type SourceCardData,
   type VegetablePageData,
@@ -98,7 +98,7 @@ export default async function VegetableContributors({
         </Text>
         <SourcesGrid sources={internalSources} className="mt-3 flex-1 gap-8" />
         {acceptedSuggestions && acceptedSuggestions.length > 0 && (
-          <div className="mt-6 space-y-3 rounded-md border-2 bg-background-card px-6 py-4">
+          <div className="bg-background-card mt-6 space-y-3 rounded-md border-2 px-6 py-4">
             <Text as="h3">
               Últimas mudanças na página d
               {gender.suffix(vegetable.gender || 'NEUTRO')} {vegetable.names[0]}

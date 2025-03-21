@@ -1,8 +1,8 @@
 import { deleteNotesMutation } from '@/mutations'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { InvalidInputError } from '@/types/errors'
-import type { Client } from 'edgedb'
 import { Effect, Schema, pipe } from 'effect'
+import type { Client } from 'gel'
 
 export const DeleteNotesInput = Schema.NonEmptyArray(Schema.UUID)
 

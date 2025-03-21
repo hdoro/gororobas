@@ -1,6 +1,6 @@
 import SuggestionsGrid from '@/components/SuggestionsGrid'
 import { Text } from '@/components/ui/text'
-import { client } from '@/edgedb'
+import { client } from '@/gel'
 import { pendingSuggestionsIndexQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'

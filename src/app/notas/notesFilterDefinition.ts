@@ -2,15 +2,28 @@ import type { NotesIndexFilterParams, NotesIndexQueryParams } from '@/queries'
 import type { NextSearchParams } from '@/types'
 import { NOTES_PER_PAGE } from '@/utils/config'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
+import { SearchIcon, ShapesIcon } from 'lucide-react'
+import type { FilterDefinition } from '../vegetais/vegetableFilterDefinitions'
 
 const PAGE_INDEX_QUERY_KEY = 'pagina'
 const FILTER_DEFINITIONS = [
   {
+    queryKey: 'busca',
+    filterKey: 'search_query',
+    label: 'Buscar por nome',
+    type: 'search_query',
+    icon: SearchIcon,
+  },
+  {
     queryKey: 'tipo',
     filterKey: 'types',
+    type: 'multiselect',
+    label: 'Tipo(s) de nota',
     values: Object.keys(NOTE_TYPE_TO_LABEL),
+    valueLabels: NOTE_TYPE_TO_LABEL,
+    icon: ShapesIcon,
   },
-] as const
+] as const satisfies FilterDefinition[]
 
 export function nextSearchParamsToQueryParams(
   searchParams: NextSearchParams,
@@ -21,20 +34,28 @@ export function nextSearchParamsToQueryParams(
 
   const filters = FILTER_DEFINITIONS.reduce(
     (accFilters, definition) => {
-      const { queryKey, filterKey, values } = definition
+      const { queryKey, filterKey } = definition
       const queryValue = searchParams[queryKey]
       if (!queryValue) return accFilters
 
-      const arrayValue = Array.isArray(queryValue) ? queryValue : [queryValue]
-      const validValues = arrayValue.filter((value) => values.includes(value))
+      if (definition.type === 'multiselect') {
+        const arrayValue = Array.isArray(queryValue) ? queryValue : [queryValue]
+        const validValues = arrayValue.filter((value) =>
+          definition.values.includes(value),
+        )
 
-      if (validValues.length) {
-        accFilters[filterKey] = validValues
+        if (validValues.length) {
+          accFilters[filterKey] = validValues
+        }
+      }
+
+      if (definition.type === 'search_query') {
+        accFilters[filterKey] = [queryValue].flat().join(' ')
       }
 
       return accFilters
     },
-    {} as Record<string, string[]>,
+    {} as Record<string, string[] | string>,
   )
 
   return {

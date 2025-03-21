@@ -51,7 +51,7 @@ export function VegetablePageHero({
   const mainImage = allPhotos?.[0]
 
   return (
-    <div className="max-w-[53.125rem] flex-[5]">
+    <div className="max-w-[53.125rem] flex-5">
       <div className="flex flex-col items-start gap-3 md:flex-row md:items-end">
         {mainImage && (
           <SanityImage
@@ -188,7 +188,7 @@ export function VegetablePageHero({
           {(vegetable.development_cycle_min ||
             vegetable.development_cycle_max) && (
             <TwoColInfo
-              left={'Ciclo de desenvolvimento (referência)'}
+              left={'Tempo até produzir'}
               leftDescription="Quanto tempo até começarmos a colher"
               right={
                 vegetable.development_cycle_min &&
@@ -207,7 +207,7 @@ export function VegetablePageHero({
         </div>
       </TooltipProvider>
 
-      <div className="mt-10 flex items-start gap-2 rounded-lg border-2 bg-card px-4 py-3 text-stone-800">
+      <div className="bg-card mt-10 flex items-start gap-2 rounded-lg border-2 px-4 py-3 text-stone-800">
         <InfoIcon className="mt-1 h-6 w-6 flex-[0_0_1.5rem] opacity-80" />
         <div className="space-y-1">
           <Text level="h3" weight="semibold">
@@ -281,7 +281,7 @@ function TwoColInfo({
                     <CircleHelp className="-mr-1 ml-1 h-4 w-4 opacity-80" />
                   </Badge>
                 </TooltipTrigger>
-                <TooltipContent className="border bg-card">
+                <TooltipContent className="bg-card border">
                   <Text level="sm" className="max-w-[20rem]">
                     {item.explainer}
                   </Text>

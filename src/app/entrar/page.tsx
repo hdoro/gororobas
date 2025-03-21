@@ -1,4 +1,4 @@
-import { auth } from '@/edgedb'
+import { auth } from '@/gel'
 import { getAuthRedirect, paths } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'

@@ -5,8 +5,7 @@
  */
 
 import { toNestErrors, validateFieldsNatively } from '@hookform/resolvers'
-import type { Schema } from 'effect'
-import * as Effect from 'effect/Effect'
+import { Effect, type Schema } from 'effect'
 import { ArrayFormatter } from 'effect/ParseResult'
 import { decodeUnknown } from 'effect/Schema'
 import type { ParseOptions } from 'effect/SchemaAST'

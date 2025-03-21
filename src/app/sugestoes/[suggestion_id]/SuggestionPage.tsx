@@ -21,8 +21,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
-import { auth } from '@/edgedb'
-import type { EditSuggestionStatus } from '@/edgedb.interfaces'
+import { auth } from '@/gel'
+import type { EditSuggestionStatus } from '@/gel.interfaces'
 import { type VegetableCardData, vegetableCardsByIdQuery } from '@/queries'
 import {
   EDIT_SUGGESTION_STATUS_TO_LABEL,
@@ -54,7 +54,7 @@ export default async function SuggestionPage({
     : ([] as VegetableCardData[])
 
   return (
-    <div className="flex flex-col items-start gap-6 px-pageX py-pageY lg:flex-row">
+    <div className="px-pageX py-pageY flex flex-col items-start gap-6 lg:flex-row">
       <div className="top-2 flex-1 lg:sticky">
         <VegetablePageHero
           // @ts-expect-error data is not perfectly the same, but it renders™

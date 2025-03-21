@@ -16,8 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install EdgeDB CLI
-        run: curl --proto '=https' --tlsv1.2 -sSf https://sh.edgedb.com | sh -s -- -y
+      - name: Install GelDB CLI
+        run: curl --proto '=https' --tlsv1.2 -sSf https://www.geldata.com/sh | sh -s -- -y
 
       - name: Install GPG
         run: sudo apt-get install -y gpg
@@ -38,7 +38,7 @@ jobs:
           COMPRESSED_FILE="${BACKUP_FILE}.gz"
 
           # Create the backup
-          edgedb dump $BACKUP_FILE
+          gel dump $BACKUP_FILE
 
           # Compress the file
           gzip -9 $BACKUP_FILE

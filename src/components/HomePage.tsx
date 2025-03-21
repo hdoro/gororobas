@@ -26,16 +26,16 @@ export default async function HomePage(data: Partial<HomePageData>) {
 
   return (
     <>
-      <section className="flex flex-col items-center gap-[0.33em] px-2 pb-12 pt-8 text-center text-4xl md:pt-16 md:text-5xl lg:text-6xl xl:pt-24">
-        <h1 className="max-w-xl font-normal leading-none text-primary-800">
+      <section className="flex flex-col items-center gap-[0.33em] px-2 pt-8 pb-12 text-center text-4xl md:pt-16 md:text-5xl lg:text-6xl xl:pt-24">
+        <h1 className="text-primary-800 max-w-xl leading-none font-normal">
           Por terra, território,
           <br /> e{' '}
-          <strong className="font-normal text-secondary-400">gororobas</strong>
+          <strong className="text-secondary-400 font-normal">gororobas</strong>
         </h1>
         <Text
           level="h1"
           as="p"
-          className="max-w-3xl !text-[0.5em] font-normal leading-snug text-primary-800 md:opacity-90"
+          className="text-primary-800 max-w-3xl text-[0.5em]! leading-snug font-normal md:opacity-90"
         >
           Enciclopédia colaborativa de conhecimento em agroecologia sobre mais
           de 400 vegetais
@@ -55,7 +55,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
       </section>
       {featured_vegetables && featured_vegetables.length > 0 && (
         <>
-          <section className="-ml-[calc(var(--vegetable-card-width)_/_2)] space-y-9 overflow-x-hidden">
+          <section className="space-y-9 overflow-x-hidden">
             <VegetablesStrip
               vegetables={featured_vegetables.slice(
                 0,
@@ -66,7 +66,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
               vegetables={featured_vegetables.slice(
                 Math.min(featured_vegetables.length / 2),
               )}
-              offset
+              inverted
             />
           </section>
           <div className="mt-8 text-center">
@@ -79,37 +79,8 @@ export default async function HomePage(data: Partial<HomePageData>) {
           </div>
         </>
       )}
-      {notes && notes.length > 0 && (
-        <section className="mt-36 flex flex-col xl:flex-row xl:items-start xl:gap-2.5">
-          <div className="box-content flex flex-col items-start gap-1 pl-pageX pr-pageX lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pl-[calc(var(--page-padding-x)_-_2.625rem)] xl:pr-0">
-            <NoteIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
-            <div>
-              <Text level="h2" as="h2">
-                Aprendizados e experimentos
-              </Text>
-              <Text level="h3" className="max-w-lg font-normal">
-                Na cozinha, no plantio e no sacolão. <br />
-                Uma rede social agroecológica, por assim dizer
-              </Text>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 lg:pt-10">
-                <Button asChild>
-                  <Link href={paths.newNote()}>Enviar sua nota</Link>
-                </Button>
-                <Link href={paths.notesIndex()} className="link font-medium">
-                  Todas as notas
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="hide-scrollbar flex-1 overflow-x-auto px-4 py-10 lg:overflow-x-hidden lg:px-10 xl:-mt-5">
-            <NotesStrip notes={notes} />
-          </div>
-        </section>
-      )}
-
       <section className="mt-36 flex flex-col gap-4 xl:flex-row xl:items-start xl:gap-2.5">
-        <div className="box-content flex flex-col items-start gap-1 pl-pageX pr-pageX lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pl-[calc(var(--page-padding-x)_-_2.625rem)] xl:pr-0">
+        <div className="pl-pageX pr-pageX box-content flex flex-col items-start gap-1 lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pr-0 xl:pl-[calc(var(--page-padding-x)_-_2.625rem)]">
           <BulbIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
           <div>
             <Text level="h2" as="h2">
@@ -140,12 +111,41 @@ export default async function HomePage(data: Partial<HomePageData>) {
         </div>
       </section>
 
+      {notes && notes.length > 0 && (
+        <section className="mt-36 flex flex-col xl:flex-row xl:items-start xl:gap-2.5">
+          <div className="pl-pageX pr-pageX box-content flex flex-col items-start gap-1 lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pr-0 xl:pl-[calc(var(--page-padding-x)_-_2.625rem)]">
+            <NoteIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
+            <div>
+              <Text level="h2" as="h2">
+                Aprendizados e experimentos
+              </Text>
+              <Text level="h3" className="max-w-lg font-normal">
+                Na cozinha, no plantio e no sacolão. <br />
+                Uma rede social agroecológica, por assim dizer
+              </Text>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 lg:pt-10">
+                <Button asChild>
+                  <Link href={paths.newNote()}>Enviar sua nota</Link>
+                </Button>
+                <Link href={paths.notesIndex()} className="link font-medium">
+                  Todas as notas
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="hide-scrollbar flex-1 overflow-x-auto px-4 py-10 lg:overflow-x-hidden lg:px-10 xl:-mt-5">
+            <NotesStrip notes={notes} />
+          </div>
+        </section>
+      )}
+
       {data.recent_contributions && data.recent_contributions.length > 0 && (
         <section className="mt-36">
           <SectionTitle Icon={HistoryIcon}>Contribuições recentes</SectionTitle>
           <SuggestionsGrid
             suggestions={data.recent_contributions}
-            className="mt-6 px-pageX"
+            className="px-pageX mt-6"
           />
         </section>
       )}
@@ -157,7 +157,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
             Cultivando sabedoria e compartilhando experiências para
             agroecologizar o mundo ✨
           </Text>
-          <ProfilesGrid profiles={profiles} className="mt-8 px-pageX" />
+          <ProfilesGrid profiles={profiles} className="px-pageX mt-8" />
         </section>
       )}
 

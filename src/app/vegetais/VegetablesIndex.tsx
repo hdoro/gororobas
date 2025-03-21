@@ -6,51 +6,32 @@ import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
 import SliderRangeInput from '@/components/forms/SliderRangeInput'
 import Carrot from '@/components/icons/Carrot'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Dialog,
-  DialogBody,
-  DialogClose,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Text } from '@/components/ui/text'
 import type { VegetablesIndexFilterParams } from '@/queries'
-import {
-  MAX_ACCEPTED_TEMPERATURE,
-  MIN_ACCEPTED_TEMPERATURE,
-  type RangeFormValue,
-} from '@/schemas'
+import type { RangeFormValue } from '@/schemas'
 import { VEGETABLES_PER_PAGE } from '@/utils/config'
-import {
-  EDIBLE_PART_TO_LABEL,
-  PLANTING_METHOD_TO_LABEL,
-  STRATUM_TO_LABEL,
-  USAGE_TO_LABEL,
-  VEGETABLE_LIFECYCLE_TO_LABEL,
-} from '@/utils/labels'
-import {
-  MAX_ACCEPTED_HEIGHT,
-  type NumberFormat,
-  formatNumber,
-} from '@/utils/numbers'
+import { type NumberFormat, formatNumber } from '@/utils/numbers'
 import {
   paths,
   persistParamsInUrl,
   searchParamsToNextSearchParams,
 } from '@/utils/urls'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { FilterIcon, XIcon } from 'lucide-react'
+import { ArrowLeft, ArrowRightCircle, FilterIcon, XIcon } from 'lucide-react'
+import { AnimatePresence } from 'motion/react'
+import * as motion from 'motion/react-client'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import React, { Fragment, useEffect, useState } from 'react'
-import { FormProvider, useForm, useFormContext } from 'react-hook-form'
+import React, { useEffect, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 import { InView } from 'react-intersection-observer'
 import type { VegetablesIndexRouteData } from './fetchVegetablesIndex'
 import { FILTER_DEFINITIONS } from './vegetableFilterDefinitions'
@@ -84,6 +65,7 @@ export default function VegetablesIndex() {
   })
   const filterParams = form.watch()
   const [autoFetchNextPageCount, setAutoFetchNextPageCount] = useState(0)
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const autoFetchNextPage = autoFetchNextPageCount < 2 // allow 3 auto fetches
 
   const queryKey = queryParamsToQueryKey(filterParams)
@@ -127,6 +109,15 @@ export default function VegetablesIndex() {
       !data.pages[0].vegetables ||
       data.pages[0].vegetables.length === 0)
 
+  const [activeFilterKey, setActiveFilterKey] = useState<
+    (typeof FILTER_DEFINITIONS)[number]['filterKey'] | null
+  >(null)
+  const activeFilter = activeFilterKey
+    ? (FILTER_DEFINITIONS.find(
+        (filter) => filter.filterKey === activeFilterKey,
+      ) ?? null)
+    : null
+
   return (
     <main className="px-pageX py-10">
       <div className="space-y-1">
@@ -138,224 +129,227 @@ export default function VegetablesIndex() {
         </Text>
       </div>
       <FormProvider {...form}>
-        <form className="sticky top-0 z-30 mt-8 bg-background py-2">
-          <Dialog>
-            <div className="xl:flex xl:items-center xl:justify-between">
-              <div className="flex gap-2">
-                <Field
-                  form={form}
-                  name="search_query"
-                  label="Nome"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      value={field.value || ''}
-                      type="text"
-                      placeholder="Buscar por nome"
-                    />
-                  )}
-                  hideLabel
-                />
-                <DialogTrigger asChild>
+        <form className="bg-background sticky top-0 z-30 mt-8 py-2">
+          <div className="xl:flex xl:items-center xl:justify-between">
+            <div className="flex flex-wrap gap-2 lg:flex-nowrap">
+              <Field
+                form={form}
+                name="search_query"
+                label="Nome"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    value={field.value || ''}
+                    type="text"
+                    placeholder="Buscar por nome"
+                    className="md:min-w-2xs"
+                  />
+                )}
+                hideLabel
+              />
+              {/* @TODO
+              - range com 2 inputs numéricos abaixo
+              - posição do popover
+              */}
+              <Popover
+                open={filtersOpen}
+                onOpenChange={(newState) => {
+                  setFiltersOpen(newState)
+                }}
+              >
+                <PopoverTrigger
+                  asChild
+                  // Ensure we're opening the top-level filter menu, as opposed to whichever filter was active before
+                  onClick={() => setActiveFilterKey(null)}
+                >
                   <Button>
                     <FilterIcon className="mr-2 h-auto w-[1.25em]" />
                     Filtros
                   </Button>
-                </DialogTrigger>
-              </div>
-              <div className="mt-2 flex items-center gap-2 overflow-auto">
-                {Object.entries(filterParams).map(([key, values]) => {
-                  if (
-                    key === 'search_query' ||
-                    !values ||
-                    !Array.isArray(values) ||
-                    values.length === 0
-                  )
-                    return null
-
-                  const filterDefinition = FILTER_DEFINITIONS.find(
-                    (filter) => filter.filterKey === key,
-                  )
-                  if (!filterDefinition) return null
-
-                  if (filterDefinition.type === 'range') {
-                    return (
-                      <RangeFilterDisplay
-                        key={key}
-                        filterKey={key}
-                        values={values}
-                      />
-                    )
-                  }
-
-                  const labels = {
-                    strata: STRATUM_TO_LABEL,
-                    lifecycles: VEGETABLE_LIFECYCLE_TO_LABEL,
-                    uses: USAGE_TO_LABEL,
-                    planting_methods: PLANTING_METHOD_TO_LABEL,
-                    edible_parts: EDIBLE_PART_TO_LABEL,
-                  }[key]
-                  return (
-                    <Fragment key={key}>
-                      {values.map((v) => (
-                        <Badge key={`${key}-${v}`} variant="outline">
-                          {labels?.[v as keyof typeof labels] || values}
+                </PopoverTrigger>
+                <PopoverContent className="p-1">
+                  <AnimatePresence mode="popLayout">
+                    {activeFilter ? (
+                      <motion.div
+                        initial={{ opacity: 0, translateX: 32 }}
+                        animate={{ opacity: 1, translateX: 0 }}
+                        exit={{ opacity: 0, translateX: -32 }}
+                        key="active-filter"
+                      >
+                        <div className="flex items-center">
                           <Button
-                            size="icon"
+                            onClick={() => setActiveFilterKey(null)}
                             mode="bleed"
+                            size="icon"
                             tone="neutral"
-                            onClick={() =>
-                              form.setValue(
-                                // @ts-expect-error
-                                key,
-                                values.filter((x) => x !== v),
-                              )
-                            }
-                            className="ml-1 size-5 p-0"
                           >
-                            <XIcon className="size-4" />
-                            <span className="sr-only">Remover</span>
+                            <ArrowLeft className="size-4 opacity-90" />
+                            <span className="sr-only">Voltar</span>
                           </Button>
-                        </Badge>
-                      ))}
-                    </Fragment>
-                  )
-                })}
-                {/* If has filters, show clear button */}
-                {Object.entries(filterParams).some(([key, values]) => {
-                  if (
-                    key === 'search_query' ||
-                    !values ||
-                    !Array.isArray(values) ||
-                    values.length === 0
-                  )
-                    return false
+                          <Text level="p" as="p" aria-hidden weight="semibold">
+                            {activeFilter.label}
+                          </Text>
+                        </div>
+                        {activeFilter.type === 'multiselect' && (
+                          <Field
+                            form={form}
+                            name={activeFilter.filterKey}
+                            label={activeFilter.label}
+                            classNames={{ root: 'p-2', label: 'sr-only' }}
+                            render={({ field }) => (
+                              <CheckboxesInput
+                                field={field}
+                                options={Object.entries(
+                                  activeFilter.valueLabels,
+                                ).map(([value, label]) => ({ value, label }))}
+                                layout="checkbox-stack"
+                              />
+                            )}
+                          />
+                        )}
+                        {activeFilter.type === 'range' && (
+                          <Field
+                            form={form}
+                            name={activeFilter.filterKey}
+                            label={activeFilter.label}
+                            description={rangeValueToLabel(
+                              form.getValues(activeFilter.filterKey),
+                              activeFilter.format,
+                            )}
+                            classNames={{
+                              root: 'p-2 space-y-4',
+                              label: 'sr-only',
+                            }}
+                            render={({ field }) => (
+                              <SliderRangeInput
+                                field={field}
+                                min={activeFilter.min}
+                                max={activeFilter.max}
+                                step={activeFilter.step}
+                              />
+                            )}
+                          />
+                        )}
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        className="space-y-0"
+                        initial={{ opacity: 0, translateX: -32 }}
+                        animate={{ opacity: 1, translateX: 0 }}
+                        exit={{ opacity: 0, translateX: 32 }}
+                        key="filter-list"
+                      >
+                        {FILTER_DEFINITIONS.map((definition) => {
+                          if (definition.type === 'search_query') return null
 
-                  return true
-                }) && (
-                  <Button
-                    mode="bleed"
-                    tone="neutral"
-                    onClick={() => {
-                      // For some reason, I'm having to reset the form twice
-                      // to clear all the filters. Once doesn't work 🤷
-                      form.reset(
-                        {},
-                        {
-                          keepDefaultValues: false,
-                          keepValues: false,
-                        },
-                      )
-                      form.reset(
-                        {},
-                        {
-                          keepDefaultValues: false,
-                          keepValues: false,
-                        },
-                      )
-                    }}
-                  >
-                    Limpar
-                  </Button>
-                )}
-              </div>
+                          return (
+                            <Button
+                              key={definition.filterKey}
+                              mode="bleed"
+                              tone="neutral"
+                              onClick={() =>
+                                setActiveFilterKey(definition.filterKey)
+                              }
+                              className="group w-full px-2 text-left"
+                            >
+                              <definition.icon className="size-[1.25em] opacity-90" />
+                              <span className="flex-1">{definition.label}</span>
+                              <ArrowRightCircle className="size-[1em] opacity-0 transition-opacity group-hover:opacity-70" />
+                            </Button>
+                          )
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </PopoverContent>
+
+                <div className="hide-scrollbar flex gap-3 overflow-auto">
+                  {FILTER_DEFINITIONS.map((definition) => {
+                    const values = filterParams[definition.filterKey]
+
+                    if (
+                      definition.type === 'search_query' ||
+                      !values ||
+                      !Array.isArray(values) ||
+                      values.length === 0 ||
+                      (definition.type === 'range' &&
+                        !values.some((v) => typeof v === 'number' && v !== 0))
+                    )
+                      return null
+
+                    return (
+                      <div
+                        key={definition.filterKey}
+                        className="flex flex-[0_0_max-content] items-center overflow-hidden rounded-xl border bg-white whitespace-nowrap"
+                      >
+                        <Text
+                          level="sm"
+                          as="div"
+                          className="flex items-center gap-1 px-2"
+                        >
+                          <definition.icon className="size-[1.25em] opacity-90" />
+                          <span>{definition.label}</span>
+                        </Text>
+                        <Button
+                          mode="bleed"
+                          tone="neutral"
+                          onClick={() => {
+                            setFiltersOpen(true)
+                            setActiveFilterKey(definition.filterKey)
+                          }}
+                          size="sm"
+                          className="bg-background block h-full max-w-[100px] overflow-hidden rounded-none px-2 text-left text-ellipsis whitespace-nowrap"
+                        >
+                          {definition.type === 'range' &&
+                            rangeValueToLabel(
+                              values as unknown as typeof RangeFormValue.Type,
+                              definition.format,
+                            )}
+                          {definition.type === 'multiselect' && (
+                            <>
+                              <span
+                                // Hide all values when there are more than 1, but keep it for screen readers
+                                className={values.length > 1 ? 'sr-only' : ''}
+                              >
+                                {values
+                                  .map(
+                                    (value) =>
+                                      definition.valueLabels[
+                                        value as keyof typeof definition.valueLabels
+                                      ],
+                                  )
+                                  .join(', ')}
+                              </span>
+                              {values.length > 1 && (
+                                <span aria-hidden>{values.length} opções</span>
+                              )}
+                            </>
+                          )}
+                        </Button>
+                        <Button
+                          mode="bleed"
+                          tone="neutral"
+                          onClick={() =>
+                            form.setValue(definition.filterKey, undefined)
+                          }
+                          title={`Remover filtro para ${definition.label}`}
+                          className="rounded-none px-2"
+                        >
+                          <XIcon className="size-[1em]" />
+                        </Button>
+                      </div>
+                    )
+                  })}
+                </div>
+              </Popover>
             </div>
-            <DialogContent className="max-w-[calc(100dvw_-_var(--page-padding-x))] rounded-md">
-              <DialogHeader>
-                <DialogTitle>Filtre os resultados</DialogTitle>
-              </DialogHeader>
-              <DialogBody className="space-y-2">
-                <Field
-                  form={form}
-                  name="strata"
-                  label="Estrato"
-                  render={({ field }) => (
-                    <CheckboxesInput
-                      field={field}
-                      options={Object.entries(STRATUM_TO_LABEL).map(
-                        ([value, label]) => ({
-                          value,
-                          label,
-                        }),
-                      )}
-                    />
-                  )}
-                />
-                <Field
-                  form={form}
-                  name="lifecycles"
-                  label="Ciclo de vida"
-                  render={({ field }) => (
-                    <CheckboxesInput
-                      field={field}
-                      options={Object.entries(VEGETABLE_LIFECYCLE_TO_LABEL).map(
-                        ([value, label]) => ({
-                          value,
-                          label,
-                        }),
-                      )}
-                    />
-                  )}
-                />
-                <Field
-                  form={form}
-                  name="uses"
-                  label="Principais usos"
-                  render={({ field }) => (
-                    <CheckboxesInput
-                      field={field}
-                      options={Object.entries(USAGE_TO_LABEL).map(
-                        ([value, label]) => ({
-                          value,
-                          label,
-                        }),
-                      )}
-                    />
-                  )}
-                />
-                <Field
-                  form={form}
-                  name="planting_methods"
-                  label="Plantio por"
-                  render={({ field }) => (
-                    <CheckboxesInput
-                      field={field}
-                      options={Object.entries(PLANTING_METHOD_TO_LABEL).map(
-                        ([value, label]) => ({ value, label }),
-                      )}
-                    />
-                  )}
-                />
-                <Field
-                  form={form}
-                  name="edible_parts"
-                  label="Partes comestíveis"
-                  render={({ field }) => (
-                    <CheckboxesInput
-                      field={field}
-                      options={Object.entries(EDIBLE_PART_TO_LABEL).map(
-                        ([value, label]) => ({ value, label }),
-                      )}
-                    />
-                  )}
-                />
-                <RangeFields />
-              </DialogBody>
-              <DialogFooter className="border-t">
-                <DialogClose asChild>
-                  <Button size="lg" mode="bleed" tone="neutral">
-                    Buscar
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          </div>
         </form>
       </FormProvider>
       <div className="relative mt-2 space-y-6">
         <VegetablesGridWrapper>
           {isFetching && !isFetchingNextPage && (
-            <div className="absolute inset-0 flex items-center justify-center gap-3 bg-background bg-opacity-50">
+            <div className="bg-background bg-opacity-50 absolute inset-0 flex items-center justify-center gap-3">
               <Carrot className="h-6 w-6 animate-spin" />
               Carregando...
             </div>
@@ -421,69 +415,6 @@ export default function VegetablesIndex() {
   )
 }
 
-const RANGE_DISPLAY_LABELS = {
-  development_cycle: {
-    label: 'Desenvolvimento',
-    format: 'days',
-  },
-  height: {
-    label: 'Altura',
-    format: 'centimeters',
-  },
-  temperature: {
-    label: 'Temperatura',
-    format: 'temperature',
-  },
-} as const
-
-function RangeFilterDisplay({
-  filterKey,
-  values,
-}: {
-  filterKey: string
-  values: VegetablesSearchFormValue[keyof VegetablesSearchFormValue]
-}) {
-  const form = useFormContext<VegetablesSearchFormValue>()
-  if (
-    !(filterKey in RANGE_DISPLAY_LABELS) ||
-    !Array.isArray(values) ||
-    values.length !== 2 ||
-    values.every((value) => typeof value !== 'number' || value === 0)
-  )
-    return null
-
-  return (
-    <Badge key={filterKey} variant="outline">
-      {
-        RANGE_DISPLAY_LABELS[filterKey as keyof typeof RANGE_DISPLAY_LABELS]
-          .label
-      }{' '}
-      -{' '}
-      {rangeValueToLabel(
-        values as unknown as typeof RangeFormValue.Type,
-        RANGE_DISPLAY_LABELS[filterKey as keyof typeof RANGE_DISPLAY_LABELS]
-          .format,
-      )}
-      <Button
-        size="icon"
-        mode="bleed"
-        tone="neutral"
-        onClick={() =>
-          form.setValue(
-            // @ts-expect-error
-            filterKey,
-            undefined,
-          )
-        }
-        className="ml-1 size-5 p-0"
-      >
-        <XIcon className="size-4" />
-        <span className="sr-only">Remover</span>
-      </Button>
-    </Badge>
-  )
-}
-
 function rangeValueToLabel(
   value: typeof RangeFormValue.Type | null | undefined,
   format: NumberFormat,
@@ -506,56 +437,7 @@ function rangeValueToLabel(
     .map((value) => {
       if (typeof value === 'string' || format === 'none') return value
 
-      return formatNumber(value, format)
+      return formatNumber(value, format, 'approximate')
     })
     .join('')
-}
-
-function RangeFields() {
-  const form = useFormContext<VegetablesSearchFormValue>()
-  const development_cycle = form.watch('development_cycle')
-  const height = form.watch('height')
-  const temperature = form.watch('temperature')
-
-  return (
-    <>
-      <Field
-        form={form}
-        name="development_cycle"
-        label="Tempo de desenvolvimento"
-        description={rangeValueToLabel(development_cycle, 'days')}
-        render={({ field }) => (
-          <SliderRangeInput field={field} min={0} max={765} step={10} />
-        )}
-      />
-      <Field
-        form={form}
-        name="height"
-        label="Altura adulta"
-        description={rangeValueToLabel(height, 'centimeters')}
-        render={({ field }) => (
-          <SliderRangeInput
-            field={field}
-            min={0}
-            max={MAX_ACCEPTED_HEIGHT / 2}
-            step={20}
-          />
-        )}
-      />
-      <Field
-        form={form}
-        name="temperature"
-        label="Temperatura ideal"
-        description={rangeValueToLabel(temperature, 'temperature')}
-        render={({ field }) => (
-          <SliderRangeInput
-            field={field}
-            min={MIN_ACCEPTED_TEMPERATURE}
-            max={MAX_ACCEPTED_TEMPERATURE}
-            step={2.5}
-          />
-        )}
-      />
-    </>
-  )
 }
