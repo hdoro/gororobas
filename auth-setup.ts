@@ -5,6 +5,12 @@ import process from 'node:process'
 
 const client = createClient()
 
+if (!!process.env.EDGEDB_INSTANCE || !!process.env.EDGEDB_SECRET_KEY) {
+  throw new Error(
+    'EDGEDB_INSTANCE environment variable is set, which could mean connecting to a remote database - run this script *only* in the local database',
+  )
+}
+
 const CONFIG = {
   tokenTTL: '336 hours',
   magicLinkTokenTTL: 'PT10M',
