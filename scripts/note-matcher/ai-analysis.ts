@@ -1,8 +1,8 @@
 import { slugify } from '@/utils/strings'
-import { anthropic } from '@ai-sdk/anthropic'
 import { generateObject } from 'ai'
 import { Effect } from 'effect'
 import { existsSync, writeFileSync } from 'fs'
+import { ollama } from 'ollama-ai-provider'
 import { z } from 'zod'
 import { tiptapJSONtoPlainText } from '../../src/utils/tiptap'
 import {
@@ -18,6 +18,8 @@ if (!process.env.EDGEDB_INSTANCE) {
     "EDGEDB_INSTANCE environment variable is not set - don't run this script in the local database",
   )
 }
+
+const MODEL = ollama('phi4')
 
 const LAST_PROCESSED = new Date(0).toISOString()
 
@@ -141,9 +143,7 @@ function parseNote(note: (typeof NOTES)[number]) {
 
     const result = yield* Effect.tryPromise(() =>
       generateObject({
-        model: anthropic('claude-3-5-haiku-20241022', {
-          cacheControl: true,
-        }),
+        model: MODEL,
         schema: SCHEMA,
         prompt,
         system: SYSTEM_PROMPT,
@@ -225,4 +225,4 @@ function parseNote(note: (typeof NOTES)[number]) {
   })
 }
 
-await Effect.runPromise(Effect.all(NOTES.map(parseNote), { concurrency: 4 }))
+await Effect.runPromise(Effect.all(NOTES.map(parseNote), { concurrency: 1 }))
