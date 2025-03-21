@@ -112,7 +112,15 @@ export const Mention = Node.create<MentionOptions>({
   },
 
   renderText({ node }) {
-    return TRIGGER_CHAR + (node.attrs.label || node.attrs.id)
+    try {
+      const { data } = Schema.encodeUnknownSync(RichTextMentionAttributes)(
+        node.attrs,
+      )
+
+      return TRIGGER_CHAR + data.label
+    } catch (error) {
+      return '(menção)'
+    }
   },
 
   addKeyboardShortcuts() {

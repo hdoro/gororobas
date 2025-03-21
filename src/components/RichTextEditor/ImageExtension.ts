@@ -3,6 +3,7 @@ import {
   type RichTextImageAttributesInDB,
 } from '@/schemas'
 import { getImageProps } from '@/utils/getImageProps'
+import { sourcesToPlainText } from '@/utils/sources'
 import { Node, mergeAttributes, nodeInputRule } from '@tiptap/core'
 import { PluginKey } from '@tiptap/pm/state'
 import { Schema } from 'effect'
@@ -84,8 +85,23 @@ export const Image = Node.create<ImageOptions>({
     }
   },
 
-  renderText() {
-    return 'imagem'
+  renderText({ node }) {
+    let label = 'imagem'
+    try {
+      const {
+        data: { image },
+      } = Schema.encodeUnknownSync(RichTextImageAttributes)(node.attrs)
+
+      label = [
+        'imagem',
+        image.label && `de ${image.label}`,
+        sourcesToPlainText({ sources: image.sources, prefix: 'por' }),
+      ]
+        .filter(Boolean)
+        .join(' ')
+    } catch (error) {}
+
+    return `\n(${label})\n`
   },
 
   addInputRules() {
@@ -93,8 +109,7 @@ export const Image = Node.create<ImageOptions>({
       nodeInputRule({
         find: inputRegex,
         type: this.type,
-        getAttributes: (match, ...props) => {
-          console.log({ match, props })
+        getAttributes: (match) => {
           const [, , alt, src, title] = match
 
           return { src, alt, title }

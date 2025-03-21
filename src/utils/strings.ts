@@ -65,7 +65,7 @@ export function semanticListItems(items: string[], maxDisplay?: number) {
   if (maxDisplay && items.length > maxDisplay) {
     return formatter.format([
       ...items.slice(0, maxDisplay),
-      `${items.length - maxDisplay} more`,
+      `e mais ${items.length - maxDisplay}`,
     ])
   }
   return formatter.format(items)

@@ -1,5 +1,6 @@
 import { cn } from '@/utils/cn'
 import Link from '@tiptap/extension-link'
+import ListKeymap from '@tiptap/extension-list-keymap'
 import Placeholder from '@tiptap/extension-placeholder'
 import type { Extensions } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -69,5 +70,6 @@ export function getTiptapExtensions({
     Mention.configure(),
     Video.configure(),
     Image.configure(),
+    ListKeymap.configure(),
   ]
 }

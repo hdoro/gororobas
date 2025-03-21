@@ -2,26 +2,29 @@ import { richTextEditorTheme } from '@/components/RichTextEditor/RichTextEditor.
 import { getTiptapExtensions } from '@/components/RichTextEditor/getTiptapExtensions'
 import { RichText } from '@/schemas'
 import type { TiptapNode } from '@/types'
-import { generateHTML } from '@tiptap/html'
+import { generateText } from '@tiptap/core'
 import { Schema } from 'effect'
-
-function HTMLToPlainText(html: string) {
-  return (
-    html
-      // Transform <br>s into line-breaks
-      .replace(/<br\/?>/g, '\n')
-      // Then remove all the other tags
-      .replace(/<\/?[^>]*>/g, '')
-  )
-}
 
 export function tiptapJSONtoPlainText(json: TiptapNode) {
   try {
-    const html = generateHTML(
-      json,
-      getTiptapExtensions({ classes: richTextEditorTheme() }),
-    )
-    return HTMLToPlainText(html)
+    const extensions = getTiptapExtensions({ classes: richTextEditorTheme() })
+    return generateText(json, extensions, {
+      // @TODO: add a prefix to list items - currently `generateText` from the list item node doesn't work
+      // textSerializers: {
+      //   listItem: (props) => {
+      //     let text = 'a'
+      //     try {
+      //       text = generateText([props.node], extensions)
+      //     } catch (error) {
+      //     }
+      //     const prefix =
+      //       props.parent.type.name === 'bulletList'
+      //         ? '- '
+      //         : `${props.index + 1}. `
+      //     return `${prefix} ${text}`
+      //   },
+      // },
+    })
   } catch (error) {
     return undefined
   }
