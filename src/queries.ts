@@ -661,35 +661,56 @@ export type VegetablesIndexFilterParams = Omit<
 export const notesIndexQuery = e.params(
   {
     types: e.optional(e.array(e.str)),
+    search_query: e.str,
     offset: e.int32,
   },
   (params) =>
     e.select(e.Note, (note) => {
-      return {
-        ...noteForCard(note),
+      const filterOps = [
+        // Only public notes
+        e.op(note.public, '=', true),
 
-        filter: e.op(
-          e.op(note.public, '=', true),
-          'and',
+        // That match the selected types
+        e.op(
+          // Either the param doesn't exist
+          e.op('not', e.op('exists', params.types)),
+          'or',
+          // Or the note has at least one of the type values
           e.op(
-            // Either the param doesn't exist
-            e.op('not', e.op('exists', params.types)),
-            'or',
-            // Or the note has at least one of the type values
-            e.op(
-              e.count(
-                e.op(
-                  note.types,
-                  'intersect',
-                  e.array_unpack(e.cast(e.array(e.NoteType), params.types)),
-                ),
+            e.count(
+              e.op(
+                note.types,
+                'intersect',
+                e.array_unpack(e.cast(e.array(e.NoteType), params.types)),
               ),
-              '>',
-              0,
             ),
+            '>',
+            0,
           ),
         ),
 
+        // And the search query
+        e.op(
+          // Either there's no search query
+          e.op(e.len(params.search_query), '=', 0),
+          'or',
+          // Or the vegetable matches it
+          e.ext.pg_trgm.word_similar(
+            params.search_query,
+            note.content_plain_text,
+          ),
+        ),
+      ]
+
+      const finalFilter = filterOps.reduce((finalFilter, op) => {
+        if (finalFilter === null) return op
+        return e.op(finalFilter, 'and', op)
+      })
+
+      return {
+        ...noteForCard(note),
+
+        filter: finalFilter,
         limit: NOTES_PER_PAGE,
         offset: params.offset,
         order_by: {
@@ -708,6 +729,7 @@ export type NotesIndexQueryParams = Pick<
   'offset'
 > & {
   types?: NoteType[] | null
+  search_query?: string | null
 }
 
 export type NotesIndexFilterParams = Omit<NotesIndexQueryParams, 'offset'>

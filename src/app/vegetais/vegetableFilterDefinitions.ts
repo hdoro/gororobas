@@ -31,6 +31,28 @@ import type {
   RefAttributes,
 } from 'react'
 
+export type FilterDefinition = {
+  queryKey: string
+  filterKey: string
+  label: string
+  icon: ForwardRefExoticComponent<
+    Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
+  >
+} & (
+  | {
+      type: 'search_query'
+    }
+  | ({ type: 'range'; format: NumberFormat } & Omit<
+      ComponentProps<typeof SliderRangeInput>,
+      'field'
+    >)
+  | {
+      type: 'multiselect'
+      valueLabels: Record<string, string>
+      values: string[]
+    }
+)
+
 export const FILTER_DEFINITIONS = [
   {
     queryKey: 'nome',
@@ -117,24 +139,4 @@ export const FILTER_DEFINITIONS = [
     max: MAX_ACCEPTED_TEMPERATURE,
     step: 2.5,
   },
-] as const satisfies ({
-  queryKey: string
-  filterKey: string
-  label: string
-  icon: ForwardRefExoticComponent<
-    Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
-  >
-} & (
-  | {
-      type: 'search_query'
-    }
-  | ({ type: 'range'; format: NumberFormat } & Omit<
-      ComponentProps<typeof SliderRangeInput>,
-      'field'
-    >)
-  | {
-      type: 'multiselect'
-      valueLabels: Record<string, string>
-      values: string[]
-    }
-))[]
+] as const satisfies FilterDefinition[]

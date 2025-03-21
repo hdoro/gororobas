@@ -1,5 +1,5 @@
 import { insertNotesMutation } from '@/mutations'
-import { NoteDataArray, type NotesForDB } from '@/schemas'
+import { NoteDataArray, type NoteInForm, type NotesForDB } from '@/schemas'
 import { buildTraceAndMetrics } from '@/services/runtime'
 import { UnknownGelDBError } from '@/types/errors'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
@@ -25,6 +25,15 @@ export function createNotes(input: NotesForDB, client: Client) {
   )
 }
 
+export function getNotePlainText(note: NoteInForm) {
+  return [
+    tiptapJSONtoPlainText(note.title),
+    !!note.body && tiptapJSONtoPlainText(note.body),
+  ]
+    .filter(Boolean)
+    .join(' ')
+}
+
 function getTransaction(input: NotesForDB, inputClient: Client) {
   const client = inputClient.withConfig({ allow_user_specified_id: true })
 
@@ -47,6 +56,7 @@ function getTransaction(input: NotesForDB, inputClient: Client) {
       public: note.public,
       published_at: note.published_at,
       types: note.types,
+      content_plain_text: getNotePlainText(note),
       optional_properties: {
         body: note.body ?? null,
         created_by: note.created_by ?? null,

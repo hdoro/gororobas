@@ -94,6 +94,7 @@ export const insertNotesMutation = e.params(
         public: e.bool,
         published_at: e.datetime,
         types: e.array(e.str),
+        content_plain_text: e.str,
 
         /** { body: e.optional(e.json), created_by: e.uuid } */
         optional_properties: e.json,
@@ -107,6 +108,7 @@ export const insertNotesMutation = e.params(
         handle: note.handle,
         title: note.title,
         body: e.cast(e.json, e.json_get(note.optional_properties, 'body')),
+        content_plain_text: note.content_plain_text,
         public: note.public,
         types: e.array_unpack(e.cast(e.array(e.NoteType), note.types)),
         published_at: note.published_at,
@@ -147,6 +149,7 @@ export const updateNotesMutation = e.params(
      * public: e.bool,
      * published_at: e.datetime,
      * types: e.array(e.str),
+     * content_plain_text: e.str,
      * }
      **/
     optional_properties: e.json,
@@ -165,6 +168,14 @@ export const updateNotesMutation = e.params(
           e.cast(e.json, e.json_get(params.optional_properties, 'body')),
           '??',
           note.body,
+        ),
+        content_plain_text: e.op(
+          e.cast(
+            e.str,
+            e.json_get(params.optional_properties, 'content_plain_text'),
+          ),
+          '??',
+          note.content_plain_text,
         ),
         public: e.op(
           e.cast(e.bool, e.json_get(params.optional_properties, 'public')),

@@ -87,7 +87,7 @@ export default async function NotePage({ note }: { note: NotePageData }) {
           ) : null}
         </Card>
 
-        {note.created_by && (
+        {note.created_by?.name && (
           <div className="lg:flex-1">
             <Text level="h2" as="h2" className="mb-2">
               Enviada por:

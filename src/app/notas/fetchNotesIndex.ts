@@ -16,12 +16,18 @@ export default async function fetchNotesIndex(
       ? searchParamsToNextSearchParams(searchParams)
       : searchParams,
   )
+  const normalizedParams = {
+    ...queryParams,
+    search_query: queryParams.search_query?.trim()
+      ? `%${queryParams.search_query.trim()}%`
+      : '',
+  }
   const session = await auth.getSession()
 
   const notes = await runServerEffect(
     pipe(
       Effect.tryPromise({
-        try: () => notesIndexQuery.run(session.client, queryParams),
+        try: () => notesIndexQuery.run(session.client, normalizedParams),
         catch: (error) => console.log(error),
       }),
       ...buildTraceAndMetrics('notes_index', queryParams),

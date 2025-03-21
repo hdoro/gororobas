@@ -4,6 +4,7 @@ import { buildTraceAndMetrics } from '@/services/runtime'
 import { UnknownGelDBError } from '@/types/errors'
 import { Effect, Schema, pipe } from 'effect'
 import type { Client } from 'gel'
+import { getNotePlainText } from './createNotes'
 
 export function updateNote(
   input: {
@@ -25,7 +26,10 @@ export function updateNote(
           updateNotesMutation.run(client, {
             note_id: current.id,
             updated_at: new Date(),
-            optional_properties: updated,
+            optional_properties: {
+              ...updated,
+              content_plain_text: getNotePlainText(updated),
+            },
           }),
         catch: (error) => {
           console.log('Failed creating notes', error)

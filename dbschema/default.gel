@@ -343,6 +343,11 @@ module default {
 
     required title: json;
     body: json;
+    
+    required content_plain_text: str {
+      default := '';
+      annotation title := 'Plain text representation of title and body for full-text search';
+    };
 
     # @TODO relate with AI
     multi related_to_vegetables: Vegetable {
