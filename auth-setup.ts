@@ -38,16 +38,19 @@ const CONFIG = {
 
 let query = `
 CONFIGURE CURRENT BRANCH
-RESET ext::auth::ProviderConfig;
-
-CONFIGURE CURRENT BRANCH
 RESET ext::auth::AuthConfig;
 
 CONFIGURE CURRENT BRANCH
 RESET ext::auth::UIConfig;
 
 CONFIGURE CURRENT BRANCH
-RESET ext::auth::SMTPConfig;
+RESET ext::auth::MagicLinkProviderConfig;
+
+CONFIGURE CURRENT BRANCH
+RESET ext::auth::ProviderConfig;
+
+CONFIGURE CURRENT BRANCH
+RESET cfg::SMTPProviderConfig;
 
 CONFIGURE CURRENT BRANCH SET
 ext::auth::AuthConfig::auth_signing_key := '${CONFIG.signingKey}';
@@ -61,30 +64,38 @@ INSERT ext::auth::MagicLinkProviderConfig {
 };
 
 CONFIGURE CURRENT BRANCH SET
-ext::auth::SMTPConfig::sender := '${CONFIG.SMTP.sender}';
+cfg::SMTPProviderConfig::sender := '${CONFIG.SMTP.sender}';
 
 CONFIGURE CURRENT BRANCH SET
-ext::auth::SMTPConfig::host := '${CONFIG.SMTP.host}';
+cfg::SMTPProviderConfig::host := '${CONFIG.SMTP.host}';
 
 CONFIGURE CURRENT BRANCH SET
-ext::auth::SMTPConfig::port := <int32>${CONFIG.SMTP.port};
+cfg::SMTPProviderConfig::port := <int32>${CONFIG.SMTP.port};
 
 CONFIGURE CURRENT BRANCH SET
-ext::auth::SMTPConfig::security := '${CONFIG.SMTP.security}';
+cfg::SMTPProviderConfig::security := '${CONFIG.SMTP.security}';
 
 CONFIGURE CURRENT BRANCH SET
-ext::auth::SMTPConfig::validate_certs := ${CONFIG.SMTP.validate_certs};
+cfg::SMTPProviderConfig::validate_certs := ${CONFIG.SMTP.validate_certs};
 `
 
 if (CONFIG.SMTP.username && CONFIG.SMTP.password) {
   query += `
 
 CONFIGURE CURRENT BRANCH SET
-ext::auth::SMTPConfig::username := '${CONFIG.SMTP.username}';
+cfg::SMTPProviderConfig::username := '${CONFIG.SMTP.username}';
 
 CONFIGURE CURRENT BRANCH SET
-ext::auth::SMTPConfig::password := '${CONFIG.SMTP.password}';
+cfg::SMTPProviderConfig::password := '${CONFIG.SMTP.password}';
 `
+} else {
+  query += `
+CONFIGURE CURRENT BRANCH SET
+cfg::SMTPProviderConfig::username := '';
+
+CONFIGURE CURRENT BRANCH SET
+cfg::SMTPProviderConfig::password := '';
+  `
 }
 
 for (const { providerType, clientId, secret } of CONFIG.providers) {

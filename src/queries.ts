@@ -1,4 +1,5 @@
 import e, { type $infer } from '@/edgeql'
+import type { $scopify } from './edgeql/reflection'
 import type {
   EdiblePart,
   NoteType,
@@ -95,7 +96,7 @@ const userProfileForAvatar = e.shape(e.UserProfile, () => ({
   location: true,
 }))
 
-/** Returns only public notes, by default */
+/** Applies publish status filter by default */
 const noteForCard = e.shape(e.Note, (note) => ({
   title: true,
   body: true,
@@ -107,7 +108,7 @@ const noteForCard = e.shape(e.Note, (note) => ({
     location: false,
   }),
 
-  filter: e.op(note.public, '=', true),
+  filter: getNotePublishStatusFilter(note),
 }))
 
 type NoteForCardResult = Exclude<$infer<typeof noteForCard>, null>[number]
@@ -217,6 +218,7 @@ const vegetablePageShape = e.shape(e.Vegetable, (vegetable) => ({
   sources: sourceForCard,
   related_notes: (note) => ({
     ...noteForCard(note),
+    filter: getNotePublishStatusFilter(note),
 
     limit: 12,
   }),
@@ -658,6 +660,38 @@ export type VegetablesIndexFilterParams = Omit<
   'offset'
 >
 
+function getNotePublishStatusFilter(
+  note: $scopify<(typeof e.Note)['__element__']>,
+) {
+  const isLoggedIn = e.op('exists', e.global.current_user_profile)
+  const isNotePublic = e.op(
+    note.publish_status,
+    '=',
+    e.NotePublishStatus.PUBLIC,
+  )
+  const isCommunityNote = e.op(
+    note.publish_status,
+    '=',
+    e.NotePublishStatus.COMMUNITY,
+  )
+  const isNoteOwner = e.op(
+    note.created_by.id,
+    '=',
+    e.global.current_user_profile.id,
+  )
+
+  return e.any(
+    e.set(
+      // PUBLIC notes are always shown
+      isNotePublic,
+      // COMMUNITY notes are always shown to logged in users
+      e.op(isLoggedIn, 'and', isCommunityNote),
+      // PRIVATE notes are only shown to their owner
+      isNoteOwner,
+    ),
+  )
+}
+
 export const notesIndexQuery = e.params(
   {
     types: e.optional(e.array(e.str)),
@@ -667,8 +701,7 @@ export const notesIndexQuery = e.params(
   (params) =>
     e.select(e.Note, (note) => {
       const filterOps = [
-        // Only public notes
-        e.op(note.public, '=', true),
+        getNotePublishStatusFilter(note) as any,
 
         // That match the selected types
         e.op(
@@ -694,7 +727,7 @@ export const notesIndexQuery = e.params(
           // Either there's no search query
           e.op(e.len(params.search_query), '=', 0),
           'or',
-          // Or the vegetable matches it
+          // Or the note matches it
           e.ext.pg_trgm.word_similar(
             params.search_query,
             note.content_plain_text,
@@ -812,6 +845,7 @@ export const homePageQuery = e.select({
 
   notes: e.select(e.Note, (note) => ({
     ...noteForCard(note),
+
     order_by: {
       expression: note.published_at,
       direction: e.DESC, // newest first
@@ -973,7 +1007,7 @@ export const profileNotesQuery = e.params(
         filter: e.op(
           e.op(note.created_by, '=', profile),
           'and',
-          e.op(note.public, '=', true),
+          getNotePublishStatusFilter(note),
         ),
         limit: 12,
         order_by: {
@@ -986,7 +1020,7 @@ export const profileNotesQuery = e.params(
           filter: e.op(
             e.op(note.created_by, '=', profile),
             'and',
-            e.op(note.public, '=', true),
+            getNotePublishStatusFilter(note),
           ),
         })),
       ),

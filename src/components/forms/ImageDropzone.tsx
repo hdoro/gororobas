@@ -127,9 +127,11 @@ export default function ImageDropzone<
           )}
         </>
       ) : (
-        <FormLabel className="flex flex-col items-center justify-center gap-1 p-4 text-center text-xs font-normal">
-          <UploadCloudIcon />
-          Clique aqui ou arraste a foto
+        <FormLabel>
+          <div className="flex flex-col items-center justify-center gap-1 p-4 text-center text-xs font-normal">
+            <UploadCloudIcon className="opacity-80" />
+            Clique aqui ou arraste a foto
+          </div>
         </FormLabel>
       )}
     </div>
