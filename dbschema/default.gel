@@ -105,6 +105,7 @@ module default {
   }
 
   scalar type HistoryAction extending enum<`INSERT`, `UPDATE`, `DELETE`>;
+  
   type HistoryLog {
     required action: HistoryAction;
     timestamp: datetime {
@@ -336,7 +337,7 @@ module default {
   }
 
   type Note extending WithHandle, Auditable, AdminCanDoAnything {
-    required public: bool{
+    required public: bool {
       annotation deprecated := 'Use publish_status instead.';
     };
 
@@ -377,7 +378,11 @@ module default {
 
     access policy visible_if_public
       allow select
-      using (.public);
+      using (.publish_status = NotePublishStatus.PUBLIC);
+
+    access policy visible_to_community
+      allow select
+      using (.publish_status = NotePublishStatus.COMMUNITY and exists global current_user_profile);
 
     access policy owner_can_do_anything
       allow all
