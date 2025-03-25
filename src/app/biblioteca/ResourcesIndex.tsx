@@ -1,10 +1,9 @@
 'use client'
 
-import VegetableCard from '@/components/VegetableCard'
-import { VegetablesGridWrapper } from '@/components/VegetablesGrid'
+import ResourceCard from '@/components/ResourceCard'
+import { ResourcesGridWrapper } from '@/components/ResourcesGrid'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
-import SliderRangeInput from '@/components/forms/SliderRangeInput'
 import Carrot from '@/components/icons/Carrot'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,10 +14,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Text } from '@/components/ui/text'
-import type { VegetablesIndexFilterParams } from '@/queries'
-import type { RangeFormValue } from '@/schemas'
-import { VEGETABLES_PER_PAGE } from '@/utils/config'
-import { type NumberFormat, formatNumber } from '@/utils/numbers'
+import type { ResourceCardData, ResourcesIndexFilterParams } from '@/queries'
+import { RESOURCES_PER_PAGE } from '@/utils/config'
 import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
   paths,
@@ -34,31 +31,31 @@ import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { InView } from 'react-intersection-observer'
-import type { VegetablesIndexRouteData } from './fetchVegetablesIndex'
-import { FILTER_DEFINITIONS } from './vegetableFilterDefinitions'
+import type { ResourcesIndexRouteData } from './fetchResourcesIndex'
+import { FILTER_DEFINITIONS } from './resourceFilterDefinitions'
 import {
-  type VegetablesSearchFormValue,
+  type ResourcesSearchFormValue,
   queryParamsToSearchParams,
-  vegetablesNextSearchParamsToQueryParams,
-} from './vegetablesFilters'
+  resourcesNextSearchParamsToQueryParams,
+} from './resourcesFilters'
 
-async function fetchVegetablesIndexFromClient(
-  filterParams: VegetablesIndexFilterParams,
+async function fetchResourcesIndexFromClient(
+  filterParams: ResourcesIndexFilterParams,
   pageIndex: number,
 ) {
   const response = await fetch(
-    `/vegetais/api?${queryParamsToSearchParams(
+    `/biblioteca/api?${queryParamsToSearchParams(
       filterParams,
       pageIndex,
     ).toString()}`,
   )
-  return response.json() as unknown as VegetablesIndexRouteData
+  return response.json() as unknown as ResourcesIndexRouteData
 }
 
-export default function VegetablesIndex() {
+export default function ResourcesIndex() {
   const initialSearchParams = useSearchParams()
-  const form = useForm<VegetablesSearchFormValue>({
-    defaultValues: vegetablesNextSearchParamsToQueryParams(
+  const form = useForm<ResourcesSearchFormValue>({
+    defaultValues: resourcesNextSearchParamsToQueryParams(
       searchParamsToNextSearchParams(initialSearchParams),
       'form',
     ),
@@ -68,18 +65,18 @@ export default function VegetablesIndex() {
   const [filtersOpen, setFiltersOpen] = useState(false)
   const autoFetchNextPage = autoFetchNextPageCount < 2 // allow 3 auto fetches
 
-  const queryKey = queryParamsToQueryKey(filterParams, 'vegetables')
+  const queryKey = queryParamsToQueryKey(filterParams, 'resources')
   // @TODO debounce search_query to avoid happening at every keystroke
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
       queryKey,
       queryFn: ({ pageParam }) =>
-        fetchVegetablesIndexFromClient(filterParams, pageParam),
+        fetchResourcesIndexFromClient(filterParams, pageParam),
       initialPageParam: 0,
       getNextPageParam: (lastPage, _allPages, lastPageParam) => {
         if (
-          !lastPage.vegetables ||
-          lastPage.vegetables.length < VEGETABLES_PER_PAGE
+          !lastPage.resources ||
+          lastPage.resources.length < RESOURCES_PER_PAGE
         ) {
           return undefined
         }
@@ -106,8 +103,8 @@ export default function VegetablesIndex() {
     !isFetching &&
     (!data?.pages ||
       !data.pages[0] ||
-      !data.pages[0].vegetables ||
-      data.pages[0].vegetables.length === 0)
+      !data.pages[0].resources ||
+      data.pages[0].resources.length === 0)
 
   const [activeFilterKey, setActiveFilterKey] = useState<
     (typeof FILTER_DEFINITIONS)[number]['filterKey'] | null
@@ -122,10 +119,11 @@ export default function VegetablesIndex() {
     <main className="px-pageX py-10">
       <div className="space-y-1">
         <Text level="h1" as="h1">
-          Vegetais
+          Biblioteca Agroecológica
         </Text>
         <Text level="h2" as="p" className="font-normal">
-          Conhecimento em agroecologia sobre mais de 400 vegetais
+          Livros, organizações, vídeos e mais sobre agroecologia, agrofloresta e
+          a luta por terra e território.
         </Text>
       </div>
       <FormProvider {...form}>
@@ -148,7 +146,6 @@ export default function VegetablesIndex() {
                 hideLabel
               />
               {/* @TODO
-              - range com 2 inputs numéricos abaixo
               - posição do popover
               */}
               <Popover
@@ -207,29 +204,6 @@ export default function VegetablesIndex() {
                             )}
                           />
                         )}
-                        {activeFilter.type === 'range' && (
-                          <Field
-                            form={form}
-                            name={activeFilter.filterKey}
-                            label={activeFilter.label}
-                            description={rangeValueToLabel(
-                              form.getValues(activeFilter.filterKey),
-                              activeFilter.format,
-                            )}
-                            classNames={{
-                              root: 'p-2 space-y-4',
-                              label: 'sr-only',
-                            }}
-                            render={({ field }) => (
-                              <SliderRangeInput
-                                field={field}
-                                min={activeFilter.min}
-                                max={activeFilter.max}
-                                step={activeFilter.step}
-                              />
-                            )}
-                          />
-                        )}
                       </motion.div>
                     ) : (
                       <motion.div
@@ -271,11 +245,10 @@ export default function VegetablesIndex() {
                       definition.type === 'search_query' ||
                       !values ||
                       !Array.isArray(values) ||
-                      values.length === 0 ||
-                      (definition.type === 'range' &&
-                        !values.some((v) => typeof v === 'number' && v !== 0))
-                    )
+                      values.length === 0
+                    ) {
                       return null
+                    }
 
                     return (
                       <div
@@ -300,11 +273,6 @@ export default function VegetablesIndex() {
                           size="sm"
                           className="bg-background block h-full max-w-[100px] overflow-hidden rounded-none px-2 text-left text-ellipsis whitespace-nowrap"
                         >
-                          {definition.type === 'range' &&
-                            rangeValueToLabel(
-                              values as unknown as typeof RangeFormValue.Type,
-                              definition.format,
-                            )}
                           {definition.type === 'multiselect' && (
                             <>
                               <span
@@ -347,7 +315,7 @@ export default function VegetablesIndex() {
         </form>
       </FormProvider>
       <div className="relative mt-2 space-y-6">
-        <VegetablesGridWrapper>
+        <ResourcesGridWrapper>
           {isFetching && !isFetchingNextPage && (
             <div className="bg-background bg-opacity-50 absolute inset-0 flex items-center justify-center gap-3">
               <Carrot className="h-6 w-6 animate-spin" />
@@ -356,8 +324,11 @@ export default function VegetablesIndex() {
           )}
           {data?.pages?.map((page) => (
             <React.Fragment key={page.queryParams.offset}>
-              {(page.vegetables || []).map((vegetable) => (
-                <VegetableCard key={vegetable.id} vegetable={vegetable} />
+              {(page.resources || []).map((resource) => (
+                <ResourceCard
+                  key={resource.id}
+                  resource={resource as ResourceCardData}
+                />
               ))}
             </React.Fragment>
           ))}
@@ -367,20 +338,20 @@ export default function VegetablesIndex() {
               Carregando...
             </div>
           )}
-        </VegetablesGridWrapper>
+        </ResourcesGridWrapper>
         {/* EMPTY STATE */}
         {isEmpty && (
           <Card aria-live="polite">
             <CardHeader>
-              <CardTitle>Nenhum vegetal encontrado</CardTitle>
+              <CardTitle>Nenhum recurso encontrado</CardTitle>
               <Text>
-                Conhece algum que não está na Gororobas? Esse site é
+                Conhece algum que não está na biblioteca? O Gororobas é
                 colaborativo, você pode ajudar:
               </Text>
             </CardHeader>
             <CardContent>
               <Button asChild>
-                <Link href={paths.newVegetable()}>Enviar um vegetal</Link>
+                <Link href={paths.newResource()}>Enviar um recurso</Link>
               </Button>
             </CardContent>
           </Card>
@@ -413,31 +384,4 @@ export default function VegetablesIndex() {
       </div>
     </main>
   )
-}
-
-function rangeValueToLabel(
-  value: typeof RangeFormValue.Type | null | undefined,
-  format: NumberFormat,
-) {
-  if (!value) return '\u200B'
-
-  const [min, max] = value
-  if (!min && !max) return '\u200B'
-
-  let parts: (string | number)[] = []
-  if (!min) {
-    parts = ['até ', max as number]
-  } else if (!max) {
-    parts = ['a partir de ', min]
-  } else {
-    parts = ['de ', min, ' a ', max]
-  }
-
-  return parts
-    .map((value) => {
-      if (typeof value === 'string' || format === 'none') return value
-
-      return formatNumber(value, format, 'approximate')
-    })
-    .join('')
 }

@@ -1,19 +1,20 @@
 import { auth } from '@/gel'
-import { vegetablesIndexQuery } from '@/queries'
+import { resourcesIndexQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { NextSearchParams } from '@/types'
+import { shuffleArray } from '@/utils/arrays'
 import { searchParamsToNextSearchParams } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
-import { vegetablesNextSearchParamsToQueryParams } from './vegetablesFilters'
+import { resourcesNextSearchParamsToQueryParams } from './resourcesFilters'
 
-export type VegetablesIndexRouteData = Awaited<
-  ReturnType<typeof fetchVegetablesIndex>
+export type ResourcesIndexRouteData = Awaited<
+  ReturnType<typeof fetchResourcesIndex>
 >
 
-export default async function fetchVegetablesIndex(
+export default async function fetchResourcesIndex(
   searchParams: NextSearchParams | URLSearchParams,
 ) {
-  const queryParams = vegetablesNextSearchParamsToQueryParams(
+  const queryParams = resourcesNextSearchParamsToQueryParams(
     searchParams instanceof URLSearchParams
       ? searchParamsToNextSearchParams(searchParams)
       : searchParams,
@@ -27,19 +28,19 @@ export default async function fetchVegetablesIndex(
   }
   const session = await auth.getSession()
 
-  const vegetables = await runServerEffect(
+  const resources = await runServerEffect(
     pipe(
       Effect.tryPromise({
-        try: () => vegetablesIndexQuery.run(session.client, normalizedParams),
+        try: () => resourcesIndexQuery.run(session.client, normalizedParams),
         catch: (error) => console.log(error),
       }),
-      ...buildTraceAndMetrics('vegetables_index', normalizedParams),
+      ...buildTraceAndMetrics('resources_index', normalizedParams),
       Effect.catchAll(() => Effect.succeed(null)),
     ),
   )
 
   return {
-    vegetables,
+    resources: shuffleArray(resources),
     queryParams,
   }
 }

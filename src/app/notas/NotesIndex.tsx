@@ -24,10 +24,10 @@ import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { InView } from 'react-intersection-observer'
+import { queryParamsToQueryKey } from '../../utils/queryParams'
 import type { NotesIndexRouteData } from './fetchNotesIndex'
 import {
-  nextSearchParamsToQueryParams,
-  queryParamsToQueryKey,
+  notesNextSearchParamsToQueryParams,
   queryParamsToSearchParams,
 } from './notesFilterDefinition'
 
@@ -47,7 +47,7 @@ async function fetchNotesIndexFromClient(
 export default function NotesIndex() {
   const initialSearchParams = useSearchParams()
   const form = useForm<NotesIndexFilterParams>({
-    defaultValues: nextSearchParamsToQueryParams(
+    defaultValues: notesNextSearchParamsToQueryParams(
       searchParamsToNextSearchParams(initialSearchParams),
     ),
   })
@@ -55,7 +55,7 @@ export default function NotesIndex() {
   const [autoFetchNextPageCount, setAutoFetchNextPageCount] = useState(0)
   const autoFetchNextPage = autoFetchNextPageCount < 2 // allow 3 auto fetches
 
-  const queryKey = queryParamsToQueryKey(filterParams)
+  const queryKey = queryParamsToQueryKey(filterParams, 'notes')
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
       queryKey,

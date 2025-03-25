@@ -4,11 +4,17 @@ import type {
   EdiblePart,
   NoteType,
   PlantingMethod,
+  ResourceFormat,
   Stratum,
   VegetableLifeCycle,
   VegetableUsage,
 } from './gel.interfaces'
-import { NOTES_PER_PAGE, VEGETABLES_PER_PAGE } from './utils/config'
+import type { RichTextValue } from './schemas'
+import {
+  NOTES_PER_PAGE,
+  RESOURCES_PER_PAGE,
+  VEGETABLES_PER_PAGE,
+} from './utils/config'
 
 const sourceForCard = e.shape(e.Source, () => ({
   id: true,
@@ -1119,3 +1125,98 @@ export const getMentionsDataQuery = e.params(
 export const peopleIndexQuery = e.select(e.UserProfile, userProfileForAvatar)
 
 export type PeopleIndexData = Exclude<$infer<typeof peopleIndexQuery>, null>
+
+const resourceForCard = e.shape(e.Resource, (resource) => ({
+  id: true,
+  handle: true,
+  title: true,
+  url: true,
+  format: true,
+  credit_line: true,
+  description: true,
+  thumbnail: true,
+  tags: { handle: true, names: true },
+  related_to_vegetables: vegetableForCard,
+}))
+
+type ResourceCardDataRaw = Exclude<$infer<typeof resourceForCard>, null>[number]
+
+export type ResourceCardData = Omit<ResourceCardDataRaw, 'description'> & {
+  description?: RichTextValue
+}
+
+export const resourcesIndexQuery = e.params(
+  {
+    search_query: e.str,
+    offset: e.int32,
+    formats: e.optional(e.array(e.str)),
+    tags: e.optional(e.array(e.uuid)),
+    vegetables: e.optional(e.array(e.uuid)),
+  },
+  (params) =>
+    e.select(e.Resource, (resource) => {
+      const filterOps = [
+        e.op(
+          // Either there's no search query
+          e.op(e.len(params.search_query), '=', 0),
+          'or',
+          // Or the vegetable matches it
+          e.ext.pg_trgm.word_similar(params.search_query, resource.title),
+        ),
+
+        e.op(
+          // Either the param doesn't exist
+          e.op('not', e.op('exists', params.formats)),
+          'or',
+          // Or the vegetable has at least one of the values
+          e.op(
+            e.count(
+              e.op(
+                resource.format,
+                'intersect',
+                e.array_unpack(
+                  e.cast(e.array(e.ResourceFormat), params.formats),
+                ),
+              ),
+            ),
+            '>',
+            0,
+          ),
+        ),
+      ]
+
+      const finalFilter = filterOps.reduce((finalFilter, op) => {
+        if (finalFilter === null) return op
+        return e.op(finalFilter, 'and', op)
+      })
+
+      return {
+        ...resourceForCard(resource),
+
+        filter: finalFilter,
+
+        limit: RESOURCES_PER_PAGE,
+        offset: params.offset,
+      }
+    }),
+)
+
+export type ResourcesIndexData = Exclude<
+  $infer<typeof resourcesIndexQuery>,
+  null
+>
+
+export type ResourcesIndexQueryParams = Pick<
+  Parameters<typeof resourcesIndexQuery.run>[1],
+  'offset'
+> & {
+  formats?: ResourceFormat[] | null
+  search_query?: string | null
+  tags?: string[]
+  vegetables?: string[]
+}
+
+export type ResourcesIndexFilterParams = Omit<
+  ResourcesIndexQueryParams,
+  'offset'
+>

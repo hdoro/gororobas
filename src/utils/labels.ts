@@ -5,6 +5,7 @@ import type {
   NotePublishStatus,
   NoteType,
   PlantingMethod,
+  ResourceFormat,
   SourceType,
   Stratum,
   TipSubject,
@@ -180,3 +181,16 @@ export const VEGETABLE_FIELD_LABELS_MAP: Record<
   uses: 'Principais usos',
   varieties: 'Variedades',
 }
+
+export const RESOURCE_FORMAT_TO_LABEL = {
+  BOOK: 'Livro',
+  SOCIAL_MEDIA: 'Rede Social',
+  VIDEO: 'Vídeo',
+  ARTICLE: 'Artigo',
+  PODCAST: 'Podcast',
+  COURSE: 'Curso',
+  ACADEMIC_WORK: 'Trabalho Acadêmico',
+  DATASET: 'Base de Dados',
+  ORGANIZATION: 'Organização',
+  OTHER: 'Outro',
+} as const satisfies Record<ResourceFormat, string>

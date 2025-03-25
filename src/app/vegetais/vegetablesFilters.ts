@@ -24,10 +24,9 @@ export type VegetablesSearchFormValue = Omit<
   development_cycle?: typeof RangeFormValue.Type | null
 }
 
-export function nextSearchParamsToQueryParams<Format extends 'form' | 'search'>(
-  searchParams: NextSearchParams,
-  format: Format,
-): VegetablesIndexQueryParams {
+export function vegetablesNextSearchParamsToQueryParams<
+  Format extends 'form' | 'search',
+>(searchParams: NextSearchParams, format: Format): VegetablesIndexQueryParams {
   const pageIndex = searchParams[PAGE_INDEX_QUERY_KEY]
     ? Number(searchParams[PAGE_INDEX_QUERY_KEY] as string)
     : 0
@@ -125,28 +124,4 @@ export function queryParamsToSearchParams(
   })
 
   return searchParams
-}
-
-/**
- * Produces a query key for caching requests in @tanstack/query
- */
-export function queryParamsToQueryKey(
-  filterParams: VegetablesIndexFilterParams,
-) {
-  return [
-    'vegetables',
-    ...Object.entries(filterParams)
-      .flatMap(([key, value]) => {
-        if (!value) return []
-        if (!Array.isArray(value)) {
-          return [key, String(value)]
-        }
-        return [key, ...value].flatMap((entry) => {
-          if (!entry) return []
-          return String(entry)
-        })
-      })
-      // Sort keys
-      .sort((a, b) => a.localeCompare(b)),
-  ]
 }
