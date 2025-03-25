@@ -15,6 +15,18 @@ module default {
   scalar type VegetableWishlistStatus extending enum<QUERO_CULTIVAR,SEM_INTERESSE,JA_CULTIVEI,ESTOU_CULTIVANDO>;
   scalar type EditSuggestionStatus extending enum<PENDING_REVIEW,MERGED,REJECTED>;
   scalar type NotePublishStatus extending enum<PRIVATE,COMMUNITY,PUBLIC>;
+  scalar type ResourceFormat extending enum<
+    BOOK,
+    SOCIAL_MEDIA,
+    VIDEO,
+    ARTICLE,
+    PODCAST,
+    COURSE,
+    ACADEMIC_WORK,
+    DATASET,
+    ORGANIZATION,
+    OTHER
+  >;
 
   scalar type NoteType extending enum<EXPERIMENTO,ENSINAMENTO,DESCOBERTA,PERGUNTA,INSPIRACAO>;
 
@@ -196,6 +208,23 @@ module default {
       constraint regexp(r'^[a-z0-9-]+$');
     };
     index on (.handle);
+  }
+
+  type Tag extending WithHandle, PublicRead, AdminCanDoAnything {
+    required names: array<str>;
+    description: json;
+    category: str {
+      annotation title := 'Arbitrary categories to group tags together in the app';
+    };
+
+    mentions := .<tags[is WithTags];
+  }
+
+  abstract type WithTags {
+    multi tags: Tag {
+      on target delete allow;
+      on source delete allow;
+    };
   }
 
   type Image extending PublicRead, Auditable, UserCanInsert, UserCanUpdate, AdminCanDoAnything {
@@ -395,5 +424,22 @@ module default {
     required snapshot: json;
     required status: EditSuggestionStatus;
     reviewed_by: UserProfile;
+  }
+
+  type Resource extending WithHandle, WithTags, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
+    required url: str {
+      constraint exclusive;
+    };
+    required title: str;
+    required format: ResourceFormat;
+    description: json;
+    credit_line: str;
+    content: json;
+    thumbnail: str;
+
+    multi related_to_vegetables: Vegetable {
+      on target delete allow;
+      on source delete allow;
+    };
   }
 }

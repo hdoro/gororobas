@@ -45,3 +45,23 @@ export function isRenderableRichText(
       !!tiptapJSONtoPlainText(json))
   )
 }
+
+export function plainTextToTiptapJSON(text: string): TiptapNode {
+  return {
+    type: 'doc',
+    content: [
+      ...text
+        .replace(/\n{2,}/g, '\n')
+        .split('\n')
+        .map((line) => ({
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: line,
+            },
+          ],
+        })),
+    ],
+  }
+}

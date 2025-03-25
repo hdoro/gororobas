@@ -1,0 +1,6 @@
+whisper.cpp
+resources/inbox
+resources/processed
+tags/inbox
+tags/processed
+podcasts
