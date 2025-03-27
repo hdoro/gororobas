@@ -10,8 +10,10 @@ import type {
   FieldPath,
   FieldValues,
 } from 'react-hook-form'
+import LoadingSpinner from '../LoadingSpinner'
 import { SanityImage } from '../SanityImage'
-import Carrot from '../icons/Carrot'
+import { Badge } from '../ui/badge'
+import { Button } from '../ui/button'
 import {
   Command,
   CommandEmpty,
@@ -20,6 +22,25 @@ import {
   CommandList,
 } from '../ui/command'
 import { FormControl, FormItem, FormLabel } from '../ui/form'
+import { Input } from '../ui/input'
+
+const LABELS = {
+  Tag: {
+    searchTitle: 'Busque por etiquetas',
+    empty: 'Nenhuma classificação encontrada',
+  },
+  Vegetable: {
+    searchTitle: 'Busque por vegetais',
+    empty: 'Nenhum vegetal encontrado',
+  },
+  UserProfile: {
+    searchTitle: 'Busque por pessoas no Gororobas',
+    empty: 'Nenhuma pessoa encontrada',
+  },
+} as const satisfies Record<
+  ReferenceObjectType,
+  { searchTitle: string; empty: string }
+>
 
 export default function ReferenceListInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -27,9 +48,11 @@ export default function ReferenceListInput<
 >({
   field,
   objectTypes,
+  layout = 'combobox',
 }: {
   field: ControllerRenderProps<TFieldValues, TName>
   objectTypes: ReferenceObjectType[]
+  layout?: 'combobox' | 'list'
 }) {
   const [focused, setFocused] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -47,7 +70,97 @@ export default function ReferenceListInput<
 
   const selectedOptions = selected.flatMap((id) => optionsMap[id] || [])
 
-  const label = objectTypes[0] === 'Vegetable' ? 'vegetais' : 'pessoas'
+  const labels = LABELS[objectTypes[0]]
+
+  if (layout === 'list') {
+    const filteredOptions = options?.filter((option) =>
+      [option.label, ...(option.keywords || [])].some((keyword) =>
+        keyword.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
+    )
+    console
+
+    /**
+     * @TODO:
+     * better way to fit parent container's height (at least inside popover it's getting absurd)
+     * better search in list - same algorithm as cmdk
+     * highlight selection up-top
+     * good UX, esp. on loading & empty states
+     */
+    return (
+      <>
+        {!options && <LoadingSpinner />}
+        {options && (
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={labels.searchTitle}
+            className="w-full"
+          />
+        )}
+        {selectedOptions.length > 0 && (
+          <div className="hide-scrollbar -mx-2 mt-4 flex min-h-10 gap-2 overflow-auto px-2">
+            {selectedOptions.map((option) => {
+              return (
+                <Badge
+                  key={option.id}
+                  size="sm"
+                  className={cn('py-1', option.image ? 'px-1' : 'px-2')}
+                >
+                  {option.image && (
+                    <SanityImage
+                      image={option.image}
+                      maxWidth={24}
+                      className="block h-6 w-6 rounded-full object-cover"
+                      alt={`Foto de ${option.label}`}
+                    />
+                  )}
+                  <span className="pr-1">{option.label}</span>
+                  <button
+                    className="button cursor-pointer rounded-full"
+                    type="button"
+                    onClick={() => toggleOption(option.id)}
+                    disabled={field.disabled}
+                  >
+                    <XIcon className="h-4 w-4" />
+                  </button>
+                </Badge>
+              )
+            })}
+          </div>
+        )}
+
+        {filteredOptions?.length === 0 && <div>{labels.empty}</div>}
+        <div className="hide-scrollbar max-h-[250px] overflow-auto pt-4">
+          {filteredOptions?.map((option) => (
+            <Button
+              key={option.id}
+              mode="bleed"
+              tone="neutral"
+              onClick={() => toggleOption(option.id)}
+              type="button"
+              disabled={field.disabled}
+              className="flex w-full justify-start"
+            >
+              {option.image && (
+                <SanityImage
+                  image={option.image}
+                  maxWidth={24}
+                  className="block h-6 w-6 rounded-full object-cover"
+                  alt={`Foto de ${option.label}`}
+                />
+              )}
+              <span>{option.label}</span>
+              {selected.includes(option.id) && (
+                <CheckIcon className="h-4 w-4" />
+              )}
+            </Button>
+          ))}
+        </div>
+      </>
+    )
+  }
+
   return (
     <FormItem className={'rounded-md border'}>
       <Command
@@ -56,13 +169,13 @@ export default function ReferenceListInput<
         className="relative overflow-visible p-0"
       >
         <FormLabel className="sr-only font-normal">
-          Busque por {label} no Gororobas
+          {labels.searchTitle}
         </FormLabel>
         <FormControl>
           <CommandInput
             value={searchQuery}
             onValueChange={setSearchQuery}
-            placeholder={`Busque por ${label} no Gororobas`}
+            placeholder={labels.searchTitle}
             className="border-none p-0"
             disabled={field.disabled}
           />
@@ -75,18 +188,20 @@ export default function ReferenceListInput<
         >
           {!options && (
             <CommandLoading>
-              <Carrot className="h-6 w-6 animate-spin" /> Carregando
+              <LoadingSpinner />
             </CommandLoading>
           )}
-          <CommandEmpty className="flex items-center gap-2">
-            Nenhum vegetal encontrado
-          </CommandEmpty>
+          {options && (
+            <CommandEmpty className="flex items-center gap-2">
+              {labels.empty}
+            </CommandEmpty>
+          )}
           {options?.map((option) => (
             <CommandItem
               key={option.id}
               className="flex items-center gap-2"
               value={option.id}
-              keywords={[option.label]}
+              keywords={[option.label, ...(option.keywords || [])]}
               onSelect={toggleOption}
             >
               {option.image && (

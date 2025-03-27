@@ -1,9 +1,14 @@
 'use client'
 
+import LoadingSpinner from '@/components/LoadingSpinner'
 import ResourceCard from '@/components/ResourceCard'
 import { ResourcesGridWrapper } from '@/components/ResourcesGrid'
+import { SanityImage } from '@/components/SanityImage'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
+import ReferenceListInput, {
+  useReferenceOptions,
+} from '@/components/forms/ReferenceListInput'
 import Carrot from '@/components/icons/Carrot'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,6 +20,7 @@ import {
 } from '@/components/ui/popover'
 import { Text } from '@/components/ui/text'
 import type { ResourceCardData, ResourcesIndexFilterParams } from '@/queries'
+import type { ReferenceObjectType } from '@/types'
 import { RESOURCES_PER_PAGE } from '@/utils/config'
 import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
@@ -204,6 +210,24 @@ export default function ResourcesIndex() {
                             )}
                           />
                         )}
+                        {activeFilter.type === 'reference' && (
+                          <Field
+                            form={form}
+                            name={activeFilter.filterKey}
+                            label={activeFilter.label}
+                            classNames={{
+                              root: 'p-2',
+                              label: 'sr-only',
+                            }}
+                            render={({ field }) => (
+                              <ReferenceListInput
+                                field={field}
+                                objectTypes={[activeFilter.objectType]}
+                                layout="list"
+                              />
+                            )}
+                          />
+                        )}
                       </motion.div>
                     ) : (
                       <motion.div
@@ -293,6 +317,12 @@ export default function ResourcesIndex() {
                               )}
                             </>
                           )}
+                          {definition.type === 'reference' && (
+                            <ReferenceRenderer
+                              objectTypes={[definition.objectType]}
+                              values={values}
+                            />
+                          )}
                         </Button>
                         <Button
                           mode="bleed"
@@ -332,12 +362,7 @@ export default function ResourcesIndex() {
               ))}
             </React.Fragment>
           ))}
-          {isFetchingNextPage && (
-            <div className="flex items-center justify-center gap-3 py-10">
-              <Carrot className="h-6 w-6 animate-spin" />
-              Carregando...
-            </div>
-          )}
+          {isFetchingNextPage && <LoadingSpinner />}
         </ResourcesGridWrapper>
         {/* EMPTY STATE */}
         {isEmpty && (
@@ -383,5 +408,43 @@ export default function ResourcesIndex() {
           ))}
       </div>
     </main>
+  )
+}
+
+function ReferenceRenderer({
+  objectTypes,
+  values,
+}: {
+  objectTypes: ReferenceObjectType[]
+  values: string[]
+}) {
+  const { optionsMap } = useReferenceOptions(objectTypes)
+
+  const validValues = values.flatMap((value) => optionsMap[value] || [])
+
+  if (!validValues.length)
+    return <LoadingSpinner className="gap-1 py-1" showLabel={false} />
+
+  return (
+    <div className="flex items-center">
+      {validValues.slice(0, 2).map((value) => (
+        <div key={value.id} className="flex items-center gap-2">
+          {value.image && (
+            <SanityImage
+              image={value.image}
+              maxWidth={24}
+              className="block size-[1.5em] flex-[0_0_1.5em] rounded-full object-cover"
+              alt={`Foto de ${value.label}`}
+            />
+          )}
+          <span>{value.label}</span>
+        </div>
+      ))}
+      {validValues.length > 2 && (
+        <span className="flex items-center gap-2">
+          +{validValues.length - 2}
+        </span>
+      )}
+    </div>
   )
 }

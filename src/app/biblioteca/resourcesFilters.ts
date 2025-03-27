@@ -2,7 +2,6 @@ import type {
   ResourcesIndexFilterParams,
   ResourcesIndexQueryParams,
 } from '@/queries'
-import { RangeFormValue } from '@/schemas'
 import type { NextSearchParams } from '@/types'
 import { RESOURCES_PER_PAGE } from '@/utils/config'
 import { FILTER_DEFINITIONS } from './resourceFilterDefinitions'
@@ -40,6 +39,12 @@ export function resourcesNextSearchParamsToQueryParams<
 
       if (definition.type === 'search_query') {
         accFilters[filterKey] = arrayValue.join(' ')
+      }
+
+      if (definition.type === 'reference') {
+        if (arrayValue.length) {
+          accFilters[filterKey] = arrayValue
+        }
       }
 
       return accFilters

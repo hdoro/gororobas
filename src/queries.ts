@@ -391,6 +391,7 @@ export const vegetablesForReferenceQuery = e.select(
   (vegetable) => ({
     id: true,
     label: vegetable.names.index(0),
+    keywords: vegetable.names.slice(1, null),
     photos: (image) => ({
       ...imageForRendering(image),
 
@@ -408,6 +409,12 @@ export const profilesForReferenceQuery = e.select(e.UserProfile, (profile) => ({
   id: true,
   label: profile.name,
   photo: imageForRendering,
+}))
+
+export const tagsForReferenceQuery = e.select(e.Tag, (tag) => ({
+  id: true,
+  label: tag.names.index(0),
+  keywords: tag.names.slice(1, null),
 }))
 
 export const editProfileQuery = e.select(e.UserProfile, (profile) => ({
@@ -1168,7 +1175,7 @@ export const resourcesIndexQuery = e.params(
           // Either the param doesn't exist
           e.op('not', e.op('exists', params.formats)),
           'or',
-          // Or the vegetable has at least one of the values
+          // Or the resource has at least one of the values
           e.op(
             e.count(
               e.op(
@@ -1177,6 +1184,42 @@ export const resourcesIndexQuery = e.params(
                 e.array_unpack(
                   e.cast(e.array(e.ResourceFormat), params.formats),
                 ),
+              ),
+            ),
+            '>',
+            0,
+          ),
+        ),
+
+        e.op(
+          // Either the param doesn't exist
+          e.op('not', e.op('exists', params.tags)),
+          'or',
+          // Or the resource has at least one of the values
+          e.op(
+            e.count(
+              e.op(
+                resource.tags.id,
+                'intersect',
+                e.array_unpack(e.cast(e.array(e.uuid), params.tags)),
+              ),
+            ),
+            '>',
+            0,
+          ),
+        ),
+
+        e.op(
+          // Either the param doesn't exist
+          e.op('not', e.op('exists', params.vegetables)),
+          'or',
+          // Or the resource has at least one of the values
+          e.op(
+            e.count(
+              e.op(
+                resource.related_vegetables.id,
+                'intersect',
+                e.array_unpack(e.cast(e.array(e.uuid), params.vegetables)),
               ),
             ),
             '>',

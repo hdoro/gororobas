@@ -1,5 +1,4 @@
 ---
-handle: ''
 names: ['']
 description: | # Optional
   A brief description of the tag. This can be multi-line

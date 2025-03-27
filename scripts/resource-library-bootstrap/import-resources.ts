@@ -28,7 +28,6 @@ const TiptapJSONFromString = Schema.transform(Schema.String, RichText, {
 })
 
 const TagMetadata = Schema.Struct({
-  handle: Schema.String,
   names: Schema.NonEmptyArray(Schema.String),
   description: Schema.NullishOr(TiptapJSONFromString),
   category: Schema.String,
@@ -37,14 +36,26 @@ const TagMetadata = Schema.Struct({
 const ResourceMetadata = Schema.Struct({
   title: Schema.String,
   url: Schema.URL,
-  format: Schema.String,
-  handle: Schema.String.pipe(Schema.pattern(/^[a-z0-9-]+$/)),
+  format: Schema.Literal(
+    'BOOK',
+    'SOCIAL_MEDIA',
+    'VIDEO',
+    'ARTICLE',
+    'PODCAST',
+    'COURSE',
+    'ACADEMIC_WORK',
+    'DATASET',
+    'ORGANIZATION',
+    'OTHER',
+  ),
   tags: Schema.NullishOr(Schema.Array(Schema.String)),
   description: Schema.NullishOr(TiptapJSONFromString),
   credit_line: Schema.NullishOr(Schema.String),
   related_vegetables: Schema.NullishOr(Schema.Array(Schema.String)),
   thumbnail: Schema.NullishOr(Schema.URL),
 })
+
+const Handle = Schema.String.pipe(Schema.pattern(/^[a-z0-9-]+$/))
 
 /**
  * Moves a file from inbox to processed folder
@@ -76,7 +87,10 @@ function moveFileToProcessed(filePath: string) {
 function processTagFile(filePath: string) {
   return Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem
+    const path = yield* Path.Path
+
     const fileContent = yield* fs.readFileString(filePath)
+    const handle = yield* Schema.decode(Handle)(path.basename(filePath, '.md'))
     const metadata = yield* Schema.decodeUnknown(TagMetadata)(
       matter(fileContent).data,
     )
@@ -100,14 +114,16 @@ function processTagFile(filePath: string) {
       );
     `
 
-    yield* Effect.tryPromise(() => client.query(query, metadata))
+    yield* Effect.tryPromise(() => client.query(query, { ...metadata, handle }))
 
-    yield* Effect.log(`✅ tag: ${metadata.handle}`)
+    yield* Effect.log(`✅ tag: ${handle}`)
 
     // Move the file to processed folder
     if (isProduction) {
       yield* moveFileToProcessed(filePath)
     }
+
+    return { ...metadata, handle }
   }).pipe(
     Effect.tapError((error) =>
       Effect.logError(`❌ Failed to process tag ${filePath}`, error),
@@ -116,13 +132,22 @@ function processTagFile(filePath: string) {
 }
 
 // Function to process a single resource file
-function processResourceFile(filePath: string) {
+function processResourceFile(
+  filePath: string,
+  tagsSchema: Schema.SchemaClass<any, any, never>,
+) {
   return Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem
+    const path = yield* Path.Path
+
     const fileContent = yield* fs.readFileString(filePath)
+    const handle = yield* Schema.decode(Handle)(path.basename(filePath, '.md'))
     const metadata = yield* Schema.decodeUnknown(ResourceMetadata)(
       matter(fileContent).data,
     )
+
+    // Ensures we can only add known tags
+    yield* Schema.decodeUnknown(tagsSchema)(metadata.tags)
 
     const thumbnailImageSanityId = metadata.thumbnail
       ? yield* downloadResourceImage(metadata.thumbnail.toString())
@@ -163,6 +188,7 @@ function processResourceFile(filePath: string) {
       related_vegetables: metadata.related_vegetables || [],
       tags: metadata.tags || [],
       thumbnail: thumbnailImageSanityId?.sanity_id,
+      handle,
     }
     yield* Effect.logDebug(`💡 Resource insert params:`, params)
     yield* Effect.tryPromise(() => client.query(query, params))
@@ -197,17 +223,26 @@ const importTagsAndResources = Effect.gen(function* () {
     glob('scripts/resource-library-bootstrap/tags/inbox/**/*.md'),
   )
   yield* Effect.log(`Found ${tagFiles.length} tags to import.`)
-  yield* Effect.all(tagFiles.map(processTagFile), { concurrency: 20 })
+  const tags = yield* Effect.all(tagFiles.map(processTagFile), {
+    concurrency: 20,
+  })
   yield* Effect.log(`\n✨ ${tagFiles.length} tags imported`)
+
+  const TagsSchema = Schema.NullishOr(
+    Schema.Array(Schema.Literal(...tags.map((tag) => tag.handle))),
+  )
 
   // RESOURCES
   const resourceFiles = yield* Effect.tryPromise(() =>
     glob('scripts/resource-library-bootstrap/resources/inbox/**/*.md'),
   )
   yield* Effect.log(`Found ${resourceFiles.length} resources to import.`)
-  yield* Effect.all(resourceFiles.map(processResourceFile), {
-    concurrency: 10,
-  })
+  yield* Effect.all(
+    resourceFiles.map((file) => processResourceFile(file, TagsSchema)),
+    {
+      concurrency: 10,
+    },
+  )
   yield* Effect.log(`\n✨ ${resourceFiles.length} resources imported`)
 })
 

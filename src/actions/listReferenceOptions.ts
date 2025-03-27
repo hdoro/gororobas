@@ -3,6 +3,7 @@
 import { auth } from '@/gel'
 import {
   profilesForReferenceQuery,
+  tagsForReferenceQuery,
   vegetablesForReferenceQuery,
 } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
@@ -30,6 +31,7 @@ export async function listReferenceOptions(
               id: vegetable.id,
               label: vegetable.label,
               image: vegetable.photos[0],
+              keywords: vegetable.keywords,
               objectType: 'Vegetable',
             }) satisfies ReferenceOption,
         ),
@@ -57,10 +59,32 @@ export async function listReferenceOptions(
     ),
   )
 
+  const tagFetcher = pipe(
+    Effect.tryPromise({
+      try: () => tagsForReferenceQuery.run(session.client),
+      catch: (error) => {
+        console.log('Failed listing reference options', error)
+        return error
+      },
+    }),
+    Effect.map((tags) =>
+      tags.map(
+        (tag) =>
+          ({
+            id: tag.id,
+            label: tag.label,
+            keywords: tag.keywords,
+            objectType: 'Tag',
+          }) satisfies ReferenceOption,
+      ),
+    ),
+  )
+
   const fetcher = Effect.all(
     [
       ...(objectTypes.includes('UserProfile') ? [userProfileFetcher] : []),
       ...(objectTypes.includes('Vegetable') ? [vegetableFetcher] : []),
+      ...(objectTypes.includes('Tag') ? [tagFetcher] : []),
     ],
     { concurrency: 'unbounded' },
   ).pipe(
