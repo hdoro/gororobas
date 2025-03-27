@@ -434,10 +434,9 @@ module default {
     required format: ResourceFormat;
     description: json;
     credit_line: str;
-    content: json;
-    thumbnail: str;
+    thumbnail: Image;
 
-    multi related_to_vegetables: Vegetable {
+    multi related_vegetables: Vegetable {
       on target delete allow;
       on source delete allow;
     };

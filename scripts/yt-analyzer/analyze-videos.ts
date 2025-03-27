@@ -6,7 +6,7 @@ import {
 } from '@/schemas'
 import { getYouTubeID } from '@/utils/youtube'
 import { Effect, Layer, Schema } from 'effect'
-import * as Level from './level.js'
+import * as Level from '../level.js'
 import * as Youtube from './youtube.js'
 
 const VideoURLs = Schema.NonEmptyArray(YoutubeURL)

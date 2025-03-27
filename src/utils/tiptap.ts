@@ -1,6 +1,6 @@
 import { richTextEditorTheme } from '@/components/RichTextEditor/RichTextEditor.theme'
 import { getTiptapExtensions } from '@/components/RichTextEditor/getTiptapExtensions'
-import { RichText } from '@/schemas'
+import { RichText, type RichTextValue } from '@/schemas'
 import type { TiptapNode } from '@/types'
 import { generateText } from '@tiptap/core'
 import { Schema } from 'effect'
@@ -26,7 +26,7 @@ export function tiptapJSONtoPlainText(json: TiptapNode) {
       // },
     })
   } catch (error) {
-    return undefined
+    return JSON.stringify(json)
   }
 }
 
@@ -46,9 +46,10 @@ export function isRenderableRichText(
   )
 }
 
-export function plainTextToTiptapJSON(text: string): TiptapNode {
+export function plainTextToTiptapJSON(text: string): RichTextValue {
   return {
     type: 'doc',
+    version: 1,
     content: [
       ...text
         .replace(/\n{2,}/g, '\n')
@@ -63,5 +64,17 @@ export function plainTextToTiptapJSON(text: string): TiptapNode {
           ],
         })),
     ],
+  }
+}
+
+export function truncateTiptapContent(
+  json: TiptapNode,
+  maxLength: number,
+): TiptapNode {
+  if (!json.content) return json
+
+  return {
+    ...json,
+    content: json.content.slice(0, maxLength),
   }
 }

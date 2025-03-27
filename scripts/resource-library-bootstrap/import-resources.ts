@@ -1,11 +1,13 @@
-import type { ResourceFormat } from '@/gel.interfaces'
-import { slugify } from '@/utils/strings'
-import { plainTextToTiptapJSON } from '@/utils/tiptap'
-import fs from 'fs'
+import { RichText } from '@/schemas'
+import { plainTextToTiptapJSON, tiptapJSONtoPlainText } from '@/utils/tiptap'
+import { FetchHttpClient, FileSystem, Path } from '@effect/platform'
+import { NodeContext, NodeRuntime } from '@effect/platform-node'
+import { Effect, Schema } from 'effect'
 import { createClient } from 'gel'
 import { glob } from 'glob'
 import matter from 'gray-matter'
-import path from 'path'
+import * as Level from '../level'
+import { downloadResourceImage } from './download-resource-image'
 
 const isProduction = !!process.env.EDGEDB_INSTANCE
 
@@ -19,33 +21,39 @@ const client = createClient({
   apply_access_policies: false,
 })
 
-// Interface for tag data
-interface TagData {
-  handle: string
-  names: string[]
-  description?: string | undefined
-  category: string
-}
+const TiptapJSONFromString = Schema.transform(Schema.String, RichText, {
+  strict: true,
+  decode: (str) => plainTextToTiptapJSON(str),
+  encode: (json) => tiptapJSONtoPlainText(json),
+})
 
-// Interface for resource data
-interface ResourceData {
-  title: string
-  url: string
-  format: ResourceFormat
-  handle?: string
-  tags?: string[]
-  description?: string | undefined
-  credit_line?: string
-  related_vegetables?: string[]
-  content: string
-  thumbnail?: string
-}
+const TagMetadata = Schema.Struct({
+  handle: Schema.String,
+  names: Schema.NonEmptyArray(Schema.String),
+  description: Schema.NullishOr(TiptapJSONFromString),
+  category: Schema.String,
+})
+
+const ResourceMetadata = Schema.Struct({
+  title: Schema.String,
+  url: Schema.URL,
+  format: Schema.String,
+  handle: Schema.String.pipe(Schema.pattern(/^[a-z0-9-]+$/)),
+  tags: Schema.NullishOr(Schema.Array(Schema.String)),
+  description: Schema.NullishOr(TiptapJSONFromString),
+  credit_line: Schema.NullishOr(Schema.String),
+  related_vegetables: Schema.NullishOr(Schema.Array(Schema.String)),
+  thumbnail: Schema.NullishOr(Schema.URL),
+})
 
 /**
  * Moves a file from inbox to processed folder
  */
-function moveFileToProcessed(filePath: string): void {
-  try {
+function moveFileToProcessed(filePath: string) {
+  return Effect.gen(function* () {
+    const path = yield* Path.Path
+    const fs = yield* FileSystem.FileSystem
+
     // Get the directory and filename
     const dirname = path.dirname(filePath)
     const filename = path.basename(filePath)
@@ -54,38 +62,24 @@ function moveFileToProcessed(filePath: string): void {
     const processedDir = dirname.replace('/inbox/', '/processed/')
 
     // Create the processed directory if it doesn't exist
-    if (!fs.existsSync(processedDir)) {
-      fs.mkdirSync(processedDir, { recursive: true })
-    }
+    yield* fs.makeDirectory(processedDir, { recursive: true })
 
     // Create the destination path
     const destPath = path.join(processedDir, filename)
 
     // Move the file
-    fs.renameSync(filePath, destPath)
-
-    console.log(`Moved ${filePath} to ${destPath}`)
-  } catch (error) {
-    console.error(`Error moving file ${filePath} to processed:`, error)
-  }
+    yield* fs.rename(filePath, destPath)
+  })
 }
 
 // Function to process a single tag file
-async function processTagFile(filePath: string): Promise<void> {
-  try {
-    // Read and parse the file
-    const fileContent = fs.readFileSync(filePath, 'utf-8')
-    const { data } = matter(fileContent)
-
-    // Prepare tag data
-    const tagData: TagData = {
-      handle: data.handle,
-      names: data.names,
-      description: data.description
-        ? JSON.stringify(plainTextToTiptapJSON(data.description))
-        : undefined,
-      category: data.category,
-    }
+function processTagFile(filePath: string) {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    const fileContent = yield* fs.readFileString(filePath)
+    const metadata = yield* Schema.decodeUnknown(TagMetadata)(
+      matter(fileContent).data,
+    )
 
     // Insert tag into EdgeDB
     const query = `
@@ -106,69 +100,44 @@ async function processTagFile(filePath: string): Promise<void> {
       );
     `
 
-    await client.query(query, {
-      handle: tagData.handle,
-      names: tagData.names,
-      description: tagData.description,
-      category: tagData.category,
-    })
+    yield* Effect.tryPromise(() => client.query(query, metadata))
 
-    console.log(`✅ Imported tag: ${tagData.handle}`)
+    yield* Effect.log(`✅ tag: ${metadata.handle}`)
 
     // Move the file to processed folder
     if (isProduction) {
-      moveFileToProcessed(filePath)
+      yield* moveFileToProcessed(filePath)
     }
-  } catch (error) {
-    console.error(`❌ Error processing tag ${filePath}:`, error)
-  }
-}
-
-function parseContent(content?: string) {
-  if (!content) return undefined
-
-  const trimmed = content.trim()
-  if (!trimmed || !trimmed.replace(/\n/g, '')) {
-    return undefined
-  }
-
-  if (trimmed.match('WEBVTT')) {
-    return JSON.stringify({ type: 'webvtt', content: trimmed })
-  }
-
-  return JSON.stringify({ type: 'markdown', content: trimmed })
+  }).pipe(
+    Effect.tapError((error) =>
+      Effect.logError(`❌ Failed to process tag ${filePath}`, error),
+    ),
+  )
 }
 
 // Function to process a single resource file
-async function processResourceFile(filePath: string): Promise<void> {
-  try {
-    // Read and parse the file
-    const fileContent = fs.readFileSync(filePath, 'utf-8')
-    const { data, content } = matter(fileContent)
+function processResourceFile(filePath: string) {
+  return Effect.gen(function* () {
+    const fs = yield* FileSystem.FileSystem
+    const fileContent = yield* fs.readFileString(filePath)
+    const metadata = yield* Schema.decodeUnknown(ResourceMetadata)(
+      matter(fileContent).data,
+    )
 
-    // Generate handle if not provided
-    if (!data.handle) {
-      data.handle = slugify(data.title)
-    }
-
-    // Prepare resource data
-    const resourceData: ResourceData = {
-      title: data.title,
-      url: data.url,
-      format: data.format,
-      handle: data.handle,
-      tags: data.tags || [],
-      description: data.description
-        ? JSON.stringify(plainTextToTiptapJSON(data.description))
-        : undefined,
-      credit_line: data.credit_line,
-      related_vegetables: data.related_vegetables || [],
-      content: JSON.stringify(parseContent(content)),
-      thumbnail: data.thumbnail,
-    }
+    const thumbnailImageSanityId = metadata.thumbnail
+      ? yield* downloadResourceImage(metadata.thumbnail.toString())
+      : undefined
 
     // Insert resource into EdgeDB
     const query = `
+      with thumbnail_image := (
+        insert Image {
+          sanity_id := <optional str>$thumbnail,
+          label := <str>$title
+        }
+        unless conflict on .sanity_id
+        else (select Image filter .sanity_id = <str>$thumbnail)
+      ) if exists <optional str>$thumbnail else {}
       insert Resource {
         title := <str>$title,
         url := <str>$url,
@@ -176,78 +145,78 @@ async function processResourceFile(filePath: string): Promise<void> {
         handle := <str>$handle,
         description := <optional json>$description,
         credit_line := <optional str>$credit_line,
-        content := <optional json>$content,
-        thumbnail := <optional str>$thumbnail,
+        thumbnail := thumbnail_image,
         tags := (
           select Tag
           filter .handle in array_unpack(<array<str>>$tags)
         ),
-        related_to_vegetables := (
+        related_vegetables := (
           select Vegetable
           filter .handle in array_unpack(<array<str>>$related_vegetables)
         )
       }
     `
 
-    await client.query(query, { ...resourceData })
+    const params = {
+      ...metadata,
+      url: metadata.url.toString(),
+      related_vegetables: metadata.related_vegetables || [],
+      tags: metadata.tags || [],
+      thumbnail: thumbnailImageSanityId?.sanity_id,
+    }
+    yield* Effect.logDebug(`💡 Resource insert params:`, params)
+    yield* Effect.tryPromise(() => client.query(query, params))
 
-    console.log(`✅ Imported resource: ${data.title}`)
+    yield* Effect.log(`✅ Imported resource: ${metadata.title}`)
 
     // Move the file to processed folder
     if (isProduction) {
-      moveFileToProcessed(filePath)
+      yield* moveFileToProcessed(filePath)
     }
-  } catch (error) {
-    console.error(`❌ Error processing resource ${filePath}:`, error)
-  }
+  }).pipe(
+    Effect.tapError((error) =>
+      Effect.logError(`❌ Failed to process resource ${filePath}`, error),
+    ),
+  )
 }
 
 // Main function to import tags and resources
-async function importTagsAndResources() {
+const importTagsAndResources = Effect.gen(function* () {
   // Clear resources and tags in development
   if (!isProduction) {
-    await client.query(`delete Tag`)
-    await client.query(`delete Resource`)
+    yield* Effect.tryPromise(() =>
+      client.query(`
+        delete Tag;
+        delete Resource;
+      `),
+    )
   }
 
-  try {
-    // First import tags
-    const tagFiles = await glob(
-      'scripts/resource-library-bootstrap/tags/inbox/**/*.md',
-      {
-        ignore: ['scripts/resource-library-bootstrap/tags/template.md'],
-      },
-    )
+  // TAGS
+  const tagFiles = yield* Effect.tryPromise(() =>
+    glob('scripts/resource-library-bootstrap/tags/inbox/**/*.md'),
+  )
+  yield* Effect.log(`Found ${tagFiles.length} tags to import.`)
+  yield* Effect.all(tagFiles.map(processTagFile), { concurrency: 20 })
+  yield* Effect.log(`\n✨ ${tagFiles.length} tags imported`)
 
-    console.log(`Found ${tagFiles.length} tag files to import.`)
+  // RESOURCES
+  const resourceFiles = yield* Effect.tryPromise(() =>
+    glob('scripts/resource-library-bootstrap/resources/inbox/**/*.md'),
+  )
+  yield* Effect.log(`Found ${resourceFiles.length} resources to import.`)
+  yield* Effect.all(resourceFiles.map(processResourceFile), {
+    concurrency: 10,
+  })
+  yield* Effect.log(`\n✨ ${resourceFiles.length} resources imported`)
+})
 
-    for (const file of tagFiles) {
-      await processTagFile(file)
-    }
-
-    console.log('Tag import completed!')
-
-    // Then import resources
-    const resourceFiles = await glob(
-      'scripts/resource-library-bootstrap/resources/inbox/**/*.md',
-      {
-        ignore: ['scripts/resource-library-bootstrap/resources/template.md'],
-      },
-    )
-
-    console.log(`Found ${resourceFiles.length} resource files to import.`)
-
-    for (const file of resourceFiles) {
-      await processResourceFile(file)
-    }
-
-    console.log('Resource import completed!')
-  } catch (error) {
-    console.error('Error importing tags and resources:', error)
-  } finally {
-    client.close()
-  }
-}
-
-// Run the import
-importTagsAndResources()
+NodeRuntime.runMain(
+  Effect.scoped(importTagsAndResources).pipe(
+    Effect.provide(NodeContext.layer),
+    Effect.provide(
+      Level.layer('scripts/resource-library-bootstrap/images-cache'),
+    ),
+    Effect.provide(FetchHttpClient.layer),
+  ),
+)

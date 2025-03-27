@@ -139,7 +139,7 @@ export default function ResourcesIndex() {
                     {...field}
                     value={field.value || ''}
                     type="text"
-                    placeholder="Buscar por nome"
+                    placeholder="Buscar por título"
                     className="md:min-w-2xs"
                   />
                 )}

@@ -40,7 +40,7 @@ export default async function fetchResourcesIndex(
   )
 
   return {
-    resources: shuffleArray(resources),
+    resources: shuffleArray(resources || []),
     queryParams,
   }
 }

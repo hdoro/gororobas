@@ -1134,9 +1134,9 @@ const resourceForCard = e.shape(e.Resource, (resource) => ({
   format: true,
   credit_line: true,
   description: true,
-  thumbnail: true,
+  thumbnail: imageForRendering,
   tags: { handle: true, names: true },
-  related_to_vegetables: vegetableForCard,
+  related_vegetables: vegetableForCard,
 }))
 
 type ResourceCardDataRaw = Exclude<$infer<typeof resourceForCard>, null>[number]
