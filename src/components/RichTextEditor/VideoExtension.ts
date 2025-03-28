@@ -13,8 +13,8 @@ import {
   RichTextVideoAttributes,
   type RichTextVideoAttributesInDB,
   YOUTUBE_REGEX,
-  type YoutubeIdType,
-  YoutubeURL,
+  type YoutubeVideoIdType,
+  YoutubeVideoURL,
 } from '@/schemas'
 import { getYoutubeVideoURL } from '@/utils/youtube'
 import { Node, mergeAttributes, nodePasteRule } from '@tiptap/core'
@@ -108,7 +108,7 @@ export const Video = Node.create<VideoOptions>({
       const { data } = Schema.encodeUnknownSync(RichTextVideoAttributes)(
         node.attrs,
       )
-      return getYoutubeVideoURL(data.id as YoutubeIdType)
+      return getYoutubeVideoURL(data.id as YoutubeVideoIdType)
     } catch (error) {
       return 'Vídeo de YouTube'
     }
@@ -121,7 +121,7 @@ export const Video = Node.create<VideoOptions>({
         type: this.type,
         getAttributes: (match) => {
           try {
-            const url = Schema.decodeUnknownSync(YoutubeURL)(match.input)
+            const url = Schema.decodeUnknownSync(YoutubeVideoURL)(match.input)
             return { data: getVideoTiptapContent(url).attrs.data }
           } catch (error) {
             return null

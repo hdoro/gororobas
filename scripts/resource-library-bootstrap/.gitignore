@@ -1,6 +1,7 @@
 whisper.cpp
 resources/inbox
 resources/processed
+resources/triage
 tags/inbox
 tags/processed
 podcasts

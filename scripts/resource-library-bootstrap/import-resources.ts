@@ -1,12 +1,10 @@
-import { RichText } from '@/schemas'
+import { Handle, RichText } from '@/schemas'
 import { plainTextToTiptapJSON, tiptapJSONtoPlainText } from '@/utils/tiptap'
-import { FetchHttpClient, FileSystem, Path } from '@effect/platform'
-import { NodeContext, NodeRuntime } from '@effect/platform-node'
+import { FileSystem, Path } from '@effect/platform'
 import { Effect, Schema } from 'effect'
 import { createClient } from 'gel'
 import { glob } from 'glob'
 import matter from 'gray-matter'
-import * as Level from '../level'
 import { downloadResourceImage } from './download-resource-image'
 
 const isProduction = !!process.env.EDGEDB_INSTANCE
@@ -27,13 +25,13 @@ const TiptapJSONFromString = Schema.transform(Schema.String, RichText, {
   encode: (json) => tiptapJSONtoPlainText(json),
 })
 
-const TagMetadata = Schema.Struct({
+export const TagMetadata = Schema.Struct({
   names: Schema.NonEmptyArray(Schema.String),
   description: Schema.NullishOr(TiptapJSONFromString),
   category: Schema.String,
 })
 
-const ResourceMetadata = Schema.Struct({
+export const ResourceMetadata = Schema.Struct({
   title: Schema.String,
   url: Schema.URL,
   format: Schema.Literal(
@@ -54,8 +52,6 @@ const ResourceMetadata = Schema.Struct({
   related_vegetables: Schema.NullishOr(Schema.Array(Schema.String)),
   thumbnail: Schema.NullishOr(Schema.URL),
 })
-
-const Handle = Schema.String.pipe(Schema.pattern(/^[a-z0-9-]+$/))
 
 /**
  * Moves a file from inbox to processed folder
@@ -99,7 +95,7 @@ const getVegetablesSchema = Effect.gen(function* () {
 })
 
 // Function to process a single tag file
-function processTagFile(filePath: string) {
+export function processTagFile(filePath: string) {
   return Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
@@ -109,6 +105,20 @@ function processTagFile(filePath: string) {
     const metadata = yield* Schema.decodeUnknown(TagMetadata)(
       matter(fileContent).data,
     )
+    return {
+      ...metadata,
+      handle,
+    }
+  }).pipe(
+    Effect.tapError((error) =>
+      Effect.logError(`❌ Failed to process tag ${filePath}`, error),
+    ),
+  )
+}
+
+function addTag(filePath: string) {
+  return Effect.gen(function* () {
+    const tag = yield* processTagFile(filePath)
 
     // Insert tag into EdgeDB
     const query = `
@@ -129,16 +139,16 @@ function processTagFile(filePath: string) {
       );
     `
 
-    yield* Effect.tryPromise(() => client.query(query, { ...metadata, handle }))
+    yield* Effect.tryPromise(() => client.query(query, tag))
 
-    yield* Effect.log(`✅ tag: ${handle}`)
+    yield* Effect.log(`✅ tag: ${tag.handle}`)
 
     // Move the file to processed folder
     if (isProduction) {
       yield* moveFileToProcessed(filePath)
     }
 
-    return { ...metadata, handle }
+    return tag
   }).pipe(
     Effect.tapError((error) =>
       Effect.logError(`❌ Failed to process tag ${filePath}`, error),
@@ -226,7 +236,7 @@ function processResourceFile(
 }
 
 // Main function to import tags and resources
-const importTagsAndResources = Effect.gen(function* () {
+export const importTagsAndResources = Effect.gen(function* () {
   // Clear resources and tags in development
   if (!isProduction) {
     yield* Effect.tryPromise(() =>
@@ -242,7 +252,7 @@ const importTagsAndResources = Effect.gen(function* () {
     glob('scripts/resource-library-bootstrap/tags/inbox/**/*.md'),
   )
   yield* Effect.log(`Found ${tagFiles.length} tags to import.`)
-  const tags = yield* Effect.all(tagFiles.map(processTagFile), {
+  const tags = yield* Effect.all(tagFiles.map(addTag), {
     concurrency: 20,
   })
   yield* Effect.log(`\n✨ ${tagFiles.length} tags imported`)
@@ -271,13 +281,3 @@ const importTagsAndResources = Effect.gen(function* () {
   )
   yield* Effect.log(`\n✨ ${resourceFiles.length} resources imported`)
 })
-
-NodeRuntime.runMain(
-  Effect.scoped(importTagsAndResources).pipe(
-    Effect.provide(NodeContext.layer),
-    Effect.provide(
-      Level.layer('scripts/resource-library-bootstrap/images-cache'),
-    ),
-    Effect.provide(FetchHttpClient.layer),
-  ),
-)

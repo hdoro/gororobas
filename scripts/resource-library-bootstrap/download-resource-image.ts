@@ -2,7 +2,7 @@ import { FailedUploadingImageError } from '@/types/errors'
 import { sanityServerClient } from '@/utils/sanity.client'
 import { HttpClient, HttpClientResponse, Path } from '@effect/platform'
 import { Effect, pipe, Schema } from 'effect'
-import * as Level from '../level'
+import * as Level from '../resource-sourcing/level'
 
 function downloadImageFile(imageURL: string) {
   return Effect.gen(function* () {

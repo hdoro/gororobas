@@ -1,6 +1,6 @@
-import type { YoutubeIdType } from '@/schemas'
+import type { YoutubeVideoIdType } from '@/schemas'
 
-export default function YoutubeVideo(props: { id: YoutubeIdType }) {
+export default function YoutubeVideo(props: { id: YoutubeVideoIdType }) {
   return (
     <div className="my-6">
       <iframe

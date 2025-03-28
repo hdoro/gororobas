@@ -229,7 +229,7 @@ export const NameInArray = S.transform(
   },
 )
 
-const Handle = S.String.pipe(
+export const Handle = S.String.pipe(
   S.minLength(1, {
     message: () => 'Obrigatório',
   }),
@@ -470,24 +470,24 @@ export type RichTextMentionAttributesInForm =
 export const YOUTUBE_REGEX =
   /^((?:https?:)?\/\/)?((?:www|m|music)\.)?(?:youtube(?:-nocookie)?\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})(\S+)?$/g
 
-export const YoutubeURL = S.String.pipe(
+export const YoutubeVideoURL = S.String.pipe(
   S.pattern(/youtu\.?be/, { message: () => 'Link de vídeo inválido' }),
   S.brand('YoutubeURL'),
 )
 
-export type YoutubeURLType = typeof YoutubeURL.Type
+export type YoutubeVideoURLType = typeof YoutubeVideoURL.Type
 
-export const YoutubeId = S.String.pipe(
-  S.pattern(/[a-zA-Z0-9_-]{6,11}/, { message: () => 'Link de vídeo inválido' }),
+export const YoutubeVideoId = S.String.pipe(
+  S.pattern(/[a-zA-Z0-9_-]{6,11}/, { message: () => 'ID de vídeo inválido' }),
   S.brand('YoutubeId'),
 )
 
-export type YoutubeIdType = typeof YoutubeId.Type
+export type YoutubeVideoIdType = typeof YoutubeVideoId.Type
 
 export const RichTextVideoData = S.Struct({
   version: S.Literal(1),
   type: S.Literal('youtube'),
-  id: YoutubeId,
+  id: YoutubeVideoId,
 })
 
 export const RichTextVideoAttributes = S.Struct({
