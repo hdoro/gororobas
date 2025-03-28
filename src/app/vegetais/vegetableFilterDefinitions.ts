@@ -18,26 +18,20 @@ import {
   BeanIcon,
   CalendarClockIcon,
   CookingPotIcon,
-  type LucideProps,
+  type LucideIcon,
   RecycleIcon,
   RulerIcon,
   SearchIcon,
   ShapesIcon,
   ThermometerIcon,
 } from 'lucide-react'
-import type {
-  ComponentProps,
-  ForwardRefExoticComponent,
-  RefAttributes,
-} from 'react'
+import type { ComponentProps } from 'react'
 
 export type FilterDefinition = {
   queryKey: string
   filterKey: string
   label: string
-  icon: ForwardRefExoticComponent<
-    Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
-  >
+  icon: LucideIcon
 } & (
   | {
       type: 'search_query'

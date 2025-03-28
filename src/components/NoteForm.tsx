@@ -20,14 +20,9 @@ import {
 } from '@/utils/labels'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Effect, Schema, pipe } from 'effect'
-import { CarrotIcon, GlobeIcon, LockIcon, type LucideProps } from 'lucide-react'
+import { CarrotIcon, GlobeIcon, LockIcon, type LucideIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import {
-  type ForwardRefExoticComponent,
-  type PropsWithChildren,
-  type RefAttributes,
-  useState,
-} from 'react'
+import { type PropsWithChildren, useState } from 'react'
 import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import {
   Select,
@@ -42,9 +37,7 @@ import {
 type PublishStatusExplainer = {
   label: string
   description: string
-  icon: ForwardRefExoticComponent<
-    Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
-  >
+  icon: LucideIcon
 }
 
 export const PUBLISH_STATUS_EXPLAINERS = {

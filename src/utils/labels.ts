@@ -184,6 +184,7 @@ export const VEGETABLE_FIELD_LABELS_MAP: Record<
 
 export const RESOURCE_FORMAT_TO_LABEL = {
   BOOK: 'Livro',
+  FILM: 'Filme',
   SOCIAL_MEDIA: 'Rede Social',
   VIDEO: 'Vídeo',
   ARTICLE: 'Artigo',

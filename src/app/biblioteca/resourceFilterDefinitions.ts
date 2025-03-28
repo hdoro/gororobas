@@ -1,16 +1,13 @@
 import type { ReferenceObjectType } from '@/types'
 import { RESOURCE_FORMAT_TO_LABEL } from '@/utils/labels'
-import type { LucideProps } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { CarrotIcon, SearchIcon, ShapesIcon, TagsIcon } from 'lucide-react'
-import type { ForwardRefExoticComponent, RefAttributes } from 'react'
 
 export type ResourceFilterDefinition = {
   queryKey: string
   filterKey: string
   label: string
-  icon: ForwardRefExoticComponent<
-    Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
-  >
+  icon: LucideIcon
 } & (
   | {
       type: 'search_query'

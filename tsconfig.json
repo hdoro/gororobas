@@ -36,6 +36,7 @@
     "src/edgeql/**",
     "effect-learnings/**",
     "gitignored",
-    "scripts/ai-experiments.ts"
+    "scripts/ai-experiments.ts",
+    "scripts/resource-library-bootstrap/whisper.cpp/**"
   ]
 }

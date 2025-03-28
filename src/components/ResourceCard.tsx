@@ -9,22 +9,29 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Text } from '@/components/ui/text'
+import type { ResourceFormat } from '@/gel.interfaces'
 import type { ResourceCardData } from '@/queries'
+import { cn } from '@/utils/cn'
 import { RESOURCE_FORMAT_TO_LABEL } from '@/utils/labels'
 import { truncateTiptapContent } from '@/utils/tiptap'
 import {
   BookOpen,
   Database,
+  ExternalLinkIcon,
   File,
   FileText,
   FileVideo,
+  FilmIcon,
   Globe,
   GraduationCap,
   Headphones,
+  type LucideIcon,
 } from 'lucide-react'
 import { useState } from 'react'
 import { SanityImage } from './SanityImage'
+import VegetableBadge from './VegetableChip'
 import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
+import { Button } from './ui/button'
 import {
   Tooltip,
   TooltipContent,
@@ -34,6 +41,7 @@ import {
 
 const FORMAT_ICONS = {
   BOOK: BookOpen,
+  FILM: FilmIcon,
   SOCIAL_MEDIA: Globe,
   VIDEO: FileVideo,
   ARTICLE: FileText,
@@ -43,11 +51,24 @@ const FORMAT_ICONS = {
   DATASET: Database,
   ORGANIZATION: Globe,
   OTHER: File,
-}
+} as const satisfies Record<ResourceFormat, LucideIcon>
+
+const FORMAT_LABELS = {
+  BOOK: 'Ler livro',
+  FILM: 'Assistir',
+  SOCIAL_MEDIA: 'Acessar',
+  VIDEO: 'Assistir',
+  ARTICLE: 'Ler artigo',
+  PODCAST: 'Escutar',
+  COURSE: 'Assistir',
+  ACADEMIC_WORK: 'Ler',
+  DATASET: 'Acessar',
+  ORGANIZATION: 'Conhecer organização',
+  OTHER: 'Acessar',
+} as const satisfies Record<ResourceFormat, string>
 
 const DISPLAYED_TAGS = 2
 
-// @TODO finish dialog
 export default function ResourceCard({
   resource,
   onClick,
@@ -93,6 +114,28 @@ export default function ResourceCard({
         </div>
 
         <div className="mx-2">
+          {(resource.related_vegetables?.length || 0) > 0 && (
+            <TooltipProvider delayDuration={200}>
+              <div
+                className={cn(
+                  'hide-scrollbar -mx-3 mt-2 flex overflow-auto px-3',
+                  resource.related_vegetables.length <= 2
+                    ? 'gap-3'
+                    : '-space-x-3',
+                )}
+              >
+                {resource.related_vegetables.map((vegetable) => (
+                  <VegetableBadge
+                    key={vegetable.handle}
+                    vegetable={vegetable}
+                    size="sm"
+                    includeName={resource.related_vegetables.length <= 2}
+                  />
+                ))}
+              </div>
+            </TooltipProvider>
+          )}
+
           <Text level="h3" as="h3" className="line-clamp-2 font-medium">
             {resource.title}
           </Text>
@@ -145,20 +188,6 @@ export default function ResourceCard({
               />
             </div>
           )}
-
-          {(resource.related_vegetables?.length || 0) > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1">
-              {resource.related_vegetables?.map((vegetable) => (
-                <Badge
-                  key={vegetable.handle}
-                  variant="outline"
-                  className="text-xs"
-                >
-                  {vegetable.name}
-                </Badge>
-              ))}
-            </div>
-          )}
         </div>
       </CardContent>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -167,80 +196,91 @@ export default function ResourceCard({
             Mais informação sobre {resource.title}
           </span>
         </DialogTrigger>
-        <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-[calc(100vw-var(--page-padding-x))] overflow-y-auto md:max-w-3xl">
           <div className="p-4">
-            <DialogTitle asChild>
-              <Text level="h2" as="h2" className="mb-4">
-                {resource.title}
-              </Text>
-            </DialogTitle>
-
-            {resource.credit_line && (
-              <Text level="p" as="p" className="text-muted-foreground mb-4">
-                {resource.credit_line}
-              </Text>
-            )}
-
-            {/* Format badge */}
-            <div className="mb-4 flex items-center gap-2">
-              <FormatIcon size={16} />
-              <Text level="sm">{label}</Text>
+            <div className={cn('flex flex-wrap items-center gap-2')}>
+              {resource.thumbnail ? (
+                <div className="size-20 overflow-hidden rounded-md bg-stone-100">
+                  <SanityImage
+                    image={resource.thumbnail}
+                    maxWidth={250}
+                    className={
+                      'block h-full w-full object-contain transition-all! select-none group-hover:scale-105'
+                    }
+                    draggable={false}
+                  />
+                </div>
+              ) : (
+                <div className="flex size-20 items-center justify-center rounded-md bg-stone-100">
+                  <FormatIcon className="text-primary-300 size-[40%]" />
+                </div>
+              )}
+              <div className="flex-[1_0_250px] space-y-1">
+                <div className="flex items-center gap-2">
+                  <FormatIcon size={16} />
+                  <Text level="sm">{label}</Text>
+                </div>
+                <DialogTitle asChild>
+                  <Text level="h2" as="h2">
+                    {resource.title}
+                  </Text>
+                </DialogTitle>
+                {resource.credit_line && (
+                  <Text level="p" as="p" className="text-muted-foreground">
+                    {resource.credit_line}
+                  </Text>
+                )}
+              </div>
+              {resource.url && (
+                <Button asChild>
+                  <a
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ExternalLinkIcon className="size-[1.25em]" />
+                    <Text level="sm">{FORMAT_LABELS[resource.format]}</Text>
+                  </a>
+                </Button>
+              )}
             </div>
 
-            {/* URL */}
-            {resource.url && (
-              <div className="mb-4">
-                <a
-                  href={resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary-600 flex items-center gap-1 hover:underline"
-                >
-                  <Globe size={16} />
-                  <Text level="sm">Acessar recurso</Text>
-                </a>
+            {((resource.related_vegetables?.length || 0) > 0 ||
+              (resource.tags?.length || 0) > 0) && (
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-x-2 gap-y-3">
+                {(resource.tags?.length || 0) > 0 && (
+                  <div className="flex flex-wrap gap-1">
+                    {resource.tags?.map((tag) => (
+                      <Badge key={tag.handle} size="sm">
+                        {tag.names[0]}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+
+                {(resource.related_vegetables?.length || 0) > 0 && (
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-3">
+                    <Text level="sm" as="h2" weight="semibold">
+                      {resource.related_vegetables.length > 1
+                        ? 'Vegetais relacionados'
+                        : 'Vegetal relacionado'}
+                    </Text>
+                    {resource.related_vegetables?.map((vegetable) => (
+                      <VegetableBadge
+                        key={vegetable.handle}
+                        vegetable={vegetable}
+                        size="sm"
+                        includeName
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
-            {/* Full description */}
             {resource.description && (
-              <div className="mb-4">
-                <Text level="h3" as="h3" className="mb-2">
-                  Descrição
-                </Text>
+              <div className="note-card--content mt-5 space-y-3">
                 <DefaultTipTapRenderer content={resource.description} />
-              </div>
-            )}
-
-            {/* Tags */}
-            {(resource.tags?.length || 0) > 0 && (
-              <div className="mb-4">
-                <Text level="h3" as="h3" className="mb-2">
-                  Tags
-                </Text>
-                <div className="flex flex-wrap gap-1">
-                  {resource.tags?.map((tag) => (
-                    <Badge key={tag.handle} variant="outline">
-                      {tag.names[0]}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Related vegetables */}
-            {(resource.related_vegetables?.length || 0) > 0 && (
-              <div>
-                <Text level="h3" as="h3" className="mb-2">
-                  Vegetais relacionados
-                </Text>
-                <div className="flex flex-wrap gap-1">
-                  {resource.related_vegetables?.map((vegetable) => (
-                    <Badge key={vegetable.handle} variant="outline">
-                      {vegetable.name}
-                    </Badge>
-                  ))}
-                </div>
               </div>
             )}
           </div>

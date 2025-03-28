@@ -2,7 +2,6 @@
 
 import LoadingSpinner from '@/components/LoadingSpinner'
 import ResourceCard from '@/components/ResourceCard'
-import { ResourcesGridWrapper } from '@/components/ResourcesGrid'
 import { SanityImage } from '@/components/SanityImage'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
@@ -29,7 +28,13 @@ import {
   searchParamsToNextSearchParams,
 } from '@/utils/urls'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { ArrowLeft, ArrowRightCircle, FilterIcon, XIcon } from 'lucide-react'
+import {
+  ArrowLeft,
+  ArrowRightCircle,
+  FilterIcon,
+  PlusCircleIcon,
+  XIcon,
+} from 'lucide-react'
 import { AnimatePresence } from 'motion/react'
 import * as motion from 'motion/react-client'
 import Link from 'next/link'
@@ -122,7 +127,7 @@ export default function ResourcesIndex() {
     : null
 
   return (
-    <main className="px-pageX py-10">
+    <main className="px-pageX pt-12 pb-30">
       <div className="space-y-1">
         <Text level="h1" as="h1">
           Biblioteca Agroecológica
@@ -341,11 +346,18 @@ export default function ResourcesIndex() {
                 </div>
               </Popover>
             </div>
+
+            <Button asChild mode="outline" className="max-xl:mt-4">
+              <Link href={paths.newResource()}>
+                <PlusCircleIcon />
+                Enviar material
+              </Link>
+            </Button>
           </div>
         </form>
       </FormProvider>
       <div className="relative mt-2 space-y-6">
-        <ResourcesGridWrapper>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {isFetching && !isFetchingNextPage && (
             <div className="bg-background bg-opacity-50 absolute inset-0 flex items-center justify-center gap-3">
               <Carrot className="h-6 w-6 animate-spin" />
@@ -362,13 +374,15 @@ export default function ResourcesIndex() {
               ))}
             </React.Fragment>
           ))}
-          {isFetchingNextPage && <LoadingSpinner />}
-        </ResourcesGridWrapper>
+          {isFetchingNextPage && (
+            <LoadingSpinner className="col-span-full py-20" />
+          )}
+        </div>
         {/* EMPTY STATE */}
         {isEmpty && (
           <Card aria-live="polite">
             <CardHeader>
-              <CardTitle>Nenhum recurso encontrado</CardTitle>
+              <CardTitle>Nenhum material encontrado</CardTitle>
               <Text>
                 Conhece algum que não está na biblioteca? O Gororobas é
                 colaborativo, você pode ajudar:
@@ -376,7 +390,7 @@ export default function ResourcesIndex() {
             </CardHeader>
             <CardContent>
               <Button asChild>
-                <Link href={paths.newResource()}>Enviar um recurso</Link>
+                <Link href={paths.newResource()}>Enviar um material</Link>
               </Button>
             </CardContent>
           </Card>

@@ -17,6 +17,7 @@ module default {
   scalar type NotePublishStatus extending enum<PRIVATE,COMMUNITY,PUBLIC>;
   scalar type ResourceFormat extending enum<
     BOOK,
+    FILM,
     SOCIAL_MEDIA,
     VIDEO,
     ARTICLE,

@@ -83,6 +83,21 @@ function moveFileToProcessed(filePath: string) {
   })
 }
 
+const getVegetablesSchema = Effect.gen(function* () {
+  const vegetables = yield* Effect.tryPromise(() =>
+    client.query<{ handle: string; names: string[] }>(
+      `select Vegetable { handle, names }`,
+    ),
+  )
+  return Schema.NullishOr(
+    Schema.Array(
+      Schema.Literal(...vegetables.map((v) => v.handle)).annotations({
+        message: () => 'Invalid vegetable handle',
+      }),
+    ),
+  )
+})
+
 // Function to process a single tag file
 function processTagFile(filePath: string) {
   return Effect.gen(function* () {
@@ -135,6 +150,7 @@ function processTagFile(filePath: string) {
 function processResourceFile(
   filePath: string,
   tagsSchema: Schema.SchemaClass<any, any, never>,
+  vegetablesSchema: Schema.SchemaClass<any, any, never>,
 ) {
   return Effect.gen(function* () {
     const fs = yield* FileSystem.FileSystem
@@ -148,6 +164,9 @@ function processResourceFile(
 
     // Ensures we can only add known tags
     yield* Schema.decodeUnknown(tagsSchema)(metadata.tags)
+
+    // Ensures we can only add known vegetables
+    yield* Schema.decodeUnknown(vegetablesSchema)(metadata.related_vegetables)
 
     const thumbnailImageSanityId = metadata.thumbnail
       ? yield* downloadResourceImage(metadata.thumbnail.toString())
@@ -229,8 +248,13 @@ const importTagsAndResources = Effect.gen(function* () {
   yield* Effect.log(`\n✨ ${tagFiles.length} tags imported`)
 
   const TagsSchema = Schema.NullishOr(
-    Schema.Array(Schema.Literal(...tags.map((tag) => tag.handle))),
+    Schema.Array(
+      Schema.Literal(...tags.map((tag) => tag.handle)).annotations({
+        message: () => 'Invalid tag handle',
+      }),
+    ),
   )
+  const VegetablesSchema = yield* getVegetablesSchema
 
   // RESOURCES
   const resourceFiles = yield* Effect.tryPromise(() =>
@@ -238,7 +262,9 @@ const importTagsAndResources = Effect.gen(function* () {
   )
   yield* Effect.log(`Found ${resourceFiles.length} resources to import.`)
   yield* Effect.all(
-    resourceFiles.map((file) => processResourceFile(file, TagsSchema)),
+    resourceFiles.map((file) =>
+      processResourceFile(file, TagsSchema, VegetablesSchema),
+    ),
     {
       concurrency: 10,
     },

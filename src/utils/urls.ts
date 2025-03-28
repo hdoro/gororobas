@@ -98,8 +98,7 @@ export const paths = {
 
   resourcesIndex: () => '/biblioteca' as const,
   resource: (handle: string) => formatPath(`/biblioteca/${handle}`),
-  // @TODO placeholder new resource page
-  newResource: () => '/biblioteca/novo' as const,
+  newResource: () => '/biblioteca/nova-referencia' as const,
 
   notesIndex: () => '/notas' as const,
   note: (handle: string) => formatPath(`/notas/${handle}`),
