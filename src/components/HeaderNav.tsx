@@ -1,9 +1,9 @@
 import { paths } from '@/utils/urls'
 import {
   LibraryBigIcon,
+  type LucideIcon,
   NotebookPenIcon,
   SproutIcon,
-  type LucideIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'

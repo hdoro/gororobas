@@ -3,9 +3,9 @@ import { paths } from '@/utils/urls'
 import {
   GithubIcon,
   LibraryBigIcon,
+  type LucideIcon,
   NotebookPenIcon,
   SproutIcon,
-  type LucideIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import GororobasLogo from './icons/GororobasLogo'

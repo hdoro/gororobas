@@ -23,6 +23,7 @@ import {
   NOTE_PUBLISH_STATUS_TO_LABEL,
   NOTE_TYPE_TO_LABEL,
   PLANTING_METHOD_TO_LABEL,
+  RESOURCE_FORMAT_TO_LABEL,
   STRATUM_TO_LABEL,
   TIP_SUBJECT_TO_LABEL,
   USAGE_TO_LABEL,
@@ -31,7 +32,11 @@ import {
 import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
 import type { JSONContent } from '@tiptap/react'
 import { Effect, ParseResult, Schema as S } from 'effect'
-import type { NotePublishStatus, NoteType } from './gel.interfaces'
+import type {
+  NotePublishStatus,
+  NoteType,
+  ResourceFormat,
+} from './gel.interfaces'
 import { FailedUploadingImageError } from './types/errors'
 import { pathToAbsUrl } from './utils/urls'
 
@@ -48,6 +53,14 @@ const isFile = (input: unknown): input is File => input instanceof File
 const FileSchema = S.declare(isFile, {
   identifier: 'FileSchema',
   description: 'Um arquivo (`File` no Javascript)',
+})
+
+const isURLString = (input: unknown): input is string =>
+  typeof input === 'string' && !!input && URL.canParse(input)
+
+const URLStringSchema = S.declare(isURLString, {
+  identifier: 'URLStringSchema',
+  description: 'Um URL válido',
 })
 
 export type RichTextValue = JSONContent & { version: 1 }
@@ -437,7 +450,7 @@ export const RangeFormValue = S.Tuple(RangeBoundValue, RangeBoundValue)
 export const RichTextMentionData = S.Struct({
   version: S.Literal(1),
   label: S.String,
-  objectType: S.Literal('Vegetable', 'UserProfile'),
+  objectType: S.Literal('Vegetable', 'UserProfile', 'Tag'),
   image: Optional(StoredImageDataInForm),
   id: S.String,
 })
@@ -540,3 +553,31 @@ export const PathSchema = S.String.pipe(
     return true
   }),
 )
+
+export const ResourceData = S.Struct({
+  id: S.UUID,
+  title: S.String.pipe(
+    S.minLength(3, {
+      message: () => 'Título deve ter ao menos 3 caracteres',
+    }),
+  ),
+  format: S.Literal(
+    ...(Object.keys(RESOURCE_FORMAT_TO_LABEL) as ResourceFormat[]),
+  ),
+  url: URLStringSchema,
+  description: Optional(RichText),
+  credit_line: Optional(S.String),
+  thumbnail: Optional(S.partial(ImageInForm)),
+  tags: Optional(S.Array(S.UUID)),
+  related_vegetables: Optional(S.Array(S.UUID)),
+})
+
+export type ResourceForDB = typeof ResourceData.Type
+export type ResourceInForm = typeof ResourceData.Encoded
+
+export const ResourceWithUploadedImages = S.Struct({
+  ...ResourceData.fields,
+  thumbnail: Optional(ImageFormToDBTransformer),
+})
+
+export type ResourceForDBWithImages = typeof ResourceWithUploadedImages.Type

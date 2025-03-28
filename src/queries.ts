@@ -1265,3 +1265,40 @@ export type ResourcesIndexFilterParams = Omit<
   ResourcesIndexQueryParams,
   'offset'
 >
+
+export const resourcePageQuery = e.params(
+  {
+    handle: e.str,
+  },
+  (params) =>
+    e.select(e.Resource, (resource) => ({
+      filter_single: e.op(resource.handle, '=', params.handle),
+
+      ...resourceForCard(resource),
+      related_resources: e.select(e.Resource, (related_resource) => ({
+        ...resourceForCard(related_resource),
+
+        limit: 8,
+        order_by: {
+          expression: e.random(),
+        },
+        filter: e.op(
+          e.op(related_resource.id, '!=', resource.id),
+          'and',
+          e.op(
+            e.count(
+              e.op(related_resource.tags.id, 'intersect', resource.tags.id),
+            ),
+            '>',
+            0,
+          ),
+        ),
+      })),
+    })),
+)
+
+type ResourcePageDataRaw = Exclude<$infer<typeof resourcePageQuery>, null>
+
+export type ResourcePageData = Omit<ResourcePageDataRaw, 'description'> & {
+  description?: RichTextValue
+}

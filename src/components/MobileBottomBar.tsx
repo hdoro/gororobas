@@ -46,7 +46,11 @@ function LinkButton(props: {
 export default function MobileBottomBar({ signedIn }: { signedIn: boolean }) {
   const pathname = usePathname()
 
-  if (pathname === paths.newNote() || pathname === paths.newVegetable()) {
+  if (
+    pathname === paths.newNote() ||
+    pathname === paths.newVegetable() ||
+    pathname === paths.newResource()
+  ) {
     return null
   }
 

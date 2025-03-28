@@ -98,7 +98,7 @@ export const paths = {
 
   resourcesIndex: () => '/biblioteca' as const,
   resource: (handle: string) => formatPath(`/biblioteca/${handle}`),
-  newResource: () => '/biblioteca/nova-referencia' as const,
+  newResource: () => '/biblioteca/novo-material' as const,
 
   notesIndex: () => '/notas' as const,
   note: (handle: string) => formatPath(`/notas/${handle}`),

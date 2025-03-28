@@ -870,3 +870,53 @@ export const relate_note_to_vegetable_mutation = e.params(
       },
     })),
 )
+
+export const insertResourceMutation = e.params(
+  {
+    title: e.str,
+    handle: e.str,
+    format: e.ResourceFormat,
+    url: e.str,
+    description: e.optional(e.json),
+    credit_line: e.optional(e.str),
+    thumbnail: e.optional(e.uuid),
+    tags: REFERENCES_PARAM,
+    related_vegetables: REFERENCES_PARAM,
+  },
+  (params) =>
+    e.insert(e.Resource, {
+      title: params.title,
+      handle: params.handle,
+      format: params.format,
+      url: params.url,
+      description: params.description,
+      credit_line: params.credit_line,
+      thumbnail: e.select(e.Image, (v) => ({
+        filter_single: e.op(v.id, '=', params.thumbnail),
+      })),
+
+      // References
+      tags: e.op(
+        'distinct',
+        e.assert_distinct(
+          e.for(e.array_unpack(params.tags), (tag) =>
+            e.select(e.detached(e.Tag), (v) => ({
+              filter: e.op(v.id, '=', tag.id),
+              '@order_index': tag.order_index,
+            })),
+          ),
+        ),
+      ),
+      related_vegetables: e.op(
+        'distinct',
+        e.assert_distinct(
+          e.for(e.array_unpack(params.related_vegetables), (vegetable) =>
+            e.select(e.detached(e.Vegetable), (v) => ({
+              filter: e.op(v.id, '=', vegetable.id),
+              '@order_index': vegetable.order_index,
+            })),
+          ),
+        ),
+      ),
+    }),
+)

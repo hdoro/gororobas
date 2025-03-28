@@ -223,6 +223,7 @@ module default {
 
   abstract type WithTags {
     multi tags: Tag {
+      order_index: int16;
       on target delete allow;
       on source delete allow;
     };
@@ -438,6 +439,8 @@ module default {
     thumbnail: Image;
 
     multi related_vegetables: Vegetable {
+      order_index: int16;
+
       on target delete allow;
       on source delete allow;
     };
