@@ -24,8 +24,10 @@ export type FormOption = {
 
 export type ReferenceObjectType = 'Vegetable' | 'UserProfile' | 'Tag'
 
+export type ReferenceValueType = 'id' | 'handle'
+
 export type ReferenceOption = {
-  id: string
+  value: string
   label: string
   objectType: ReferenceObjectType
   keywords?: string[]

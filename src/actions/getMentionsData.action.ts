@@ -41,7 +41,7 @@ export async function getMentionsDataAction(rawIds: readonly string[]) {
           if (!label || !objectType) return []
 
           return {
-            id: data.id,
+            value: data.id,
             handle: data.handle,
             objectType,
             label,

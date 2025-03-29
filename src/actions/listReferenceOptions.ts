@@ -7,11 +7,16 @@ import {
   vegetablesForReferenceQuery,
 } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import type { ReferenceObjectType, ReferenceOption } from '@/types'
+import type {
+  ReferenceObjectType,
+  ReferenceOption,
+  ReferenceValueType,
+} from '@/types'
 import { Effect, pipe } from 'effect'
 
 export async function listReferenceOptions(
   objectTypes: ReferenceObjectType[],
+  valueType: ReferenceValueType = 'id',
 ): Promise<ReferenceOption[] | { error: string }> {
   const session = await auth.getSession()
 
@@ -28,7 +33,7 @@ export async function listReferenceOptions(
         vegetables.map(
           (vegetable) =>
             ({
-              id: vegetable.id,
+              value: valueType === 'id' ? vegetable.id : vegetable.handle,
               label: vegetable.label,
               image: vegetable.photos[0],
               keywords: vegetable.keywords,
@@ -50,7 +55,7 @@ export async function listReferenceOptions(
       profiles.map(
         (profile) =>
           ({
-            id: profile.id,
+            value: valueType === 'id' ? profile.id : profile.handle,
             label: profile.label,
             image: profile.photo,
             objectType: 'UserProfile',
@@ -71,7 +76,7 @@ export async function listReferenceOptions(
       tags.map(
         (tag) =>
           ({
-            id: tag.id,
+            value: valueType === 'id' ? tag.id : tag.handle,
             label: tag.label,
             keywords: tag.keywords,
             objectType: 'Tag',

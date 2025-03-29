@@ -53,9 +53,9 @@ export default function useMentionOptions(query: string) {
 
   // Scroll to selected item when it changes
   useEffect(() => {
-    if (selectedItem?.id)
+    if (selectedItem?.value)
       containerRef?.current
-        ?.querySelector?.(`[data-id="${selectedItem?.id}"]`)
+        ?.querySelector?.(`[data-id="${selectedItem?.value}"]`)
         ?.scrollIntoView({ block: 'nearest' })
   }, [selectedItem])
 

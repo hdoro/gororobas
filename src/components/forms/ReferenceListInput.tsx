@@ -1,5 +1,9 @@
 import { listReferenceOptions } from '@/actions/listReferenceOptions'
-import type { ReferenceObjectType, ReferenceOption } from '@/types'
+import type {
+  ReferenceObjectType,
+  ReferenceOption,
+  ReferenceValueType,
+} from '@/types'
 import { cn } from '@/utils/cn'
 import { useQuery } from '@tanstack/react-query'
 import { CommandLoading } from 'cmdk'
@@ -48,16 +52,18 @@ export default function ReferenceListInput<
 >({
   field,
   objectTypes,
+  valueType = 'id',
   layout = 'combobox',
 }: {
   field: ControllerRenderProps<TFieldValues, TName>
   objectTypes: ReferenceObjectType[]
+  valueType?: ReferenceValueType
   layout?: 'combobox' | 'list'
 }) {
   const [focused, setFocused] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const selected = (field.value || []) as ReferenceOption['id'][]
-  const { options, optionsMap } = useReferenceOptions(objectTypes)
+  const selected = (field.value || []) as ReferenceOption['value'][]
+  const { options, optionsMap } = useReferenceOptions(objectTypes, valueType)
 
   function toggleOption(id: string) {
     if (selected.includes(id)) {
@@ -84,7 +90,6 @@ export default function ReferenceListInput<
      * @TODO:
      * better way to fit parent container's height (at least inside popover it's getting absurd)
      * better search in list - same algorithm as cmdk
-     * highlight selection up-top
      * good UX, esp. on loading & empty states
      */
     return (
@@ -103,7 +108,7 @@ export default function ReferenceListInput<
             {selectedOptions.map((option) => {
               return (
                 <Badge
-                  key={option.id}
+                  key={option.value}
                   size="sm"
                   className={cn('py-1', option.image ? 'px-1' : 'px-2')}
                 >
@@ -119,7 +124,7 @@ export default function ReferenceListInput<
                   <button
                     className="button cursor-pointer rounded-full"
                     type="button"
-                    onClick={() => toggleOption(option.id)}
+                    onClick={() => toggleOption(option.value)}
                     disabled={field.disabled}
                   >
                     <XIcon className="h-4 w-4" />
@@ -134,10 +139,10 @@ export default function ReferenceListInput<
         <div className="hide-scrollbar max-h-[250px] overflow-auto pt-4">
           {filteredOptions?.map((option) => (
             <Button
-              key={option.id}
+              key={option.value}
               mode="bleed"
               tone="neutral"
-              onClick={() => toggleOption(option.id)}
+              onClick={() => toggleOption(option.value)}
               type="button"
               disabled={field.disabled}
               className="flex w-full justify-start"
@@ -151,7 +156,7 @@ export default function ReferenceListInput<
                 />
               )}
               <span>{option.label}</span>
-              {selected.includes(option.id) && (
+              {selected.includes(option.value) && (
                 <CheckIcon className="h-4 w-4" />
               )}
             </Button>
@@ -198,9 +203,9 @@ export default function ReferenceListInput<
           )}
           {options?.map((option) => (
             <CommandItem
-              key={option.id}
+              key={option.value}
               className="flex items-center gap-2"
-              value={option.id}
+              value={option.value}
               keywords={[option.label, ...(option.keywords || [])]}
               onSelect={toggleOption}
             >
@@ -213,7 +218,7 @@ export default function ReferenceListInput<
                 />
               )}
               <span>{option.label}</span>
-              {selected.includes(option.id) && (
+              {selected.includes(option.value) && (
                 <CheckIcon className="h-4 w-4" />
               )}
             </CommandItem>
@@ -225,7 +230,7 @@ export default function ReferenceListInput<
           {selectedOptions.map((option) => {
             return (
               <div
-                key={option.id}
+                key={option.value}
                 className={cn(
                   'flex h-9 items-center gap-2 rounded-full border-2 py-1 text-sm',
                   option.image ? 'px-1' : 'px-2',
@@ -243,7 +248,7 @@ export default function ReferenceListInput<
                 <button
                   className="button cursor-pointer rounded-full"
                   type="button"
-                  onClick={() => toggleOption(option.id)}
+                  onClick={() => toggleOption(option.value)}
                   disabled={field.disabled}
                 >
                   <XIcon className="h-4 w-4" />
@@ -257,10 +262,13 @@ export default function ReferenceListInput<
   )
 }
 
-export function useReferenceOptions(objectTypes: ReferenceObjectType[]) {
+export function useReferenceOptions(
+  objectTypes: ReferenceObjectType[],
+  valueType: ReferenceValueType = 'id',
+) {
   const result = useQuery({
     queryKey: ['useReferenceOptions', objectTypes.sort().join(',')],
-    queryFn: () => listReferenceOptions(objectTypes),
+    queryFn: () => listReferenceOptions(objectTypes, valueType),
     enabled: true,
   })
 
@@ -269,7 +277,7 @@ export function useReferenceOptions(objectTypes: ReferenceObjectType[]) {
 
     return (result.data || []).reduce(
       (acc, option) => {
-        acc[option.id] = option
+        acc[option.value] = option
         return acc
       },
       {} as Record<string, ReferenceOption>,

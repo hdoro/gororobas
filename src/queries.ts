@@ -390,6 +390,7 @@ export const vegetablesForReferenceQuery = e.select(
   e.Vegetable,
   (vegetable) => ({
     id: true,
+    handle: true,
     label: vegetable.names.index(0),
     keywords: vegetable.names.slice(1, null),
     photos: (image) => ({
@@ -407,12 +408,14 @@ export const vegetablesForReferenceQuery = e.select(
 
 export const profilesForReferenceQuery = e.select(e.UserProfile, (profile) => ({
   id: true,
+  handle: true,
   label: profile.name,
   photo: imageForRendering,
 }))
 
 export const tagsForReferenceQuery = e.select(e.Tag, (tag) => ({
   id: true,
+  handle: true,
   label: tag.names.index(0),
   keywords: tag.names.slice(1, null),
 }))
@@ -1159,8 +1162,8 @@ export const resourcesIndexQuery = e.params(
     search_query: e.str,
     offset: e.int32,
     formats: e.optional(e.array(e.str)),
-    tags: e.optional(e.array(e.uuid)),
-    vegetables: e.optional(e.array(e.uuid)),
+    tags: e.optional(e.array(e.str)),
+    vegetables: e.optional(e.array(e.str)),
   },
   (params) =>
     e.select(e.Resource, (resource) => {
@@ -1201,9 +1204,9 @@ export const resourcesIndexQuery = e.params(
           e.op(
             e.count(
               e.op(
-                resource.tags.id,
+                resource.tags.handle,
                 'intersect',
-                e.array_unpack(e.cast(e.array(e.uuid), params.tags)),
+                e.array_unpack(params.tags),
               ),
             ),
             '>',
@@ -1219,9 +1222,9 @@ export const resourcesIndexQuery = e.params(
           e.op(
             e.count(
               e.op(
-                resource.related_vegetables.id,
+                resource.related_vegetables.handle,
                 'intersect',
-                e.array_unpack(e.cast(e.array(e.uuid), params.vegetables)),
+                e.array_unpack(params.vegetables),
               ),
             ),
             '>',

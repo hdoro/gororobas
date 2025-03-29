@@ -228,6 +228,7 @@ export default function ResourcesIndex() {
                               <ReferenceListInput
                                 field={field}
                                 objectTypes={[activeFilter.objectType]}
+                                valueType={'handle'}
                                 layout="list"
                               />
                             )}
@@ -442,7 +443,7 @@ function ReferenceRenderer({
   return (
     <div className="flex items-center">
       {validValues.slice(0, 2).map((value) => (
-        <div key={value.id} className="flex items-center gap-2">
+        <div key={value.value} className="flex items-center gap-2">
           {value.image && (
             <SanityImage
               image={value.image}
