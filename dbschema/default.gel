@@ -335,6 +335,7 @@ module default {
           filter .status != <VegetableWishlistStatus>'SEM_INTERESSE'
     );
     related_notes := .<related_to_vegetables[is Note];
+    related_resources := .<related_vegetables[is Resource];
   }
 
   type VegetableFriendship extending Auditable, PublicRead, UserCanInsert, AdminCanDoAnything {

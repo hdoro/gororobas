@@ -168,6 +168,35 @@ export type VegetableTipCardData = Exclude<
   null
 >[number]
 
+const vegetableForChip = e.shape(e.Vegetable, (vegetable) => ({
+  id: true,
+  handle: true,
+  name: vegetable.names.index(0),
+  photos: (image) => ({
+    ...imageForRendering(image),
+
+    limit: 1,
+    order_by: {
+      expression: image['@order_index'],
+      direction: 'ASC',
+      empty: e.EMPTY_LAST,
+    },
+  }),
+}))
+
+const resourceForCard = e.shape(e.Resource, () => ({
+  id: true,
+  handle: true,
+  title: true,
+  url: true,
+  format: true,
+  credit_line: true,
+  description: true,
+  thumbnail: imageForRendering,
+  tags: { handle: true, names: true },
+  related_vegetables: vegetableForChip,
+}))
+
 const coreVegetableData = e.shape(e.Vegetable, () => ({
   id: true,
   names: true,
@@ -222,6 +251,15 @@ const vegetablePageShape = e.shape(e.Vegetable, (vegetable) => ({
   }),
   friends: vegetableForCard,
   sources: sourceForCard,
+
+  related_resources: (resource) => ({
+    ...resourceForCard(resource),
+
+    order_by: {
+      expression: e.random(),
+    },
+  }),
+
   related_notes: (note) => ({
     ...noteForCard(note),
     filter: getNotePublishStatusFilter(note),
@@ -888,22 +926,6 @@ export type HomePageData = Exclude<$infer<typeof homePageQuery>, null>
 
 export const VEGETABLES_PER_WISHLIST_STATUS = 4 as const
 
-const vegetableForChip = e.shape(e.Vegetable, (vegetable) => ({
-  id: true,
-  handle: true,
-  name: vegetable.names.index(0),
-  photos: (image) => ({
-    ...imageForRendering(image),
-
-    limit: 1,
-    order_by: {
-      expression: image['@order_index'],
-      direction: 'ASC',
-      empty: e.EMPTY_LAST,
-    },
-  }),
-}))
-
 const wishlistForProfile = e.shape(e.UserWishlist, () => ({
   status: true,
   vegetable: vegetableForChip,
@@ -1137,19 +1159,6 @@ export const getMentionsDataQuery = e.params(
 export const peopleIndexQuery = e.select(e.UserProfile, userProfileForAvatar)
 
 export type PeopleIndexData = Exclude<$infer<typeof peopleIndexQuery>, null>
-
-const resourceForCard = e.shape(e.Resource, () => ({
-  id: true,
-  handle: true,
-  title: true,
-  url: true,
-  format: true,
-  credit_line: true,
-  description: true,
-  thumbnail: imageForRendering,
-  tags: { handle: true, names: true },
-  related_vegetables: vegetableForChip,
-}))
 
 type ResourceCardDataRaw = Exclude<$infer<typeof resourceForCard>, null>[number]
 
