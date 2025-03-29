@@ -19,7 +19,7 @@ import {
   VEGETABLE_LIFECYCLE_EXPLAINERS,
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
-import { formatCentimeters } from '@/utils/numbers'
+import { rangeValueToLabel } from '@/utils/numbers'
 import { gender } from '@/utils/strings'
 import { paths } from '@/utils/urls'
 import { CircleHelp, Edit2Icon, InfoIcon } from 'lucide-react'
@@ -156,13 +156,10 @@ export function VegetablePageHero({
           {(vegetable.temperature_min || vegetable.temperature_max) && (
             <TwoColInfo
               left={'Temperatura ideal'}
-              right={
-                vegetable.temperature_min && vegetable.temperature_max
-                  ? `De ${vegetable.temperature_min}° a ${vegetable.temperature_max}°C`
-                  : vegetable.temperature_min
-                    ? `Acima de ${vegetable.temperature_min}°C`
-                    : `Abaixo de ${vegetable.temperature_max}°C`
-              }
+              right={rangeValueToLabel(
+                [vegetable.temperature_min, vegetable.temperature_max],
+                'temperature',
+              )}
               hasChanged={
                 diffKeys?.includes('temperature_min') ||
                 diffKeys?.includes('temperature_max')
@@ -172,13 +169,10 @@ export function VegetablePageHero({
           {(vegetable.height_min || vegetable.height_max) && (
             <TwoColInfo
               left={`Altura quando adult${gender.suffix(vegetable.gender || 'FEMININO')}`}
-              right={
-                vegetable.height_min && vegetable.height_max
-                  ? `De ${formatCentimeters(vegetable.height_min)} a ${formatCentimeters(vegetable.height_max)}`
-                  : vegetable.height_min
-                    ? `A partir de ${formatCentimeters(vegetable.height_min)}`
-                    : `Até ${formatCentimeters(vegetable.height_max || 0)}`
-              }
+              right={rangeValueToLabel(
+                [vegetable.height_min, vegetable.height_max],
+                'centimeters',
+              )}
               hasChanged={
                 diffKeys?.includes('height_min') ||
                 diffKeys?.includes('height_max')
@@ -190,14 +184,13 @@ export function VegetablePageHero({
             <TwoColInfo
               left={'Tempo até produzir'}
               leftDescription="Quanto tempo até começarmos a colher"
-              right={
-                vegetable.development_cycle_min &&
-                vegetable.development_cycle_max
-                  ? `De ${vegetable.development_cycle_min} a ${vegetable.development_cycle_max} dias`
-                  : vegetable.development_cycle_min
-                    ? `A partir de ${vegetable.development_cycle_min} dias`
-                    : `Até ${vegetable.development_cycle_max} dias`
-              }
+              right={rangeValueToLabel(
+                [
+                  vegetable.development_cycle_min,
+                  vegetable.development_cycle_max,
+                ],
+                'days',
+              )}
               hasChanged={
                 diffKeys?.includes('development_cycle_min') ||
                 diffKeys?.includes('development_cycle_max')

@@ -3,14 +3,20 @@
 import { auth } from '@/gel'
 import {
   profilesForReferenceQuery,
+  tagsForReferenceQuery,
   vegetablesForReferenceQuery,
 } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import type { ReferenceObjectType, ReferenceOption } from '@/types'
+import type {
+  ReferenceObjectType,
+  ReferenceOption,
+  ReferenceValueType,
+} from '@/types'
 import { Effect, pipe } from 'effect'
 
 export async function listReferenceOptions(
   objectTypes: ReferenceObjectType[],
+  valueType: ReferenceValueType = 'id',
 ): Promise<ReferenceOption[] | { error: string }> {
   const session = await auth.getSession()
 
@@ -27,9 +33,10 @@ export async function listReferenceOptions(
         vegetables.map(
           (vegetable) =>
             ({
-              id: vegetable.id,
+              value: valueType === 'id' ? vegetable.id : vegetable.handle,
               label: vegetable.label,
               image: vegetable.photos[0],
+              keywords: vegetable.keywords,
               objectType: 'Vegetable',
             }) satisfies ReferenceOption,
         ),
@@ -48,10 +55,31 @@ export async function listReferenceOptions(
       profiles.map(
         (profile) =>
           ({
-            id: profile.id,
+            value: valueType === 'id' ? profile.id : profile.handle,
             label: profile.label,
             image: profile.photo,
             objectType: 'UserProfile',
+          }) satisfies ReferenceOption,
+      ),
+    ),
+  )
+
+  const tagFetcher = pipe(
+    Effect.tryPromise({
+      try: () => tagsForReferenceQuery.run(session.client),
+      catch: (error) => {
+        console.log('Failed listing reference options', error)
+        return error
+      },
+    }),
+    Effect.map((tags) =>
+      tags.map(
+        (tag) =>
+          ({
+            value: valueType === 'id' ? tag.id : tag.handle,
+            label: tag.label,
+            keywords: tag.keywords,
+            objectType: 'Tag',
           }) satisfies ReferenceOption,
       ),
     ),
@@ -61,6 +89,7 @@ export async function listReferenceOptions(
     [
       ...(objectTypes.includes('UserProfile') ? [userProfileFetcher] : []),
       ...(objectTypes.includes('Vegetable') ? [vegetableFetcher] : []),
+      ...(objectTypes.includes('Tag') ? [tagFetcher] : []),
     ],
     { concurrency: 'unbounded' },
   ).pipe(

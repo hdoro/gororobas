@@ -1,0 +1,9 @@
+whisper.cpp
+resources/inbox
+resources/processed
+resources/triage
+resources/discarded
+tags/inbox
+tags/processed
+podcasts
+images-cache

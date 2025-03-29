@@ -15,6 +15,19 @@ module default {
   scalar type VegetableWishlistStatus extending enum<QUERO_CULTIVAR,SEM_INTERESSE,JA_CULTIVEI,ESTOU_CULTIVANDO>;
   scalar type EditSuggestionStatus extending enum<PENDING_REVIEW,MERGED,REJECTED>;
   scalar type NotePublishStatus extending enum<PRIVATE,COMMUNITY,PUBLIC>;
+  scalar type ResourceFormat extending enum<
+    BOOK,
+    FILM,
+    SOCIAL_MEDIA,
+    VIDEO,
+    ARTICLE,
+    PODCAST,
+    COURSE,
+    ACADEMIC_WORK,
+    DATASET,
+    ORGANIZATION,
+    OTHER
+  >;
 
   scalar type NoteType extending enum<EXPERIMENTO,ENSINAMENTO,DESCOBERTA,PERGUNTA,INSPIRACAO>;
 
@@ -198,6 +211,24 @@ module default {
     index on (.handle);
   }
 
+  type Tag extending WithHandle, PublicRead, AdminCanDoAnything {
+    required names: array<str>;
+    description: json;
+    category: str {
+      annotation title := 'Arbitrary categories to group tags together in the app';
+    };
+
+    mentions := .<tags[is WithTags];
+  }
+
+  abstract type WithTags {
+    multi tags: Tag {
+      order_index: int16;
+      on target delete allow;
+      on source delete allow;
+    };
+  }
+
   type Image extending PublicRead, Auditable, UserCanInsert, UserCanUpdate, AdminCanDoAnything {
     required sanity_id: str {
       constraint exclusive;
@@ -304,6 +335,7 @@ module default {
           filter .status != <VegetableWishlistStatus>'SEM_INTERESSE'
     );
     related_notes := .<related_to_vegetables[is Note];
+    related_resources := .<related_vegetables[is Resource];
   }
 
   type VegetableFriendship extending Auditable, PublicRead, UserCanInsert, AdminCanDoAnything {
@@ -395,5 +427,23 @@ module default {
     required snapshot: json;
     required status: EditSuggestionStatus;
     reviewed_by: UserProfile;
+  }
+
+  type Resource extending WithHandle, WithTags, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
+    required url: str {
+      constraint exclusive;
+    };
+    required title: str;
+    required format: ResourceFormat;
+    description: json;
+    credit_line: str;
+    thumbnail: Image;
+
+    multi related_vegetables: Vegetable {
+      order_index: int16;
+
+      on target delete allow;
+      on source delete allow;
+    };
   }
 }

@@ -1,3 +1,4 @@
+import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
   HydrationBoundary,
   QueryClient,
@@ -6,10 +7,7 @@ import {
 import type { Metadata } from 'next'
 import VegetablesIndex from './VegetablesIndex'
 import fetchVegetablesIndex from './fetchVegetablesIndex'
-import {
-  nextSearchParamsToQueryParams,
-  queryParamsToQueryKey,
-} from './vegetablesFilters'
+import { vegetablesNextSearchParamsToQueryParams } from './vegetablesFilters'
 
 export const metadata: Metadata = {
   title: 'Todos os vegetais e suas propriedades agroecológicas | Gororobas',
@@ -27,7 +25,8 @@ export default async function VegetablesRoute(props: {
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: queryParamsToQueryKey(
-      nextSearchParamsToQueryParams(searchParams, 'search'),
+      vegetablesNextSearchParamsToQueryParams(searchParams, 'search'),
+      'vegetables',
     ),
     queryFn: () => fetchVegetablesIndex(searchParams),
     initialPageParam: 0,

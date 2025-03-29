@@ -25,7 +25,35 @@ const FILTER_DEFINITIONS = [
   },
 ] as const satisfies FilterDefinition[]
 
-export function nextSearchParamsToQueryParams(
+export function queryParamsToSearchParams(
+  filterParams: NotesIndexFilterParams,
+  pageIndex?: number,
+): URLSearchParams {
+  const searchParams = new URLSearchParams()
+  if (pageIndex) {
+    searchParams.set(PAGE_INDEX_QUERY_KEY, String(pageIndex))
+  }
+
+  // Set all filters
+  Object.entries(filterParams).forEach(([key, value]) => {
+    const definition = FILTER_DEFINITIONS.find(
+      (definition) => definition.filterKey === key,
+    )
+    if (!definition || !value) return
+
+    const { queryKey } = definition
+
+    if (Array.isArray(value)) {
+      value.forEach((entry) => searchParams.append(queryKey, entry))
+    } else {
+      searchParams.set(queryKey, String(value))
+    }
+  })
+
+  return searchParams
+}
+
+export function notesNextSearchParamsToQueryParams(
   searchParams: NextSearchParams,
 ): NotesIndexQueryParams {
   const pageIndex = searchParams[PAGE_INDEX_QUERY_KEY]
@@ -62,47 +90,4 @@ export function nextSearchParamsToQueryParams(
     ...filters,
     offset: pageIndex * NOTES_PER_PAGE,
   } as NotesIndexQueryParams
-}
-
-export function queryParamsToSearchParams(
-  filterParams: NotesIndexFilterParams,
-  pageIndex?: number,
-): URLSearchParams {
-  const searchParams = new URLSearchParams()
-  if (pageIndex) {
-    searchParams.set(PAGE_INDEX_QUERY_KEY, String(pageIndex))
-  }
-
-  // Set all filters
-  Object.entries(filterParams).forEach(([key, value]) => {
-    const definition = FILTER_DEFINITIONS.find(
-      (definition) => definition.filterKey === key,
-    )
-    if (!definition || !value) return
-
-    const { queryKey } = definition
-
-    if (Array.isArray(value)) {
-      value.forEach((entry) => searchParams.append(queryKey, entry))
-    } else {
-      searchParams.set(queryKey, String(value))
-    }
-  })
-
-  return searchParams
-}
-
-export function queryParamsToQueryKey(filterParams: NotesIndexFilterParams) {
-  return [
-    'notes',
-    ...Object.entries(filterParams)
-      .flatMap(([key, value]) => {
-        if (!value) return []
-        if (!Array.isArray(value)) {
-          return [key, String(value)]
-        }
-        return [key, ...value]
-      })
-      .sort((a, b) => a.localeCompare(b)),
-  ]
 }

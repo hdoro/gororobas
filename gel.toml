@@ -1,7 +1,11 @@
 [instance]
-server-version = "5.8"
+server-version = "6.4"
 
 [hooks]
 schema.update.after = """
 npm run generate:all
 """
+
+[[watch]]
+files = ["dbschema/*.gel"]
+script = "npm run generate:all"

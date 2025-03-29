@@ -2,7 +2,7 @@ import {
   RichTextImageAttributes,
   RichTextMentionAttributes,
   RichTextVideoAttributes,
-  type YoutubeIdType,
+  type YoutubeVideoIdType,
 } from '@/schemas'
 import { BASE_URL } from '@/utils/config'
 import { Schema } from 'effect'
@@ -187,7 +187,7 @@ const VideoHandler: NodeHandler = (props) => {
       node.attrs,
     )
 
-    return <YoutubeVideo id={data.id as YoutubeIdType} />
+    return <YoutubeVideo id={data.id as YoutubeVideoIdType} />
   } catch (error) {
     return <Passthrough {...props} />
   }

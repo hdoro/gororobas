@@ -18,7 +18,10 @@ import { Text } from '@/components/ui/text'
 import type { VegetablesIndexFilterParams } from '@/queries'
 import type { RangeFormValue } from '@/schemas'
 import { VEGETABLES_PER_PAGE } from '@/utils/config'
-import { type NumberFormat, formatNumber } from '@/utils/numbers'
+import {
+  rangeValueToLabel,
+} from '@/utils/numbers'
+import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
   paths,
   persistParamsInUrl,
@@ -37,9 +40,8 @@ import type { VegetablesIndexRouteData } from './fetchVegetablesIndex'
 import { FILTER_DEFINITIONS } from './vegetableFilterDefinitions'
 import {
   type VegetablesSearchFormValue,
-  nextSearchParamsToQueryParams,
-  queryParamsToQueryKey,
   queryParamsToSearchParams,
+  vegetablesNextSearchParamsToQueryParams,
 } from './vegetablesFilters'
 
 async function fetchVegetablesIndexFromClient(
@@ -58,7 +60,7 @@ async function fetchVegetablesIndexFromClient(
 export default function VegetablesIndex() {
   const initialSearchParams = useSearchParams()
   const form = useForm<VegetablesSearchFormValue>({
-    defaultValues: nextSearchParamsToQueryParams(
+    defaultValues: vegetablesNextSearchParamsToQueryParams(
       searchParamsToNextSearchParams(initialSearchParams),
       'form',
     ),
@@ -68,7 +70,7 @@ export default function VegetablesIndex() {
   const [filtersOpen, setFiltersOpen] = useState(false)
   const autoFetchNextPage = autoFetchNextPageCount < 2 // allow 3 auto fetches
 
-  const queryKey = queryParamsToQueryKey(filterParams)
+  const queryKey = queryParamsToQueryKey(filterParams, 'vegetables')
   // @TODO debounce search_query to avoid happening at every keystroke
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
@@ -413,31 +415,4 @@ export default function VegetablesIndex() {
       </div>
     </main>
   )
-}
-
-function rangeValueToLabel(
-  value: typeof RangeFormValue.Type | null | undefined,
-  format: NumberFormat,
-) {
-  if (!value) return '\u200B'
-
-  const [min, max] = value
-  if (!min && !max) return '\u200B'
-
-  let parts: (string | number)[] = []
-  if (!min) {
-    parts = ['até ', max as number]
-  } else if (!max) {
-    parts = ['a partir de ', min]
-  } else {
-    parts = ['de ', min, ' a ', max]
-  }
-
-  return parts
-    .map((value) => {
-      if (typeof value === 'string' || format === 'none') return value
-
-      return formatNumber(value, format, 'approximate')
-    })
-    .join('')
 }

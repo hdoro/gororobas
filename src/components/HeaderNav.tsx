@@ -1,13 +1,24 @@
 import { paths } from '@/utils/urls'
+import {
+  LibraryBigIcon,
+  type LucideIcon,
+  NotebookPenIcon,
+  SproutIcon,
+} from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import UserNav from './UserNav'
 import GororobasLogo from './icons/GororobasLogo'
 
 const HEADER_LINKS = [
-  { href: paths.vegetablesIndex(), text: 'Vegetais' },
-  { href: paths.notesIndex(), text: 'Notas' },
-]
+  { href: paths.vegetablesIndex(), text: 'Vegetais', icon: SproutIcon },
+  { href: paths.notesIndex(), text: 'Notas', icon: NotebookPenIcon },
+  {
+    href: paths.resourcesIndex(),
+    text: 'Biblioteca',
+    icon: LibraryBigIcon,
+  },
+] as const satisfies { href: string; text: string; icon: LucideIcon }[]
 
 export default async function HeaderNav({ signedIn }: { signedIn: boolean }) {
   return (
@@ -25,8 +36,9 @@ export default async function HeaderNav({ signedIn }: { signedIn: boolean }) {
             <Link
               key={link.href}
               href={link.href}
-              className="text-primary-800 hidden text-lg md:block"
+              className="text-primary-800 hidden items-center gap-1 text-lg md:flex"
             >
+              <link.icon className="text-primary-600 size-[1.25em]" />{' '}
               {link.text}
             </Link>
           ))}

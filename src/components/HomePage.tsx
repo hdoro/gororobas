@@ -1,4 +1,4 @@
-import type { HomePageData } from '@/queries'
+import type { HomePageData, ResourceCardData } from '@/queries'
 import { shuffleArray } from '@/utils/arrays'
 import { paths } from '@/utils/urls'
 import { SearchIcon } from 'lucide-react'
@@ -6,18 +6,20 @@ import Image from 'next/image'
 import Link from 'next/link'
 import wikiPreview from '../wiki-preview.png'
 import { ContributionCTA } from './ContributionCTA'
-import NotesStrip from './NotesStrip'
-import ProfilesGrid from './ProfilesGrid'
-import SectionTitle from './SectionTitle'
-import SuggestionsGrid from './SuggestionsGrid'
-import VegetablesStrip from './VegetablesStrip'
 import BulbIcon from './icons/BulbIcon'
 import HistoryIcon from './icons/HistoryIcon'
+import LibraryIcon from './icons/LibraryIcon'
 import NoteIcon from './icons/NoteIcon'
 import RainbowIcon from './icons/RainbowIcon'
+import NotesStrip from './NotesStrip'
+import ProfilesGrid from './ProfilesGrid'
+import ResourceCard from './ResourceCard'
+import SectionTitle from './SectionTitle'
+import SuggestionsGrid from './SuggestionsGrid'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Text } from './ui/text'
+import VegetablesStrip from './VegetablesStrip'
 
 export default async function HomePage(data: Partial<HomePageData>) {
   const featured_vegetables = shuffleArray(data.featured_vegetables || [])
@@ -136,6 +138,49 @@ export default async function HomePage(data: Partial<HomePageData>) {
 
           <div className="hide-scrollbar flex-1 overflow-x-auto px-4 py-10 lg:overflow-x-hidden lg:px-10 xl:-mt-5">
             <NotesStrip notes={notes} />
+          </div>
+        </section>
+      )}
+
+      {data.featured_resources && data.featured_resources.length > 0 && (
+        <section className="mt-36 flex flex-col xl:flex-row xl:items-start xl:gap-2.5">
+          <div className="pl-pageX pr-pageX box-content flex flex-col items-start gap-1 lg:flex-row xl:max-w-md xl:flex-[3_0_15rem] xl:pr-0 xl:pl-[calc(var(--page-padding-x)_-_2.625rem)]">
+            <LibraryIcon
+              variant="color"
+              className="w-8 flex-[0_0_2rem] lg:mt-1"
+            />
+            <div>
+              <Text level="h2" as="h2">
+                Biblioteca agroecológica
+              </Text>
+              <Text level="h3" className="max-w-lg font-normal">
+                Livros, organizações, vídeos e mais sobre agroecologia,
+                <br />
+                agrofloresta e a luta por terra e território.
+              </Text>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 lg:pt-10">
+                <Button asChild>
+                  <Link href={paths.newResource()}>Enviar um material</Link>
+                </Button>
+                <Link
+                  href={paths.resourcesIndex()}
+                  className="link font-medium"
+                >
+                  Todos materiais
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="hide-scrollbar flex-1 overflow-x-auto px-4 py-10 lg:overflow-x-hidden lg:px-10 xl:-mt-5">
+            <div className={'flex w-auto justify-start gap-9 *:flex-1'}>
+              {data.featured_resources.map((resource) => (
+                <ResourceCard
+                  key={resource.handle}
+                  resource={resource as ResourceCardData}
+                />
+              ))}
+            </div>
           </div>
         </section>
       )}

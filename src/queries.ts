@@ -4,11 +4,17 @@ import type {
   EdiblePart,
   NoteType,
   PlantingMethod,
+  ResourceFormat,
   Stratum,
   VegetableLifeCycle,
   VegetableUsage,
 } from './gel.interfaces'
-import { NOTES_PER_PAGE, VEGETABLES_PER_PAGE } from './utils/config'
+import type { RichTextValue } from './schemas'
+import {
+  NOTES_PER_PAGE,
+  RESOURCES_PER_PAGE,
+  VEGETABLES_PER_PAGE,
+} from './utils/config'
 
 const sourceForCard = e.shape(e.Source, () => ({
   id: true,
@@ -162,6 +168,35 @@ export type VegetableTipCardData = Exclude<
   null
 >[number]
 
+const vegetableForChip = e.shape(e.Vegetable, (vegetable) => ({
+  id: true,
+  handle: true,
+  name: vegetable.names.index(0),
+  photos: (image) => ({
+    ...imageForRendering(image),
+
+    limit: 1,
+    order_by: {
+      expression: image['@order_index'],
+      direction: 'ASC',
+      empty: e.EMPTY_LAST,
+    },
+  }),
+}))
+
+const resourceForCard = e.shape(e.Resource, () => ({
+  id: true,
+  handle: true,
+  title: true,
+  url: true,
+  format: true,
+  credit_line: true,
+  description: true,
+  thumbnail: imageForRendering,
+  tags: { handle: true, names: true },
+  related_vegetables: vegetableForChip,
+}))
+
 const coreVegetableData = e.shape(e.Vegetable, () => ({
   id: true,
   names: true,
@@ -216,6 +251,15 @@ const vegetablePageShape = e.shape(e.Vegetable, (vegetable) => ({
   }),
   friends: vegetableForCard,
   sources: sourceForCard,
+
+  related_resources: (resource) => ({
+    ...resourceForCard(resource),
+
+    order_by: {
+      expression: e.random(),
+    },
+  }),
+
   related_notes: (note) => ({
     ...noteForCard(note),
     filter: getNotePublishStatusFilter(note),
@@ -384,7 +428,9 @@ export const vegetablesForReferenceQuery = e.select(
   e.Vegetable,
   (vegetable) => ({
     id: true,
+    handle: true,
     label: vegetable.names.index(0),
+    keywords: vegetable.names.slice(1, null),
     photos: (image) => ({
       ...imageForRendering(image),
 
@@ -400,8 +446,16 @@ export const vegetablesForReferenceQuery = e.select(
 
 export const profilesForReferenceQuery = e.select(e.UserProfile, (profile) => ({
   id: true,
+  handle: true,
   label: profile.name,
   photo: imageForRendering,
+}))
+
+export const tagsForReferenceQuery = e.select(e.Tag, (tag) => ({
+  id: true,
+  handle: true,
+  label: tag.names.index(0),
+  keywords: tag.names.slice(1, null),
 }))
 
 export const editProfileQuery = e.select(e.UserProfile, (profile) => ({
@@ -834,6 +888,15 @@ export const homePageQuery = e.select({
     limit: 16,
   })),
 
+  featured_resources: e.select(e.Resource, (resource) => ({
+    ...resourceForCard(resource),
+
+    order_by: {
+      expression: e.random(),
+    },
+    limit: 3,
+  })),
+
   profiles: e.select(e.UserProfile, (profile) => ({
     ...userProfileForAvatar(profile),
 
@@ -874,21 +937,7 @@ export const VEGETABLES_PER_WISHLIST_STATUS = 4 as const
 
 const wishlistForProfile = e.shape(e.UserWishlist, () => ({
   status: true,
-  vegetable: (vegetable) => ({
-    id: true,
-    handle: true,
-    name: vegetable.names.index(0),
-    photos: (image) => ({
-      ...imageForRendering(image),
-
-      limit: 1,
-      order_by: {
-        expression: image['@order_index'],
-        direction: 'ASC',
-        empty: e.EMPTY_LAST,
-      },
-    }),
-  }),
+  vegetable: vegetableForChip,
 }))
 export type WishlistForProfile = Exclude<
   $infer<typeof wishlistForProfile>,
@@ -1119,3 +1168,158 @@ export const getMentionsDataQuery = e.params(
 export const peopleIndexQuery = e.select(e.UserProfile, userProfileForAvatar)
 
 export type PeopleIndexData = Exclude<$infer<typeof peopleIndexQuery>, null>
+
+type ResourceCardDataRaw = Exclude<$infer<typeof resourceForCard>, null>[number]
+
+export type ResourceCardData = Omit<ResourceCardDataRaw, 'description'> & {
+  description?: RichTextValue
+}
+
+export const resourcesIndexQuery = e.params(
+  {
+    search_query: e.str,
+    offset: e.int32,
+    formats: e.optional(e.array(e.str)),
+    tags: e.optional(e.array(e.str)),
+    vegetables: e.optional(e.array(e.str)),
+  },
+  (params) =>
+    e.select(e.Resource, (resource) => {
+      const filterOps = [
+        e.op(
+          // Either there's no search query
+          e.op(e.len(params.search_query), '=', 0),
+          'or',
+          // Or the vegetable matches it
+          e.ext.pg_trgm.word_similar(params.search_query, resource.title),
+        ),
+
+        e.op(
+          // Either the param doesn't exist
+          e.op('not', e.op('exists', params.formats)),
+          'or',
+          // Or the resource has at least one of the values
+          e.op(
+            e.count(
+              e.op(
+                resource.format,
+                'intersect',
+                e.array_unpack(
+                  e.cast(e.array(e.ResourceFormat), params.formats),
+                ),
+              ),
+            ),
+            '>',
+            0,
+          ),
+        ),
+
+        e.op(
+          // Either the param doesn't exist
+          e.op('not', e.op('exists', params.tags)),
+          'or',
+          // Or the resource has at least one of the values
+          e.op(
+            e.count(
+              e.op(
+                resource.tags.handle,
+                'intersect',
+                e.array_unpack(params.tags),
+              ),
+            ),
+            '>',
+            0,
+          ),
+        ),
+
+        e.op(
+          // Either the param doesn't exist
+          e.op('not', e.op('exists', params.vegetables)),
+          'or',
+          // Or the resource has at least one of the values
+          e.op(
+            e.count(
+              e.op(
+                resource.related_vegetables.handle,
+                'intersect',
+                e.array_unpack(params.vegetables),
+              ),
+            ),
+            '>',
+            0,
+          ),
+        ),
+      ]
+
+      const finalFilter = filterOps.reduce((finalFilter, op) => {
+        if (finalFilter === null) return op
+        return e.op(finalFilter, 'and', op)
+      })
+
+      return {
+        ...resourceForCard(resource),
+
+        filter: finalFilter,
+
+        limit: RESOURCES_PER_PAGE,
+        offset: params.offset,
+      }
+    }),
+)
+
+export type ResourcesIndexData = Exclude<
+  $infer<typeof resourcesIndexQuery>,
+  null
+>
+
+export type ResourcesIndexQueryParams = Pick<
+  Parameters<typeof resourcesIndexQuery.run>[1],
+  'offset'
+> & {
+  formats?: ResourceFormat[] | null
+  search_query?: string | null
+  tags?: string[]
+  vegetables?: string[]
+}
+
+export type ResourcesIndexFilterParams = Omit<
+  ResourcesIndexQueryParams,
+  'offset'
+>
+
+export const resourcePageQuery = e.params(
+  {
+    handle: e.str,
+  },
+  (params) =>
+    e.select(e.Resource, (resource) => ({
+      filter_single: e.op(resource.handle, '=', params.handle),
+
+      ...resourceForCard(resource),
+      related_resources: e.select(e.Resource, (related_resource) => ({
+        ...resourceForCard(related_resource),
+
+        limit: 8,
+        order_by: {
+          expression: e.random(),
+        },
+        filter: e.op(
+          e.op(related_resource.id, '!=', resource.id),
+          'and',
+          e.op(
+            e.count(
+              e.op(related_resource.tags.id, 'intersect', resource.tags.id),
+            ),
+            '>',
+            0,
+          ),
+        ),
+      })),
+    })),
+)
+
+type ResourcePageDataRaw = Exclude<$infer<typeof resourcePageQuery>, null>
+
+export type ResourcePageData = Omit<ResourcePageDataRaw, 'description'> & {
+  description?: RichTextValue
+}

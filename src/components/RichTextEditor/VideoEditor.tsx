@@ -2,8 +2,8 @@
 
 import {
   RichTextVideoAttributes,
-  YoutubeURL,
-  type YoutubeURLType,
+  YoutubeVideoURL,
+  type YoutubeVideoURLType,
 } from '@/schemas'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { getYouTubeID } from '@/utils/youtube'
@@ -24,10 +24,10 @@ import { Input } from '../ui/input'
 import type { EditorUIProps } from './tiptapStateMachine'
 
 const formSchema = Schema.Struct({
-  url: YoutubeURL,
+  url: YoutubeVideoURL,
 })
 
-export function getVideoTiptapContent(url: YoutubeURLType) {
+export function getVideoTiptapContent(url: YoutubeVideoURLType) {
   return {
     type: 'video',
     attrs: Schema.decodeSync(RichTextVideoAttributes)({

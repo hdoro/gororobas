@@ -23,6 +23,7 @@ import {
   NOTE_PUBLISH_STATUS_TO_LABEL,
   NOTE_TYPE_TO_LABEL,
   PLANTING_METHOD_TO_LABEL,
+  RESOURCE_FORMAT_TO_LABEL,
   STRATUM_TO_LABEL,
   TIP_SUBJECT_TO_LABEL,
   USAGE_TO_LABEL,
@@ -31,7 +32,11 @@ import {
 import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
 import type { JSONContent } from '@tiptap/react'
 import { Effect, ParseResult, Schema as S } from 'effect'
-import type { NotePublishStatus, NoteType } from './gel.interfaces'
+import type {
+  NotePublishStatus,
+  NoteType,
+  ResourceFormat,
+} from './gel.interfaces'
 import { FailedUploadingImageError } from './types/errors'
 import { pathToAbsUrl } from './utils/urls'
 
@@ -48,6 +53,14 @@ const isFile = (input: unknown): input is File => input instanceof File
 const FileSchema = S.declare(isFile, {
   identifier: 'FileSchema',
   description: 'Um arquivo (`File` no Javascript)',
+})
+
+const isURLString = (input: unknown): input is string =>
+  typeof input === 'string' && !!input && URL.canParse(input)
+
+const URLStringSchema = S.declare(isURLString, {
+  identifier: 'URLStringSchema',
+  description: 'Um URL válido',
 })
 
 export type RichTextValue = JSONContent & { version: 1 }
@@ -216,7 +229,7 @@ export const NameInArray = S.transform(
   },
 )
 
-const Handle = S.String.pipe(
+export const Handle = S.String.pipe(
   S.minLength(1, {
     message: () => 'Obrigatório',
   }),
@@ -437,7 +450,7 @@ export const RangeFormValue = S.Tuple(RangeBoundValue, RangeBoundValue)
 export const RichTextMentionData = S.Struct({
   version: S.Literal(1),
   label: S.String,
-  objectType: S.Literal('Vegetable', 'UserProfile'),
+  objectType: S.Literal('Vegetable', 'UserProfile', 'Tag'),
   image: Optional(StoredImageDataInForm),
   id: S.String,
 })
@@ -457,24 +470,24 @@ export type RichTextMentionAttributesInForm =
 export const YOUTUBE_REGEX =
   /^((?:https?:)?\/\/)?((?:www|m|music)\.)?(?:youtube(?:-nocookie)?\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})(\S+)?$/g
 
-export const YoutubeURL = S.String.pipe(
+export const YoutubeVideoURL = S.String.pipe(
   S.pattern(/youtu\.?be/, { message: () => 'Link de vídeo inválido' }),
   S.brand('YoutubeURL'),
 )
 
-export type YoutubeURLType = typeof YoutubeURL.Type
+export type YoutubeVideoURLType = typeof YoutubeVideoURL.Type
 
-export const YoutubeId = S.String.pipe(
-  S.pattern(/[a-zA-Z0-9_-]{6,11}/, { message: () => 'Link de vídeo inválido' }),
+export const YoutubeVideoId = S.String.pipe(
+  S.pattern(/[a-zA-Z0-9_-]{6,11}/, { message: () => 'ID de vídeo inválido' }),
   S.brand('YoutubeId'),
 )
 
-export type YoutubeIdType = typeof YoutubeId.Type
+export type YoutubeVideoIdType = typeof YoutubeVideoId.Type
 
 export const RichTextVideoData = S.Struct({
   version: S.Literal(1),
   type: S.Literal('youtube'),
-  id: YoutubeId,
+  id: YoutubeVideoId,
 })
 
 export const RichTextVideoAttributes = S.Struct({
@@ -540,3 +553,31 @@ export const PathSchema = S.String.pipe(
     return true
   }),
 )
+
+export const ResourceData = S.Struct({
+  id: S.UUID,
+  title: S.String.pipe(
+    S.minLength(3, {
+      message: () => 'Título deve ter ao menos 3 caracteres',
+    }),
+  ),
+  format: S.Literal(
+    ...(Object.keys(RESOURCE_FORMAT_TO_LABEL) as ResourceFormat[]),
+  ),
+  url: URLStringSchema,
+  description: Optional(RichText),
+  credit_line: Optional(S.String),
+  thumbnail: Optional(S.partial(ImageInForm)),
+  tags: Optional(S.Array(S.UUID)),
+  related_vegetables: Optional(S.Array(S.UUID)),
+})
+
+export type ResourceForDB = typeof ResourceData.Type
+export type ResourceInForm = typeof ResourceData.Encoded
+
+export const ResourceWithUploadedImages = S.Struct({
+  ...ResourceData.fields,
+  thumbnail: Optional(ImageFormToDBTransformer),
+})
+
+export type ResourceForDBWithImages = typeof ResourceWithUploadedImages.Type

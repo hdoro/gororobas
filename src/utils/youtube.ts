@@ -1,9 +1,11 @@
-import type { YoutubeIdType, YoutubeURLType } from '@/schemas'
+import type { YoutubeVideoIdType, YoutubeVideoURLType } from '@/schemas'
 
-export function getYouTubeID<U extends string | YoutubeURLType>(
+export function getYouTubeID<U extends string | YoutubeVideoURLType>(
   url: U,
   opts: { fuzzy?: boolean } = { fuzzy: true },
-): U extends YoutubeURLType ? YoutubeIdType : YoutubeIdType | null {
+): U extends YoutubeVideoURLType
+  ? YoutubeVideoIdType
+  : YoutubeVideoIdType | null {
   if (/youtu\.?be/.test(url)) {
     // Look first for known patterns
     const patterns = [
@@ -18,7 +20,7 @@ export function getYouTubeID<U extends string | YoutubeURLType>(
     for (const pattern of patterns) {
       const match = pattern.exec(url)
       if (match) {
-        return match[1] as YoutubeIdType
+        return match[1] as YoutubeVideoIdType
       }
     }
 
@@ -28,15 +30,17 @@ export function getYouTubeID<U extends string | YoutubeURLType>(
       const tokens = url.split(/[\/\&\?=#\.\s]/g)
       for (const token of tokens) {
         if (/^[^#\&\?]{11}$/.test(token)) {
-          return token as YoutubeIdType
+          return token as YoutubeVideoIdType
         }
       }
     }
   }
 
-  return null as U extends YoutubeURLType ? YoutubeIdType : YoutubeIdType | null
+  return null as U extends YoutubeVideoURLType
+    ? YoutubeVideoIdType
+    : YoutubeVideoIdType | null
 }
 
-export function getYoutubeVideoURL(id: YoutubeIdType) {
+export function getYoutubeVideoURL(id: YoutubeVideoIdType) {
   return `https://www.youtube.com/watch?v=${id}`
 }

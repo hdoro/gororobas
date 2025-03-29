@@ -4,14 +4,14 @@ import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { NextSearchParams } from '@/types'
 import { searchParamsToNextSearchParams } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
-import { nextSearchParamsToQueryParams } from './notesFilterDefinition'
+import { notesNextSearchParamsToQueryParams } from './notesFilterDefinition'
 
 export type NotesIndexRouteData = Awaited<ReturnType<typeof fetchNotesIndex>>
 
 export default async function fetchNotesIndex(
   searchParams: NextSearchParams | URLSearchParams,
 ) {
-  const queryParams = nextSearchParamsToQueryParams(
+  const queryParams = notesNextSearchParamsToQueryParams(
     searchParams instanceof URLSearchParams
       ? searchParamsToNextSearchParams(searchParams)
       : searchParams,

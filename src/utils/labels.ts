@@ -5,6 +5,7 @@ import type {
   NotePublishStatus,
   NoteType,
   PlantingMethod,
+  ResourceFormat,
   SourceType,
   Stratum,
   TipSubject,
@@ -12,7 +13,7 @@ import type {
   VegetableUsage,
   VegetableWishlistStatus,
 } from '@/gel.interfaces'
-import type { VegetableData } from '@/schemas'
+import type { ResourceData, VegetableData } from '@/schemas'
 
 export const STRATUM_TO_LABEL = {
   EMERGENTE: 'Emergente',
@@ -179,4 +180,32 @@ export const VEGETABLE_FIELD_LABELS_MAP: Record<
   temperature_min: 'Temperatura ideal mínima',
   uses: 'Principais usos',
   varieties: 'Variedades',
+}
+
+export const RESOURCE_FORMAT_TO_LABEL = {
+  BOOK: 'Livro',
+  FILM: 'Filme',
+  SOCIAL_MEDIA: 'Rede Social',
+  VIDEO: 'Vídeo',
+  ARTICLE: 'Artigo',
+  PODCAST: 'Podcast',
+  COURSE: 'Curso',
+  ACADEMIC_WORK: 'Trabalho Acadêmico',
+  DATASET: 'Base de Dados',
+  ORGANIZATION: 'Organização',
+  OTHER: 'Outro',
+} as const satisfies Record<ResourceFormat, string>
+
+export const RESOURCE_FIELD_LABELS_MAP: Record<
+  Exclude<keyof typeof ResourceData.Encoded, 'id'>,
+  string
+> = {
+  title: 'Título',
+  format: 'Formato',
+  url: 'URL',
+  description: 'Sobre esse material',
+  tags: 'Classificação',
+  related_vegetables: 'Vegetais relacionados',
+  credit_line: 'Créditos ou autoria',
+  thumbnail: 'Imagem de capa',
 }

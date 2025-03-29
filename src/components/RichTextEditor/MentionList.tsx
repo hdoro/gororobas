@@ -35,7 +35,7 @@ export default function MentionList({
   } = useMentionOptions(query)
 
   const selectItem = (id: string) => {
-    const item = matches.find((item) => item.id === id)
+    const item = matches.find((item) => item.value === id)
 
     if (item && match) {
       const range = match.range
@@ -54,7 +54,7 @@ export default function MentionList({
             type: 'mention',
             attrs: Schema.decodeSync(RichTextMentionAttributes)({
               data: {
-                id: item.id,
+                id: item.value,
                 version: 1,
                 label: item.label,
                 objectType: item.objectType,
@@ -98,7 +98,7 @@ export default function MentionList({
       if (event.key === 'Enter') {
         event.preventDefault()
         event.stopPropagation()
-        if (selectedItem?.id) selectItem(selectedItem.id)
+        if (selectedItem?.value) selectItem(selectedItem.value)
       }
     },
     [selectedItem, selectItem],
@@ -130,7 +130,7 @@ export default function MentionList({
                 <div className="flex flex-col">
                   {items.map((item, itemIndex) => (
                     <Button
-                      key={item.id}
+                      key={item.value}
                       tone="neutral"
                       mode={
                         selection.objectType === objectType &&
@@ -138,11 +138,11 @@ export default function MentionList({
                           ? 'outline'
                           : 'bleed'
                       }
-                      onClick={() => selectItem(item.id)}
+                      onClick={() => selectItem(item.value)}
                       type="button"
                       size="sm"
                       className="justify-start!"
-                      data-id={item.id}
+                      data-id={item.value}
                     >
                       {item.image && (
                         <SanityImage

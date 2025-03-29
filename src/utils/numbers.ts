@@ -1,3 +1,5 @@
+import type { RangeFormValue } from '@/schemas'
+
 export const MAX_ACCEPTED_HEIGHT = 6_000 // 60m
 
 export function formatCentimeters(cm: number) {
@@ -85,4 +87,31 @@ export function formatNumber(
   }
 
   return String(value)
+}
+
+export function rangeValueToLabel(
+  value: typeof RangeFormValue.Type | null | undefined,
+  format: NumberFormat,
+) {
+  if (!value) return '\u200B'
+
+  const [min, max] = value
+  if (!min && !max) return '\u200B'
+
+  let parts: (string | number)[] = []
+  if (!min) {
+    parts = ['até ', max as number]
+  } else if (!max) {
+    parts = ['a partir de ', min]
+  } else {
+    parts = ['de ', min, ' a ', max]
+  }
+
+  return parts
+    .map((value) => {
+      if (typeof value === 'string' || format === 'none') return value
+
+      return formatNumber(value, format, 'approximate')
+    })
+    .join('')
 }

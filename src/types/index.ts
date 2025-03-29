@@ -22,12 +22,15 @@ export type FormOption = {
   description?: string
 }
 
-export type ReferenceObjectType = 'Vegetable' | 'UserProfile'
+export type ReferenceObjectType = 'Vegetable' | 'UserProfile' | 'Tag'
+
+export type ReferenceValueType = 'id' | 'handle'
 
 export type ReferenceOption = {
-  id: string
+  value: string
   label: string
   objectType: ReferenceObjectType
+  keywords?: string[]
   image?: ImageForRendering | null
 }
 

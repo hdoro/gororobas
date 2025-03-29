@@ -43,7 +43,7 @@ const GetMentionByIdResolver = RequestResolver.makeBatched(
       ),
       Effect.andThen((mentions) =>
         Effect.forEach(requests, (request) => {
-          const mention = mentions.find((m) => m.id === request.id)
+          const mention = mentions.find((m) => m.value === request.id)
           return mention
             ? Request.completeEffect(request, Effect.succeed(mention))
             : Request.completeEffect(

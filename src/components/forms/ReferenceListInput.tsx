@@ -1,5 +1,9 @@
 import { listReferenceOptions } from '@/actions/listReferenceOptions'
-import type { ReferenceObjectType, ReferenceOption } from '@/types'
+import type {
+  ReferenceObjectType,
+  ReferenceOption,
+  ReferenceValueType,
+} from '@/types'
 import { cn } from '@/utils/cn'
 import { useQuery } from '@tanstack/react-query'
 import { CommandLoading } from 'cmdk'
@@ -10,8 +14,10 @@ import type {
   FieldPath,
   FieldValues,
 } from 'react-hook-form'
+import LoadingSpinner from '../LoadingSpinner'
 import { SanityImage } from '../SanityImage'
-import Carrot from '../icons/Carrot'
+import { Badge } from '../ui/badge'
+import { Button } from '../ui/button'
 import {
   Command,
   CommandEmpty,
@@ -20,6 +26,25 @@ import {
   CommandList,
 } from '../ui/command'
 import { FormControl, FormItem, FormLabel } from '../ui/form'
+import { Input } from '../ui/input'
+
+const LABELS = {
+  Tag: {
+    searchTitle: 'Busque por etiquetas',
+    empty: 'Nenhuma classificação encontrada',
+  },
+  Vegetable: {
+    searchTitle: 'Busque por vegetais',
+    empty: 'Nenhum vegetal encontrado',
+  },
+  UserProfile: {
+    searchTitle: 'Busque por pessoas no Gororobas',
+    empty: 'Nenhuma pessoa encontrada',
+  },
+} as const satisfies Record<
+  ReferenceObjectType,
+  { searchTitle: string; empty: string }
+>
 
 export default function ReferenceListInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -27,14 +52,18 @@ export default function ReferenceListInput<
 >({
   field,
   objectTypes,
+  valueType = 'id',
+  layout = 'combobox',
 }: {
   field: ControllerRenderProps<TFieldValues, TName>
   objectTypes: ReferenceObjectType[]
+  valueType?: ReferenceValueType
+  layout?: 'combobox' | 'list'
 }) {
   const [focused, setFocused] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const selected = (field.value || []) as ReferenceOption['id'][]
-  const { options, optionsMap } = useReferenceOptions(objectTypes)
+  const selected = (field.value || []) as ReferenceOption['value'][]
+  const { options, optionsMap } = useReferenceOptions(objectTypes, valueType)
 
   function toggleOption(id: string) {
     if (selected.includes(id)) {
@@ -47,7 +76,96 @@ export default function ReferenceListInput<
 
   const selectedOptions = selected.flatMap((id) => optionsMap[id] || [])
 
-  const label = objectTypes[0] === 'Vegetable' ? 'vegetais' : 'pessoas'
+  const labels = LABELS[objectTypes[0]]
+
+  if (layout === 'list') {
+    const filteredOptions = options?.filter((option) =>
+      [option.label, ...(option.keywords || [])].some((keyword) =>
+        keyword.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
+    )
+    console
+
+    /**
+     * @TODO:
+     * better way to fit parent container's height (at least inside popover it's getting absurd)
+     * better search in list - same algorithm as cmdk
+     * good UX, esp. on loading & empty states
+     */
+    return (
+      <>
+        {!options && <LoadingSpinner />}
+        {options && (
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={labels.searchTitle}
+            className="w-full"
+          />
+        )}
+        {selectedOptions.length > 0 && (
+          <div className="hide-scrollbar -mx-2 mt-4 flex min-h-10 gap-2 overflow-auto px-2">
+            {selectedOptions.map((option) => {
+              return (
+                <Badge
+                  key={option.value}
+                  size="sm"
+                  className={cn('py-1', option.image ? 'px-1' : 'px-2')}
+                >
+                  {option.image && (
+                    <SanityImage
+                      image={option.image}
+                      maxWidth={24}
+                      className="block h-6 w-6 rounded-full object-cover"
+                      alt={`Foto de ${option.label}`}
+                    />
+                  )}
+                  <span className="pr-1">{option.label}</span>
+                  <button
+                    className="button cursor-pointer rounded-full"
+                    type="button"
+                    onClick={() => toggleOption(option.value)}
+                    disabled={field.disabled}
+                  >
+                    <XIcon className="h-4 w-4" />
+                  </button>
+                </Badge>
+              )
+            })}
+          </div>
+        )}
+
+        {filteredOptions?.length === 0 && <div>{labels.empty}</div>}
+        <div className="hide-scrollbar max-h-[250px] overflow-auto pt-4">
+          {filteredOptions?.map((option) => (
+            <Button
+              key={option.value}
+              mode="bleed"
+              tone="neutral"
+              onClick={() => toggleOption(option.value)}
+              type="button"
+              disabled={field.disabled}
+              className="flex w-full justify-start"
+            >
+              {option.image && (
+                <SanityImage
+                  image={option.image}
+                  maxWidth={24}
+                  className="block h-6 w-6 rounded-full object-cover"
+                  alt={`Foto de ${option.label}`}
+                />
+              )}
+              <span>{option.label}</span>
+              {selected.includes(option.value) && (
+                <CheckIcon className="h-4 w-4" />
+              )}
+            </Button>
+          ))}
+        </div>
+      </>
+    )
+  }
+
   return (
     <FormItem className={'rounded-md border'}>
       <Command
@@ -56,13 +174,13 @@ export default function ReferenceListInput<
         className="relative overflow-visible p-0"
       >
         <FormLabel className="sr-only font-normal">
-          Busque por {label} no Gororobas
+          {labels.searchTitle}
         </FormLabel>
         <FormControl>
           <CommandInput
             value={searchQuery}
             onValueChange={setSearchQuery}
-            placeholder={`Busque por ${label} no Gororobas`}
+            placeholder={labels.searchTitle}
             className="border-none p-0"
             disabled={field.disabled}
           />
@@ -75,18 +193,20 @@ export default function ReferenceListInput<
         >
           {!options && (
             <CommandLoading>
-              <Carrot className="h-6 w-6 animate-spin" /> Carregando
+              <LoadingSpinner />
             </CommandLoading>
           )}
-          <CommandEmpty className="flex items-center gap-2">
-            Nenhum vegetal encontrado
-          </CommandEmpty>
+          {options && (
+            <CommandEmpty className="flex items-center gap-2">
+              {labels.empty}
+            </CommandEmpty>
+          )}
           {options?.map((option) => (
             <CommandItem
-              key={option.id}
+              key={option.value}
               className="flex items-center gap-2"
-              value={option.id}
-              keywords={[option.label]}
+              value={option.value}
+              keywords={[option.label, ...(option.keywords || [])]}
               onSelect={toggleOption}
             >
               {option.image && (
@@ -98,7 +218,7 @@ export default function ReferenceListInput<
                 />
               )}
               <span>{option.label}</span>
-              {selected.includes(option.id) && (
+              {selected.includes(option.value) && (
                 <CheckIcon className="h-4 w-4" />
               )}
             </CommandItem>
@@ -110,7 +230,7 @@ export default function ReferenceListInput<
           {selectedOptions.map((option) => {
             return (
               <div
-                key={option.id}
+                key={option.value}
                 className={cn(
                   'flex h-9 items-center gap-2 rounded-full border-2 py-1 text-sm',
                   option.image ? 'px-1' : 'px-2',
@@ -128,7 +248,7 @@ export default function ReferenceListInput<
                 <button
                   className="button cursor-pointer rounded-full"
                   type="button"
-                  onClick={() => toggleOption(option.id)}
+                  onClick={() => toggleOption(option.value)}
                   disabled={field.disabled}
                 >
                   <XIcon className="h-4 w-4" />
@@ -142,10 +262,13 @@ export default function ReferenceListInput<
   )
 }
 
-export function useReferenceOptions(objectTypes: ReferenceObjectType[]) {
+export function useReferenceOptions(
+  objectTypes: ReferenceObjectType[],
+  valueType: ReferenceValueType = 'id',
+) {
   const result = useQuery({
     queryKey: ['useReferenceOptions', objectTypes.sort().join(',')],
-    queryFn: () => listReferenceOptions(objectTypes),
+    queryFn: () => listReferenceOptions(objectTypes, valueType),
     enabled: true,
   })
 
@@ -154,7 +277,7 @@ export function useReferenceOptions(objectTypes: ReferenceObjectType[]) {
 
     return (result.data || []).reduce(
       (acc, option) => {
-        acc[option.id] = option
+        acc[option.value] = option
         return acc
       },
       {} as Record<string, ReferenceOption>,

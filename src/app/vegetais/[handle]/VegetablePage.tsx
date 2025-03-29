@@ -1,6 +1,7 @@
 import { ContributionCTA } from '@/components/ContributionCTA'
 import FullscreenPhotos from '@/components/FullscreenPhotos'
 import NotesGrid from '@/components/NotesGrid'
+import ResourceCard from '@/components/ResourceCard'
 import SectionTitle from '@/components/SectionTitle'
 import { SendTipDialog } from '@/components/SendTipDialog'
 import SourcesGrid from '@/components/SourcesGrid'
@@ -15,7 +16,7 @@ import VegetableFriendsIcon from '@/components/icons/VegetableFriendsIcon'
 import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
-import type { VegetablePageData } from '@/queries'
+import type { ResourceCardData, VegetablePageData } from '@/queries'
 import { gender } from '@/utils/strings'
 import { isRenderableRichText } from '@/utils/tiptap'
 import { paths } from '@/utils/urls'
@@ -129,13 +130,29 @@ export default function VegetablePage({
             <VegetablesGrid vegetables={friends} className="px-pageX mt-6" />
           </section>
         )}
-        {externalSources.length > 0 && (
+        {(externalSources.length || vegetable.related_resources.length) > 0 && (
           <section className="my-36" id="fontes">
             <SectionTitle Icon={QuoteIcon}>Fontes e recursos</SectionTitle>
             <Text level="h3" className="px-pageX font-normal">
-              Materiais que embasaram essas informações
+              Fontes que embasaram essas informações e recursos para ir mais a
+              fundo
             </Text>
-            <SourcesGrid sources={externalSources} className="px-pageX mt-6" />
+            {externalSources.length > 0 && (
+              <SourcesGrid
+                sources={externalSources}
+                className="px-pageX mt-6"
+              />
+            )}
+            {vegetable.related_resources.length > 0 && (
+              <div className="px-page-x mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                {vegetable.related_resources.map((related_resource) => (
+                  <ResourceCard
+                    key={related_resource.id}
+                    resource={related_resource as ResourceCardData}
+                  />
+                ))}
+              </div>
+            )}
           </section>
         )}
         <section className="my-36" id="notas">

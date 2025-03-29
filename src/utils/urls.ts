@@ -96,6 +96,10 @@ export const paths = {
   editSuggestion: (suggestionId: string) =>
     formatPath(`/sugestoes/${suggestionId}`),
 
+  resourcesIndex: () => '/biblioteca' as const,
+  resource: (handle: string) => formatPath(`/biblioteca/${handle}`),
+  newResource: () => '/biblioteca/novo-material' as const,
+
   notesIndex: () => '/notas' as const,
   note: (handle: string) => formatPath(`/notas/${handle}`),
   newNote: () => '/notas/nova' as const,

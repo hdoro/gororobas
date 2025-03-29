@@ -4,7 +4,7 @@ import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { NextSearchParams } from '@/types'
 import { searchParamsToNextSearchParams } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
-import { nextSearchParamsToQueryParams } from './vegetablesFilters'
+import { vegetablesNextSearchParamsToQueryParams } from './vegetablesFilters'
 
 export type VegetablesIndexRouteData = Awaited<
   ReturnType<typeof fetchVegetablesIndex>
@@ -13,7 +13,7 @@ export type VegetablesIndexRouteData = Awaited<
 export default async function fetchVegetablesIndex(
   searchParams: NextSearchParams | URLSearchParams,
 ) {
-  const queryParams = nextSearchParamsToQueryParams(
+  const queryParams = vegetablesNextSearchParamsToQueryParams(
     searchParams instanceof URLSearchParams
       ? searchParamsToNextSearchParams(searchParams)
       : searchParams,

@@ -4,12 +4,10 @@ import {
   dehydrate,
 } from '@tanstack/react-query'
 import type { Metadata } from 'next'
+import { queryParamsToQueryKey } from '../../utils/queryParams'
 import NotesIndex from './NotesIndex'
 import fetchNotesIndex from './fetchNotesIndex'
-import {
-  nextSearchParamsToQueryParams,
-  queryParamsToQueryKey,
-} from './notesFilterDefinition'
+import { notesNextSearchParamsToQueryParams } from './notesFilterDefinition'
 
 export const metadata: Metadata = {
   title:
@@ -28,7 +26,8 @@ export default async function NotesRoute(props: {
 
   await queryClient.prefetchInfiniteQuery({
     queryKey: queryParamsToQueryKey(
-      nextSearchParamsToQueryParams(searchParams),
+      notesNextSearchParamsToQueryParams(searchParams),
+      'notes',
     ),
     queryFn: () => fetchNotesIndex(searchParams),
     initialPageParam: 0,
