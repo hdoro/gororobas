@@ -3,6 +3,7 @@ import { FileSystem, Path } from '@effect/platform'
 import { generateObject } from 'ai'
 import { Data, Effect } from 'effect'
 import { ollama } from 'ollama-ai-provider'
+import Parser, { type Output } from 'rss-parser'
 import { z } from 'zod'
 import { SCRIPT_PATHS } from '../script.utils'
 import {
@@ -10,32 +11,29 @@ import {
   type ResourceCustomizer,
 } from './add-resource-to-inbox'
 import { getTagsSchema, type TagsForAISchema } from './get-tags-schema'
-import {
-  getChannel,
-  getChannelVideos,
-  getVideoTranscripts,
-  type VideoWithTranscript,
-} from './youtube'
+import { AiError } from './process-channel-videos'
 
-const MODEL = ollama('phi4')
-
-export class AiError extends Data.TaggedError('AiError')<{
+export class RSSError extends Data.TaggedError('RSSError')<{
   cause?: unknown
   message?: string
 }> {}
 
-const processVideo = ({
-  video,
-  transcript,
+const MODEL = ollama('phi4')
+
+const processEpisode = <O extends Output<{ [key: string]: any }>>({
+  episode,
+  feed,
   tagsSchema,
   customizer,
-}: VideoWithTranscript & {
+}: {
+  feed: O
+  episode: O['items'][number]
   tagsSchema: TagsForAISchema
   customizer?: ResourceCustomizer | undefined
 }) =>
   Effect.gen(function* () {
     const handle = slugify(
-      `${truncate(video.snippet.title, 50)} ${truncate(video.snippet.channelTitle, 30)}`,
+      `${truncate(episode.title || '', 50)} ${truncate(feed.title || '', 30)}`,
     )
     const fs = yield* FileSystem.FileSystem
     const path = yield* Path.Path
@@ -49,50 +47,47 @@ const processVideo = ({
       return
     }
 
-    yield* Effect.log(`Processing video: ${video.snippet.title}`)
+    yield* Effect.log(`Processing episode: ${episode.title}`)
     const SCHEMA = z.object({
       tags: z.optional(tagsSchema.schema),
     })
 
-    const highestResThumbnail = Object.entries(video.snippet.thumbnails).sort(
-      (a, b) => b[1].width - a[1].width,
-    )[0][1]
+    const thumbnail = episode.itunes?.image
     const content: Omit<Parameters<typeof addResourceToInbox>[0], 'tags'> = {
-      title: video.snippet.title,
-      credit_line: video.snippet.channelTitle,
-      format: 'VIDEO',
-      url: `https://youtu.be/${video.id.videoId}`,
-      thumbnail: highestResThumbnail?.url,
+      title: episode.title || '',
+      credit_line: feed.title || '',
+      format: 'PODCAST',
+      url: episode.link || '',
+      thumbnail: thumbnail,
       related_vegetables: undefined,
-      description: video.snippet.description,
+      description: episode.contentSnippet || '',
       handle: handle,
-      content: transcript.map((t) => t.text).join(' '),
       inboxFolder: SCRIPT_PATHS.resources.triage,
+      content: JSON.stringify(episode, null, 2),
     }
-
     const result = yield* Effect.tryPromise({
       try: () =>
         generateObject({
           model: MODEL,
           schema: SCHEMA,
-          prompt: `Segundo as informações e transcrição do vídeo abaixo, em quais tags o conteúdo se enquadra?
+          prompt: `Segundo as informações do episódio de podcast abaixo, em quais tags o conteúdo se enquadra?
         
-        Vídeo: ${content.title}
+        Episódio: ${content.title}
         Por: ${content.credit_line}
         
-        Transcrição:
+        Descrição:
         
-        ${content.content}
+        ${content.description}
         `,
         }),
       catch: (error) =>
         new AiError({
           cause: error,
-          message: `Failed to generate tags for video ${content.title}`,
+          message: `Failed to generate tags for episode ${content.title}`,
         }),
     }).pipe(
       Effect.tapError((error) =>
-        Effect.logError(`[video] ${content.title}:`, error),
+        Effect.logError(`[podcast episode] ${content.title}:`, error),
       ),
       Effect.catchAll(() => Effect.succeed({ object: { tags: undefined } })),
     )
@@ -102,25 +97,32 @@ const processVideo = ({
       tags: result.object.tags,
       customizer,
     })
-    yield* Effect.logInfo(`✅ [video] added to ${filePath}`)
+    yield* Effect.logInfo(`✅ [podcast episode] added to ${filePath}`)
   })
 
-export const processChannelVideos = (
-  channelURL: string,
+export const processPodcastEpisodes = (
+  rssFeedURL: string,
   customizer?: ResourceCustomizer,
 ) =>
   Effect.gen(function* () {
-    const channel = yield* getChannel(channelURL)
-    const videos = yield* getChannelVideos(channel)
-    const withTranscript = yield* getVideoTranscripts(videos)
-
-    yield* Effect.log(
-      `Processing ${withTranscript.length} videos from channel ${channelURL}`,
-    )
+    const parser = new Parser()
+    const feed = yield* Effect.tryPromise({
+      try: () => parser.parseURL(rssFeedURL),
+      catch: (error) =>
+        new RSSError({ cause: error, message: 'Failed to parse RSS feed' }),
+    })
 
     const tagsSchema = yield* getTagsSchema
+
     yield* Effect.all(
-      withTranscript.map((v) => processVideo({ ...v, tagsSchema, customizer })),
+      feed.items.map((item) =>
+        processEpisode({
+          episode: item,
+          feed,
+          tagsSchema,
+          customizer,
+        }),
+      ),
       { concurrency: 1 },
     )
   })

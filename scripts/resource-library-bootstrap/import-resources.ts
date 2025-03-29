@@ -5,6 +5,7 @@ import { Effect, Schema } from 'effect'
 import { createClient } from 'gel'
 import { glob } from 'glob'
 import matter from 'gray-matter'
+import { SCRIPT_PATHS } from '../script.utils'
 import { downloadResourceImage } from './download-resource-image'
 
 const isProduction = !!process.env.EDGEDB_INSTANCE
@@ -246,20 +247,29 @@ export const importTagsAndResources = Effect.gen(function* () {
       `),
     )
   }
+  const path = yield* Path.Path
 
   // TAGS
-  const tagFiles = yield* Effect.tryPromise(() =>
-    glob('scripts/resource-library-bootstrap/tags/inbox/**/*.md'),
+  const tagsInInbox = yield* Effect.tryPromise(() =>
+    glob(path.join(SCRIPT_PATHS.tags.inbox, '**/*.md')),
   )
-  yield* Effect.log(`Found ${tagFiles.length} tags to import.`)
-  const tags = yield* Effect.all(tagFiles.map(addTag), {
+  yield* Effect.log(`Found ${tagsInInbox.length} tags to import.`)
+  const newTags = yield* Effect.all(tagsInInbox.map(addTag), {
     concurrency: 20,
   })
-  yield* Effect.log(`\n✨ ${tagFiles.length} tags imported`)
+  yield* Effect.log(`\n✨ ${tagsInInbox.length} tags imported`)
 
+  const tagsProcessed = yield* Effect.tryPromise(() =>
+    glob(path.join(SCRIPT_PATHS.tags.processed, '**/*.md')),
+  )
+  const existingTags = yield* Effect.all(tagsProcessed.map(processTagFile), {
+    concurrency: 20,
+  })
+
+  const allTags = [...newTags, ...existingTags]
   const TagsSchema = Schema.NullishOr(
     Schema.Array(
-      Schema.Literal(...tags.map((tag) => tag.handle)).annotations({
+      Schema.Literal(...allTags.map((tag) => tag.handle)).annotations({
         message: () => 'Invalid tag handle',
       }),
     ),
@@ -268,7 +278,7 @@ export const importTagsAndResources = Effect.gen(function* () {
 
   // RESOURCES
   const resourceFiles = yield* Effect.tryPromise(() =>
-    glob('scripts/resource-library-bootstrap/resources/inbox/**/*.md'),
+    glob(path.join(SCRIPT_PATHS.resources.inbox, '**/*.md')),
   )
   yield* Effect.log(`Found ${resourceFiles.length} resources to import.`)
   yield* Effect.all(
