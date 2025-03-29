@@ -15,7 +15,7 @@ const HEADER_LINKS = [
   { href: paths.notesIndex(), text: 'Notas', icon: NotebookPenIcon },
   {
     href: paths.resourcesIndex(),
-    text: 'Biblioteca Agroecológica',
+    text: 'Biblioteca',
     icon: LibraryBigIcon,
   },
 ] as const satisfies { href: string; text: string; icon: LucideIcon }[]

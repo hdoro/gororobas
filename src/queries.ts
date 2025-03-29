@@ -888,6 +888,15 @@ export const homePageQuery = e.select({
     limit: 16,
   })),
 
+  featured_resources: e.select(e.Resource, (resource) => ({
+    ...resourceForCard(resource),
+
+    order_by: {
+      expression: e.random(),
+    },
+    limit: 3,
+  })),
+
   profiles: e.select(e.UserProfile, (profile) => ({
     ...userProfileForAvatar(profile),
 
