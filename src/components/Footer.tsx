@@ -1,4 +1,5 @@
 import { SOURCE_CODE_URL } from '@/utils/config'
+import { getUserLocale, type Locale } from '@/utils/i18n'
 import { paths } from '@/utils/urls'
 import {
   GithubIcon,
@@ -11,16 +12,34 @@ import Link from 'next/link'
 import GororobasLogo from './icons/GororobasLogo'
 
 const FOOTER_LINKS = [
-  { href: paths.vegetablesIndex(), text: 'Vegetais', icon: SproutIcon },
-  { href: paths.notesIndex(), text: 'Notas', icon: NotebookPenIcon },
+  {
+    href: paths.vegetablesIndex(),
+    text: { pt: 'Vegetais', es: 'Vegetales' },
+    icon: SproutIcon,
+  },
+  {
+    href: paths.notesIndex(),
+    text: { pt: 'Notas', es: 'Notas' },
+    icon: NotebookPenIcon,
+  },
   {
     href: paths.resourcesIndex(),
-    text: 'Biblioteca Agroecológica',
+    text: { pt: 'Biblioteca Agroecológica', es: 'Biblioteca Agroecológica' },
     icon: LibraryBigIcon,
   },
-] as const satisfies { href: string; text: string; icon: LucideIcon }[]
+  {
+    href: SOURCE_CODE_URL,
+    text: { pt: 'Código fonte', es: 'Código fuente' },
+    icon: GithubIcon,
+  },
+] as const satisfies {
+  href: string
+  text: Record<Locale, string>
+  icon: LucideIcon
+}[]
 
-export default function Footer() {
+export default async function Footer() {
+  const locale = await getUserLocale()
   return (
     <footer
       className="border-t-primary-100 bg-background-card px-pageX flex flex-col items-center gap-[var(--page-padding-x)] border-t py-10 max-md:pb-28 md:flex-row md:items-start md:justify-start md:py-16 lg:py-24"
@@ -34,24 +53,36 @@ export default function Footer() {
         aria-label="Rodapé"
         className="flex flex-wrap items-center justify-center gap-10"
       >
-        {FOOTER_LINKS.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className="text-primary-800 inline-flex items-center gap-2 text-lg"
-          >
-            <link.icon className="text-primary-700 size-[1.25em]" /> {link.text}
-          </Link>
-        ))}
-        <a
-          className="text-primary-800 inline-flex gap-2 text-lg"
-          href={SOURCE_CODE_URL}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <GithubIcon className="text-primary-700 size-[1.25em]" />
-          Código fonte
-        </a>
+        {FOOTER_LINKS.map((link) => {
+          const className =
+            'text-primary-800 inline-flex items-center gap-2 text-lg'
+          const Content = (
+            <>
+              <link.icon className="text-primary-700 size-[1.25em]" />{' '}
+              {link.text[locale]}
+            </>
+          )
+
+          if (link.href.startsWith('http')) {
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                className={className}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {Content}
+              </a>
+            )
+          }
+
+          return (
+            <Link key={link.href} href={link.href} className={className}>
+              {Content}
+            </Link>
+          )
+        })}
       </nav>
     </footer>
   )

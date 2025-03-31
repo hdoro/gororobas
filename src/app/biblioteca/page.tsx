@@ -11,7 +11,8 @@ import { resourcesNextSearchParamsToQueryParams } from './resourcesFilters'
 
 export const metadata: Metadata = {
   title: 'Biblioteca Agroecológica | Gororobas',
-  description: '@TODO',
+  description:
+    'Livros, organizações, vídeos e mais sobre agroecologia, agrofloresta e a luta por terra e território.',
 }
 
 export default async function ResourcesRoute(props: {

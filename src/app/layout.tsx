@@ -5,6 +5,7 @@ import TanstackQueryProvider from '@/components/TanstackQueryProvider'
 import { Toaster } from '@/components/ui/toaster'
 import { auth } from '@/gel'
 import { cn } from '@/utils/cn'
+import { getUserLocale } from '@/utils/i18n'
 import { pathToAbsUrl } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
@@ -57,9 +58,10 @@ export default async function RootLayout({
 }) {
   const session = await auth.getSession()
   const signedIn = await session.isSignedIn()
+  const locale = await getUserLocale()
 
   return (
-    <html lang="pt-BR">
+    <html lang={locale}>
       <head>
         <link
           rel="search"

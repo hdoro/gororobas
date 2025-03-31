@@ -1,3 +1,4 @@
+import { getUserLocale, type Locale } from '@/utils/i18n'
 import { paths } from '@/utils/urls'
 import {
   LibraryBigIcon,
@@ -11,16 +12,29 @@ import UserNav from './UserNav'
 import GororobasLogo from './icons/GororobasLogo'
 
 const HEADER_LINKS = [
-  { href: paths.vegetablesIndex(), text: 'Vegetais', icon: SproutIcon },
-  { href: paths.notesIndex(), text: 'Notas', icon: NotebookPenIcon },
+  {
+    href: paths.vegetablesIndex(),
+    text: { pt: 'Vegetais', es: 'Vegetales' },
+    icon: SproutIcon,
+  },
+  {
+    href: paths.notesIndex(),
+    text: { pt: 'Notas', es: 'Notas' },
+    icon: NotebookPenIcon,
+  },
   {
     href: paths.resourcesIndex(),
-    text: 'Biblioteca',
+    text: { pt: 'Biblioteca', es: 'Biblioteca' },
     icon: LibraryBigIcon,
   },
-] as const satisfies { href: string; text: string; icon: LucideIcon }[]
+] as const satisfies {
+  href: string
+  text: Record<Locale, string>
+  icon: LucideIcon
+}[]
 
 export default async function HeaderNav({ signedIn }: { signedIn: boolean }) {
+  const locale = await getUserLocale()
   return (
     <>
       <nav
@@ -39,7 +53,7 @@ export default async function HeaderNav({ signedIn }: { signedIn: boolean }) {
               className="text-primary-800 hidden items-center gap-1 text-lg md:flex"
             >
               <link.icon className="text-primary-600 size-[1.25em]" />{' '}
-              {link.text}
+              {link.text[locale]}
             </Link>
           ))}
           <Suspense fallback={signedIn ? <div className="w-7" /> : null}>
