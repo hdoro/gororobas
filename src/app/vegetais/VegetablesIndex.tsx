@@ -18,9 +18,7 @@ import { Text } from '@/components/ui/text'
 import type { VegetablesIndexFilterParams } from '@/queries'
 import type { RangeFormValue } from '@/schemas'
 import { VEGETABLES_PER_PAGE } from '@/utils/config'
-import {
-  rangeValueToLabel,
-} from '@/utils/numbers'
+import { rangeValueToLabel } from '@/utils/numbers'
 import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
   paths,
@@ -36,6 +34,7 @@ import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { InView } from 'react-intersection-observer'
+import { useDebounce } from 'use-debounce'
 import type { VegetablesIndexRouteData } from './fetchVegetablesIndex'
 import { FILTER_DEFINITIONS } from './vegetableFilterDefinitions'
 import {
@@ -65,13 +64,20 @@ export default function VegetablesIndex() {
       'form',
     ),
   })
-  const filterParams = form.watch()
+  let filterParams = form.watch()
+  const [debouncedSearchQuery] = useDebounce(filterParams.search_query, 600, {
+    maxWait: 3000,
+    leading: false,
+  })
+  filterParams = {
+    ...filterParams,
+    search_query: debouncedSearchQuery || null,
+  }
   const [autoFetchNextPageCount, setAutoFetchNextPageCount] = useState(0)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const autoFetchNextPage = autoFetchNextPageCount < 2 // allow 3 auto fetches
 
   const queryKey = queryParamsToQueryKey(filterParams, 'vegetables')
-  // @TODO debounce search_query to avoid happening at every keystroke
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
       queryKey,
@@ -88,6 +94,8 @@ export default function VegetablesIndex() {
 
         return lastPageParam + 1
       },
+      refetchOnWindowFocus: false,
+      staleTime: Number.POSITIVE_INFINITY,
     })
 
   // biome-ignore lint: We want to react to changes in the filter params

@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import type { NotesIndexFilterParams } from '@/queries'
 import { NOTES_PER_PAGE } from '@/utils/config'
-import { getNoteCardTransform } from '@/utils/css'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 import {
   paths,
@@ -24,6 +23,7 @@ import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { InView } from 'react-intersection-observer'
+import { useDebounce } from 'use-debounce'
 import { queryParamsToQueryKey } from '../../utils/queryParams'
 import type { NotesIndexRouteData } from './fetchNotesIndex'
 import {
@@ -51,7 +51,15 @@ export default function NotesIndex() {
       searchParamsToNextSearchParams(initialSearchParams),
     ),
   })
-  const filterParams = form.watch()
+  let filterParams = form.watch()
+  const [debouncedSearchQuery] = useDebounce(filterParams.search_query, 600, {
+    maxWait: 3000,
+    leading: false,
+  })
+  filterParams = {
+    ...filterParams,
+    search_query: debouncedSearchQuery || null,
+  }
   const [autoFetchNextPageCount, setAutoFetchNextPageCount] = useState(0)
   const autoFetchNextPage = autoFetchNextPageCount < 2 // allow 3 auto fetches
 
@@ -165,11 +173,7 @@ export default function NotesIndex() {
         {data?.pages?.map((page) => (
           <React.Fragment key={page.queryParams.offset}>
             {(page.notes || []).map((note) => (
-              <NoteCard
-                key={note.handle}
-                note={note}
-                transform={getNoteCardTransform()}
-              />
+              <NoteCard key={note.handle} note={note} />
             ))}
           </React.Fragment>
         ))}
