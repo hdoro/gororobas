@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/utils/cn'
-import type { ElementTransform } from '@/utils/css'
+import type { ElementTransform } from '@/utils/noteCardTransforms'
 import { type PropsWithChildren, useState } from 'react'
 
 /** Wrapper component for NoteCard to prevent having to ship it as a client component.

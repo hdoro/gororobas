@@ -1,7 +1,7 @@
 import type { NoteCardData } from '@/queries'
 import { cn } from '@/utils/cn'
-import type { ElementTransform } from '@/utils/css'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
+import { getNoteCardTransform } from '@/utils/noteCardTransforms'
 import { truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { paths } from '@/utils/urls'
@@ -15,14 +15,13 @@ import { Button } from './ui/button'
 
 export default function NoteCard({
   note,
-  transform,
   variant = 'grid',
 }: {
   note: NoteCardData
-  transform: ElementTransform
   variant?: 'grid' | 'page'
 }) {
   const { title } = note
+  const transform = getNoteCardTransform(note.handle)
 
   const published_at = note.published_at
     ? new Date(note.published_at)

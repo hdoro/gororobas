@@ -1,4 +1,4 @@
-import { getUserLocale, type Locale } from '@/utils/i18n'
+import { type Locale, getUserLocale } from '@/utils/i18n'
 import { paths } from '@/utils/urls'
 import {
   LibraryBigIcon,

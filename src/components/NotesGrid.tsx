@@ -1,6 +1,5 @@
 import type { NoteCardData } from '@/queries'
 import { cn } from '@/utils/cn'
-import { getNoteCardTransform } from '@/utils/css'
 import type {
   DetailedHTMLProps,
   HTMLAttributes,
@@ -34,11 +33,7 @@ export default function NotesGrid(props: { notes: NoteCardData[] }) {
   return (
     <NotesGridWrapper className="px-pageX overflow-hidden">
       {props.notes.map((note) => (
-        <NoteCard
-          key={note.handle}
-          note={note}
-          transform={getNoteCardTransform()}
-        />
+        <NoteCard key={note.handle} note={note} />
       ))}
     </NotesGridWrapper>
   )

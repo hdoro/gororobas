@@ -1,5 +1,5 @@
 import { SOURCE_CODE_URL } from '@/utils/config'
-import { getUserLocale, type Locale } from '@/utils/i18n'
+import { type Locale, getUserLocale } from '@/utils/i18n'
 import { paths } from '@/utils/urls'
 import {
   GithubIcon,

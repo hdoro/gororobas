@@ -1,4 +1,4 @@
-import { NextMiddleware, NextResponse } from 'next/server'
+import { type NextMiddleware, NextResponse } from 'next/server'
 import { getBrowserPreferredLocale, getCurrentLocaleCookie } from './utils/i18n'
 
 export const middleware: NextMiddleware = (request) => {
