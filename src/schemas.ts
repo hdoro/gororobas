@@ -272,7 +272,7 @@ const Height = S.Int.pipe(
   S.lessThan(MAX_ACCEPTED_HEIGHT, {
     message: () => 'Que vegetal gigante e louco é esse?!',
   }),
-)
+).annotations({ identifier: 'height' })
 
 export const MAX_ACCEPTED_TEMPERATURE = 50
 export const MIN_ACCEPTED_TEMPERATURE = -50
@@ -365,6 +365,42 @@ export const VegetableData = VegetableCoreData.pipe(
 
 export type VegetableForDB = typeof VegetableData.Type
 export type VegetableInForm = typeof VegetableData.Encoded
+
+/** @TODO figure out how to do schemas that `UnsetInvalidProperties`
+ * so forms can hydrate with missing value instead of breaking & leading to a 500 */
+// export const VegetableData_UnsetInvalidProperties = VegetableData.pipe(
+//   S.pick('id'),
+//   S.extend(
+//     S.Struct(
+//       Object.fromEntries(
+//         Object.entries(VegetableCoreData.fields).flatMap(
+//           ([key, fieldSchema]) => {
+//             if (key === 'id') return []
+
+//             const unsetWhenInvalid = S.transform(S.Any, fieldSchema, {
+//               strict: true,
+//               decode: (value) => {
+//                 try {
+//                   return S.decodeUnknownSync(fieldSchema)(value)
+//                 } catch (error) {
+//                   return undefined
+//                 }
+//               },
+//               encode: (value) => value,
+//             })
+//             return [
+//               [
+//                 key,
+//                 ,
+//               ],
+//             ]
+//           },
+//         ),
+//       ) as typeof VegetableCoreData.fields,
+//     ),
+//   ),
+//   // S.extend(VegetableCoreData),
+// )
 
 export const VegetableWithUploadedImages = S.Struct({
   ...VegetableCoreData.fields,

@@ -1,6 +1,7 @@
 import type { RangeFormValue } from '@/schemas'
 
-export const MAX_ACCEPTED_HEIGHT = 6_000 // 60m
+/** In centimeters - 100m */
+export const MAX_ACCEPTED_HEIGHT = 100_01
 
 export function formatCentimeters(cm: number) {
   /** If over 1 meter, return in meters */

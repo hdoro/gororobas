@@ -12,6 +12,7 @@ import type { VegetablePageData } from '@/queries'
 import { cn } from '@/utils/cn'
 import {
   EDIBLE_PART_TO_LABEL,
+  PLANTING_METHOD_EXPLAINERS,
   PLANTING_METHOD_TO_LABEL,
   STRATUM_EXPLAINERS,
   STRATUM_TO_LABEL,
@@ -147,9 +148,10 @@ export function VegetablePageHero({
           {vegetable.planting_methods && (
             <TwoColInfo
               left={'Métodos de plantio e propagação'}
-              right={vegetable.planting_methods.map(
-                (u) => PLANTING_METHOD_TO_LABEL[u],
-              )}
+              right={vegetable.planting_methods.map((u) => ({
+                label: PLANTING_METHOD_TO_LABEL[u],
+                explainer: PLANTING_METHOD_EXPLAINERS[u],
+              }))}
               hasChanged={diffKeys?.includes('planting_methods')}
             />
           )}

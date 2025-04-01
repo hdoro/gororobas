@@ -101,14 +101,32 @@ export const EDIBLE_PART_TO_LABEL = {
   RIZOMA: 'Rizoma',
 } as const satisfies Record<EdiblePart, string>
 
-// @TODO: explicações para os métodos de plantio
 export const PLANTING_METHOD_TO_LABEL = {
   BROTO: 'Broto',
-  ENXERTO: 'Enxerto',
-  ESTACA: 'Estaca ou rama',
+  ENXERTO: 'Enxerto ou clonagem',
+  ESTACA: 'Estaca, rama ou folha',
   RIZOMA: 'Rizoma',
   SEMENTE: 'Semente',
   TUBERCULO: 'Tubérculo',
+} as const satisfies Record<PlantingMethod, string>
+
+export const PLANTING_METHOD_EXPLAINERS = {
+  BROTO:
+    'Brotos retirados da planta mãe, como gemas ou brotações laterais. Exemplos incluem batata doce, couve, mamão, etc.',
+  ENXERTO:
+    'Técnica de unir partes de duas plantas diferentes para combinar características desejáveis. Uma parte (o enxerto ou clone) é inserida em outra planta (o porta-enxerto ou cavalo) para que cresçam juntas. Grande parte da produção comercial de muitas frutíferas é feita assim (cacau, cítricas, amoras, etc.).',
+  ESTACA:
+    'Plantar um pedaço (estaca ou rama) do caule, folha ou raiz de uma planta. A estaca cria raízes e se desenvolve em uma nova planta geneticamente idêntica à original. Usado em roseiras, mandioca e muitas outras.',
+  RIZOMA:
+    'Rizomas são caules subterrâneos que crescem (também) horizontalmente e emitem raízes e brotos. Cortamos pedaços e plantamos, cada um originando uma nova planta. Banana é o exemplo clássico, mas também a cúrcuma, gengibre e bambu',
+  /**
+   * "Não jogue fora as sementes, guarde pra mim por amor" 🎶
+   * Chegou até mim atráves de AS SEMENTES, de Marcelo D2, e de uma amiga (Bia) que trocou o "favor" por "amor" 🌻
+   */
+  SEMENTE:
+    'Sejam plantadas diretamente no solo, ou em mudas a serem transplantadas',
+  TUBERCULO:
+    'Tubérculos são caules subterrâneos engrossados que armazenam nutrientes e possuem gemas que originam brotos. O plantio por tubérculo consiste em plantar o tubérculo inteiro ou seccionado, cada parte gerando uma nova planta. Nossas ancestrais já plantaram muuuita batata e inhame assim.',
 } as const satisfies Record<PlantingMethod, string>
 
 export const TIP_SUBJECT_TO_LABEL = {
