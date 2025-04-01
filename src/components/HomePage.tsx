@@ -211,14 +211,14 @@ export default async function HomePage(data: Partial<HomePageData>) {
       {locale === 'es' && (
         <section className="px-pageX mt-14">
           <Card>
-            <CardHeader className="flex flex-row items-center gap-4">
+            <CardHeader className="flex flex-row flex-wrap items-center gap-4">
               <LanguagesIcon className="text-primary-600 size-8 flex-[0_0_2rem]" />
               <div>
                 <CardTitle>
-                  Aún estamos preparando Gororobas para el Español
+                  Aún estamos preparando Gororobas en Español
                 </CardTitle>
                 <Text level="h3" as="p" weight="normal">
-                  Por encuanto, puedes intentar practicar tu Portunhol con el
+                  Por ahora, puedes intentar practicar tu Portunhol con el
                   contenido que ya existe 😅
                 </Text>
               </div>
@@ -230,6 +230,8 @@ export default async function HomePage(data: Partial<HomePageData>) {
                 <a
                   href="https://github.com/hdoro/gororobas/issues/82"
                   className="link font-semibold"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
                   tarea de internacionalización del aplicativo
                 </a>{' '}
@@ -299,7 +301,9 @@ export default async function HomePage(data: Partial<HomePageData>) {
           </div>
 
           <div className="hide-scrollbar flex-1 overflow-x-auto px-4 py-10 lg:overflow-x-hidden lg:px-10 xl:-mt-5">
-            <div className={'flex w-auto justify-start gap-9 *:flex-1'}>
+            <div
+              className={'flex w-auto justify-start gap-9 *:flex-[1_0_250px]'}
+            >
               {data.featured_resources.map((resource) => (
                 <ResourceCard
                   key={resource.handle}

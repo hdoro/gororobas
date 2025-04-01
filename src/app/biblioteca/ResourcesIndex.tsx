@@ -94,6 +94,8 @@ export default function ResourcesIndex() {
 
         return lastPageParam + 1
       },
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
     })
 
   // biome-ignore lint: We want to react to changes in the filter params

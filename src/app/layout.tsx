@@ -73,7 +73,7 @@ export default async function RootLayout({
       <body className={cn(fontFamily.className, 'flex min-h-dvh flex-col')}>
         <TanstackQueryProvider>
           <HeaderNav signedIn={signedIn} />
-          <MobileBottomBar signedIn={signedIn} />
+          <MobileBottomBar signedIn={signedIn} locale={locale} />
           <div className="flex-1">{children}</div>
           <Footer />
           <Toaster />

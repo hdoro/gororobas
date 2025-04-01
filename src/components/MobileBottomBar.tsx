@@ -1,14 +1,29 @@
 'use client'
 
 import { cn } from '@/utils/cn'
+import type { Locale } from '@/utils/i18n'
 import { formatPath, paths } from '@/utils/urls'
 import { FilePlus2Icon } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { JSX, SVGProps } from 'react'
+import LibraryIcon from './icons/LibraryIcon'
 import NoteIcon from './icons/NoteIcon'
 import SeedlingIcon from './icons/SeedlingIcon'
 import { Button } from './ui/button'
+
+const LOCALIZED_CONTENT = {
+  pt: {
+    notes: 'Notas',
+    vegetables: 'Vegetais',
+    biblioteca: 'Biblioteca',
+  },
+  es: {
+    notes: 'Notas',
+    vegetables: 'Vegetales',
+    biblioteca: 'Biblioteca',
+  },
+} as const satisfies Record<Locale, unknown>
 
 function LinkButton(props: {
   href: string
@@ -26,8 +41,9 @@ function LinkButton(props: {
       mode="bleed"
       tone="neutral"
       asChild
+      size="xs"
       className={cn(
-        'flex h-auto w-40 flex-col items-center justify-center gap-[0.25em] rounded-b-none border-y-4 py-2 text-xs',
+        'flex h-auto flex-col items-center justify-center gap-[0.25em] rounded-b-none border-y-4 px-4 py-1 text-xs',
         isActive && 'border-b-primary-400! text-primary-800',
         !isActive && 'border-transparent',
       )}
@@ -43,7 +59,13 @@ function LinkButton(props: {
   )
 }
 
-export default function MobileBottomBar({ signedIn }: { signedIn: boolean }) {
+export default function MobileBottomBar({
+  signedIn,
+  locale,
+}: {
+  signedIn: boolean
+  locale: Locale
+}) {
   const pathname = usePathname()
 
   if (
@@ -56,21 +78,30 @@ export default function MobileBottomBar({ signedIn }: { signedIn: boolean }) {
 
   return (
     <div className="px-pageX fixed inset-x-0 bottom-0 z-30 flex w-screen items-stretch justify-center gap-2 bg-white lg:hidden">
-      <LinkButton href={paths.notesIndex()} Icon={NoteIcon} label="Notas" />
-      {signedIn && pathname !== paths.newNote() && (
-        <Link
-          href={paths.newNote()}
-          className="bg-primary-500 text-primary-50 flex size-14 flex-[0_0_3.5rem] -translate-y-3 items-center justify-center rounded-full border-4 border-white"
-        >
-          <FilePlus2Icon className="size-7" />{' '}
-          <span className="sr-only">Enviar nota</span>
-        </Link>
-      )}
+      <LinkButton
+        href={paths.notesIndex()}
+        Icon={NoteIcon}
+        label={LOCALIZED_CONTENT[locale].notes}
+      />
       <LinkButton
         href={paths.vegetablesIndex()}
         Icon={SeedlingIcon}
-        label="Vegetais"
+        label={LOCALIZED_CONTENT[locale].vegetables}
       />
+      <LinkButton
+        href={paths.resourcesIndex()}
+        Icon={LibraryIcon}
+        label={LOCALIZED_CONTENT[locale].biblioteca}
+      />
+      {signedIn && pathname !== paths.newNote() && (
+        <Link
+          href={paths.newNote()}
+          className="bg-primary-500 text-primary-50 flex size-12 flex-[0_0_3rem] -translate-y-3 items-center justify-center rounded-full border-4 border-white"
+        >
+          <FilePlus2Icon className="size-5" />{' '}
+          <span className="sr-only">Enviar nota</span>
+        </Link>
+      )}
     </div>
   )
 }
