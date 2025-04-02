@@ -1,7 +1,7 @@
 import { Data, Effect, Schema } from 'effect'
 import { YoutubeTranscript } from 'youtube-transcript'
-import * as Level from './level'
-import * as Youtube from './youtube'
+import * as Level from '../services/level'
+import * as Youtube from '../services/youtube'
 
 const VideoTranscript = Schema.Array(
   Schema.Struct({

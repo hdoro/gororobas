@@ -1,4 +1,5 @@
 import e, { type $infer } from '@/edgeql'
+import { __type } from 'effect/FastCheck'
 import type { $scopify } from './edgeql/reflection'
 import type {
   EdiblePart,
@@ -1323,3 +1324,51 @@ type ResourcePageDataRaw = Exclude<$infer<typeof resourcePageQuery>, null>
 export type ResourcePageData = Omit<ResourcePageDataRaw, 'description'> & {
   description?: RichTextValue
 }
+
+export const contentToPostQuery = e.select({
+  notes: e.select(e.Note, (note) => ({
+    ...noteForCard(note),
+    type: note.__type__.name,
+
+    filter: e.op(
+      e.op(note.publish_status, '=', e.NotePublishStatus.PUBLIC),
+      'and',
+      e.op(note.has_been_posted, '=', false),
+    ),
+    limit: 1,
+    order_by: {
+      expression: e.random(),
+    },
+  })),
+  vegetables: e.select(e.Vegetable, (vegetable) => ({
+    ...vegetableForChip(vegetable),
+    type: vegetable.__type__.name,
+    gender: true,
+
+    filter: e.op(
+      e.op('exists', vegetable.photos),
+      'and',
+      e.op(vegetable.has_been_posted, '=', false),
+    ),
+    limit: 1,
+    order_by: {
+      expression: e.random(),
+    },
+  })),
+  resources: e.select(e.Resource, (resource) => ({
+    ...resourceForCard(resource),
+    type: resource.__type__.name,
+
+    filter: e.op(
+      e.op('exists', resource.thumbnail),
+      'and',
+      e.op(resource.has_been_posted, '=', false),
+    ),
+    limit: 1,
+    order_by: {
+      expression: e.random(),
+    },
+  })),
+})
+
+export type ContentToPostData = Exclude<$infer<typeof contentToPostQuery>, null>

@@ -6,16 +6,16 @@ import { ollama } from 'ollama-ai-provider'
 import { z } from 'zod'
 import { SCRIPT_PATHS } from '../script.utils'
 import {
-  addResourceToInbox,
-  type ResourceCustomizer,
-} from './add-resource-to-inbox'
-import { getTagsSchema, type TagsForAISchema } from './get-tags-schema'
-import {
   getChannel,
   getChannelVideos,
   getVideoTranscripts,
   type VideoWithTranscript,
-} from './youtube'
+} from '../services/youtube'
+import {
+  addResourceToInbox,
+  type ResourceCustomizer,
+} from './add-resource-to-inbox'
+import { getTagsSchema, type TagsForAISchema } from './get-tags-schema'
 
 const MODEL = ollama('phi4')
 

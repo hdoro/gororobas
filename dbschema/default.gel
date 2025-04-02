@@ -266,7 +266,7 @@ module default {
     };
   }
 
-  type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything, ModeratorCanUpdate {
+  type Vegetable extending WithHandle, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything, ModeratorCanUpdate, PostableToBluesky {
     required names: array<str>;
     searchable_names := array_join(
       .names ++ 
@@ -368,7 +368,7 @@ module default {
       using (global current_user_profile ?= .user_profile);
   }
 
-  type Note extending WithHandle, Auditable, AdminCanDoAnything {
+  type Note extending WithHandle, Auditable, AdminCanDoAnything, PostableToBluesky {
     required public: bool {
       annotation deprecated := 'Use publish_status instead.';
     };
@@ -429,7 +429,7 @@ module default {
     reviewed_by: UserProfile;
   }
 
-  type Resource extending WithHandle, WithTags, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything {
+  type Resource extending WithHandle, WithTags, PublicRead, Auditable, UserCanInsert, AdminCanDoAnything, PostableToBluesky {
     required url: str {
       constraint exclusive;
     };
@@ -442,6 +442,21 @@ module default {
     multi related_vegetables: Vegetable {
       order_index: int16;
 
+      on target delete allow;
+      on source delete allow;
+    };
+  }
+
+  abstract type PostableToBluesky {
+    has_been_posted := exists .<content[is BlueskyPost];
+  }
+
+  type BlueskyPost extending Auditable, AdminCanDoAnything {
+    required text: str;
+    required content: PostableToBluesky {
+      # single post per content
+      constraint exclusive;
+      # allow deletion of content
       on target delete allow;
       on source delete allow;
     };

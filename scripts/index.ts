@@ -1,11 +1,11 @@
 import { NodeContext } from '@effect/platform-node'
 import { Effect, Layer, pipe } from 'effect'
-import { SCRIPT_PATHS } from '../script.utils'
-import * as Level from '../services/level'
-import * as Youtube from '../services/youtube'
-import type { ResourceCustomizer } from './add-resource-to-inbox'
-import { processChannelVideos } from './process-channel-videos'
-import { processPodcastEpisodes } from './process-podcast-episodes'
+import type { ResourceCustomizer } from './resource-sourcing/add-resource-to-inbox'
+import { processChannelVideos } from './resource-sourcing/process-channel-videos'
+import { processPodcastEpisodes } from './resource-sourcing/process-podcast-episodes'
+import { SCRIPT_PATHS } from './script.utils'
+import * as Level from './services/level'
+import * as Youtube from './services/youtube'
 
 const AllServices = Layer.mergeAll(
   Level.layer(SCRIPT_PATHS.sourcing_db),
