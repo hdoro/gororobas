@@ -1333,7 +1333,7 @@ export const contentToPostQuery = e.select({
     filter: e.op(
       e.op(note.publish_status, '=', e.NotePublishStatus.PUBLIC),
       'and',
-      e.op(note.has_been_posted, '=', false),
+      e.op(note.has_been_posted_to_bluesky, '=', false),
     ),
     limit: 1,
     order_by: {
@@ -1348,7 +1348,7 @@ export const contentToPostQuery = e.select({
     filter: e.op(
       e.op('exists', vegetable.photos),
       'and',
-      e.op(vegetable.has_been_posted, '=', false),
+      e.op(vegetable.has_been_posted_to_bluesky, '=', false),
     ),
     limit: 1,
     order_by: {
@@ -1362,7 +1362,7 @@ export const contentToPostQuery = e.select({
     filter: e.op(
       e.op('exists', resource.thumbnail),
       'and',
-      e.op(resource.has_been_posted, '=', false),
+      e.op(resource.has_been_posted_to_bluesky, '=', false),
     ),
     limit: 1,
     order_by: {
@@ -1372,3 +1372,20 @@ export const contentToPostQuery = e.select({
 })
 
 export type ContentToPostData = Exclude<$infer<typeof contentToPostQuery>, null>
+
+export const vegetablesForSitemapQuery = e.select(e.Vegetable, (vegetable) => ({
+  handle: true,
+  updated_at: true,
+  filter: e.op('exists', vegetable.photos),
+}))
+
+export const notesForSitemapQuery = e.select(e.Note, (note) => ({
+  handle: true,
+  updated_at: true,
+  filter: e.op(note.publish_status, '=', e.NotePublishStatus.PUBLIC),
+}))
+
+export const resourcesForSitemapQuery = e.select(e.Resource, (resource) => ({
+  handle: true,
+  updated_at: true,
+}))
