@@ -73,7 +73,9 @@ export function semanticListItems(
   if (maxDisplay && items.length > maxDisplay) {
     return formatter.format([
       ...items.slice(0, maxDisplay),
-      `e mais ${items.length - maxDisplay}`,
+      formatter.resolvedOptions().type === 'conjunction'
+        ? `e mais ${items.length - maxDisplay}`
+        : `${items.length - maxDisplay} outro`,
     ])
   }
   return formatter.format(items)

@@ -1,4 +1,4 @@
-import type { ImageForRenderingData } from '@/queries'
+import { ImageObjectInDB } from '@/schemas'
 import { getImageProps } from '@/utils/getImageProps'
 import { sourcesToPlainText } from '@/utils/sources'
 import { truncate } from '@/utils/strings'
@@ -6,10 +6,11 @@ import {
   AtpAgent,
   RichText,
   type AppBskyEmbedDefs,
+  type AppBskyEmbedImages,
   type AppBskyFeedPost,
 } from '@atproto/api'
-import { Config, Context, Data, Effect, Layer } from 'effect'
-import { downloadImageFile } from '../resource-library-bootstrap/download-resource-image'
+import { Config, Context, Data, Effect, Layer, Schema } from 'effect'
+import { downloadImageFile } from '../script.utils'
 
 export class BlueskyError extends Data.TaggedError('BlueskyError')<{
   cause?: unknown
@@ -98,7 +99,7 @@ export const layer = Layer.scoped(
   }),
 )
 
-const uploadPostImages = (input?: ImageForRenderingData[]) =>
+const uploadPostImages = (input?: BlueskyPostInput['images']) =>
   Effect.gen(function* () {
     const bluesky = yield* Bluesky
     const images = input || []
@@ -107,18 +108,19 @@ const uploadPostImages = (input?: ImageForRenderingData[]) =>
       images.map((image) =>
         Effect.gen(function* () {
           yield* Effect.logDebug('Downloading image')
-          const imageProps = getImageProps({
-            image,
-            maxWidth: 1200,
-          })
-          if (
-            !imageProps.src ||
-            typeof imageProps.width !== 'number' ||
-            typeof imageProps.height !== 'number'
-          ) {
+          const imageProps =
+            'url' in image
+              ? {
+                  src: image.url.toString(),
+                }
+              : getImageProps({
+                  image,
+                  maxWidth: 1200,
+                })
+          if (!imageProps.src) {
             return yield* Effect.fail(
               new BlueskyError({
-                message: `Invalid input image: ${image.sanity_id}`,
+                message: 'Invalid input image',
               }),
             )
           }
@@ -132,32 +134,38 @@ const uploadPostImages = (input?: ImageForRenderingData[]) =>
             return yield* Effect.fail(
               new BlueskyError({
                 cause: blobResponse,
-                message: `Failed to upload image: ${image.sanity_id}`,
+                message: 'Failed to upload image',
               }),
             )
           }
 
-          const aspectRatio: AppBskyEmbedDefs.AspectRatio = {
-            $type: 'app.bsky.embed.defs#aspectRatio',
-            height: imageProps.height,
-            width: imageProps.width,
-          }
+          const aspectRatio: AppBskyEmbedDefs.AspectRatio | undefined =
+            typeof imageProps.height === 'number' &&
+            typeof imageProps.width === 'number'
+              ? {
+                  $type: 'app.bsky.embed.defs#aspectRatio',
+                  height: imageProps.height,
+                  width: imageProps.width,
+                }
+              : undefined
 
           return {
             aspectRatio,
             blob: blobResponse.data.blob,
             alt:
               image.label ||
-              sourcesToPlainText({
-                sources: image.sources,
-                prefix: 'Foto por ',
-              }) ||
+              ('sources' in image
+                ? sourcesToPlainText({
+                    sources: image.sources,
+                    prefix: 'Foto por ',
+                  })
+                : '') ||
               '',
             src: imageProps.src,
           }
         }).pipe(
           Effect.withLogSpan(
-            `[bluesky/uploadPostImages] ${image.sanity_id} (${image.label})`,
+            `[bluesky/uploadPostImages] ${'url' in image ? image.url : image.sanity_id} (${image.label})`,
           ),
         ),
       ),
@@ -165,12 +173,23 @@ const uploadPostImages = (input?: ImageForRenderingData[]) =>
     )
   })
 
-export type BlueskyPostInput = {
-  message: string
-  images?: ImageForRenderingData[]
-}
-
 export const MAX_BLUESKY_MESSAGE_LENGTH = 300
+
+const ImageFromURL = Schema.Struct({
+  url: Schema.URL,
+  label: Schema.String,
+})
+
+export const BlueskyImageInput = Schema.Array(
+  Schema.Union(ImageFromURL, ImageObjectInDB),
+)
+
+export const BlueskyPostInput = Schema.Struct({
+  message: Schema.String.pipe(Schema.maxLength(MAX_BLUESKY_MESSAGE_LENGTH)),
+  images: Schema.optional(BlueskyImageInput),
+})
+
+export type BlueskyPostInput = typeof BlueskyPostInput.Type
 
 export const postToBluesky = ({ message, images }: BlueskyPostInput) =>
   Effect.gen(function* () {
@@ -201,12 +220,15 @@ export const postToBluesky = ({ message, images }: BlueskyPostInput) =>
     if (blobRes.length > 0) {
       post.embed = {
         $type: 'app.bsky.embed.images',
-        images: blobRes.map(({ blob, alt, aspectRatio }) => ({
-          $type: 'app.bsky.embed.images#image',
-          image: blob,
-          alt,
-          aspectRatio,
-        })),
+        images: blobRes.map(({ blob, alt, aspectRatio }) => {
+          const image: AppBskyEmbedImages.Image = {
+            $type: 'app.bsky.embed.images#image',
+            image: blob,
+            alt,
+          }
+          if (aspectRatio) image.aspectRatio = aspectRatio
+          return image
+        }),
       }
     }
 

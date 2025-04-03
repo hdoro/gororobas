@@ -5,7 +5,7 @@ import {
 } from '@/queries'
 import { runQuery } from '@/services/runQuery'
 import { runServerEffect } from '@/services/runtime'
-import { paths, pathToAbsUrl } from '@/utils/urls'
+import { pathToAbsUrl, paths } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
 import type { MetadataRoute } from 'next'
 

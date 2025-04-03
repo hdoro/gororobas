@@ -1,5 +1,4 @@
 import e, { type $infer } from '@/edgeql'
-import { __type } from 'effect/FastCheck'
 import type { $scopify } from './edgeql/reflection'
 import type {
   EdiblePart,
@@ -1354,6 +1353,7 @@ export const contentToPostQuery = e.select({
     friends: vegetableForCard,
     varieties: {
       names: true,
+      photos: imageForRendering,
     },
 
     filter: e.all(
