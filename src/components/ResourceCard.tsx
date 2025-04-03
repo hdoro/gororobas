@@ -12,7 +12,10 @@ import { Text } from '@/components/ui/text'
 import type { ResourceFormat } from '@/gel.interfaces'
 import type { ResourceCardData } from '@/queries'
 import { cn } from '@/utils/cn'
-import { RESOURCE_FORMAT_TO_LABEL } from '@/utils/labels'
+import {
+  RESOURCE_FORMAT_ACTION_LABELS,
+  RESOURCE_FORMAT_TO_LABEL,
+} from '@/utils/labels'
 import { truncateTiptapContent } from '@/utils/tiptap'
 import {
   BookOpen,
@@ -52,20 +55,6 @@ const FORMAT_ICONS = {
   ORGANIZATION: Globe,
   OTHER: File,
 } as const satisfies Record<ResourceFormat, LucideIcon>
-
-const FORMAT_LABELS = {
-  BOOK: 'Ler livro',
-  FILM: 'Assistir',
-  SOCIAL_MEDIA: 'Acessar',
-  VIDEO: 'Assistir',
-  ARTICLE: 'Ler artigo',
-  PODCAST: 'Escutar',
-  COURSE: 'Assistir',
-  ACADEMIC_WORK: 'Ler',
-  DATASET: 'Acessar',
-  ORGANIZATION: 'Conhecer organização',
-  OTHER: 'Acessar',
-} as const satisfies Record<ResourceFormat, string>
 
 const DISPLAYED_TAGS = 2
 
@@ -124,7 +113,9 @@ export function FullResourceDisplay({
           <Button asChild>
             <a href={resource.url} target="_blank" rel="noopener noreferrer">
               <ExternalLinkIcon className="size-[1.25em]" />
-              <Text level="sm">{FORMAT_LABELS[resource.format]}</Text>
+              <Text level="sm">
+                {RESOURCE_FORMAT_ACTION_LABELS[resource.format]}
+              </Text>
             </a>
           </Button>
         )}

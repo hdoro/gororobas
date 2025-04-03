@@ -171,7 +171,7 @@ const Image: NodeHandler = (props) => {
       <SanityImage
         image={image}
         maxWidth={560}
-        className="my-6 max-h-[50dvh] max-w-full"
+        className="my-6 max-h-[50dvh] max-w-full object-contain"
       />
     )
   } catch (error) {

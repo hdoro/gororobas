@@ -66,7 +66,11 @@ const make = (options: BlueskyClientOptions) =>
           } else {
             return result
           }
-        }),
+        }).pipe(
+          Effect.tapError((error) =>
+            Effect.logDebug('Bluesky.use failed', error.cause),
+          ),
+        ),
       buildRichText: (text) =>
         Effect.gen(function* () {
           const rt = new RichText({
@@ -166,8 +170,15 @@ export type BlueskyPostInput = {
   images?: ImageForRenderingData[]
 }
 
+export const MAX_BLUESKY_MESSAGE_LENGTH = 300
+
 export const postToBluesky = ({ message, images }: BlueskyPostInput) =>
   Effect.gen(function* () {
+    if (message.length > MAX_BLUESKY_MESSAGE_LENGTH) {
+      return yield* Effect.fail(
+        new BlueskyError({ message: 'Message too long' }),
+      )
+    }
     const bluesky = yield* Bluesky
 
     yield* Effect.logDebug('Building rich text')
@@ -181,8 +192,7 @@ export const postToBluesky = ({ message, images }: BlueskyPostInput) =>
     const blobRes = yield* uploadPostImages(images)
     let post: AppBskyFeedPost.Record = {
       text: rt.text,
-      // @TODO debug why facet isn't being set - links aren't expanded in the published post
-      facet: rt.facets,
+      facets: rt.facets || [],
 
       $type: 'app.bsky.feed.post',
       createdAt: new Date().toISOString(),

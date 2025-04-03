@@ -920,3 +920,17 @@ export const insertResourceMutation = e.params(
       ),
     }),
 )
+
+export const markContentAsPostedMutation = e.params(
+  {
+    content_id: e.uuid,
+    text: e.str,
+  },
+  (params) =>
+    e.insert(e.BlueskyPost, {
+      text: params.text,
+      content: e.select(e.PostableToBluesky, (v) => ({
+        filter_single: e.op(v.id, '=', params.content_id),
+      })),
+    }),
+)

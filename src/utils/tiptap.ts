@@ -5,10 +5,23 @@ import type { TiptapNode } from '@/types'
 import { generateText } from '@tiptap/core'
 import { Schema } from 'effect'
 
+function removeEmptyTextNodes(json: TiptapNode): TiptapNode {
+  if (!json.content) return json
+
+  return {
+    ...json,
+    content: json.content.flatMap((node) => {
+      if (node.type === 'text' && !node.text) return []
+
+      return [removeEmptyTextNodes(node)]
+    }),
+  }
+}
+
 export function tiptapJSONtoPlainText(json: TiptapNode) {
   try {
     const extensions = getTiptapExtensions({ classes: richTextEditorTheme() })
-    return generateText(json, extensions, {
+    return generateText(removeEmptyTextNodes(json), extensions, {
       // @TODO: add a prefix to list items - currently `generateText` from the list item node doesn't work
       // textSerializers: {
       //   listItem: (props) => {

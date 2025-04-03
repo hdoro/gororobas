@@ -227,3 +227,17 @@ export const RESOURCE_FIELD_LABELS_MAP: Record<
   credit_line: 'Créditos ou autoria',
   thumbnail: 'Imagem de capa',
 }
+
+export const RESOURCE_FORMAT_ACTION_LABELS = {
+  BOOK: 'Ler livro',
+  FILM: 'Assistir',
+  SOCIAL_MEDIA: 'Acessar',
+  VIDEO: 'Assistir',
+  ARTICLE: 'Ler artigo',
+  PODCAST: 'Escutar',
+  COURSE: 'Assistir',
+  ACADEMIC_WORK: 'Ler',
+  DATASET: 'Acessar',
+  ORGANIZATION: 'Conhecer organização',
+  OTHER: 'Acessar',
+} as const satisfies Record<ResourceFormat, string>

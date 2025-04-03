@@ -1328,6 +1328,7 @@ export type ResourcePageData = Omit<ResourcePageDataRaw, 'description'> & {
 export const contentToPostQuery = e.select({
   notes: e.select(e.Note, (note) => ({
     ...noteForCard(note),
+    id: true,
     type: note.__type__.name,
 
     filter: e.op(
@@ -1341,14 +1342,29 @@ export const contentToPostQuery = e.select({
     },
   })),
   vegetables: e.select(e.Vegetable, (vegetable) => ({
-    ...vegetableForChip(vegetable),
+    ...vegetableForCard(vegetable),
+    id: true,
     type: vegetable.__type__.name,
+    names: true,
+    scientific_names: true,
+    origin: true,
     gender: true,
+    planting_methods: true,
+    strata: true,
+    friends: vegetableForCard,
+    varieties: {
+      names: true,
+    },
 
-    filter: e.op(
-      e.op('exists', vegetable.photos),
-      'and',
-      e.op(vegetable.has_been_posted_to_bluesky, '=', false),
+    filter: e.all(
+      e.set(
+        e.op('exists', vegetable.photos),
+        e.op(e.len(vegetable.origin), '>', 3),
+        e.op('exists', vegetable.scientific_names),
+        e.op('exists', vegetable.planting_methods),
+        e.op('exists', vegetable.strata),
+        e.op(vegetable.has_been_posted_to_bluesky, '=', false),
+      ),
     ),
     limit: 1,
     order_by: {
@@ -1357,6 +1373,7 @@ export const contentToPostQuery = e.select({
   })),
   resources: e.select(e.Resource, (resource) => ({
     ...resourceForCard(resource),
+    id: true,
     type: resource.__type__.name,
 
     filter: e.op(

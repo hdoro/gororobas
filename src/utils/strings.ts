@@ -10,6 +10,8 @@ export function truncate(str: string, maxLength: number) {
     return str
   }
 
+  if (maxLength < 0) return ''
+
   // To prevent truncating in the middle of words, let's get
   // the position of the first whitespace after the truncation
   const firstWhitespaceAfterTruncation =
@@ -56,12 +58,18 @@ export function slugify(str: string) {
   )
 }
 
-const formatter = new Intl.ListFormat('pt-BR', {
-  style: 'long',
-  type: 'conjunction',
-})
+export function semanticListItems(
+  input_items: string[],
+  maxDisplay?: number,
+  options?: Intl.ListFormatOptions,
+) {
+  const formatter = new Intl.ListFormat('pt-BR', {
+    style: 'long',
+    type: 'conjunction',
+    ...(options || {}),
+  })
 
-export function semanticListItems(items: string[], maxDisplay?: number) {
+  const items = input_items.map((item) => item.trim())
   if (maxDisplay && items.length > maxDisplay) {
     return formatter.format([
       ...items.slice(0, maxDisplay),
@@ -78,6 +86,12 @@ export function concatStringArray(arr: string[]) {
 const GENDER_ARTICLES: Record<Gender, string> = {
   FEMININO: 'a',
   MASCULINO: 'o',
+  NEUTRO: '',
+}
+
+const GENDER_PRONOUM: Record<Gender, string> = {
+  FEMININO: 'ela',
+  MASCULINO: 'ele',
   NEUTRO: '',
 }
 
@@ -110,6 +124,12 @@ export const gender = {
 
     return padString(article, pad)
   },
+  pronoun: (gender: Gender = 'NEUTRO', pad: StrPad = 'none') => {
+    const pronoun = GENDER_PRONOUM[gender]
+    if (!pronoun || pronoun === '') return ''
+
+    return padString(pronoun, pad)
+  },
   preposition: (gender: Gender = 'NEUTRO', pad: StrPad = 'none') => {
     const preposition = GENDER_PREPOSITIONS[gender]
     if (!preposition || preposition === '') return ''
@@ -119,4 +139,8 @@ export const gender = {
   suffix: (gender: Gender = 'NEUTRO') => {
     return GENDER_SUFFIX[gender]
   },
+}
+
+export function stringToHashtag(str: string) {
+  return `#${capitalize(str, true).replace(/\s/g, '')}`
 }

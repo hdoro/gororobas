@@ -448,7 +448,7 @@ module default {
   }
 
   abstract type PostableToBluesky {
-    has_been_posted := exists .<content[is BlueskyPost];
+    has_been_posted_to_bluesky := exists .<content[is BlueskyPost];
   }
 
   type BlueskyPost extending Auditable, AdminCanDoAnything {

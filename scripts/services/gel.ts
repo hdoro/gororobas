@@ -42,7 +42,11 @@ const make = (options: GelClientOptions) =>
           } else {
             return result
           }
-        }),
+        }).pipe(
+          Effect.tapError((error) =>
+            Effect.logDebug('Gel.use failed', error.cause),
+          ),
+        ),
     })
   })
 
