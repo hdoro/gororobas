@@ -33,6 +33,7 @@ export const metadata: Metadata = {
   title: 'Gororobas',
   description:
     'Aprendendo juntes a fazer agroecologia - Por terra, território, e gororobas!',
+  applicationName: 'Gororobas Agroecologia',
   openGraph: {
     images: [
       {

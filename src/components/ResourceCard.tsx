@@ -12,6 +12,7 @@ import { Text } from '@/components/ui/text'
 import type { ResourceFormat } from '@/gel.interfaces'
 import type { ResourceCardData } from '@/queries'
 import { cn } from '@/utils/cn'
+import { getResourceJsonLDSchema } from '@/utils/jsonLDSchemas'
 import {
   RESOURCE_FORMAT_ACTION_LABELS,
   RESOURCE_FORMAT_TO_LABEL,
@@ -31,6 +32,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { useState } from 'react'
+import JsonLD from './JsonLD'
 import { SanityImage } from './SanityImage'
 import VegetableBadge from './VegetableChip'
 import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
@@ -278,6 +280,7 @@ export default function ResourceCard({
             </div>
           )}
         </div>
+        <JsonLD data={getResourceJsonLDSchema(resource)} />
       </CardContent>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger className="absolute inset-0 z-10 cursor-pointer">

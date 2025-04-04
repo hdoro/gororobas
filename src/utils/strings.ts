@@ -63,6 +63,8 @@ export function semanticListItems(
   maxDisplay?: number,
   options?: Intl.ListFormatOptions,
 ) {
+  if (!input_items || !input_items.length) return ''
+
   const formatter = new Intl.ListFormat('pt-BR', {
     style: 'long',
     type: 'conjunction',
