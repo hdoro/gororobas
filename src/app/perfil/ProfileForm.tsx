@@ -120,7 +120,7 @@ export default function ProfileForm({
   }
 
   return (
-    <main className="px-pageX py-pageY flex flex-wrap gap-8">
+    <main className="px-pageX py-pageY flex flex-col gap-8 md:flex-row">
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

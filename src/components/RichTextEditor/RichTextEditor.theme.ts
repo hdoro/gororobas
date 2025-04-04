@@ -29,7 +29,7 @@ export const richTextEditorTheme = tv({
       },
       formTextarea: {
         contentEditable:
-          'text-sm leading-tight font-normal *:w-full rounded-md *:rounded-md *:border *:border-input *:bg-white *:px-3 *:py-2 *:ring-offset-background focus-within:outline-hidden focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:*:cursor-not-allowed disabled:*:opacity-50 min-h-[4lh] *:min-h-[4lh]',
+          'text-sm leading-normal font-normal *:w-full rounded-md *:rounded-md *:border *:border-input *:bg-white *:px-3 *:py-2 *:ring-offset-background focus-within:outline-hidden focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:*:cursor-not-allowed disabled:*:opacity-50 min-h-[4lh] *:min-h-[4lh]',
         placeholder: 'pt-0.5 text-muted-foreground',
         tiptapBold: 'font-semibold',
       },
