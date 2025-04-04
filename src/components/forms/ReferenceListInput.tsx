@@ -6,7 +6,7 @@ import type {
 } from '@/types'
 import { cn } from '@/utils/cn'
 import { useQuery } from '@tanstack/react-query'
-import { CommandLoading } from 'cmdk'
+import { CommandLoading, defaultFilter } from 'cmdk'
 import { CheckIcon, XIcon } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type {
@@ -27,6 +27,7 @@ import {
 } from '../ui/command'
 import { FormControl, FormItem, FormLabel } from '../ui/form'
 import { Input } from '../ui/input'
+import { Text } from '../ui/text'
 
 const LABELS = {
   Tag: {
@@ -79,19 +80,16 @@ export default function ReferenceListInput<
   const labels = LABELS[objectTypes[0]]
 
   if (layout === 'list') {
-    const filteredOptions = options?.filter((option) =>
-      [option.label, ...(option.keywords || [])].some((keyword) =>
-        keyword.toLowerCase().includes(searchQuery.toLowerCase()),
-      ),
-    )
-    console
+    const filteredOptions = options
+      ?.flatMap((option) => {
+        const score = defaultFilter(option.label, searchQuery, option.keywords)
+        if (score === 0) return []
 
-    /**
-     * @TODO:
-     * better way to fit parent container's height (at least inside popover it's getting absurd)
-     * better search in list - same algorithm as cmdk
-     * good UX, esp. on loading & empty states
-     */
+        return [{ option, score }]
+      })
+      .sort((a, b) => b.score - a.score)
+      .map(({ option }) => option)
+
     return (
       <>
         {!options && <LoadingSpinner />}
@@ -105,38 +103,46 @@ export default function ReferenceListInput<
         )}
         {selectedOptions.length > 0 && (
           <div className="hide-scrollbar -mx-2 mt-4 flex min-h-10 gap-2 overflow-auto px-2">
-            {selectedOptions.map((option) => {
-              return (
-                <Badge
-                  key={option.value}
-                  size="sm"
-                  className={cn('py-1', option.image ? 'px-1' : 'px-2')}
-                >
-                  {option.image && (
-                    <SanityImage
-                      image={option.image}
-                      maxWidth={24}
-                      className="block h-6 w-6 rounded-full object-cover"
-                      alt={`Foto de ${option.label}`}
-                    />
-                  )}
-                  <span className="pr-1">{option.label}</span>
-                  <button
-                    className="button cursor-pointer rounded-full"
-                    type="button"
-                    onClick={() => toggleOption(option.value)}
-                    disabled={field.disabled}
+            {
+              // Reverse the array to keep the latest additions first,
+              // which makes it easier for users to react to misselections
+              [...selectedOptions].reverse().map((option) => {
+                return (
+                  <Badge
+                    key={option.value}
+                    size="sm"
+                    className={cn('py-1', option.image ? 'px-1' : 'px-2')}
                   >
-                    <XIcon className="h-4 w-4" />
-                  </button>
-                </Badge>
-              )
-            })}
+                    {option.image && (
+                      <SanityImage
+                        image={option.image}
+                        maxWidth={24}
+                        className="block h-6 w-6 rounded-full object-cover"
+                        alt={`Foto de ${option.label}`}
+                      />
+                    )}
+                    <span className="pr-1">{option.label}</span>
+                    <button
+                      className="button cursor-pointer rounded-full"
+                      type="button"
+                      onClick={() => toggleOption(option.value)}
+                      disabled={field.disabled}
+                    >
+                      <XIcon className="h-4 w-4" />
+                    </button>
+                  </Badge>
+                )
+              })
+            }
           </div>
         )}
 
-        {filteredOptions?.length === 0 && <div>{labels.empty}</div>}
-        <div className="hide-scrollbar max-h-[250px] overflow-auto pt-4">
+        {filteredOptions?.length === 0 && (
+          <Text level="sm" className="text-muted-foreground pt-4 text-center">
+            {labels.empty}
+          </Text>
+        )}
+        <div className="hide-scrollbar overflow-auto pt-2">
           {filteredOptions?.map((option) => (
             <Button
               key={option.value}

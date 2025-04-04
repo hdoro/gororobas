@@ -8,7 +8,6 @@ import Field from '@/components/forms/Field'
 import ReferenceListInput, {
   useReferenceOptions,
 } from '@/components/forms/ReferenceListInput'
-import Carrot from '@/components/icons/Carrot'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -186,7 +185,7 @@ export default function ResourcesIndex() {
                     Filtros
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="p-1">
+                <PopoverContent className="px-1 pt-0 pb-1">
                   <AnimatePresence mode="popLayout">
                     {activeFilter ? (
                       <motion.div
@@ -195,7 +194,7 @@ export default function ResourcesIndex() {
                         exit={{ opacity: 0, translateX: -32 }}
                         key="active-filter"
                       >
-                        <div className="flex items-center">
+                        <div className="sticky top-0 flex items-center bg-white pt-1">
                           <Button
                             onClick={() => setActiveFilterKey(null)}
                             mode="bleed"
@@ -214,7 +213,10 @@ export default function ResourcesIndex() {
                             form={form}
                             name={activeFilter.filterKey}
                             label={activeFilter.label}
-                            classNames={{ root: 'p-2', label: 'sr-only' }}
+                            classNames={{
+                              root: 'p-2 flex-1',
+                              label: 'sr-only',
+                            }}
                             render={({ field }) => (
                               <CheckboxesInput
                                 field={field}
@@ -232,7 +234,7 @@ export default function ResourcesIndex() {
                             name={activeFilter.filterKey}
                             label={activeFilter.label}
                             classNames={{
-                              root: 'p-2',
+                              root: 'p-2 flex-1',
                               label: 'sr-only',
                             }}
                             render={({ field }) => (
@@ -371,10 +373,7 @@ export default function ResourcesIndex() {
       <div className="relative mt-2 space-y-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {isFetching && !isFetchingNextPage && (
-            <div className="bg-background bg-opacity-50 absolute inset-0 flex items-center justify-center gap-3">
-              <Carrot className="h-6 w-6 animate-spin" />
-              Carregando...
-            </div>
+            <LoadingSpinner className="col-span-full" />
           )}
           {data?.pages?.map((page) => (
             <React.Fragment key={page.queryParams.offset}>
