@@ -59,7 +59,6 @@ export const layer = Layer.scoped(
       // which will cause api calls with the fetch api to fail.
       tlsSecurity:
         process.env.NODE_ENV === 'development' ? 'insecure' : 'default',
-      instanceName: process.env.EDGEDB_INSTANCE as string,
     })
   }),
 )
