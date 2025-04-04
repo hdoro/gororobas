@@ -1,13 +1,13 @@
 import { markContentAsPostedMutation } from '@/mutations'
-import { contentToPostQuery, type ContentToPostData } from '@/queries'
+import { type ContentToPostData, contentToPostQuery } from '@/queries'
 import type { RichTextValue } from '@/schemas'
+import * as Bluesky from '@/services/bluesky'
+import * as Gel from '@/services/gel'
 import { shuffleArray } from '@/utils/arrays'
 import { truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
-import { paths, pathToAbsUrl } from '@/utils/urls'
+import { pathToAbsUrl, paths } from '@/utils/urls'
 import { Effect, Schema } from 'effect'
-import * as Bluesky from '../services/bluesky'
-import * as Gel from '../services/gel'
 import { createResourcePost } from './createResourcePost'
 import { createVegetablePost } from './createVegetablePost'
 
@@ -62,13 +62,16 @@ const contentToPost = (
       return yield* Schema.decodeUnknown(Bluesky.BlueskyPostInput)(
         createNotePost(entry),
       )
-    } else if (entry.type === 'default::Resource') {
+    }
+
+    if (entry.type === 'default::Resource') {
       return yield* Schema.decodeUnknown(Bluesky.BlueskyPostInput)(
         createResourcePost(entry),
       )
-    } else if (entry.type === 'default::Vegetable') {
-      return yield* createVegetablePost(entry)
     }
+
+    // default ::Vegetable
+    return yield* createVegetablePost(entry)
   }).pipe(
     Effect.map((post) => ({
       post,
@@ -83,7 +86,7 @@ export const postContentToBluesky = Effect.gen(function* () {
       client.withConfig({ apply_access_policies: false }),
     )
   })
-  yield* Effect.logDebug(`Got content to consider:`, content)
+  yield* Effect.logDebug('Got content to consider:', content)
 
   // Whichever content first yields a valid post will be used
   const { post, selectedContent } = yield* Effect.firstSuccessOf(
@@ -94,10 +97,10 @@ export const postContentToBluesky = Effect.gen(function* () {
     return yield* Effect.fail('No post to create')
   }
 
-  yield* Effect.logDebug(`Post to create:`, post)
+  yield* Effect.logDebug('Post to create:', post)
   yield* Bluesky.postToBluesky(post)
 
-  yield* Effect.logDebug(`Marking content as posted:`, post)
+  yield* Effect.logDebug('Marking content as posted:', post)
   yield* gel.use((client) => {
     return markContentAsPostedMutation.run(
       client.withConfig({ apply_access_policies: false }),

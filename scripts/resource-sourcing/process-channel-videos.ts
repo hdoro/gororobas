@@ -1,3 +1,9 @@
+import {
+  getChannel,
+  getChannelVideos,
+  getVideoTranscripts,
+  type VideoWithTranscript,
+} from '@/services/youtube'
 import { slugify, truncate } from '@/utils/strings'
 import { FileSystem, Path } from '@effect/platform'
 import { generateObject } from 'ai'
@@ -5,12 +11,6 @@ import { Data, Effect } from 'effect'
 import { ollama } from 'ollama-ai-provider'
 import { z } from 'zod'
 import { SCRIPT_PATHS } from '../script.utils'
-import {
-  getChannel,
-  getChannelVideos,
-  getVideoTranscripts,
-  type VideoWithTranscript,
-} from '../services/youtube'
 import {
   addResourceToInbox,
   type ResourceCustomizer,

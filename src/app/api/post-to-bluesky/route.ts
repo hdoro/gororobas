@@ -1,11 +1,11 @@
+import { postContentToBluesky } from '@/bluesky-bot/bluesky-bot'
+import * as Bluesky from '@/services/bluesky'
+import * as Gel from '@/services/gel'
 import { runServerEffect } from '@/services/runtime'
 import { FetchHttpClient } from '@effect/platform'
 import { NodeContext } from '@effect/platform-node'
 import { Effect, Layer, LogLevel, Logger } from 'effect'
 import type { NextRequest } from 'next/server'
-import { postContentToBluesky } from '../../../../scripts/bluesky-bot/bluesky-bot'
-import * as Bluesky from '../../../../scripts/services/bluesky'
-import * as Gel from '../../../../scripts/services/gel'
 
 const AllServices = Layer.mergeAll(
   Bluesky.layer,

@@ -1,5 +1,5 @@
 import { Context, Data, Effect, Layer } from 'effect'
-import { createClient, type Client } from 'gel'
+import { type Client, createClient } from 'gel'
 
 export class GelError extends Data.TaggedError('GelError')<{
   cause?: unknown
@@ -39,9 +39,9 @@ const make = (options: GelClientOptions) =>
                   message: 'Asyncronous error in `Gel.use`',
                 }),
             })
-          } else {
-            return result
           }
+
+          return result
         }).pipe(
           Effect.tapError((error) =>
             Effect.logDebug('Gel.use failed', error.cause),

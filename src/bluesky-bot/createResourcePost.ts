@@ -1,4 +1,5 @@
 import type { ContentToPostData } from '@/queries'
+import * as Bluesky from '@/services/bluesky'
 import {
   RESOURCE_FORMAT_ACTION_LABELS,
   RESOURCE_FORMAT_TO_LABEL,
@@ -6,7 +7,6 @@ import {
 import { stringToHashtag, truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { Effect, Either, Schema } from 'effect'
-import * as Bluesky from '../services/bluesky'
 
 export const createResourcePost = (
   resource: ContentToPostData['resources'][number],

@@ -1,19 +1,19 @@
 import {
   Command,
+  type CommandExecutor,
   FileSystem,
   Path,
-  type CommandExecutor,
 } from '@effect/platform'
 import type { PlatformError } from '@effect/platform/Error'
 import {
   Context,
   Data,
   Effect,
+  String as EffectString,
   Layer,
-  pipe,
-  Stream,
-  String,
   type Scope,
+  Stream,
+  pipe,
 } from 'effect'
 
 type WhisperOptions = {
@@ -49,7 +49,10 @@ export class Whisper extends Context.Tag('WhisperService')<
 const runString = <E, R>(
   stream: Stream.Stream<Uint8Array, E, R>,
 ): Effect.Effect<string, E, R> =>
-  stream.pipe(Stream.decodeText(), Stream.runFold(String.empty, String.concat))
+  stream.pipe(
+    Stream.decodeText(),
+    Stream.runFold(EffectString.empty, EffectString.concat),
+  )
 
 const make = (options: WhisperOptions) =>
   Effect.gen(function* () {

@@ -1,8 +1,8 @@
+import * as Level from '@/services/level'
 import { FailedUploadingImageError } from '@/types/errors'
+import { downloadImageFile } from '@/utils/downloadImageFile'
 import { sanityServerClient } from '@/utils/sanity.client'
 import { Effect, pipe } from 'effect'
-import { downloadImageFile } from '../script.utils'
-import * as Level from '../services/level'
 
 // Modified to accept a URL instead of a File
 function uploadImageToSanityFromURL(imageURL: string) {

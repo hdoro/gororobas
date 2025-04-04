@@ -56,9 +56,9 @@ const make = (path: string, options?: LevelClientOptions) =>
                 message: 'Asyncronous error in `Level.use`',
               }),
           })
-        } else {
-          return result
         }
+
+        return result
       })
     return Level.of({
       use,

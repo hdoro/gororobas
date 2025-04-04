@@ -1,8 +1,8 @@
+import * as Whisper from '@/services/whisper'
 import { FileSystem, Path } from '@effect/platform'
 import { NodeContext, NodeRuntime } from '@effect/platform-node'
 import { Data, Effect, Layer } from 'effect'
 import { glob } from 'glob'
-import * as Whisper from '../services/whisper'
 
 class FileSystemError extends Data.TaggedError('FileSystemError')<{
   readonly message: string

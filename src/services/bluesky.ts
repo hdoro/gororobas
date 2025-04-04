@@ -1,16 +1,16 @@
 import { ImageObjectInDB } from '@/schemas'
+import { downloadImageFile } from '@/utils/downloadImageFile'
 import { getImageProps } from '@/utils/getImageProps'
 import { sourcesToPlainText } from '@/utils/sources'
 import { truncate } from '@/utils/strings'
 import {
-  AtpAgent,
-  RichText,
   type AppBskyEmbedDefs,
   type AppBskyEmbedImages,
   type AppBskyFeedPost,
+  AtpAgent,
+  RichText,
 } from '@atproto/api'
 import { Config, Context, Data, Effect, Layer, Schema } from 'effect'
-import { downloadImageFile } from '../script.utils'
 
 export class BlueskyError extends Data.TaggedError('BlueskyError')<{
   cause?: unknown
@@ -64,9 +64,9 @@ const make = (options: BlueskyClientOptions) =>
                   message: 'Asyncronous error in `Bluesky.use`',
                 }),
             })
-          } else {
-            return result
           }
+
+          return result
         }).pipe(
           Effect.tapError((error) =>
             Effect.logDebug('Bluesky.use failed', error.cause),
@@ -126,7 +126,7 @@ const uploadPostImages = (input?: BlueskyPostInput['images']) =>
           }
           const file = yield* downloadImageFile(imageProps.src)
 
-          yield* Effect.logDebug(`Downloaded image. Now uploading to Bluesky`)
+          yield* Effect.logDebug('Downloaded image. Now uploading to Bluesky')
           const blobResponse = yield* bluesky.use((agent) =>
             agent.uploadBlob(file),
           )
@@ -209,7 +209,7 @@ export const postToBluesky = ({ message, images }: BlueskyPostInput) =>
       images?.length ? 'Now uploading images' : '',
     )
     const blobRes = yield* uploadPostImages(images)
-    let post: AppBskyFeedPost.Record = {
+    const post: AppBskyFeedPost.Record = {
       text: rt.text,
       facets: rt.facets || [],
 

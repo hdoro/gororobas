@@ -1,8 +1,8 @@
+import * as Level from '@/services/level'
 import { FetchHttpClient } from '@effect/platform'
 import { NodeContext, NodeRuntime } from '@effect/platform-node'
 import { Effect, Layer } from 'effect'
 import { SCRIPT_PATHS } from '../script.utils'
-import * as Level from '../services/level'
 import { importTagsAndResources } from './import-resources'
 
 const AllServices = Layer.mergeAll(

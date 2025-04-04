@@ -43,9 +43,9 @@ const make = (options: YoutubeClientOptions) =>
                   message: 'Asyncronous error in `Youtube.use`',
                 }),
             })
-          } else {
-            return result
           }
+
+          return result
         }),
     })
   })
