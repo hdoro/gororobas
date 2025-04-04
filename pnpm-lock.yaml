@@ -43,11 +43,11 @@ importers:
         specifier: ^0.27.6
         version: 0.27.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@gel/auth-core':
-        specifier: ^0.3.0
-        version: 0.3.0(gel@2.0.2)
+        specifier: 0.4.0-canary.20250404T195749
+        version: 0.4.0-canary.20250404T195749(gel@2.0.2)
       '@gel/auth-nextjs':
-        specifier: 0.5.0-canary.20250306T011036
-        version: 0.5.0-canary.20250306T011036(gel@2.0.2)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+        specifier: 0.5.0-canary.20250404T195755
+        version: 0.5.0-canary.20250404T195755(gel@2.0.2)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       '@googleapis/youtube':
         specifier: ^24.0.0
         version: 24.0.0
@@ -290,8 +290,8 @@ importers:
         specifier: ^1.9.4
         version: 1.9.4
       '@gel/generate':
-        specifier: 0.7.0-canary.20250228T221400
-        version: 0.7.0-canary.20250228T221400(gel@2.0.2)
+        specifier: 0.7.0-canary.20250404T195742
+        version: 0.7.0-canary.20250404T195742(gel@2.0.2)
       '@portabletext/to-html':
         specifier: ^2.0.14
         version: 2.0.14
@@ -599,19 +599,24 @@ packages:
     peerDependencies:
       gel: ^2.0.0
 
-  '@gel/auth-nextjs@0.5.0-canary.20250306T011036':
-    resolution: {integrity: sha512-ZLqfw2VSnr6BmUUfuxeeic/xyy/u1WX04sSmSJFyjZkvN03CDsiDZRR4gbw6Q87/bWXxfnJXu7o6uLV5RsY7Hw==}
+  '@gel/auth-core@0.4.0-canary.20250404T195749':
+    resolution: {integrity: sha512-bAmRIj8nb9E8T8C0Umb6P3bKRp0nBXYwjpthcT81h9wlRqRc8rVPGEI0nXV7SfizoZWgtbsvj5l5UMN8l8kPXA==}
+    peerDependencies:
+      gel: ^2.0.0
+
+  '@gel/auth-nextjs@0.5.0-canary.20250404T195755':
+    resolution: {integrity: sha512-vIseThpsoYNbX1Y74zBdHL3g0fC6w85mwEYNWgGmJHE4GUO065K6nO2q5h/witX84KeDQYYna0NrlYqsa8QI0Q==}
     peerDependencies:
       gel: ^2.0.0
       next: '>=13.5.6 <16.0.0'
       react: ^18.2.0 || ^19.0
 
-  '@gel/generate@0.7.0-canary.20250228T221400':
-    resolution: {integrity: sha512-Zj5JXZyeRJWCcMG8NRIJcybLuiDweYmqJxnEsE9zEqUgtpbHF8VEm6P29sIAgTNfhkglZ75tLH54KL9pfH245w==}
+  '@gel/generate@0.7.0-canary.20250404T195742':
+    resolution: {integrity: sha512-+lJz1T2j6EXNIhTeBmB4swkV01sc4f1PdR7Kks8KOL5gJO7wkrmqXxw1rAdTR7giPQGpScVYcSMKGi6gvZ0ikg==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
-      gel: ^2.0.0-rc
+      gel: ^2.0.1
 
   '@googleapis/youtube@24.0.0':
     resolution: {integrity: sha512-pu0fOZm7d4z8R5b0rirWn13jMaN90b4LzhgsDYZobvhgVjm9yNBEu81essBJ3otR4k0NN17hQJP1UxrsLXja8A==}
@@ -3905,14 +3910,19 @@ snapshots:
       gel: 2.0.2
       jwt-decode: 4.0.0
 
-  '@gel/auth-nextjs@0.5.0-canary.20250306T011036(gel@2.0.2)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)':
+  '@gel/auth-core@0.4.0-canary.20250404T195749(gel@2.0.2)':
+    dependencies:
+      gel: 2.0.2
+      jwt-decode: 4.0.0
+
+  '@gel/auth-nextjs@0.5.0-canary.20250404T195755(gel@2.0.2)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@gel/auth-core': 0.3.0(gel@2.0.2)
       gel: 2.0.2
       next: 15.2.4(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0
 
-  '@gel/generate@0.7.0-canary.20250228T221400(gel@2.0.2)':
+  '@gel/generate@0.7.0-canary.20250404T195742(gel@2.0.2)':
     dependencies:
       '@iarna/toml': 2.2.5
       debug: 4.4.0

@@ -121,8 +121,8 @@ const gelAuthHandlers = auth.createAuthRouteHandlers({
   async onSignout() {
     // @TODO remove once @gel/auth-nextjs fixes sign-out not working on Next dev
     await auth.deleteAuthCookie()
-    // @TODO UserNav remains with the user's avatar after sign-out. Can we do a hard refresh
-    redirect(paths.home(), RedirectType.replace)
+    // Hacky way of ensuring UserNav is revalidated. `revalidatePath` wasn't working
+    redirect(`${paths.home()}?sair=true`, RedirectType.replace)
   },
 })
 

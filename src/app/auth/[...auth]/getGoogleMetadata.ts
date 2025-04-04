@@ -3,55 +3,8 @@ import { Effect, Schema } from 'effect'
 
 /**
  * We're only interested in the `displayName` and `email.value` subsets.
- * Example of a full response:
- * {
-  "resourceName": "people/PERSON_ID",
-  "etag": "%RANDOM_KEY",
-  "names": [
-    {
-      "metadata": {
-        "primary": true,
-        "source": {
-          "type": "PROFILE",
-          "id": "PERSON_ID"
-        },
-        "sourcePrimary": true
-      },
-      "displayName": "NAME LASTNAME",
-      "familyName": "LASTNAME",
-      "givenName": "NAME",
-      "displayNameLastFirst": "LASTNAME, NAME",
-      "unstructuredName": "NAME LASTNAME"
-    },
-    {
-      "metadata": {
-        "source": {
-          "type": "DOMAIN_PROFILE",
-          "id": "PERSON_ID"
-        }
-      },
-      "displayName": "NAME LASTNAME",
-      "familyName": "LASTNAME",
-      "givenName": "NAME",
-      "displayNameLastFirst": "LASTNAME, NAME",
-      "unstructuredName": "NAME LASTNAME"
-    }
-  ],
-  "emailAddresses": [
-    {
-      "metadata": {
-        "primary": true,
-        "source": {
-          "type": "PROFILE",
-          "id": "PERSON_ID"
-        },
-        "sourcePrimary": true
-      },
-      "value": "email@example.com"
-    }
-  ]
-}
- */
+ * @docs https://developers.google.com/people/api/rest/v1/people
+ **/
 const GooglePeopleAPIMinimalResponse = Schema.Struct({
   names: Schema.Array(
     Schema.Struct({
