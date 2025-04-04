@@ -8,7 +8,10 @@ import { Effect } from 'effect'
 export default function createUserProfile(
   /** Keep track of retries to gauge how many auth callbacks are failing */
   isRetry = false,
-  oauthName: string | null = null,
+  oauth?: {
+    name: string | null
+    email: string | null
+  } | null,
 ) {
   return Effect.gen(function* (_) {
     const session = yield* _(Effect.tryPromise(() => auth.getSession()))
@@ -34,8 +37,9 @@ export default function createUserProfile(
     )
 
     const userId = generateId()
-    const initialName = oauthName || factorData?.email?.split('@')[0] || ''
+    const initialName = oauth?.name || factorData?.email?.split('@')[0] || ''
     const initialHandle = getStandardHandle(initialName || '', userId)
+    const email = oauth?.email || factorData?.email || null
 
     return yield* Effect.tryPromise({
       try: () =>
@@ -60,7 +64,7 @@ export default function createUserProfile(
         `,
           {
             userId,
-            email: factorData?.email,
+            email,
             initialHandle,
             initialName,
           },

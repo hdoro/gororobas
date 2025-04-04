@@ -10,7 +10,7 @@ import {
   setAuthRedirectCookie,
 } from './authRedirects'
 import createUserProfile from './createUserProfile'
-import getGoogleName from './getGoogleName'
+import getGoogleMetadata from './getGoogleMetadata'
 
 const gelAuthHandlers = auth.createAuthRouteHandlers({
   async onOAuthCallback(props) {
@@ -27,13 +27,16 @@ const gelAuthHandlers = auth.createAuthRouteHandlers({
         }
 
         if (props.isSignUp) {
-          let name: null | string = null
+          let oauthMetadata: {
+            name: string | null
+            email: string | null
+          } | null = null
 
           if (
             props.provider === 'builtin::oauth_google' &&
             props.tokenData.provider_token
           ) {
-            name = yield* getGoogleName(props.tokenData).pipe(
+            oauthMetadata = yield* getGoogleMetadata(props.tokenData).pipe(
               Effect.tap((name) =>
                 Effect.logInfo('[getGoogleName] name:', name),
               ),
@@ -45,7 +48,7 @@ const gelAuthHandlers = auth.createAuthRouteHandlers({
             )
           }
 
-          return yield* createUserProfile(false, name).pipe(
+          return yield* createUserProfile(false, oauthMetadata).pipe(
             Effect.map(
               () =>
                 ({
