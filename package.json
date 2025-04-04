@@ -89,6 +89,7 @@
     "json-diff-ts": "^4.2.0",
     "level": "^9.0.0",
     "lucide-react": "^0.483.0",
+    "mailpit-api": "^1.2.0",
     "match-sorter": "^8.0.0",
     "motion": "^12.6.0",
     "negotiator": "^1.0.0",

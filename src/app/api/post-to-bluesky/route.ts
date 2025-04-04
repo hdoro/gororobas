@@ -1,7 +1,5 @@
 import { postContentToBluesky } from '@/bluesky-bot/bluesky-bot'
-import * as Bluesky from '@/services/bluesky'
-import * as Gel from '@/services/gel'
-import * as ResendService from '@/services/resend'
+import { Bluesky, Gel, Mailpit, Resend } from '@/services'
 import { runServerEffect } from '@/services/runtime'
 import { FetchHttpClient } from '@effect/platform'
 import { NodeContext } from '@effect/platform-node'
@@ -13,7 +11,8 @@ const AllServices = Layer.mergeAll(
   NodeContext.layer,
   FetchHttpClient.layer,
   Gel.layer,
-  ResendService.fromEnv,
+  Resend.fromEnv,
+  Mailpit.fromEnv,
 )
 
 export async function GET(request: NextRequest) {

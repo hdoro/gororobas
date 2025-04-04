@@ -1,5 +1,5 @@
 import { Config, Context, Data, Effect, Layer } from 'effect'
-import { Resend } from 'resend'
+import { Resend as ResendClient } from 'resend'
 
 export class ResendError extends Data.TaggedError('ResendError')<{
   cause?: unknown
@@ -8,18 +8,15 @@ export class ResendError extends Data.TaggedError('ResendError')<{
 
 interface ResendImpl {
   use: <T>(
-    fn: (client: Resend) => T,
+    fn: (client: ResendClient) => T,
   ) => Effect.Effect<Awaited<T>, ResendError, never>
 }
-export class ResendService extends Context.Tag('Resend')<
-  Resend,
-  ResendImpl
->() {}
+export class Resend extends Context.Tag('Resend')<Resend, ResendImpl>() {}
 
 const make = (apiKey: string) =>
   Effect.gen(function* () {
-    const client = new Resend(apiKey)
-    return ResendService.of({
+    const client = new ResendClient(apiKey)
+    return Resend.of({
       use: (fn) =>
         Effect.gen(function* () {
           const result = yield* Effect.try({
@@ -51,7 +48,7 @@ const make = (apiKey: string) =>
   })
 
 export const fromEnv = Layer.scoped(
-  ResendService,
+  Resend,
   Effect.gen(function* () {
     const apiKey = yield* Config.string('RESEND_API_KEY')
     return yield* make(apiKey)

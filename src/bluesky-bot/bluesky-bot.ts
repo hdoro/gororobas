@@ -4,8 +4,8 @@ import { type ContentToPostData, contentToPostQuery } from '@/queries'
 import type { RichTextValue } from '@/schemas'
 import * as Bluesky from '@/services/bluesky'
 import * as Gel from '@/services/gel'
-import { ResendService } from '@/services/resend'
 import { shuffleArray } from '@/utils/arrays'
+import { sendEmail } from '@/utils/sendEmail'
 import { truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { pathToAbsUrl, paths } from '@/utils/urls'
@@ -118,16 +118,12 @@ export const postContentToBluesky = Effect.gen(function* () {
   Effect.catchAll((error) =>
     Effect.gen(function* () {
       yield* Effect.logError('Failed to post content to Bluesky', error)
-      const resend = yield* ResendService
-      yield* resend.use((client) => {
-        client.emails.send({
-          to: 'admin@gororobas.com',
-          from: 'Gororobas <ola@gororobas.com>',
-          subject: 'Falha na tarefa automatizada',
-          react: FailedToPostToBlueskyEmail({
-            errorDetails: error.toString(),
-          }),
-        })
+      yield* sendEmail({
+        to: 'admin@gororobas.com',
+        subject: 'Falha na tarefa automatizada',
+        react: FailedToPostToBlueskyEmail({
+          errorDetails: error.toString(),
+        }),
       })
       return yield* Effect.succeed({ success: false, error })
     }),

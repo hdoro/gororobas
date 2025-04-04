@@ -24,7 +24,7 @@ export default function EmailLayout(
             <Section>
               <Img
                 src={pathToAbsUrl('/email-header.png', true)}
-                alt="Gororobas Header"
+                alt=""
                 width="100%"
                 height="auto"
                 className="h-auto w-full rounded-t-[8px] object-cover"

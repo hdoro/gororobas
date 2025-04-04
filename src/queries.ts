@@ -1410,3 +1410,14 @@ export const resourcesForSitemapQuery = e.select(e.Resource, (resource) => ({
   handle: true,
   updated_at: true,
 }))
+
+export const getUserEmail = e.params(
+  {
+    email_factor_id: e.uuid,
+  },
+  (params) =>
+    e.select(e.ext.auth.EmailFactor, (emailFactor) => ({
+      filter_single: e.op(emailFactor.id, '=', params.email_factor_id),
+      email: true,
+    })),
+)

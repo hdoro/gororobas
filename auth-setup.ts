@@ -24,15 +24,10 @@ const CONFIG = {
     },
   ],
   appName: APP_NAME,
-  /** Email sending */
-  SMTP: {
-    sender: 'ola@gororobas.com',
-    username: process.env.SMTP_USERNAME,
-    password: process.env.SMTP_PASSWORD,
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    security: process.env.SMTP_SECURITY,
-    validate_certs: Boolean(process.env.SMTP_VALIDATE_CERTS),
+  webhooks: {
+    url: 'http://localhost:3000/auth/webhook',
+    events: ['MagicLinkRequested'],
+    signing_key: process.env.AUTH_WEBHOOK_SECRET,
   },
   redirect_urls: [
     'https://www.gororobas.com',
@@ -43,20 +38,23 @@ const CONFIG = {
 } as const
 
 let query = `
-CONFIGURE CURRENT BRANCH
-RESET ext::auth::AuthConfig;
+CONFIGURE CURRENT BRANCH RESET
+ext::auth::AuthConfig;
 
-CONFIGURE CURRENT BRANCH
-RESET ext::auth::UIConfig;
+CONFIGURE CURRENT BRANCH RESET
+ext::auth::UIConfig;
 
-CONFIGURE CURRENT BRANCH
-RESET ext::auth::MagicLinkProviderConfig;
+CONFIGURE CURRENT BRANCH RESET
+ext::auth::MagicLinkProviderConfig;
 
-CONFIGURE CURRENT BRANCH
-RESET ext::auth::ProviderConfig;
+CONFIGURE CURRENT BRANCH RESET
+ext::auth::ProviderConfig;
 
-CONFIGURE CURRENT BRANCH
-RESET cfg::SMTPProviderConfig;
+CONFIGURE CURRENT BRANCH RESET
+cfg::SMTPProviderConfig;
+
+CONFIGURE CURRENT BRANCH RESET
+ext::auth::WebhookConfig;
 
 CONFIGURE CURRENT BRANCH SET
 ext::auth::AuthConfig::auth_signing_key := '${CONFIG.signingKey}';
@@ -64,24 +62,21 @@ ext::auth::AuthConfig::auth_signing_key := '${CONFIG.signingKey}';
 CONFIGURE CURRENT BRANCH SET
 ext::auth::AuthConfig::token_time_to_live := <duration>'${CONFIG.tokenTTL}';
 
-CONFIGURE CURRENT BRANCH
-INSERT ext::auth::MagicLinkProviderConfig {
+CONFIGURE CURRENT BRANCH INSERT
+ext::auth::MagicLinkProviderConfig {
   token_time_to_live := <duration>'${CONFIG.magicLinkTokenTTL}',
 };
 
 CONFIGURE CURRENT BRANCH SET
 ext::auth::AuthConfig::allowed_redirect_urls := {${CONFIG.redirect_urls.map((url) => `"${url}"`).join(',')}};
 
-CONFIGURE CURRENT BRANCH
-INSERT cfg::SMTPProviderConfig {
-  name := "_default",
-  sender := "${CONFIG.SMTP.sender}",
-  port := <int32>"${CONFIG.SMTP.port}",
-  security := <cfg::SMTPSecurity>"${CONFIG.SMTP.security}",
-  timeout_per_email := <std::duration>"60",
-  timeout_per_attempt := <std::duration>"15",
-  ${CONFIG.SMTP.username ? `username := "${CONFIG.SMTP.username}",` : ''}
-  ${CONFIG.SMTP.password ? `password := "${CONFIG.SMTP.password}",` : ''}
+CONFIGURE CURRENT BRANCH INSERT
+ext::auth::WebhookConfig {
+  url := '${CONFIG.webhooks.url}',
+  signing_secret_key := "${CONFIG.webhooks.signing_key}", 
+  events := {
+    ${CONFIG.webhooks.events.map((event) => `ext::auth::WebhookEvent.${event}`).join(',')}
+  },
 };
 `
 
