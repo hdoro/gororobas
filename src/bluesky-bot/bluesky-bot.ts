@@ -1,8 +1,10 @@
+import FailedToPostToBlueskyEmail from '@/emails/failed-to-post-to-bluesky'
 import { markContentAsPostedMutation } from '@/mutations'
 import { type ContentToPostData, contentToPostQuery } from '@/queries'
 import type { RichTextValue } from '@/schemas'
 import * as Bluesky from '@/services/bluesky'
 import * as Gel from '@/services/gel'
+import { ResendService } from '@/services/resend'
 import { shuffleArray } from '@/utils/arrays'
 import { truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
@@ -113,7 +115,21 @@ export const postContentToBluesky = Effect.gen(function* () {
 
   return { success: true }
 }).pipe(
-  Effect.catchAll((error) => {
-    return Effect.succeed({ success: false, error })
-  }),
+  Effect.catchAll((error) =>
+    Effect.gen(function* () {
+      yield* Effect.logError('Failed to post content to Bluesky', error)
+      const resend = yield* ResendService
+      yield* resend.use((client) => {
+        client.emails.send({
+          to: 'admin@gororobas.com',
+          from: 'Gororobas <ola@gororobas.com>',
+          subject: 'Falha na tarefa automatizada',
+          react: FailedToPostToBlueskyEmail({
+            errorDetails: error.toString(),
+          }),
+        })
+      })
+      return yield* Effect.succeed({ success: false, error })
+    }),
+  ),
 )

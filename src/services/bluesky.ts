@@ -27,15 +27,16 @@ export class Bluesky extends Context.Tag('Bluesky')<Bluesky, BlueskyImpl>() {}
 
 type BlueskyClientOptions = ConstructorParameters<typeof AtpAgent>[0]
 
-const make = (options: BlueskyClientOptions) =>
+const make = (
+  options: BlueskyClientOptions,
+  { identifier, password }: { identifier: string; password: string },
+) =>
   Effect.gen(function* () {
     const agent = new AtpAgent(options)
-    const identifier = yield* Config.string('BLUESKY_USERNAME')
-    const password = yield* Config.string('BLUESKY_PASSWORD')
 
     yield* Effect.logDebug(`[bluesky] Logging into Bluesky as ${identifier}`)
     const loginResponse = yield* Effect.tryPromise({
-      try: () => agent.login({ identifier: identifier, password }),
+      try: () => agent.login({ identifier, password }),
       catch: (error) =>
         new BlueskyError({
           cause: error,
@@ -92,10 +93,15 @@ const make = (options: BlueskyClientOptions) =>
     })
   })
 
-export const layer = Layer.scoped(
+export const fromEnv = Layer.scoped(
   Bluesky,
   Effect.gen(function* () {
-    return yield* make({ service: 'https://bsky.social' })
+    const identifier = yield* Config.string('BLUESKY_USERNAME')
+    const password = yield* Config.string('BLUESKY_PASSWORD')
+    return yield* make(
+      { service: 'https://bsky.social' },
+      { identifier, password },
+    )
   }),
 )
 

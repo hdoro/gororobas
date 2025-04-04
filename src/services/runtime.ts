@@ -2,8 +2,8 @@ import { Effect, Metric } from 'effect'
 import type { SpanOptions } from 'effect/Tracer'
 import { TracingLive } from './Tracing'
 
-export function runServerEffect<A, E, R>(
-  effect: Effect.Effect<A, E, R>,
+export function runServerEffect<A, E>(
+  effect: Effect.Effect<A, E, never>,
 ): Promise<A> {
   return Effect.runPromise(
     Effect.provide(effect, TracingLive) as Effect.Effect<A, E, never>,
