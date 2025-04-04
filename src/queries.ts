@@ -511,7 +511,11 @@ export const noteEditingQuery = e.params(
   },
   (params) =>
     e.select(e.Note, (note) => ({
-      filter_single: e.op(note.handle, '=', params.handle),
+      filter_single: e.op(
+        e.op(note.handle, '=', params.handle),
+        'and',
+        e.op(note.created_by.id, '=', e.global.current_user_profile.id),
+      ),
 
       ...e.Note['*'],
     })),
