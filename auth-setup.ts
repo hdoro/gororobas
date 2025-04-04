@@ -34,6 +34,12 @@ const CONFIG = {
     security: process.env.SMTP_SECURITY,
     validate_certs: Boolean(process.env.SMTP_VALIDATE_CERTS),
   },
+  redirect_urls: [
+    'https://www.gororobas.com',
+    'https://gororobas.com',
+    'https://gororobas.com/auth/',
+    'http://localhost:3000',
+  ],
 } as const
 
 let query = `
@@ -64,39 +70,20 @@ INSERT ext::auth::MagicLinkProviderConfig {
 };
 
 CONFIGURE CURRENT BRANCH SET
-cfg::SMTPProviderConfig::sender := '${CONFIG.SMTP.sender}';
+ext::auth::AuthConfig::allowed_redirect_urls := {${CONFIG.redirect_urls.map((url) => `"${url}"`).join(',')}};
 
-CONFIGURE CURRENT BRANCH SET
-cfg::SMTPProviderConfig::host := '${CONFIG.SMTP.host}';
-
-CONFIGURE CURRENT BRANCH SET
-cfg::SMTPProviderConfig::port := <int32>${CONFIG.SMTP.port};
-
-CONFIGURE CURRENT BRANCH SET
-cfg::SMTPProviderConfig::security := '${CONFIG.SMTP.security}';
-
-CONFIGURE CURRENT BRANCH SET
-cfg::SMTPProviderConfig::validate_certs := ${CONFIG.SMTP.validate_certs};
+CONFIGURE CURRENT BRANCH
+INSERT cfg::SMTPProviderConfig {
+  name := "_default",
+  sender := "${CONFIG.SMTP.sender}",
+  port := <int32>"${CONFIG.SMTP.port}",
+  security := <cfg::SMTPSecurity>"${CONFIG.SMTP.security}",
+  timeout_per_email := <std::duration>"60",
+  timeout_per_attempt := <std::duration>"15",
+  ${CONFIG.SMTP.username ? `username := "${CONFIG.SMTP.username}",` : ''}
+  ${CONFIG.SMTP.password ? `password := "${CONFIG.SMTP.password}",` : ''}
+};
 `
-
-if (CONFIG.SMTP.username && CONFIG.SMTP.password) {
-  query += `
-
-CONFIGURE CURRENT BRANCH SET
-cfg::SMTPProviderConfig::username := '${CONFIG.SMTP.username}';
-
-CONFIGURE CURRENT BRANCH SET
-cfg::SMTPProviderConfig::password := '${CONFIG.SMTP.password}';
-`
-} else {
-  query += `
-CONFIGURE CURRENT BRANCH SET
-cfg::SMTPProviderConfig::username := '';
-
-CONFIGURE CURRENT BRANCH SET
-cfg::SMTPProviderConfig::password := '';
-  `
-}
 
 for (const { providerType, clientId, secret } of CONFIG.providers) {
   query += `
