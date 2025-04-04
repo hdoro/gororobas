@@ -2,11 +2,9 @@ import createUserProfile from '@/app/auth/[...auth]/createUserProfile'
 import { auth } from '@/gel'
 import { profileForNavQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { paths } from '@/utils/urls'
 import { Effect, pipe } from 'effect'
-import Link from 'next/link'
+import LoginButton from './LoginButton'
 import ProfileCard from './ProfileCard'
-import { Button } from './ui/button'
 
 export default async function UserNav({ signedIn }: { signedIn: boolean }) {
   const session = await auth.getSession()
@@ -15,9 +13,7 @@ export default async function UserNav({ signedIn }: { signedIn: boolean }) {
     return (
       <>
         <div className="flex items-center gap-2">
-          <Button asChild mode="outline">
-            <Link href={paths.signInOrSignUp(paths.home())}>Entrar</Link>
-          </Button>
+          <LoginButton />
         </div>
       </>
     )
