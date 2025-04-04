@@ -75,11 +75,6 @@ module default {
       using (global current_user.userRole ?= Role.MODERATOR);
   }
 
-  # 🚧 WARNING: **access policy is deactivated**, any session can access User
-  # 👉 Don't query/modify without first checking if the user has access
-  # ❓ @TODO is there a way to implement access policies on User without getting `required link 'user' of object type 'default::UserProfile' is hidden by access policy`?
-  #   - I've tried Elvis' suggestion of using an optional property but it doesn't work - https://discord.com/channels/841451783728529451/1118375623019221012/1118577633144348682
-  #   - Created an issue in the Next template: https://github.com/edgedb/nextjs-edgedb-auth-template/issues/8
   type User {
     required identity: ext::auth::Identity {
       constraint exclusive;
@@ -99,10 +94,19 @@ module default {
       rewrite insert using (datetime_of_statement());
       rewrite update using (datetime_of_statement());
     };
+
+    access policy current_user_has_full_access
+      allow all
+      using (.id ?= global current_user.id);
+    access policy admin_has_full_access
+      allow all
+      using (global current_user.userRole ?= Role.ADMIN);
+    access policy everyone_insert_only
+      allow insert;
   }
 
   type UserProfile extending WithHandle, PublicRead {
-    required user: User {
+    user: User {
       constraint exclusive;
 
       on target delete delete source;
@@ -392,7 +396,6 @@ module default {
       annotation title := 'Plain text representation of title and body for full-text search';
     };
 
-    # @TODO relate with AI
     multi related_to_vegetables: Vegetable {
       on target delete allow;
       on source delete allow;
