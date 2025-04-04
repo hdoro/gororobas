@@ -275,6 +275,7 @@ label {
 .tiptap--image img {
   max-width: 100%;
   max-height: 50dvh;
+  width: auto;
 }
 
 .tiptap--video.ProseMirror-selectednode,

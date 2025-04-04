@@ -78,7 +78,15 @@ export const Image = Node.create<ImageOptions>({
           { class: 'my-6 tiptap--image' },
           this.options.HTMLAttributes,
         ),
-        ['img', imageProps],
+        [
+          'img',
+          {
+            ...imageProps,
+            style: Object.entries(imageProps.style || {})
+              .map(([key, value]) => `${key}: ${value};`)
+              .join(' '),
+          },
+        ],
       ]
     } catch (error) {
       return ['div']
