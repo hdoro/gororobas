@@ -7,8 +7,7 @@ import { paraglideMiddleware } from './paraglide/server'
 
 export const middleware: NextMiddleware = (request) => {
   return paraglideMiddleware(request, ({ request: modified, locale }) => {
-    modified.headers.set('x-paraglide-locale', locale)
-    modified.headers.set('x-paraglide-request-url', modified.url)
+    modified.headers.set('x-gororobas-locale', locale)
     return NextResponse.rewrite(modified.url, modified)
   })
 }

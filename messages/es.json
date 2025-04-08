@@ -4,8 +4,12 @@
   "livid_vivid_bullock_foster": "Más información sobre",
   "every_inclusive_buzzard_greet": [
     {
-      "declarations": ["input countPlural"],
-      "selectors": ["countPlural"],
+      "declarations": [
+        "input countPlural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
       "match": {
         "countPlural=one": "Vegetal relacionado",
         "countPlural=other": "Vegetales relacionados"
@@ -149,5 +153,6 @@
   "zippy_every_anaconda_believe": "Aporta mejor información sobre las verduras y envía tu\nconsejos y recomendaciones",
   "drab_away_starfish_gleam": "Error al enviar el correo electrónico",
   "nice_crisp_wombat_quiz": "Correo electrónico",
-  "stock_crisp_buzzard_feel": "Para enviar"
+  "stock_crisp_buzzard_feel": "Para enviar",
+  "this_patient_ant_enrich": "Envía tu nota"
 }

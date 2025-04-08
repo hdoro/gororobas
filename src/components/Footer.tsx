@@ -1,5 +1,6 @@
+import { getLocale } from '@/paraglide/runtime'
 import { SOURCE_CODE_URL } from '@/utils/config'
-import { type Locale, getUserLocale } from '@/utils/i18n'
+import type { Locale } from '@/utils/i18n'
 import { paths } from '@/utils/urls'
 import {
   GithubIcon,
@@ -39,7 +40,7 @@ const FOOTER_LINKS = [
 }[]
 
 export default async function Footer() {
-  const locale = await getUserLocale()
+  const locale = getLocale()
   return (
     <footer
       className="border-t-primary-100 bg-background-card px-pageX flex flex-col items-center gap-[var(--page-padding-x)] border-t py-10 max-md:pb-28 md:flex-row md:items-start md:justify-start md:py-16 lg:py-24"

@@ -1,4 +1,5 @@
-import { type Locale, getUserLocale } from '@/utils/i18n'
+import { getLocale } from '@/paraglide/runtime'
+import type { Locale } from '@/utils/i18n'
 import { paths } from '@/utils/urls'
 import {
   LibraryBigIcon,
@@ -34,7 +35,7 @@ const HEADER_LINKS = [
 }[]
 
 export default async function HeaderNav({ signedIn }: { signedIn: boolean }) {
-  const locale = await getUserLocale()
+  const locale = getLocale()
   return (
     <>
       <nav

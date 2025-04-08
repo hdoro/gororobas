@@ -1,6 +1,7 @@
+import { getLocale } from '@/paraglide/runtime'
 import type { HomePageData, ResourceCardData } from '@/queries'
 import { shuffleArray } from '@/utils/arrays'
-import { type Locale, getUserLocale } from '@/utils/i18n'
+import type { Locale } from '@/utils/i18n'
 import { paths } from '@/utils/urls'
 import { LanguagesIcon, SearchIcon } from 'lucide-react'
 import Image from 'next/image'
@@ -121,7 +122,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
   const featured_vegetables = shuffleArray(data.featured_vegetables || [])
   const profiles = shuffleArray(data.profiles || [])
   const notes = shuffleArray(data.notes || [])
-  const locale = await getUserLocale()
+  const locale = getLocale()
   const content = LOCALIZED_CONTENT[locale]
 
   return (

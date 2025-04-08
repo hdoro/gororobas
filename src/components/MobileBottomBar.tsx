@@ -1,5 +1,6 @@
 'use client'
 
+import { getLocale } from '@/paraglide/runtime'
 import { cn } from '@/utils/cn'
 import type { Locale } from '@/utils/i18n'
 import { formatPath, paths } from '@/utils/urls'
@@ -59,13 +60,8 @@ function LinkButton(props: {
   )
 }
 
-export default function MobileBottomBar({
-  signedIn,
-  locale,
-}: {
-  signedIn: boolean
-  locale: Locale
-}) {
+export default function MobileBottomBar({ signedIn }: { signedIn: boolean }) {
+  const locale = getLocale()
   const pathname = usePathname()
 
   if (

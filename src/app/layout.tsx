@@ -4,13 +4,13 @@ import MobileBottomBar from '@/components/MobileBottomBar'
 import TanstackQueryProvider from '@/components/TanstackQueryProvider'
 import { Toaster } from '@/components/ui/toaster'
 import { auth } from '@/gel'
+import { getLocale } from '@/paraglide/runtime'
 import { cn } from '@/utils/cn'
-import { getUserLocale } from '@/utils/i18n'
 import { configureServerLocale } from '@/utils/i18n.server'
 import { pathToAbsUrl } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
-import { getLocale } from '../paraglide/runtime'
+import { LocaleInjection } from './LocaleInjection'
 import './globals.css'
 
 const fontFamily = Plus_Jakarta_Sans({
@@ -59,10 +59,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  await configureServerLocale()
+  const locale = await configureServerLocale()
   const session = await auth.getSession()
   const signedIn = await session.isSignedIn()
-  const locale = await getUserLocale()
 
   return (
     <html lang={getLocale()}>
@@ -75,13 +74,15 @@ export default async function RootLayout({
         />
       </head>
       <body className={cn(fontFamily.className, 'flex min-h-dvh flex-col')}>
-        <TanstackQueryProvider>
-          <HeaderNav signedIn={signedIn} />
-          <MobileBottomBar signedIn={signedIn} locale={locale} />
-          <div className="flex-1">{children}</div>
-          <Footer />
-          <Toaster />
-        </TanstackQueryProvider>
+        <LocaleInjection locale={locale}>
+          <TanstackQueryProvider>
+            <HeaderNav signedIn={signedIn} />
+            <MobileBottomBar signedIn={signedIn} />
+            <div className="flex-1">{children}</div>
+            <Footer />
+            <Toaster />
+          </TanstackQueryProvider>
+        </LocaleInjection>
       </body>
     </html>
   )

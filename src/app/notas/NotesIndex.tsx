@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
+import { m } from '@/paraglide/messages'
 import type { NotesIndexFilterParams } from '@/queries'
 import { NOTES_PER_PAGE } from '@/utils/config'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
@@ -109,7 +110,7 @@ export default function NotesIndex() {
         >
           Notas
           <Button asChild>
-            <Link href={paths.newNote()}>Enviar sua nota</Link>
+            <Link href={paths.newNote()}>{m.this_patient_ant_enrich()}</Link>
           </Button>
         </Text>
         <Text level="h2" as="p" className="max-w-md font-normal">

@@ -1,3 +1,5 @@
+import 'server-only'
+
 import {
   type Locale,
   assertIsLocale,
@@ -16,11 +18,26 @@ export const ssrLocale = cache(() => ({
 
 // overwrite the getLocale function to use the locale from the request
 overwriteGetLocale(() => {
-  console.log('\n\noverwriteGetLocale', ssrLocale().locale)
-  return assertIsLocale(ssrLocale().locale)
+  try {
+    return assertIsLocale(ssrLocale().locale)
+  } catch (error) {
+    return 'pt'
+  }
 })
 overwriteGetUrlOrigin(() => ssrLocale().origin)
 
+/**
+ * As Next doesn't offer a sync way to access the locale, we need to run this function
+ * in the root layout to get the locale message sent by the middleware via the request headers.
+ *
+ * Then, we overwrite the `ssrLocale` in the cache so it's accessible to any server component
+ * or function down the rendering line.
+ *
+ * For client components, refer to `LocaleInjection.tsx`
+ */
 export async function configureServerLocale() {
-  ssrLocale().locale = (await headers()).get('x-paraglide-locale') as Locale
+  const locale = (await headers()).get('x-gororobas-locale') as Locale
+  ssrLocale().locale = locale
+
+  return locale
 }
