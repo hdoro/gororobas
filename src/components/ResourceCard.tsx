@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog'
 import { Text } from '@/components/ui/text'
 import type { ResourceFormat } from '@/gel.interfaces'
+import { m } from '@/paraglide/messages'
 import type { ResourceCardData } from '@/queries'
 import { cn } from '@/utils/cn'
 import { getResourceJsonLDSchema } from '@/utils/jsonLDSchemas'
@@ -68,7 +69,8 @@ export function FullResourceDisplay({
   placement: 'dialog' | 'standalone'
 }) {
   const FormatIcon = FORMAT_ICONS[resource.format] || File
-  const label = RESOURCE_FORMAT_TO_LABEL[resource.format] || 'Outro'
+  const label =
+    RESOURCE_FORMAT_TO_LABEL[resource.format] || RESOURCE_FORMAT_TO_LABEL.OTHER
 
   return (
     <>
@@ -139,9 +141,9 @@ export function FullResourceDisplay({
           {(resource.related_vegetables?.length || 0) > 0 && (
             <div className="flex flex-wrap items-center gap-x-2 gap-y-3">
               <Text level="sm" as="h2" weight="semibold">
-                {resource.related_vegetables.length > 1
-                  ? 'Vegetais relacionados'
-                  : 'Vegetal relacionado'}
+                {m.every_inclusive_buzzard_greet({
+                  count: resource.related_vegetables.length,
+                })}
               </Text>
               {resource.related_vegetables?.map((vegetable) => (
                 <VegetableBadge
@@ -285,7 +287,7 @@ export default function ResourceCard({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger className="absolute inset-0 z-10 cursor-pointer">
           <span className="sr-only">
-            Mais informação sobre {resource.title}
+            {m.livid_vivid_bullock_foster()} {resource.title}
           </span>
         </DialogTrigger>
         <DialogContent className="max-h-[90vh] max-w-[calc(100vw-var(--page-padding-x))] overflow-y-auto md:max-w-3xl">

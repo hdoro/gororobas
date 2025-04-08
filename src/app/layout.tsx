@@ -6,9 +6,11 @@ import { Toaster } from '@/components/ui/toaster'
 import { auth } from '@/gel'
 import { cn } from '@/utils/cn'
 import { getUserLocale } from '@/utils/i18n'
+import { configureServerLocale } from '@/utils/i18n.server'
 import { pathToAbsUrl } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
+import { getLocale } from '../paraglide/runtime'
 import './globals.css'
 
 const fontFamily = Plus_Jakarta_Sans({
@@ -57,12 +59,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  await configureServerLocale()
   const session = await auth.getSession()
   const signedIn = await session.isSignedIn()
   const locale = await getUserLocale()
 
   return (
-    <html lang={locale}>
+    <html lang={getLocale()}>
       <head>
         <link
           rel="search"

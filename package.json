@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "dev:network": "LOCAL_IP=$(ifconfig en0 | grep 'inet ' | awk '{print $2}') && next dev --turbo -H $LOCAL_IP",
-    "build": "next build",
+    "build": "paraglide-js compile --project ./project.inlang --outdir ./src/paraglide && next build",
     "prebuild": "npm run generate:all",
     "start": "GEL_CLIENT_SECURITY=insecure_dev_mode next start",
     "buildAndTest": "bun run build && bun run start",
@@ -16,7 +16,8 @@
     "generate:gel": "npx @gel/generate edgeql-js --out src/edgeql --future-polymorphism-as-discriminated-unions --future-strict-type-names",
     "generate:interfaces": "npx @gel/generate interfaces --file src/gel.interfaces.ts",
     "generate:all": "pnpm generate:gel && pnpm generate:interfaces",
-    "prepare": "husky"
+    "prepare": "husky",
+    "machine-translate": "inlang machine translate --project project.inlang"
   },
   "dependencies": {
     "@atproto/api": "^0.14.20",
@@ -114,6 +115,8 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@gel/generate": "0.7.0-canary.20250404T195742",
+    "@inlang/cli": "^3.0.10",
+    "@inlang/paraglide-js": "^2.0.11",
     "@portabletext/to-html": "^2.0.14",
     "@sanity/types": "^3.82.0",
     "@tailwindcss/postcss": "^4.1.3",
@@ -135,7 +138,7 @@
   "lint-staged": {
     "*.{js,ts,tsx,css}": "biome check --staged --diagnostic-level=error"
   },
-  "packageManager": "pnpm@10.6.5+sha512.cdf928fca20832cd59ec53826492b7dc25dc524d4370b6b4adbf65803d32efaa6c1c88147c0ae4e8d579a6c9eec715757b50d4fa35eea179d868eada4ed043af",
+  "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971",
   "pnpm": {
     "overrides": {
       "@types/react": "19.0.2",

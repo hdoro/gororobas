@@ -12,6 +12,7 @@ import { Text } from '@/components/ui/text'
 import type { NotesIndexFilterParams } from '@/queries'
 import { NOTES_PER_PAGE } from '@/utils/config'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
+import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
   paths,
   persistParamsInUrl,
@@ -24,7 +25,6 @@ import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { InView } from 'react-intersection-observer'
 import { useDebounce } from 'use-debounce'
-import { queryParamsToQueryKey } from '../../utils/queryParams'
 import type { NotesIndexRouteData } from './fetchNotesIndex'
 import {
   notesNextSearchParamsToQueryParams,

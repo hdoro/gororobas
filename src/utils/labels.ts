@@ -13,66 +13,130 @@ import type {
   VegetableUsage,
   VegetableWishlistStatus,
 } from '@/gel.interfaces'
+import { m } from '@/paraglide/messages'
 import type { ResourceData, VegetableData } from '@/schemas'
 
 export const STRATUM_TO_LABEL = {
-  EMERGENTE: 'Emergente',
-  ALTO: 'Alto',
-  MEDIO: 'Médio',
-  BAIXO: 'Baixo',
-  RASTEIRO: 'Rasteiro',
+  get EMERGENTE() {
+    return m.stratum_emergente()
+  },
+  get ALTO() {
+    return m.stratum_alto()
+  },
+  get MEDIO() {
+    return m.stratum_medio()
+  },
+  get BAIXO() {
+    return m.stratum_baixo()
+  },
+  get RASTEIRO() {
+    return m.stratum_rasteiro()
+  },
 } as const satisfies Record<Stratum, string>
 
 export const STRATUM_EXPLAINERS = {
-  EMERGENTE:
-    'Plantas que devem estar acima de todas as outras e receber o máximo de luz - toleram até ~20% de sombra ao longo do dia',
-  ALTO: 'Plantas que só ficam abaixo das de estrato emergente - toleram até ~40% de sombra ao longo do dia',
-  MEDIO:
-    'Plantas que ficam abaixo das de estrato alto - toleram até ~60% de sombra ao longo do dia',
-  BAIXO:
-    'Plantas que ficam abaixo das de estrato médio - toleram até ~80% de sombra ao longo do dia',
-  RASTEIRO: 'Plantas de solo de floresta, sobrevivem sem luz direta',
+  get EMERGENTE() {
+    return m.stratum_explainer_emergente()
+  },
+  get ALTO() {
+    return m.stratum_explainer_alto()
+  },
+  get MEDIO() {
+    return m.stratum_explainer_medio()
+  },
+  get BAIXO() {
+    return m.stratum_explainer_baixo()
+  },
+  get RASTEIRO() {
+    return m.stratum_explainer_rasteiro()
+  },
 } as const satisfies Record<Stratum, string>
 
 export const VEGETABLE_LIFECYCLE_TO_LABEL = {
-  SEMESTRAL: 'Semestral',
-  ANUAL: 'Anual',
-  BIENAL: 'Bienal',
-  PERENE: 'Perene',
+  get SEMESTRAL() {
+    return m.vegetable_lifecycle_semestral()
+  },
+  get ANUAL() {
+    return m.vegetable_lifecycle_anual()
+  },
+  get BIENAL() {
+    return m.vegetable_lifecycle_bienal()
+  },
+  get PERENE() {
+    return m.vegetable_lifecycle_perene()
+  },
 } as const satisfies Record<VegetableLifeCycle, string>
 
 export const VEGETABLE_LIFECYCLE_EXPLAINERS = {
-  SEMESTRAL:
-    'Plantas que removemos ou colhemos em até 6 meses ou que morrem naturalmente nesse período',
-  ANUAL:
-    'Plantas que removemos ou colhemos entre 6 meses e 1 ano ou que morrem naturalmente nesse período',
-  BIENAL:
-    'Plantas que removemos ou colhemos em 1 a 2 anos ou que morrem naturalmente nesse período',
-  PERENE:
-    'Plantas que cultivamos por mais de 2 anos, como árvores frutíferas. "Perene" não significa pra sempre: muitas delas replantamos eventualmente para maximizar a produção, como o café, a banana, a parreira, etc.',
+  get SEMESTRAL() {
+    return m.vegetable_lifecycle_explainer_semestral()
+  },
+  get ANUAL() {
+    return m.vegetable_lifecycle_explainer_anual()
+  },
+  get BIENAL() {
+    return m.vegetable_lifecycle_explainer_bienal()
+  },
+  get PERENE() {
+    return m.vegetable_lifecycle_explainer_perene()
+  },
 } as const satisfies Record<VegetableLifeCycle, string>
 
 export const USAGE_TO_LABEL = {
-  ALIMENTO_ANIMAL: 'Alimento Animal',
-  ALIMENTO_HUMANO: 'Alimento Humano',
-  CONSTRUCAO: 'Construção',
-  COSMETICO: 'Cosmético',
-  MATERIA_ORGANICA: 'Matéria orgânica',
-  MEDICINAL: 'Medicinal',
-  ORNAMENTAL: 'Ornamental',
-  RITUALISTICO: 'Ritualístico',
-  ECOLOGICO: 'Ecológico / ambiental',
+  get ALIMENTO_ANIMAL() {
+    return m.vegetable_usage_alimento_animal()
+  },
+  get ALIMENTO_HUMANO() {
+    return m.vegetable_usage_alimento_humano()
+  },
+  get CONSTRUCAO() {
+    return m.vegetable_usage_construcao()
+  },
+  get COSMETICO() {
+    return m.vegetable_usage_cosmetico()
+  },
+  get MATERIA_ORGANICA() {
+    return m.vegetable_usage_materia_organica()
+  },
+  get MEDICINAL() {
+    return m.vegetable_usage_medicinal()
+  },
+  get ORNAMENTAL() {
+    return m.vegetable_usage_ornamental()
+  },
+  get RITUALISTICO() {
+    return m.vegetable_usage_ritualistico()
+  },
+  get ECOLOGICO() {
+    return m.vegetable_usage_ecologico()
+  },
 } as const satisfies Record<VegetableUsage, string>
 
 export const EDIBLE_PART_TO_LABEL = {
-  FRUTO: 'Fruto',
-  FLOR: 'Flor',
-  FOLHA: 'Folha',
-  CAULE: 'Caule',
-  SEMENTE: 'Semente',
-  CASCA: 'Casca',
-  BULBO: 'Bulbo',
-  BROTO: 'Broto',
+  get FRUTO() {
+    return m.edible_part_fruto()
+  },
+  get FLOR() {
+    return m.edible_part_flor()
+  },
+  get FOLHA() {
+    return m.edible_part_folha()
+  },
+  get CAULE() {
+    return m.edible_part_caule()
+  },
+  get SEMENTE() {
+    return m.edible_part_semente()
+  },
+  get CASCA() {
+    return m.edible_part_casca()
+  },
+  get BULBO() {
+    return m.edible_part_bulbo()
+  },
+  get BROTO() {
+    return m.edible_part_broto()
+  },
   /**
    * Raiz: responsável pela absorção de água e nutrientes
    *
@@ -85,159 +149,331 @@ export const EDIBLE_PART_TO_LABEL = {
    *
    * Exemplos: cenoura, beterraba, nabo
    */
-  RAIZ: 'Raiz',
+  get RAIZ() {
+    return m.edible_part_raiz()
+  },
   /**
    * Tubérculo: órgãos de reserva de nutrientes.
    * Os tubérculos são capazes de produzir novas plantas.
    *
    * Exemplos: Mandioca, batata
    */
-  TUBERCULO: 'Tubérculo',
+  get TUBERCULO() {
+    return m.edible_part_tuberculo()
+  },
   /**
    * Rizoma: caule subterrâneo que cresce horizontalmente e produz raízes e brotos.
    *
    * Exemplos: gengibre, açafrão-da-terra, cana-de-açúcar
    */
-  RIZOMA: 'Rizoma',
+  get RIZOMA() {
+    return m.edible_part_rizoma()
+  },
 } as const satisfies Record<EdiblePart, string>
 
 export const PLANTING_METHOD_TO_LABEL = {
-  BROTO: 'Broto',
-  ENXERTO: 'Enxerto ou clonagem',
-  ESTACA: 'Estaca, rama ou folha',
-  RIZOMA: 'Rizoma',
-  SEMENTE: 'Semente',
-  TUBERCULO: 'Tubérculo',
+  get BROTO() {
+    return m.planting_method_broto()
+  },
+  get ENXERTO() {
+    return m.planting_method_enxerto()
+  },
+  get ESTACA() {
+    return m.planting_method_estaca()
+  },
+  get RIZOMA() {
+    return m.planting_method_rizoma()
+  },
+  get SEMENTE() {
+    return m.planting_method_semente()
+  },
+  get TUBERCULO() {
+    return m.planting_method_tuberculo()
+  },
 } as const satisfies Record<PlantingMethod, string>
 
 export const PLANTING_METHOD_EXPLAINERS = {
-  BROTO:
-    'Brotos retirados da planta mãe, como gemas ou brotações laterais. Exemplos incluem batata doce, couve, mamão, etc.',
-  ENXERTO:
-    'Técnica de unir partes de duas plantas diferentes para combinar características desejáveis. Uma parte (o enxerto ou clone) é inserida em outra planta (o porta-enxerto ou cavalo) para que cresçam juntas. Grande parte da produção comercial de muitas frutíferas é feita assim (cacau, cítricas, amoras, etc.).',
-  ESTACA:
-    'Plantar um pedaço (estaca ou rama) do caule, folha ou raiz de uma planta. A estaca cria raízes e se desenvolve em uma nova planta geneticamente idêntica à original. Usado em roseiras, mandioca e muitas outras.',
-  RIZOMA:
-    'Rizomas são caules subterrâneos que crescem (também) horizontalmente e emitem raízes e brotos. Cortamos pedaços e plantamos, cada um originando uma nova planta. Banana é o exemplo clássico, mas também a cúrcuma, gengibre e bambu',
+  get BROTO() {
+    return m.planting_method_explainer_broto()
+  },
+  get ENXERTO() {
+    return m.planting_method_explainer_enxerto()
+  },
+  get ESTACA() {
+    return m.planting_method_explainer_estaca()
+  },
+  get RIZOMA() {
+    return m.planting_method_explainer_rizoma()
+  },
   /**
    * "Não jogue fora as sementes, guarde pra mim por amor" 🎶
    * Chegou até mim atráves de AS SEMENTES, de Marcelo D2, e de uma amiga (Bia) que trocou o "favor" por "amor" 🌻
    */
-  SEMENTE:
-    'Sejam plantadas diretamente no solo, ou em mudas a serem transplantadas',
-  TUBERCULO:
-    'Tubérculos são caules subterrâneos engrossados que armazenam nutrientes e possuem gemas que originam brotos. O plantio por tubérculo consiste em plantar o tubérculo inteiro ou seccionado, cada parte gerando uma nova planta. Nossas ancestrais já plantaram muuuita batata e inhame assim.',
+  get SEMENTE() {
+    return m.planting_method_explainer_semente()
+  },
+  get TUBERCULO() {
+    return m.planting_method_explainer_tuberculo()
+  },
 } as const satisfies Record<PlantingMethod, string>
 
 export const TIP_SUBJECT_TO_LABEL = {
-  PLANTIO: 'Plantio',
-  CRESCIMENTO: 'Crescimento',
-  COLHEITA: 'Colheita e pós colheita',
+  get PLANTIO() {
+    return m.tip_subject_plantio()
+  },
+  get CRESCIMENTO() {
+    return m.tip_subject_crescimento()
+  },
+  get COLHEITA() {
+    return m.tip_subject_colheita()
+  },
 } as const satisfies Record<TipSubject, string>
 
 export const SOURCE_TYPE_TO_LABEL = {
-  GOROROBAS: 'Pessoa no Gororobas',
-  EXTERNAL: 'Externa',
+  get GOROROBAS() {
+    return m.source_type_gororobas()
+  },
+  get EXTERNAL() {
+    return m.source_type_external()
+  },
 } as const satisfies Record<SourceType, string>
 
 export const GENDER_TO_LABEL = {
-  FEMININO: 'Feminino',
-  MASCULINO: 'Masculino',
-  NEUTRO: 'Neutro',
+  get FEMININO() {
+    return m.gender_feminino()
+  },
+  get MASCULINO() {
+    return m.gender_masculino()
+  },
+  get NEUTRO() {
+    return m.gender_neutro()
+  },
 } as const satisfies Record<Gender, string>
 
 export const WISHLIST_STATUS_TO_LABEL = {
-  QUERO_CULTIVAR: 'Quero cultivar',
-  SEM_INTERESSE: 'Sem interesse',
-  JA_CULTIVEI: 'Já cultivei',
-  ESTOU_CULTIVANDO: 'Estou cultivando',
+  get QUERO_CULTIVAR() {
+    return m.wishlist_status_quero_cultivar()
+  },
+  get SEM_INTERESSE() {
+    return m.wishlist_status_sem_interesse()
+  },
+  get JA_CULTIVEI() {
+    return m.wishlist_status_ja_cultivei()
+  },
+  get ESTOU_CULTIVANDO() {
+    return m.wishlist_status_estou_cultivando()
+  },
 } as const satisfies Record<VegetableWishlistStatus, string>
 
 export const NOTE_TYPE_TO_LABEL = {
-  DESCOBERTA: 'Descoberta',
-  ENSINAMENTO: 'Me ensinaram',
-  EXPERIMENTO: 'Experimento',
-  PERGUNTA: 'Pergunta',
-  INSPIRACAO: 'Inspiração',
+  get DESCOBERTA() {
+    return m.note_type_descoberta()
+  },
+  get ENSINAMENTO() {
+    return m.note_type_ensinamento()
+  },
+  get EXPERIMENTO() {
+    return m.note_type_experimento()
+  },
+  get PERGUNTA() {
+    return m.note_type_pergunta()
+  },
+  get INSPIRACAO() {
+    return m.note_type_inspiracao()
+  },
 } as const satisfies Record<NoteType, string>
 
 export const EDIT_SUGGESTION_STATUS_TO_LABEL = {
-  PENDING_REVIEW: 'Em revisão',
-  MERGED: 'Aprovadas',
-  REJECTED: 'Rejeitadas',
+  get PENDING_REVIEW() {
+    return m.edit_suggestion_status_pending_review()
+  },
+  get MERGED() {
+    return m.edit_suggestion_status_merged()
+  },
+  get REJECTED() {
+    return m.edit_suggestion_status_rejected()
+  },
 } as const satisfies Record<EditSuggestionStatus, string>
 
 export const NOTE_PUBLISH_STATUS_TO_LABEL = {
-  PRIVATE: 'Nota Privada',
-  COMMUNITY: 'Nota da comunidade',
-  PUBLIC: 'Nota Pública',
+  get PRIVATE() {
+    return m.publish_status_private()
+  },
+  get COMMUNITY() {
+    return m.publish_status_community()
+  },
+  get PUBLIC() {
+    return m.publish_status_public()
+  },
 } as const satisfies Record<NotePublishStatus, string>
 
 export const VEGETABLE_FIELD_LABELS_MAP: Record<
   Exclude<keyof typeof VegetableData.Encoded, 'id'>,
   string
 > = {
-  content: 'Conteúdo livre sobre o vegetal',
-  edible_parts: 'Partes comestíveis',
-  friends: 'Amigues',
-  gender: 'Gênero gramatical',
-  handle: 'Endereço no site',
-  lifecycles: 'Ciclo de vida',
-  names: 'Nomes',
-  origin: 'Origem',
-  photos: 'Fotos',
-  planting_methods: 'Plantio por',
-  scientific_names: 'Nomes científicos',
-  sources: 'Fontes',
-  strata: 'Estrato de cultivo',
-  development_cycle_max: 'Tempo de desenvolvimento máximo',
-  development_cycle_min: 'Tempo de desenvolvimento mínimo',
-  height_max: 'Altura adulta máxima',
-  height_min: 'Altura adulta mínima',
-  temperature_max: 'Temperatura ideal máxima',
-  temperature_min: 'Temperatura ideal mínima',
-  uses: 'Principais usos',
-  varieties: 'Variedades',
+  get content() {
+    return m.vegetable_field_content()
+  },
+  get edible_parts() {
+    return m.vegetable_field_edible_parts()
+  },
+  get friends() {
+    return m.vegetable_field_friends()
+  },
+  get gender() {
+    return m.vegetable_field_gender()
+  },
+  get handle() {
+    return m.vegetable_field_handle()
+  },
+  get lifecycles() {
+    return m.vegetable_field_lifecycles()
+  },
+  get names() {
+    return m.vegetable_field_names()
+  },
+  get origin() {
+    return m.vegetable_field_origin()
+  },
+  get photos() {
+    return m.vegetable_field_photos()
+  },
+  get planting_methods() {
+    return m.vegetable_field_planting_methods()
+  },
+  get scientific_names() {
+    return m.vegetable_field_scientific_names()
+  },
+  get sources() {
+    return m.vegetable_field_sources()
+  },
+  get strata() {
+    return m.vegetable_field_strata()
+  },
+  get development_cycle_max() {
+    return m.vegetable_field_development_cycle_max()
+  },
+  get development_cycle_min() {
+    return m.vegetable_field_development_cycle_min()
+  },
+  get height_max() {
+    return m.vegetable_field_height_max()
+  },
+  get height_min() {
+    return m.vegetable_field_height_min()
+  },
+  get temperature_max() {
+    return m.vegetable_field_temperature_max()
+  },
+  get temperature_min() {
+    return m.vegetable_field_temperature_min()
+  },
+  get uses() {
+    return m.vegetable_field_uses()
+  },
+  get varieties() {
+    return m.vegetable_field_varieties()
+  },
 }
 
 export const RESOURCE_FORMAT_TO_LABEL = {
-  BOOK: 'Livro',
-  FILM: 'Filme',
-  SOCIAL_MEDIA: 'Rede Social',
-  VIDEO: 'Vídeo',
-  ARTICLE: 'Artigo',
-  PODCAST: 'Podcast',
-  COURSE: 'Curso',
-  ACADEMIC_WORK: 'Trabalho Acadêmico',
-  DATASET: 'Base de Dados',
-  ORGANIZATION: 'Organização',
-  OTHER: 'Outro',
+  get BOOK() {
+    return m.format_book()
+  },
+  get FILM() {
+    return m.format_movie()
+  },
+  get SOCIAL_MEDIA() {
+    return m.format_social_media()
+  },
+  get VIDEO() {
+    return m.format_video()
+  },
+  get ARTICLE() {
+    return m.format_article()
+  },
+  get PODCAST() {
+    return m.format_podcast()
+  },
+  get COURSE() {
+    return m.format_course()
+  },
+  get ACADEMIC_WORK() {
+    return m.format_academic_work()
+  },
+  get DATASET() {
+    return m.format_dataset()
+  },
+  get ORGANIZATION() {
+    return m.format_organization()
+  },
+  get OTHER() {
+    return m.format_other()
+  },
 } as const satisfies Record<ResourceFormat, string>
 
 export const RESOURCE_FIELD_LABELS_MAP: Record<
   Exclude<keyof typeof ResourceData.Encoded, 'id'>,
   string
 > = {
-  title: 'Título',
-  format: 'Formato',
-  url: 'URL',
-  description: 'Sobre esse material',
-  tags: 'Classificação',
-  related_vegetables: 'Vegetais relacionados',
-  credit_line: 'Créditos ou autoria',
-  thumbnail: 'Imagem de capa',
+  get title() {
+    return m.resource_field_title()
+  },
+  get format() {
+    return m.resource_field_format()
+  },
+  get url() {
+    return m.resource_field_url()
+  },
+  get description() {
+    return m.resource_field_description()
+  },
+  get tags() {
+    return m.resource_field_tags()
+  },
+  get related_vegetables() {
+    return m.resource_field_related_vegetables()
+  },
+  get credit_line() {
+    return m.resource_field_credit_line()
+  },
+  get thumbnail() {
+    return m.resource_field_thumbnail()
+  },
 }
 
 export const RESOURCE_FORMAT_ACTION_LABELS = {
-  BOOK: 'Ler livro',
-  FILM: 'Assistir',
-  SOCIAL_MEDIA: 'Acessar',
-  VIDEO: 'Assistir',
-  ARTICLE: 'Ler artigo',
-  PODCAST: 'Escutar',
-  COURSE: 'Assistir',
-  ACADEMIC_WORK: 'Ler',
-  DATASET: 'Acessar',
-  ORGANIZATION: 'Conhecer organização',
-  OTHER: 'Acessar',
+  get BOOK() {
+    return m.resource_format_action_book()
+  },
+  get FILM() {
+    return m.resource_format_action_film()
+  },
+  get SOCIAL_MEDIA() {
+    return m.resource_format_action_social_media()
+  },
+  get VIDEO() {
+    return m.resource_format_action_video()
+  },
+  get ARTICLE() {
+    return m.resource_format_action_article()
+  },
+  get PODCAST() {
+    return m.resource_format_action_podcast()
+  },
+  get COURSE() {
+    return m.resource_format_action_course()
+  },
+  get ACADEMIC_WORK() {
+    return m.resource_format_action_academic_work()
+  },
+  get DATASET() {
+    return m.resource_format_action_dataset()
+  },
+  get ORGANIZATION() {
+    return m.resource_format_action_organization()
+  },
+  get OTHER() {
+    return m.resource_format_action_other()
+  },
 } as const satisfies Record<ResourceFormat, string>
