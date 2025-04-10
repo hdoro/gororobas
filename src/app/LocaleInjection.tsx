@@ -2,7 +2,6 @@
 
 import { overwriteGetLocale } from '@/paraglide/runtime'
 import type { Locale } from '@/utils/i18n'
-import type { PropsWithChildren } from 'react'
 
 /**
  * Because of how NextJS handles server and client components differently,
@@ -12,10 +11,8 @@ import type { PropsWithChildren } from 'react'
  * different instantiation of the `paraglide/runtime.js` module. As such, overwriting the
  * `getLocale` function in one doesn't modify the other.
  */
-export const LocaleInjection = (
-  props: PropsWithChildren<{ locale: Locale }>,
-) => {
-  overwriteGetLocale(() => props.locale)
+export const LocaleInjection = (props: { locale: Locale }) => {
+  if (props?.locale) overwriteGetLocale(() => props.locale)
 
-  return props.children
+  return null
 }

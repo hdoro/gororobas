@@ -10,8 +10,8 @@ import { configureServerLocale } from '@/utils/i18n.server'
 import { pathToAbsUrl } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
-import { LocaleInjection } from './LocaleInjection'
 import './globals.css'
+import { LocaleInjection } from './LocaleInjection'
 
 const fontFamily = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -74,15 +74,14 @@ export default async function RootLayout({
         />
       </head>
       <body className={cn(fontFamily.className, 'flex min-h-dvh flex-col')}>
-        <LocaleInjection locale={locale}>
-          <TanstackQueryProvider>
-            <HeaderNav signedIn={signedIn} />
-            <MobileBottomBar signedIn={signedIn} />
-            <div className="flex-1">{children}</div>
-            <Footer />
-            <Toaster />
-          </TanstackQueryProvider>
-        </LocaleInjection>
+        <LocaleInjection locale={locale} />
+        <TanstackQueryProvider>
+          <HeaderNav signedIn={signedIn} />
+          <MobileBottomBar signedIn={signedIn} />
+          <div className="flex-1">{children}</div>
+          <Footer />
+          <Toaster />
+        </TanstackQueryProvider>
       </body>
     </html>
   )

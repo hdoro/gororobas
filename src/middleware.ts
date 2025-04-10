@@ -6,6 +6,9 @@ import {
 import { paraglideMiddleware } from './paraglide/server'
 
 export const middleware: NextMiddleware = (request) => {
+  // Don't run in Server Actions - Paraglide's cloning breaks their returns in the client
+  if (request.headers.get('next-action')) return NextResponse.next()
+
   return paraglideMiddleware(request, ({ request: modified, locale }) => {
     modified.headers.set('x-gororobas-locale', locale)
     return NextResponse.rewrite(modified.url, modified)
