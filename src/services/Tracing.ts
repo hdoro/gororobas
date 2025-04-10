@@ -4,13 +4,13 @@ import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
-import { Config, Effect, FiberRef, Layer, LogLevel, Secret } from 'effect'
+import { Config, Effect, FiberRef, Layer, LogLevel, Redacted } from 'effect'
 
 // `nested` means secrets are prefixed by `HONEYCOMB_`
 const HoneycombConfig = Config.nested('HONEYCOMB')(
   Config.all({
-    apiKey: Config.secret('API_KEY'),
-    serviceName: Config.secret('DATASET'),
+    apiKey: Config.redacted('API_KEY'),
+    serviceName: Config.redacted('DATASET'),
   }),
 )
 
@@ -25,13 +25,13 @@ export const TracingLive = Layer.unwrapEffect(
 
     const { apiKey, serviceName } = config.value
     const headers = {
-      'X-Honeycomb-Team': Secret.value(apiKey),
-      'X-Honeycomb-Dataset': Secret.value(serviceName),
+      'X-Honeycomb-Team': Redacted.value(apiKey),
+      'X-Honeycomb-Dataset': Redacted.value(serviceName),
     }
 
     return NodeSdk.layer(() => ({
       resource: {
-        serviceName: Secret.value(serviceName),
+        serviceName: Redacted.value(serviceName),
       },
       spanProcessor: new BatchSpanProcessor(
         new OTLPTraceExporter({
