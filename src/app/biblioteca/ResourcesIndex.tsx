@@ -17,6 +17,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Text } from '@/components/ui/text'
+import { m } from '@/paraglide/messages'
 import type { ResourceCardData, ResourcesIndexFilterParams } from '@/queries'
 import type { ReferenceObjectType } from '@/types'
 import { RESOURCES_PER_PAGE } from '@/utils/config'
@@ -140,11 +141,10 @@ export default function ResourcesIndex() {
     <main className="px-pageX pt-12 pb-30">
       <div className="space-y-1">
         <Text level="h1" as="h1">
-          Biblioteca Agroecológica
+          {m.late_grand_grebe_fry()}
         </Text>
         <Text level="h2" as="p" className="font-normal">
-          Livros, organizações, vídeos e mais sobre agroecologia, agrofloresta e
-          a luta por terra e território.
+          {m.tough_teary_dachshund_arise()}
         </Text>
       </div>
       <FormProvider {...form}>
@@ -154,13 +154,13 @@ export default function ResourcesIndex() {
               <Field
                 form={form}
                 name="search_query"
-                label="Nome"
+                label={m.green_fair_carp_climb()}
                 render={({ field }) => (
                   <Input
                     {...field}
                     value={field.value || ''}
                     type="text"
-                    placeholder="Buscar por título"
+                    placeholder={m.big_smug_crocodile_adore()}
                     className="md:min-w-2xs"
                   />
                 )}
@@ -182,7 +182,7 @@ export default function ResourcesIndex() {
                 >
                   <Button>
                     <FilterIcon className="mr-2 h-auto w-[1.25em]" />
-                    Filtros
+                    {m.north_pretty_scallop_hint()}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="px-1 pt-0 pb-1">
@@ -202,7 +202,9 @@ export default function ResourcesIndex() {
                             tone="neutral"
                           >
                             <ArrowLeft className="size-4 opacity-90" />
-                            <span className="sr-only">Voltar</span>
+                            <span className="sr-only">
+                              {m.crazy_awful_worm_vent()}
+                            </span>
                           </Button>
                           <Text level="p" as="p" aria-hidden weight="semibold">
                             {activeFilter.label}
@@ -332,7 +334,10 @@ export default function ResourcesIndex() {
                                   .join(', ')}
                               </span>
                               {values.length > 1 && (
-                                <span aria-hidden>{values.length} opções</span>
+                                <span aria-hidden>
+                                  {values.length}{' '}
+                                  {m.lofty_mellow_gazelle_empower()}
+                                </span>
                               )}
                             </>
                           )}
@@ -349,7 +354,7 @@ export default function ResourcesIndex() {
                           onClick={() =>
                             form.setValue(definition.filterKey, undefined)
                           }
-                          title={`Remover filtro para ${definition.label}`}
+                          title={`${m.active_legal_albatross_play()} ${definition.label}`}
                           className="rounded-none px-2"
                         >
                           <XIcon className="size-[1em]" />
@@ -364,7 +369,7 @@ export default function ResourcesIndex() {
             <Button asChild mode="outline" className="max-xl:mt-4">
               <Link href={paths.newResource()}>
                 <PlusCircleIcon />
-                Enviar material
+                {m.maroon_that_turtle_comfort()}
               </Link>
             </Button>
           </div>
@@ -393,15 +398,12 @@ export default function ResourcesIndex() {
         {isEmpty && (
           <Card aria-live="polite">
             <CardHeader>
-              <CardTitle>Nenhum material encontrado</CardTitle>
-              <Text>
-                Conhece algum que não está na biblioteca? O Gororobas é
-                colaborativo, você pode ajudar:
-              </Text>
+              <CardTitle>{m.fresh_caring_gecko_value()}</CardTitle>
+              <Text>{m.weird_jumpy_tuna_tend()}</Text>
             </CardHeader>
             <CardContent>
               <Button asChild>
-                <Link href={paths.newResource()}>Enviar um material</Link>
+                <Link href={paths.newResource()}>{m.low_smug_mink_pout()}</Link>
               </Button>
             </CardContent>
           </Card>
@@ -427,7 +429,7 @@ export default function ResourcesIndex() {
                 }}
                 mode="outline"
               >
-                Carregar próxima página
+                {m.fluffy_flat_jackal_intend()}
               </Button>
             </div>
           ))}
@@ -459,7 +461,7 @@ function ReferenceRenderer({
               image={value.image}
               maxWidth={24}
               className="block size-[1.5em] flex-[0_0_1.5em] rounded-full object-cover"
-              alt={`Foto de ${value.label}`}
+              alt={m.simple_civil_tiger_commend({ label: value.label })}
             />
           )}
           <span>{value.label}</span>

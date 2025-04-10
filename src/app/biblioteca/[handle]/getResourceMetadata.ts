@@ -16,7 +16,7 @@ export default function getResourceMetadata(
 
   const mainImage = resource.thumbnail || undefined
   return {
-    title: `${resource.title} | Gororobas`,
+    title: `${resource.title} | Gororobas Agroecologia`,
     description,
     alternates: {
       canonical: pathToAbsUrl(paths.resource(resource.handle)),

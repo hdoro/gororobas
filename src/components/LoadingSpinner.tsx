@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import { cn } from '@/utils/cn'
 import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 import Carrot from './icons/Carrot'
@@ -17,7 +18,9 @@ export default function LoadingSpinner({
       )}
     >
       <Carrot className="size-[1.5em] flex-[0_0_1.5em] animate-spin" />
-      <span className={!showLabel ? 'sr-only' : ''}>Carregando...</span>
+      <span className={!showLabel ? 'sr-only' : ''}>
+        {m.real_ago_yak_adore()}...
+      </span>
     </div>
   )
 }
