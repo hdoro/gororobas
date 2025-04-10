@@ -1,7 +1,7 @@
+import Link from '@/components/LinkWithTransition'
 import type { EditSuggestionCardData } from '@/queries'
 import { paths } from '@/utils/urls'
 import { type Changeset, atomizeChangeset } from 'json-diff-ts'
-import Link from 'next/link'
 import ProfileCard from './ProfileCard'
 import { SanityImage } from './SanityImage'
 import { Text } from './ui/text'

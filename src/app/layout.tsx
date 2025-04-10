@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer'
 import HeaderNav from '@/components/HeaderNav'
+import { RouteTransitionProvider } from '@/components/LinkWithTransition'
 import MobileBottomBar from '@/components/MobileBottomBar'
 import TanstackQueryProvider from '@/components/TanstackQueryProvider'
 import { Toaster } from '@/components/ui/toaster'
@@ -76,11 +77,13 @@ export default async function RootLayout({
       <body className={cn(fontFamily.className, 'flex min-h-dvh flex-col')}>
         <LocaleInjection locale={locale} />
         <TanstackQueryProvider>
-          <HeaderNav signedIn={signedIn} />
-          <MobileBottomBar signedIn={signedIn} />
-          <div className="flex-1">{children}</div>
-          <Footer />
-          <Toaster />
+          <RouteTransitionProvider>
+            <HeaderNav signedIn={signedIn} />
+            <MobileBottomBar signedIn={signedIn} />
+            <div className="flex-1">{children}</div>
+            <Footer />
+            <Toaster />
+          </RouteTransitionProvider>
         </TanstackQueryProvider>
       </body>
     </html>

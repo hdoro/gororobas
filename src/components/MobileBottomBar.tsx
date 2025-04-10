@@ -1,11 +1,11 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
 import { getLocale } from '@/paraglide/runtime'
 import { cn } from '@/utils/cn'
 import type { Locale } from '@/utils/i18n'
 import { formatPath, paths } from '@/utils/urls'
 import { FilePlus2Icon } from 'lucide-react'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { JSX, SVGProps } from 'react'
 import LibraryIcon from './icons/LibraryIcon'

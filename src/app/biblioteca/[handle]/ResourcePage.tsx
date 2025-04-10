@@ -1,4 +1,5 @@
 import { ContributionCTA } from '@/components/ContributionCTA'
+import Link from '@/components/LinkWithTransition'
 import ResourceCard, { FullResourceDisplay } from '@/components/ResourceCard'
 import SectionTitle from '@/components/SectionTitle'
 import BulbIcon from '@/components/icons/BulbIcon'
@@ -7,7 +8,6 @@ import { m } from '@/paraglide/messages'
 import type { ResourceCardData, ResourcePageData } from '@/queries'
 import { paths } from '@/utils/urls'
 import { PlusCircleIcon } from 'lucide-react'
-import Link from 'next/link'
 
 export default function ResourcePage({
   resource,

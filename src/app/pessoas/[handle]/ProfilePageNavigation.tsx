@@ -1,11 +1,11 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
 import CameraIcon from '@/components/icons/CameraIcon'
 import HistoryIcon from '@/components/icons/HistoryIcon'
 import NoteIcon from '@/components/icons/NoteIcon'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export function ProfilePageNavigation(props: { handle: string }) {

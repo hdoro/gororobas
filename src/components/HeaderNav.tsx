@@ -1,3 +1,4 @@
+import Link from '@/components/LinkWithTransition'
 import { getLocale } from '@/paraglide/runtime'
 import type { Locale } from '@/utils/i18n'
 import { paths } from '@/utils/urls'
@@ -7,7 +8,6 @@ import {
   NotebookPenIcon,
   SproutIcon,
 } from 'lucide-react'
-import Link from 'next/link'
 import { Suspense } from 'react'
 import UserNav from './UserNav'
 import GororobasLogo from './icons/GororobasLogo'

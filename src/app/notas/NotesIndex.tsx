@@ -1,5 +1,6 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
 import NoteCard from '@/components/NoteCard'
 import { NotesGridWrapper } from '@/components/NotesGrid'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
@@ -20,7 +21,6 @@ import {
   searchParamsToNextSearchParams,
 } from '@/utils/urls'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'

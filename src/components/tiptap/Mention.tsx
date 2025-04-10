@@ -1,10 +1,10 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
 import { useMentionData } from '@/hooks/useMentionData'
 import type { RichTextMentionAttributesInForm } from '@/schemas'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
-import Link from 'next/link'
 import { SanityImage } from '../SanityImage'
 
 export function Mention(props: RichTextMentionAttributesInForm['data']) {

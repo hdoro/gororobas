@@ -1,5 +1,6 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import ResourceCard from '@/components/ResourceCard'
 import { SanityImage } from '@/components/SanityImage'
@@ -37,7 +38,6 @@ import {
 } from 'lucide-react'
 import { AnimatePresence } from 'motion/react'
 import * as motion from 'motion/react-client'
-import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'

@@ -1,5 +1,6 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
 import { ProfilePhoto } from '@/components/ProfileCard'
 import RainbowIcon from '@/components/icons/RainbowIcon'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
@@ -9,7 +10,6 @@ import { Text } from '@/components/ui/text'
 import type { ProfileLayoutData } from '@/queries'
 import { paths } from '@/utils/urls'
 import { Edit2Icon } from 'lucide-react'
-import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { VegetablesInWishlist } from './VegetablesInWishlist'
 

@@ -1,5 +1,6 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
 import { SanityImage } from '@/components/SanityImage'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import { Text } from '@/components/ui/text'
@@ -10,7 +11,6 @@ import {
 } from '@/components/ui/tooltip'
 import type { WishlistForProfile } from '@/queries'
 import { paths } from '@/utils/urls'
-import Link from 'next/link'
 import { type VariantProps, tv } from 'tailwind-variants'
 
 const vegetableChipVariants = tv({

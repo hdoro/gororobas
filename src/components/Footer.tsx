@@ -1,3 +1,4 @@
+import Link from '@/components/LinkWithTransition'
 import { getLocale } from '@/paraglide/runtime'
 import { SOURCE_CODE_URL } from '@/utils/config'
 import type { Locale } from '@/utils/i18n'
@@ -9,7 +10,6 @@ import {
   NotebookPenIcon,
   SproutIcon,
 } from 'lucide-react'
-import Link from 'next/link'
 import GororobasLogo from './icons/GororobasLogo'
 
 const FOOTER_LINKS = [

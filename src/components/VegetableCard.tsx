@@ -1,5 +1,6 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
 import { Badge } from '@/components/ui/badge'
 import {
   Carousel,
@@ -13,7 +14,6 @@ import type { ImageForRenderingData, VegetableCardData } from '@/queries'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
 import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
-import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { SanityImage } from './SanityImage'
 

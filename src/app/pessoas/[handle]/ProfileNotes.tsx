@@ -1,3 +1,4 @@
+import Link from '@/components/LinkWithTransition'
 import NotesGrid from '@/components/NotesGrid'
 import SectionTitle from '@/components/SectionTitle'
 import NoteIcon from '@/components/icons/NoteIcon'
@@ -6,7 +7,6 @@ import { Text } from '@/components/ui/text'
 import type { ProfileNotesData } from '@/queries'
 import { truncate } from '@/utils/strings'
 import { paths } from '@/utils/urls'
-import Link from 'next/link'
 
 export default function ProfileNotes({
   notes,
