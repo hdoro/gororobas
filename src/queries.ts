@@ -1080,7 +1080,10 @@ export const profileNotesQuery = e.params(
     })),
 )
 
-export type ProfileNotesData = Exclude<$infer<typeof profileNotesQuery>, null>
+export type ProfileNotesData = Omit<
+  Exclude<$infer<typeof profileNotesQuery>, null>,
+  'is_owner'
+> & { is_owner: boolean }
 
 export const profileContributionsQuery = e.params(
   {
@@ -1109,10 +1112,10 @@ export const profileContributionsQuery = e.params(
     })),
 )
 
-export type ProfileContributionsData = Exclude<
-  $infer<typeof profileContributionsQuery>,
-  null
->
+export type ProfileContributionsData = Omit<
+  Exclude<$infer<typeof profileContributionsQuery>, null>,
+  'is_owner'
+> & { is_owner: boolean }
 
 export const profileGalleryQuery = e.params(
   {
@@ -1137,10 +1140,12 @@ export const profileGalleryQuery = e.params(
     })),
 )
 
-export type ProfileGalleryData = Exclude<
-  $infer<typeof profileGalleryQuery>,
-  null
->
+export type ProfileGalleryData = Omit<
+  Exclude<$infer<typeof profileGalleryQuery>, null>,
+  'is_owner'
+> & {
+  is_owner: boolean
+}
 
 export const getMentionsDataQuery = e.params(
   { ids: e.array(e.uuid) },

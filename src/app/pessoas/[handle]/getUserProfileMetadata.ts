@@ -9,16 +9,13 @@ export default function getUserProfileMetadata(
 ): Metadata {
   const name = profile?.name
 
-  if (!profile)
+  if (!name)
     return {
-      title: 'Perfil não encontrado no Gororobas',
+      robots: {
+        index: false,
+        follow: false,
+      },
     }
-
-  if (!name) {
-    return {
-      title: 'Pessoa sem nome | Gororobas',
-    }
-  }
 
   const firstName = name.split(' ')[0]
   const description = [
@@ -35,7 +32,7 @@ export default function getUserProfileMetadata(
 
   const { photo } = profile
   return {
-    title: `${name} | Gororobas`,
+    title: `${name} | Gororobas Agroecologia`,
     description: truncate(description, 240),
     alternates: {
       canonical: pathToAbsUrl(paths.userProfile(profile.handle)),

@@ -30,5 +30,11 @@ export default async function UserGalleryPage(props: {
 
   if (!data) return notFound()
 
-  return <ProfileGallery {...data} images={shuffleArray(data.images)} />
+  return (
+    <ProfileGallery
+      {...data}
+      images={shuffleArray(data.images)}
+      is_owner={data.is_owner ?? false}
+    />
+  )
 }

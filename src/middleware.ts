@@ -11,7 +11,9 @@ export const middleware: NextMiddleware = (request) => {
 
   return paraglideMiddleware(request, ({ request: modified, locale }) => {
     modified.headers.set('x-gororobas-locale', locale)
-    return NextResponse.rewrite(modified.url, modified)
+    const response = NextResponse.rewrite(modified.url, modified)
+    response.cookies.set('gororobas--locale', locale)
+    return response
   })
 }
 

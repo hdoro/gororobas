@@ -15,7 +15,7 @@ const nextConfig = {
       paraglideWebpackPlugin({
         outdir: './src/paraglide',
         project: './project.inlang',
-        strategy: ['cookie', 'url', 'preferredLanguage', 'baseLocale'],
+        strategy: ['cookie', 'preferredLanguage', 'url', 'baseLocale'],
         cookieName: 'gororobas--locale',
         outputStructure: 'message-modules',
         urlPatterns: [
@@ -51,21 +51,21 @@ const nextConfig = {
             pattern: '/pessoas/:handle/contribuicoes',
             localized: [
               ['es', '/es/personas/:handle/contribuciones'],
-              ['pt', '/vegetais/:handle/contribuicoes'],
+              ['pt', '/pessoas/:handle/contribuicoes'],
             ],
           },
           {
             pattern: '/pessoas/:handle(.*)?',
             localized: [
               ['es', '/es/personas/:handle(.*)?'],
-              ['pt', '/vegetais/:handle(.*)?'],
+              ['pt', '/pessoas/:handle(.*)?'],
             ],
           },
           {
             pattern: '/sugestoes/:handle(.*)?',
             localized: [
               ['es', '/es/sugerencias/:handle(.*)?'],
-              ['pt', '/vegetais/:handle(.*)?'],
+              ['pt', '/sugestoes/:handle(.*)?'],
             ],
           },
           {
