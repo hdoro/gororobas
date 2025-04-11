@@ -2,6 +2,7 @@
 
 import { updateNoteAction } from '@/actions/updateNote.action'
 import NoteForm from '@/components/NoteForm'
+import { m } from '@/paraglide/messages'
 import type { NoteInForm } from '@/schemas'
 import { getChangedObjectSubset, removeNullishKeys } from '@/utils/diffs'
 import { paths } from '@/utils/urls'
@@ -23,7 +24,7 @@ export default function EditNoteForm(props: {
           return {
             success: true,
             message: {
-              title: 'Tudo certo, nada foi alterado',
+              title: m.aloof_deft_elephant_accept(),
               description: '',
             },
             redirectTo: paths.note(updatedNote.handle || ''),
@@ -39,7 +40,7 @@ export default function EditNoteForm(props: {
             redirectTo: paths.note(response.result.handle),
           } as const
         }
-        return { success: false, error: 'Failed to update note' } as const
+        return { success: false, error: m.tame_zany_giraffe_amaze() } as const
       }}
       initialValue={props.noteInForm}
     />

@@ -10,11 +10,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Text, textVariants } from '@/components/ui/text'
+import { m } from '@/paraglide/messages'
 import type { NotePageData } from '@/queries'
 import type { TiptapNode } from '@/types'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
 import { paths } from '@/utils/urls'
 import { EditIcon } from 'lucide-react'
+import { Fragment } from 'react'
 import DeleteNoteButton from './DeleteNoteButton'
 
 export default async function NotePage({ note }: { note: NotePageData }) {
@@ -68,7 +70,7 @@ export default async function NotePage({ note }: { note: NotePageData }) {
                   <Button mode="outline" tone="neutral" size="xs" asChild>
                     <Link href={paths.editNote(note.handle)}>
                       <EditIcon className="w-[1.25em]" />
-                      Editar
+                      {m.edit()}
                     </Link>
                   </Button>
                 </div>
@@ -90,13 +92,13 @@ export default async function NotePage({ note }: { note: NotePageData }) {
         {note.created_by?.name && (
           <div className="lg:flex-1">
             <Text level="h2" as="h2" className="mb-2">
-              Enviada por:
+              {m.best_quaint_seal_edit()}
             </Text>
             <ProfileCard size="md" profile={note.created_by} />
             {note.created_by.bio ? (
               <div className="mt-8">
                 <Text level="h3" as="h3">
-                  Sobre {note.created_by.name}
+                  {m.game_wacky_warthog_pet({ name: note.created_by.name })}
                 </Text>
                 <TipTapRenderer content={note.created_by.bio} />
               </div>
@@ -106,7 +108,9 @@ export default async function NotePage({ note }: { note: NotePageData }) {
       </div>
       {note.related_to_vegetables.length > 0 && (
         <section className="my-36" id="vegetais">
-          <SectionTitle Icon={SeedlingIcon}>Vegetais citados</SectionTitle>
+          <SectionTitle Icon={SeedlingIcon}>
+            {m.zany_zany_moose_grow()}
+          </SectionTitle>
           <VegetablesGrid
             vegetables={note.related_to_vegetables}
             className="px-pageX mt-4"
@@ -120,22 +124,46 @@ export default async function NotePage({ note }: { note: NotePageData }) {
             CTA={
               note.related_notes.length > 0 ? (
                 <Button asChild>
-                  <Link href={paths.newNote()}>Enviar sua nota</Link>
+                  <Link href={paths.newNote()}>{m.send_note_cta()}</Link>
                 </Button>
               ) : null
             }
           >
-            Notas relacionadas
+            {m.related_notes()}
           </SectionTitle>
           {note.related_notes.length > 0 ? (
             <NotesGrid notes={note.related_notes} />
           ) : (
             <Text level="p" className="px-pageX">
-              Ainda não temos notas que conversem com essa. Que tal{' '}
-              <Link href={paths.newNote()} className="link">
-                enviar uma
-              </Link>
-              ?
+              {(() => {
+                const parts = m.proof_that_cockroach_link().split(/(%LINK%)/g)
+                return (
+                  <>
+                    {parts.map((part, index) => {
+                      if (part === '%LINK%') {
+                        // Skip the %LINK% markers themselves
+                        return null
+                      }
+
+                      // Determine if the part should be wrapped in a Link
+                      const isLink = index > 0 && parts[index - 1] === '%LINK%'
+                      if (isLink) {
+                        return (
+                          <Link
+                            key={part}
+                            href={paths.newNote()}
+                            className="link"
+                          >
+                            {part}
+                          </Link>
+                        )
+                      }
+
+                      return <Fragment key={part}>{part}</Fragment>
+                    })}
+                  </>
+                )
+              })()}
             </Text>
           )}
         </section>
