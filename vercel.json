@@ -5,12 +5,5 @@
       "destination": "https://hdoro.mmm.page/edgedb-hackathon",
       "permanent": true
     }
-  ],
-
-  "crons": [
-    {
-      "path": "/api/post-to-bluesky",
-      "schedule": "0 12 * * *"
-    }
   ]
 }
