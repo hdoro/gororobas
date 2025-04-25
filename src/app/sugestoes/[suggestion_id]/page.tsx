@@ -26,7 +26,7 @@ export async function generateMetadata(props: {
   if (!data?.target_object?.names) return {}
 
   return {
-    title: `Sugestão de edição d${gender.suffix(data.toRender.gender || 'NEUTRO')} ${data.toRender.names[0]} | Gororobas`,
+    title: `Sugestão de edição d${gender.suffix(data.toRender.gender || 'NEUTRO')} ${data.toRender.names[0]} | Gororobas Agroecologia`,
     robots: {
       index: false,
       follow: false,

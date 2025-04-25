@@ -23,6 +23,7 @@ import {
 import { Text } from '@/components/ui/text'
 import { auth } from '@/gel'
 import type { EditSuggestionStatus } from '@/gel.interfaces'
+import { m } from '@/paraglide/messages'
 import { type VegetableCardData, vegetableCardsByIdQuery } from '@/queries'
 import {
   EDIT_SUGGESTION_STATUS_TO_LABEL,
@@ -78,7 +79,7 @@ export default async function SuggestionPage({
         {dataThatChanged.varieties && (
           <section className="my-36" id="variedades">
             <SectionTitle Icon={RainbowIcon} includePadding={false}>
-              Variedades
+              {m.large_neat_octopus_aim()}
             </SectionTitle>
 
             <div className="relative mt-3 flex flex-wrap gap-20 pl-[2.625rem]">

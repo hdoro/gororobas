@@ -4,8 +4,13 @@
   "livid_vivid_bullock_foster": "Más información sobre",
   "every_inclusive_buzzard_greet": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
       "match": {
         "countPlural=one": "Vegetal relacionado",
         "countPlural=other": "Vegetales relacionados"
@@ -201,94 +206,5 @@
   "load_next_page": "Cargar la siguiente página",
   "related_notes": "Notas relacionadas",
   "proof_that_cockroach_link": "Aún no tenemos ninguna nota que coincida con esto. ¿Qué tal si %LINK%envías un%LINK%?",
-  "lazy_simple_swan_push": "Enviada por {name} el {date}",
-  "round_stout_deer_catch": "Editar perfil",
-  "only_this_reindeer_accept": "Está bien, nada ha cambiado.",
-  "novel_sound_trout_glow": "Perfil editado exitosamente ✨",
-  "good_such_jannes_fetch": "Enviándote a tu página...",
-  "vivid_hour_osprey_honor": "Error de edición",
-  "bald_merry_cheetah_fetch": "Por favor, inténtelo de nuevo.",
-  "even_only_bison_support": "Modificar tu perfil",
-  "patient_bold_antelope_hunt": "Guardar cambios",
-  "tidy_careful_florian_gleam": "El nombre con el que prefieres que te llamen, sin formalidades",
-  "patient_awful_felix_greet": "Nombre",
-  "east_key_rook_approve": "Territorio o localidad",
-  "zesty_funny_herring_pave": "Dirección de su perfil en el sitio web",
-  "odd_raw_penguin_mend": "Datos curiosos sobre ti",
-  "smug_front_warthog_flow": "¡Lo que quieras decir! Por ejemplo: ¿Qué es lo que más te gusta de cocinar? ¿Qué te llevó a la agroecología?",
-  "best_lazy_dragonfly_play": "Si quieres, claro. También pueden ser verduras que te gusten ✨",
-  "upper_full_dragonfly_reap": "¡Pequeña foto!",
-  "quaint_grassy_puma_beam": "SIN NOMBRE",
-  "jolly_just_grizzly_devour": "Cómo aparecerá en el sitio web:",
-  "flat_same_sloth_succeed": "Muchas gracias por vuestro apoyo. ¡Viva la agroecología!",
-  "inner_sad_sloth_pout": [
-    {
-      "declarations": ["input is_owner", "input name"],
-      "selectors": ["is_owner"],
-      "match": {
-        "is_owner=true": "Aún no has realizado ninguna contribución",
-        "name=*": "{name} aún no ha realizado ninguna contribución"
-      }
-    }
-  ],
-  "simple_smart_cougar_lend": [
-    {
-      "declarations": ["input is_owner", "input name"],
-      "selectors": ["is_owner"],
-      "match": {
-        "is_owner=true": "Fotos que enviaste",
-        "name=*": "Fotos de {name}"
-      }
-    }
-  ],
-  "great_heroic_butterfly_buy": "Envía otra nota",
-  "bright_agent_finch_thrive": [
-    {
-      "declarations": ["input is_owner", "input name"],
-      "selectors": ["is_owner"],
-      "match": {
-        "is_owner=true": "Comparte tus experiencias y aprendizajes con la comunidad",
-        "name=*": "{name} aún no ha compartido ninguna nota."
-      }
-    }
-  ],
-  "busy_red_weasel_pause": [
-    {
-      "declarations": ["input is_owner", "input name"],
-      "selectors": ["is_owner"],
-      "match": {
-        "is_owner=true": "Sus contribuciones",
-        "name=*": "Contribuciones de {name}"
-      }
-    }
-  ],
-  "tasty_vivid_jan_bless": [
-    {
-      "declarations": ["input is_owner", "input name"],
-      "selectors": ["is_owner"],
-      "match": {
-        "is_owner=true": "Notas que compartiste",
-        "is_owner=*": "Notas que {name} compartió"
-      }
-    }
-  ],
-  "maroon_spry_wombat_flop": "Mostrando solo {note_count} notas aleatorias",
-  "few_warm_quail_dust": "Editar perfil",
-  "whole_livid_ox_heal": "Cerrar sesión o cambiar de cuenta",
-  "soft_aloof_wasp_smile": "Acerca de {name}",
-  "fit_watery_shad_value": "Planta (o ha plantado):",
-  "equal_key_mantis_attend": "Quiere plantar:",
-  "careful_misty_blackbird_value": "Notas",
-  "few_flat_wolf_dash": "Fotos",
-  "nice_tired_lionfish_sprout": "Contribuciones",
-  "this_stock_puma_engage": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=*": "y {count} otros",
-        "countPlural=one": "y {count} otro"
-      }
-    }
-  ]
+  "lazy_simple_swan_push": "Enviada por {name} el {date}"
 }
