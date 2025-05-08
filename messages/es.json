@@ -206,5 +206,265 @@
   "load_next_page": "Cargar la siguiente página",
   "related_notes": "Notas relacionadas",
   "proof_that_cockroach_link": "Aún no tenemos ninguna nota que coincida con esto. ¿Qué tal si %LINK%envías un%LINK%?",
-  "lazy_simple_swan_push": "Enviada por {name} el {date}"
+  "lazy_simple_swan_push": "Enviada por {name} el {date}",
+  "round_stout_deer_catch": "Editar perfil",
+  "only_this_reindeer_accept": "Está bien, nada ha cambiado.",
+  "novel_sound_trout_glow": "Perfil editado exitosamente ✨",
+  "good_such_jannes_fetch": "Enviándote a tu página...",
+  "vivid_hour_osprey_honor": "Error de edición",
+  "bald_merry_cheetah_fetch": "Por favor, inténtelo de nuevo.",
+  "even_only_bison_support": "Modificar tu perfil",
+  "patient_bold_antelope_hunt": "Guardar cambios",
+  "tidy_careful_florian_gleam": "El nombre con el que prefieres que te llamen, sin formalidades",
+  "patient_awful_felix_greet": "Nombre",
+  "east_key_rook_approve": "Territorio o localidad",
+  "zesty_funny_herring_pave": "Dirección de su perfil en el sitio web",
+  "odd_raw_penguin_mend": "Datos curiosos sobre ti",
+  "smug_front_warthog_flow": "¡Lo que quieras decir! Por ejemplo: ¿Qué es lo que más te gusta de cocinar? ¿Qué te llevó a la agroecología?",
+  "best_lazy_dragonfly_play": "Si quieres, claro. También pueden ser verduras que te gusten ✨",
+  "upper_full_dragonfly_reap": "¡Pequeña foto!",
+  "quaint_grassy_puma_beam": "SIN NOMBRE",
+  "jolly_just_grizzly_devour": "Cómo aparecerá en el sitio web:",
+  "flat_same_sloth_succeed": "Muchas gracias por vuestro apoyo. ¡Viva la agroecología!",
+  "inner_sad_sloth_pout": [
+    {
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
+      "match": {
+        "is_owner=true": "Aún no has realizado ninguna contribución",
+        "name=*": "{name} aún no ha realizado ninguna contribución"
+      }
+    }
+  ],
+  "simple_smart_cougar_lend": [
+    {
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
+      "match": {
+        "is_owner=true": "Fotos que enviaste",
+        "name=*": "Fotos de {name}"
+      }
+    }
+  ],
+  "great_heroic_butterfly_buy": "Envía otra nota",
+  "bright_agent_finch_thrive": [
+    {
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
+      "match": {
+        "is_owner=true": "Comparte tus experiencias y aprendizajes con la comunidad",
+        "name=*": "{name} aún no ha compartido ninguna nota."
+      }
+    }
+  ],
+  "busy_red_weasel_pause": [
+    {
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
+      "match": {
+        "is_owner=true": "Sus contribuciones",
+        "name=*": "Contribuciones de {name}"
+      }
+    }
+  ],
+  "tasty_vivid_jan_bless": [
+    {
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner"
+      ],
+      "match": {
+        "is_owner=true": "Notas que compartiste",
+        "is_owner=*": "Notas que {name} compartió"
+      }
+    }
+  ],
+  "maroon_spry_wombat_flop": "Mostrando solo {note_count} notas aleatorias",
+  "few_warm_quail_dust": "Editar perfil",
+  "whole_livid_ox_heal": "Cerrar sesión o cambiar de cuenta",
+  "soft_aloof_wasp_smile": "Acerca de {name}",
+  "fit_watery_shad_value": "Plantar (o ya haber plantado):",
+  "equal_key_mantis_attend": "¿Quieres plantar?:",
+  "careful_misty_blackbird_value": "Notas",
+  "few_flat_wolf_dash": "Fotos",
+  "nice_tired_lionfish_sprout": "Contribuciones",
+  "this_stock_puma_engage": [
+    {
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
+      "match": {
+        "countPlural=*": "y {count} otros",
+        "countPlural=one": "y {count} otros"
+      }
+    }
+  ],
+  "teal_flat_osprey_skip": "Sugerencia rechazada",
+  "sea_dizzy_raven_find": "Error al rechazar la sugerencia",
+  "wacky_orange_skunk_type": "Sugerencia aceptada ✨",
+  "day_proud_duck_pinch": "Error al aceptar la sugerencia",
+  "weary_level_camel_startle": "Aceptar y publicar",
+  "chunky_weary_dove_clip": "Rechazar",
+  "large_neat_octopus_aim": "Variedades",
+  "cute_slimy_pelican_lift": "{firstName} proviene de {location}",
+  "crazy_ornate_marlin_cuddle": [
+    {
+      "declarations": [
+        "input planted_count"
+      ],
+      "selectors": [
+        "planted_count"
+      ],
+      "match": {
+        "planted_count=one": "está cultivando {planted_count} verdura",
+        "planted_count=other": "está cultivando {planted_count} verduras"
+      }
+    }
+  ],
+  "yummy_still_eel_bloom": [
+    {
+      "declarations": [
+        "input desired_count"
+      ],
+      "selectors": [
+        "desired_count"
+      ],
+      "match": {
+        "desired_count=one": "Quiero cultivar otra planta {desired_count}",
+        "desired_count=other": "Quiero cultivar otras {desired_count} plantas"
+      }
+    }
+  ],
+  "calm_spry_trout_hunt": "Foto de {name}",
+  "royal_large_mayfly_stab": "¿Quién se involucra?",
+  "quick_dirty_mouse_twist": "Cultivando sabiduría y compartiendo experiencias para agroecologizar la\nmundo ✨",
+  "warm_bold_cat_slide": "Editar sugerencia para {name} | Agroecología pegajosa",
+  "civil_deft_dove_achieve": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=FEMININO": "Acerca de {name}",
+        "gender=MASCULINO": "Acerca de {name}",
+        "gender=*": "Acerca de {name}"
+      }
+    }
+  ],
+  "slow_neat_niklas_bump": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender",
+        "name"
+      ],
+      "match": {
+        "gender=FEMININO": "Amigos de {name}",
+        "gender=MASCULINO": "Amigos de {name}",
+        "name=*": "Amigos de {name}"
+      }
+    }
+  ],
+  "noble_east_jurgen_gleam": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender",
+        "name"
+      ],
+      "match": {
+        "gender=FEMININO": "Plantas a las que les gusta estar plantadas y cerca de {name}",
+        "gender=MASCULINO": "Plantas a las que les gusta estar plantadas y cerca de {name}",
+        "gender=*": "Plantas a las que les gusta estar plantadas y cerca de {name}"
+      }
+    }
+  ],
+  "tidy_swift_wren_breathe": "verdura",
+  "noble_spicy_wolf_feast": [
+    {
+      "declarations": [
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=FEMININO": "Sugerencias para la",
+        "gender=MASCULINO": "Sugerencias para la",
+        "gender=*": "Sugerencias para"
+      }
+    }
+  ],
+  "teal_mellow_cod_grip": [
+    {
+      "declarations": [
+        "input count"
+      ],
+      "selectors": [
+        "count"
+      ],
+      "match": {
+        "count=one": "Enviado por:",
+        "count=other": "Enviado por:"
+      }
+    }
+  ],
+  "ornate_smart_skunk_buy": [
+    {
+      "declarations": [
+        "input count"
+      ],
+      "selectors": [
+        "count"
+      ],
+      "match": {
+        "count=one": "{count} cambio",
+        "count=other": "{count} cambios"
+      }
+    }
+  ],
+  "male_polite_myna_arrive": "Sugerencias abiertas | Agroecología pegajosa",
+  "aqua_swift_jaguar_dash": "Sugerencias abiertas",
+  "jolly_key_maggot_flip": "No hay sugerencias que necesiten revisión. Todo está bien ✨"
 }

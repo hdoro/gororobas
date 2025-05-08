@@ -55,6 +55,12 @@ You can learn about the project's motivation, tech stack, approach and learnings
 1. If you're setting up a Vercel project for it the first time, refer to the [official guide on deploying to Vercel](https://docs.geldata.com/guides/tutorials/nextjs_app_router#deploying-to-vercel)
 1. When you push a commit to main, Vercel will automatically build and deploy it to `gororobas.com` or whatever the domain for the new project you've set up
 
+## Working with translations
+
+We're using the [Inlang suite of tools](https://inlang.com) to manage translations and locale selection. Its big benefit is its compiled nature, which makes bundle sizes more atomic and allows us to use the same API for translation strings no matter where they're at - components, APIs, constants and more, all call each translation string's individual function, compiled by [ParaglideJS](https://www.npmjs.com/package/@inlang/paraglide-js).
+
+**🌺 to edit translations**, we highly recommend you to install the [Sherlock VSCode extension](https://inlang.com/m/r7kp499g/app-inlang-ideExtension) to edit and preview translation strings inline. The alternative is editing the `messages/pt|es.json` files, but that's more cumbersome.
+
 ## Credits
 
 People involved in this creation:
@@ -70,16 +76,3 @@ If you'd like to contribute to the project, please open an issue or a pull reque
 ## License
 
 This project is licensed under the Apache 2.0 License. You can read more about it in the [LICENSE](./LICENSE) file.
-
-## Restaurando backups
-
-A partir do backup baixado no S3:
-
-1. Instale o GPG:
-   - Windows: `winget install GnuPG.GnuPG`
-   - MacOS: `brew install gpg`
-   - Linux: `sudo apt-get install gpg`
-1. Decodifique a encriptação do backup com: `gpg --decrypt --output decrypted_backup.dump.gz input_file.dump.gpg `
-   - A chave de encriptação é a mesma que foi usada para criar o backup
-1. Descompacte o backup: `gunzip decrypted_backup.dump.gz`
-1. Restaure o backup: `gel restore decrypted_backup.dump` localmente, ou `gel restore -I ORG/INSTANCE_NAME decrypted_backup.dump` na nuvem

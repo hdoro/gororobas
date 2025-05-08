@@ -3,6 +3,7 @@ import SectionTitle from '@/components/SectionTitle'
 import RainbowIcon from '@/components/icons/RainbowIcon'
 import { Text } from '@/components/ui/text'
 import { auth, client } from '@/gel'
+import { m } from '@/paraglide/messages'
 import { peopleIndexQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
@@ -31,10 +32,11 @@ export default async function PeopleIndexRoute() {
 
   return (
     <section className="mt-12 mb-32">
-      <SectionTitle Icon={RainbowIcon}>Quem se envolve</SectionTitle>
+      <SectionTitle Icon={RainbowIcon}>
+        {m.royal_large_mayfly_stab()}
+      </SectionTitle>
       <Text level="h3" className="px-pageX font-normal">
-        Cultivando sabedoria e compartilhando experiências para agroecologizar o
-        mundo ✨
+        {m.quick_dirty_mouse_twist()}
       </Text>
       <ProfilesGrid profiles={data} className="px-pageX mt-8" />
     </section>

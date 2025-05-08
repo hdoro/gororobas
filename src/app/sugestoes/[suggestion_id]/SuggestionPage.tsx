@@ -22,14 +22,13 @@ import {
 } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
 import { auth } from '@/gel'
-import type { EditSuggestionStatus } from '@/gel.interfaces'
+import type { EditSuggestionStatus, Gender } from '@/gel.interfaces'
 import { m } from '@/paraglide/messages'
 import { type VegetableCardData, vegetableCardsByIdQuery } from '@/queries'
 import {
   EDIT_SUGGESTION_STATUS_TO_LABEL,
   VEGETABLE_FIELD_LABELS_MAP,
 } from '@/utils/labels'
-import { gender } from '@/utils/strings'
 import { paths } from '@/utils/urls'
 import JudgeSuggestion from './JudgeSuggestion'
 
@@ -54,6 +53,13 @@ export default async function SuggestionPage({
       })
     : ([] as VegetableCardData[])
 
+  const gender = toRender.gender || ('NEUTRO' satisfies Gender)
+  const name = toRender.names[0]
+  const changeCount = diff.reduce(
+    (count, change) => count + (change?.changes?.length ?? 0),
+    0,
+  )
+
   return (
     <div className="px-pageX py-pageY flex flex-col items-start gap-6 lg:flex-row">
       <div className="top-2 flex-1 lg:sticky">
@@ -67,8 +73,10 @@ export default async function SuggestionPage({
         {dataThatChanged.content && (
           <section className="my-36" id="curiosidades">
             <SectionTitle Icon={BulbIcon} includePadding={false}>
-              Sobre {gender.article(toRender.gender || 'NEUTRO', 'both')}
-              {toRender.names[0]}
+              {m.civil_deft_dove_achieve({
+                gender,
+                name,
+              })}
             </SectionTitle>
             <div className="relative mt-5 box-content space-y-3 pl-[2.625rem] text-base">
               <ChangeIndicator />
@@ -94,12 +102,10 @@ export default async function SuggestionPage({
         {friends.length > 0 && (
           <section className="my-36" id="amizades">
             <SectionTitle Icon={VegetableFriendsIcon} includePadding={false}>
-              Amigues d{gender.suffix(toRender.gender || 'NEUTRO')}{' '}
-              {toRender.names[0]}
+              {m.slow_neat_niklas_bump({ name, gender })}
             </SectionTitle>
             <Text level="h3" className="pl-[2.625rem] font-normal">
-              Plantas que gostam de serem plantadas e estarem próximas a
-              {gender.suffix(toRender.gender || 'NEUTRO')} {toRender.names[0]}
+              {m.noble_east_jurgen_gleam({ name, gender })}
             </Text>
             <div className="relative pl-[2.625rem]">
               <ChangeIndicator />
@@ -126,21 +132,22 @@ export default async function SuggestionPage({
             )}
           </div>
           <CardTitle>
-            Sugestões para{' '}
-            {gender.article(data.target_object.gender || 'NEUTRO')}{' '}
+            {m.noble_spicy_wolf_feast({ gender })}{' '}
             <a
               href={paths.vegetable(data.target_object.handle)}
               className="link"
               // biome-ignore lint: same-site link
               target="_blank"
             >
-              {data.target_object.names[0] || 'vegetal'}
+              {data.target_object.names[0] || m.tidy_swift_wren_breathe()}
             </a>
           </CardTitle>
           <div className="flex items-center gap-3">
             {data.created_by?.name && (
               <>
-                <Text level="sm">Enviadas por:</Text>
+                <Text level="sm">
+                  {m.teal_mellow_cod_grip({ count: changeCount })}
+                </Text>
                 <ProfileCard profile={data.created_by} size="sm" />
               </>
             )}
@@ -163,11 +170,9 @@ export default async function SuggestionPage({
                     :{' '}
                   </span>
                   <span className="text-muted-foreground">
-                    {change.changes
-                      ? `${change.changes.length} ${
-                          change.changes.length > 1 ? 'alterações' : 'alteração'
-                        }`
-                      : 'alterado'}
+                    {m.ornate_smart_skunk_buy({
+                      count: change?.changes?.length ?? 0,
+                    })}
                   </span>
                 </li>
               )
