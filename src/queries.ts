@@ -126,6 +126,7 @@ export type NoteCardData = Omit<
   published_at: Date | string
   /** In UserProfilePage (userProfilePageQuery), created_by isn't fetched */
   created_by?: NoteForCardResult['created_by']
+  is_owner?: boolean | null
 }
 
 const vegetableVarietyForCard = e.shape(e.VegetableVariety, (variety) => ({
@@ -1066,6 +1067,7 @@ export const profileNotesQuery = e.params(
         order_by: {
           expression: e.random(),
         },
+        is_owner: e.op(profile.id, '=', e.global.current_user_profile.id),
       })),
 
       note_count: e.count(
