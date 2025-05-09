@@ -5,7 +5,7 @@ import { getNoteCardTransform } from '@/utils/noteCardTransforms'
 import { truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { paths } from '@/utils/urls'
-import { Share2Icon } from 'lucide-react'
+import { EditIcon, Share2Icon } from 'lucide-react'
 import Link from 'next/link'
 import NoteCardFlipper from './NoteCardFlipper'
 import ProfileCard from './ProfileCard'
@@ -71,6 +71,16 @@ export default function NoteCard({
               {note.created_by?.name && (
                 <ProfileCard profile={note.created_by} />
               )}
+
+              {note.is_owner && (
+              <Button mode="bleed" tone="secondary" size="xs" asChild>
+                    <Link href={paths.editNote(note.handle)}>
+                      <EditIcon className="w-[1.25em]" />
+                      Editar
+                    </Link>
+              </Button>
+              )}
+
               <Button
                 size="sm"
                 asChild
