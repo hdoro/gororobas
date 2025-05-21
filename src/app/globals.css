@@ -238,6 +238,15 @@ label {
   display: block;
 }
 
+img {
+  color: transparent;
+}
+
+img[alt]:not([alt=''])::before {
+  content: attr(alt);
+  @apply text-primary-900 bg-card flex size-full items-center justify-center text-center text-sm;
+}
+
 .note-body--content > .tiptap {
   height: 100%;
 }
