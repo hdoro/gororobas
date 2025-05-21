@@ -21,6 +21,7 @@ import {
 import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
 import type { VegetableWishlistStatus } from '@/gel.interfaces'
+import { m } from '@/paraglide/messages'
 import { WISHLIST_STATUS_TO_LABEL } from '@/utils/labels'
 import { paths } from '@/utils/urls'
 import { ChevronDownIcon } from 'lucide-react'
@@ -52,11 +53,11 @@ export default function WishlistButton(
       setOptimisticStatus(prevStatus)
       toast({
         variant: 'destructive',
-        title: 'Erro ao atualizar seu interesse',
+        title: m.flat_key_warthog_bless(),
       })
     } else {
       toast({
-        title: 'Interesse atualizado!',
+        title: m.giant_witty_hyena_jump(),
       })
       router.refresh()
     }
@@ -75,17 +76,13 @@ export default function WishlistButton(
         <DialogContent className="max-w-lg">
           <DialogBody className="space-y-2 pt-10">
             <DialogTitle asChild>
-              <Text level="h2">Crie uma conta no Gororobas</Text>
+              <Text level="h2">{m.seemly_crazy_beetle_kiss()}</Text>
             </DialogTitle>
-            <Text level="p">
-              Para salvar sua listinha de plantas você precisa ter uma conta. Só
-              assim podemos lembrar suas escolhas sem embolar quem escolheu o
-              quê 🤗
-            </Text>
+            <Text level="p">{m.dirty_giant_cougar_ask()}</Text>
             <div className="flex items-center gap-2 pt-2">
               <Button asChild>
                 <a href={paths.signInOrSignUp(pathname)}>
-                  Entrar ou criar conta
+                  {m.equal_north_mammoth_jest()}
                 </a>
               </Button>
             </div>
@@ -111,7 +108,7 @@ export default function WishlistButton(
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Qual seu interesse nesta planta?</DropdownMenuLabel>
+        <DropdownMenuLabel>{m.tangy_slimy_shrimp_offer()}</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
         <DropdownMenuRadioGroup

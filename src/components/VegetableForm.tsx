@@ -58,7 +58,7 @@ export default function VegetableForm(props: {
     | {
         success: true
         redirectTo: string
-        message?: { title?: string; description?: string }
+        message?: { title: string; description?: string }
       }
     | { success: false; error: string }
   >

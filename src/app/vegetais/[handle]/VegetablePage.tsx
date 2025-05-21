@@ -17,8 +17,8 @@ import VegetableFriendsIcon from '@/components/icons/VegetableFriendsIcon'
 import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
+import { m } from '@/paraglide/messages'
 import type { ResourceCardData, VegetablePageData } from '@/queries'
-import { gender } from '@/utils/strings'
 import { isRenderableRichText } from '@/utils/tiptap'
 import { paths } from '@/utils/urls'
 import { Edit2Icon } from 'lucide-react'
@@ -80,15 +80,13 @@ export default function VegetablePage({
               ) : null
             }
           >
-            Sugestões e dicas
+            {m.patient_real_crab_nail()}
           </SectionTitle>
           {vegetable.tips.length > 0 ? (
             <VegetableTips tips={vegetable.tips} vegetable={vegetable} />
           ) : (
             <div className="px-pageX mt-1 space-y-2">
-              <Text level="p">
-                Ainda não temos dicas sobre esse vegetal. Que tal enviar a sua?
-              </Text>
+              <Text level="p">{m.late_arable_bulldog_blink()}</Text>
               <SendTipDialog vegetable={vegetable} />
             </div>
           )}
@@ -96,7 +94,9 @@ export default function VegetablePage({
         {Array.isArray(vegetable.varieties) &&
           vegetable.varieties.length > 0 && (
             <section className="my-36" id="variedades">
-              <SectionTitle Icon={RainbowIcon}>Variedades</SectionTitle>
+              <SectionTitle Icon={RainbowIcon}>
+                {m.busy_candid_cockroach_radiate()}
+              </SectionTitle>
               <div className="hide-scrollbar px-pageX mt-3 flex gap-6 overflow-x-auto xl:gap-20">
                 {vegetable.varieties.map((variety) => (
                   <VegetableVarietyCard
@@ -110,8 +110,10 @@ export default function VegetablePage({
         {isRenderableRichText(vegetable.content) && (
           <section className="my-36" id="curiosidades">
             <SectionTitle Icon={BulbIcon}>
-              Sobre {gender.article(vegetable.gender || 'NEUTRO', 'both')}
-              {names[0]}
+              {m.civil_deft_dove_achieve({
+                name: names[0],
+                gender: vegetable.gender || 'NEUTRO',
+              })}
             </SectionTitle>
             <div className="px-pageX mt-5 box-content max-w-[39.375rem] space-y-3 text-base">
               <TipTapRenderer content={vegetable.content} />
@@ -121,21 +123,27 @@ export default function VegetablePage({
         {friends.length > 0 && (
           <section className="my-36" id="amizades">
             <SectionTitle Icon={VegetableFriendsIcon}>
-              Amigues d{gender.suffix(vegetable.gender || 'NEUTRO')} {names[0]}
+              {m.slow_neat_niklas_bump({
+                name: names[0],
+                gender: vegetable.gender || 'NEUTRO',
+              })}
             </SectionTitle>
             <Text level="h3" className="px-pageX font-normal">
-              Plantas que gostam de serem plantadas e estarem próximas a
-              {gender.suffix(vegetable.gender || 'NEUTRO')} {names[0]}
+              {m.noble_east_jurgen_gleam({
+                name: names[0],
+                gender: vegetable.gender || 'NEUTRO',
+              })}
             </Text>
             <VegetablesGrid vegetables={friends} className="px-pageX mt-6" />
           </section>
         )}
         {(externalSources.length || vegetable.related_resources.length) > 0 && (
           <section className="my-36" id="fontes">
-            <SectionTitle Icon={QuoteIcon}>Fontes e recursos</SectionTitle>
+            <SectionTitle Icon={QuoteIcon}>
+              {m.loud_happy_rooster_tap()}
+            </SectionTitle>
             <Text level="h3" className="px-pageX font-normal">
-              Fontes que embasaram essas informações e recursos para ir mais a
-              fundo
+              {m.stale_last_bulldog_rush()}
             </Text>
             {externalSources.length > 0 && (
               <SourcesGrid
@@ -161,20 +169,22 @@ export default function VegetablePage({
             CTA={
               vegetable.related_notes.length > 0 ? (
                 <Button asChild>
-                  <Link href={paths.newNote()}>Enviar sua nota</Link>
+                  <Link href={paths.newNote()}>
+                    {m.bad_honest_salmon_arise()}
+                  </Link>
                 </Button>
               ) : null
             }
           >
-            Aprendizados e experimentos
+            {m.orange_front_myna_revive()}
           </SectionTitle>
           {vegetable.related_notes.length > 0 ? (
             <NotesGrid notes={vegetable.related_notes} />
           ) : (
             <Text level="p" className="px-pageX mt-1">
-              Ainda não temos notas sobre esse vegetal. Que tal{' '}
+              {m.simple_heroic_cougar_catch()}{' '}
               <Link href={paths.newNote()} className="link">
-                enviar uma
+                {m.steep_weird_kudu_gaze()}
               </Link>
               ?
             </Text>
@@ -185,10 +195,10 @@ export default function VegetablePage({
             <Button asChild>
               <Link href={paths.editVegetable(vegetable.handle)}>
                 <Edit2Icon className="w-[1.25em]" />
-                Editar página {gender.preposition(
-                  vegetable.gender || 'NEUTRO',
-                )}{' '}
-                {vegetable.names[0]}
+                {m.tame_loud_alligator_zap({
+                  name: names[0],
+                  gender: vegetable.gender || 'NEUTRO',
+                })}
               </Link>
             </Button>
           }

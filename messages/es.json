@@ -399,6 +399,7 @@
       "match": {
         "gender=FEMININO": "Amigos de {name}",
         "gender=MASCULINO": "Amigos de {name}",
+        "gender=*": "Amigos de {name}",
         "name=*": "Amigos de {name}"
       }
     }
@@ -466,5 +467,224 @@
   ],
   "male_polite_myna_arrive": "Sugerencias abiertas | Agroecología pegajosa",
   "aqua_swift_jaguar_dash": "Sugerencias abiertas",
-  "jolly_key_maggot_flip": "No hay sugerencias que necesiten revisión. Todo está bien ✨"
+  "jolly_key_maggot_flip": "No hay sugerencias que necesiten revisión. Todo está bien ✨",
+  "aloof_acidic_dachshund_pout": "Está bien, nada ha cambiado.",
+  "sweet_simple_butterfly_drum": "Editar {name} | Viscosidad",
+  "stale_only_parakeet_engage": "{name} en Agroecología | Viscosidad",
+  "next_curly_weasel_build": [
+    {
+      "declarations": [
+        "input image_label",
+        "input name"
+      ],
+      "selectors": [
+        "image_label",
+        "name"
+      ],
+      "match": {
+        "name=*": "Foto de {name}",
+        "image_label=*": "Foto de {name} ( {image_label} )"
+      }
+    }
+  ],
+  "mad_antsy_lobster_engage": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "El {name}",
+        "gender=FEMININO": "Una {name}",
+        "gender=*": "{name}"
+      }
+    }
+  ],
+  "sharp_wacky_nuthatch_thrive": [
+    {
+      "declarations": [
+        "input alt_names",
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": ", también conocido como {alt_names}",
+        "gender=FEMININO": ", también conocido como {alt_names}",
+        "gender=*": ", o {alt_names}"
+      }
+    }
+  ],
+  "even_legal_tortoise_dash": [
+    {
+      "declarations": [
+        "input is_conjunction",
+        "input remaining"
+      ],
+      "selectors": [
+        "is_conjunction"
+      ],
+      "match": {
+        "is_conjunction=true": "más {remaining}",
+        "is_conjunction=false": "{remaining} otro"
+      }
+    }
+  ],
+  "gaudy_bland_racoon_pick": ", surgió de {origin}",
+  "wild_green_antelope_snap": [
+    {
+      "declarations": [
+        "input gender",
+        "input methods"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "Lo plantamos a través de {methods} .",
+        "gender=FEMININO": "Lo plantamos a través de {methods} .",
+        "gender=*": "Plantamos a través de {methods} ."
+      }
+    }
+  ],
+  "silly_plain_vulture_lead": [
+    {
+      "declarations": [
+        "input strata",
+        "input strata_count",
+        "local plural = strata_count: plural"
+      ],
+      "selectors": [
+        "plural"
+      ],
+      "match": {
+        "plural=one": "Se desarrolla en el estrato {strata} .",
+        "plural=other": "Se desarrolla en los estratos {strata} ."
+      }
+    }
+  ],
+  "loose_bad_bat_ascend": [
+    {
+      "declarations": [
+        "input friends",
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "Funciona bien en consorcios con {friends} .",
+        "gender=FEMININO": "Funciona bien en consorcios con {friends} .",
+        "gender=*": "Funciona bien en consorcios con {friends} ."
+      }
+    }
+  ],
+  "minor_sweet_martin_trust": "Sus variedades incluyen {varieties} .",
+  "nice_topical_dolphin_hike": "¿Quién contribuyó?",
+  "tidy_quiet_cow_clasp": "Personas en Gororobas que contribuyeron con fotos, consejos y/o ediciones",
+  "watery_born_duck_view": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "Últimos cambios en la página {name}",
+        "gender=FEMININO": "Últimos cambios en la página {name}",
+        "gender=*": "Últimos cambios en la página de {name}"
+      }
+    }
+  ],
+  "late_arable_bulldog_blink": "Aún no tenemos ningún consejo sobre esta verdura. ¿Qué tal si nos envías el tuyo?",
+  "patient_real_crab_nail": "Sugerencias y consejos",
+  "busy_candid_cockroach_radiate": "Variedades",
+  "loud_happy_rooster_tap": "Fuentes y recursos",
+  "stale_last_bulldog_rush": "Fuentes que respaldaron esta información y recursos para profundizar\nabajo",
+  "bad_honest_salmon_arise": "Envía tu nota",
+  "orange_front_myna_revive": "Aprendizajes y experimentos",
+  "simple_heroic_cougar_catch": "Aún no tenemos ninguna nota sobre esta verdura. ¿Qué tal?",
+  "steep_weird_kudu_gaze": "enviar un",
+  "tame_loud_alligator_zap": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "Editar la página {name}",
+        "gender=FEMININO": "Editar la página {name}",
+        "gender=*": "Editar la página {name}"
+      }
+    }
+  ],
+  "spare_good_boar_compose": [
+    {
+      "declarations": [
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=FEMININO": "También conocido como",
+        "gender=*": "También conocido como"
+      }
+    }
+  ],
+  "late_dry_salmon_pinch": "Nombres científicos",
+  "empty_acidic_alligator_renew": "Origen",
+  "smug_misty_barbel_thrive": "Usos principales",
+  "stout_acidic_antelope_dig": "partes comestibles",
+  "tame_pink_toad_relish": "Estrato",
+  "wise_bald_eel_treat": "Capa vertical según requerimiento de luz",
+  "equal_big_piranha_zoom": "Duración desde la siembra hasta la muerte o la cosecha",
+  "last_awful_mink_assure": "Ciclo vital",
+  "loved_odd_leopard_dare": "Métodos de plantación y propagación",
+  "away_elegant_earthworm_offer": "Temperatura ideal",
+  "away_cuddly_elephant_twist": [
+    {
+      "declarations": [
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=FEMININO": "Altura en la edad adulta",
+        "gender=*": "Altura en la edad adulta"
+      }
+    }
+  ],
+  "hour_born_dragonfly_favor": "Es hora de producir",
+  "less_top_meerkat_flip": "¿Cuánto tiempo hasta que empecemos a cosechar?",
+  "east_best_tadpole_treat": "¿Hay alguna información incorrecta o faltante?",
+  "ago_mad_penguin_bump": "Puedes <link> enviar una sugerencia</link>, ¡esta enciclopedia es colaborativa!",
+  "weird_slow_impala_loop": "Quien ya planta",
+  "yummy_cute_panda_approve": "¿Quién quiere plantar?",
+  "flat_key_warthog_bless": "Error al actualizar tu interés",
+  "giant_witty_hyena_jump": "¡Interés actualizado!",
+  "seemly_crazy_beetle_kiss": "Crea una cuenta en Gororobas",
+  "dirty_giant_cougar_ask": "Para guardar tu lista de plantas necesitas tener una cuenta. Solo\nPara que podamos recordar tus elecciones sin confundir quién eligió qué\n¿Qué? 🤗",
+  "equal_north_mammoth_jest": "Iniciar sesión o crear una cuenta",
+  "tangy_slimy_shrimp_offer": "¿Cuál es su interés en esta planta?",
+  "petty_best_snake_coax": "Descripción general",
+  "extra_novel_robin_loop": "Sugerencias y consejos",
+  "loud_real_jackal_gaze": "Variedades",
+  "pretty_active_jannes_twirl": "Curiosidades",
+  "tangy_patchy_salmon_treat": "Amistades y consorcios",
+  "top_muddy_skunk_seek": "Fuentes y recursos",
+  "wide_topical_blackbird_dial": "¿Quién contribuyó?",
+  "major_slimy_badger_play": "Aprendizajes y experimentos",
+  "cute_ago_niklas_scoop": "Tabla de contenido",
+  "vexed_upper_lemur_aim": "Sugerir edición"
 }
