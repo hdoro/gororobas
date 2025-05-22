@@ -1,22 +1,23 @@
 import Link from '@/components/LinkWithTransition'
+import { m } from '@/paraglide/messages'
 import { paths } from '@/utils/urls'
+import { NotebookPenIcon } from 'lucide-react'
 import type { JSX } from 'react'
 import NoteIcon from './icons/NoteIcon'
-import SeedlingIcon from './icons/SeedlingIcon'
 import SparklesIcon from './icons/SparklesIcon'
 import { Button } from './ui/button'
 import { Text } from './ui/text'
 
 export function ContributionCTA({
   customCTA,
-  title = 'Gororobas é um espaço colaborativo',
-  subtitle = 'Iríamos adorar receber suas notinhas ou conhecimento sobre plantas e agroecologia',
-  newNoteLabel = 'Envie sua nota',
-  newVegetableLabel = 'Envie um novo vegetal',
+  title = m.warm_active_horse_persist(),
+  subtitle = m.pink_neat_guppy_create(),
+  newNoteLabel = m.proof_orange_gadfly_coax(),
+  newResourceLabel = m.smart_slimy_hedgehog_radiate(),
 }: {
   customCTA?: JSX.Element
   newNoteLabel?: string
-  newVegetableLabel?: string
+  newResourceLabel?: string
   title?: string
   subtitle?: string
 }) {
@@ -37,9 +38,8 @@ export function ContributionCTA({
         <span className="text-muted-foreground">ou</span>
         {customCTA || (
           <Button asChild>
-            <Link href={paths.newVegetable()}>
-              <SeedlingIcon variant="monochrome" className="w-[1.25em]" />{' '}
-              {newVegetableLabel}
+            <Link href={paths.newResource()}>
+              <NotebookPenIcon className="w-[1.25em]" /> {newResourceLabel}
             </Link>
           </Button>
         )}

@@ -1,8 +1,8 @@
 import Link from '@/components/LinkWithTransition'
+import { m } from '@/paraglide/messages'
 import { getLocale } from '@/paraglide/runtime'
 import type { HomePageData, ResourceCardData } from '@/queries'
 import { shuffleArray } from '@/utils/arrays'
-import type { Locale } from '@/utils/i18n'
 import { paths } from '@/utils/urls'
 import { LanguagesIcon, SearchIcon } from 'lucide-react'
 import Image from 'next/image'
@@ -10,6 +10,7 @@ import wikiPreview from '../wiki-preview.png'
 import { ContributionCTA } from './ContributionCTA'
 import NotesStrip from './NotesStrip'
 import ProfilesGrid from './ProfilesGrid'
+import ReplaceI18nFragments, { DEFAULT_FRAGMENTS } from './ReplaceI18nFragments'
 import ResourceCard from './ResourceCard'
 import SectionTitle from './SectionTitle'
 import SuggestionsGrid from './SuggestionsGrid'
@@ -20,134 +21,49 @@ import LibraryIcon from './icons/LibraryIcon'
 import NoteIcon from './icons/NoteIcon'
 import RainbowIcon from './icons/RainbowIcon'
 import { Button } from './ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import { Card, CardHeader, CardTitle } from './ui/card'
 import { Input } from './ui/input'
 import { Text } from './ui/text'
-
-/** Makeshift solution for internationalizing the homepage only */
-const LOCALIZED_CONTENT = {
-  pt: {
-    title: (
-      <>
-        Por terra, território,
-        <br /> e{' '}
-        <strong className="text-secondary-400 font-normal">gororobas</strong>
-      </>
-    ),
-    subtitle:
-      'Enciclopédia colaborativa de conhecimento em agroecologia sobre mais de 400 vegetais',
-    searchPlaceholder: 'Buscar vegetais...',
-    searchButton: 'Buscar',
-    browseAllVegetables: 'Navegue todos os vegetais',
-    encyclopediaTitle: 'Enciclopédia agroecológica',
-    encyclopediaDescription: (
-      <>
-        Informações sobre centenas de vegetais baseadas em conhecimentos e
-        experiências de diversas pessoas,{' '}
-        <strong className="font-semibold">inclusive você</strong>
-      </>
-    ),
-    allVegetablesButton: 'Todos os vegetais',
-    submitNewVegetable: 'Envie novo vegetal',
-    notesTitle: 'Aprendizados e experimentos',
-    notesDescription:
-      'Na cozinha, no plantio e no sacolão. Uma rede social agroecológica, por assim dizer',
-    submitYourNote: 'Enviar sua nota',
-    allNotes: 'Todas as notas',
-    libraryTitle: 'Biblioteca agroecológica',
-    libraryDescription:
-      'Livros, organizações, vídeos e mais sobre agroecologia, agrofloresta e a luta por terra e território.',
-    submitMaterial: 'Enviar um material',
-    allMaterials: 'Todos materiais',
-    recentContributions: 'Contribuições recentes',
-    whoIsInvolved: 'Quem se envolve',
-    communityDescription:
-      'Cultivando sabedoria e compartilhando experiências para agroecologizar o mundo ✨',
-    contributionCTA: {
-      title: 'Gororobas é um espaço colaborativo',
-      subtitle:
-        'Iríamos adorar receber suas notinhas ou conhecimento sobre plantas e agroecologia',
-      newNoteLabel: 'Envie sua nota',
-      newVegetableLabel: 'Envie novo vegetal',
-    },
-  },
-  es: {
-    title: (
-      <>
-        Por tierra, territorio,
-        <br /> y{' '}
-        <strong className="text-secondary-400 font-normal">gororobas</strong>
-      </>
-    ),
-    subtitle:
-      'Enciclopedia colaborativa de conocimiento en agroecología sobre más de 400 vegetales',
-    searchPlaceholder: 'Buscar vegetales...',
-    searchButton: 'Buscar',
-    browseAllVegetables: 'Navegar todos los vegetales',
-    encyclopediaTitle: 'Enciclopedia agroecológica',
-    encyclopediaDescription: (
-      <>
-        Información sobre cientos de vegetales basada en conocimientos y
-        experiencias de diversas personas,{' '}
-        <strong className="font-semibold">incluyéndote</strong>
-      </>
-    ),
-    allVegetablesButton: 'Todos los vegetales',
-    submitNewVegetable: 'Enviar nuevo vegetal',
-    notesTitle: 'Aprendizajes y experimentos',
-    notesDescription:
-      'En la cocina, en el cultivo y en el mercado. Una red social agroecológica, por así decirlo',
-    submitYourNote: 'Enviar tu nota',
-    allNotes: 'Todas las notas',
-    libraryTitle: 'Biblioteca agroecológica',
-    libraryDescription:
-      'Libros, organizaciones, videos y más sobre agroecología, agroforestería y la lucha por tierra y territorio.',
-    submitMaterial: 'Enviar un material',
-    allMaterials: 'Todos los materiales',
-    recentContributions: 'Contribuciones recientes',
-    whoIsInvolved: 'Quiénes participan',
-    communityDescription:
-      'Cultivando sabiduría y compartiendo experiencias para agroecologizar el mundo ✨',
-    contributionCTA: {
-      title: 'Gororobas es un espacio colaborativo',
-      subtitle:
-        'Iriamos adorar recibir sus notas o conocimiento sobre plantas y agroecología',
-      newNoteLabel: 'Envie su nota',
-      newVegetableLabel: 'Envie un nuevo vegetal',
-    },
-  },
-} as const satisfies Record<Locale, unknown>
 
 export default async function HomePage(data: Partial<HomePageData>) {
   const featured_vegetables = shuffleArray(data.featured_vegetables || [])
   const profiles = shuffleArray(data.profiles || [])
   const notes = shuffleArray(data.notes || [])
   const locale = getLocale()
-  const content = LOCALIZED_CONTENT[locale]
 
   return (
     <>
       <section className="flex flex-col items-center gap-[0.33em] px-2 pt-8 pb-12 text-center text-4xl md:pt-16 md:text-5xl lg:text-6xl xl:pt-24">
         <h1 className="text-primary-800 max-w-xl leading-none font-normal">
-          {content.title}
+          <ReplaceI18nFragments
+            message={m.grand_same_puffin_stir()}
+            fragments={{
+              ...DEFAULT_FRAGMENTS,
+              strong: (props) => (
+                <strong className="text-secondary-400 font-normal">
+                  {props.children}
+                </strong>
+              ),
+            }}
+          />
         </h1>
         <Text
           level="h1"
           as="p"
           className="text-primary-800 max-w-3xl text-[0.5em]! leading-snug font-normal md:opacity-90"
         >
-          {content.subtitle}
+          {m.actual_every_halibut_find()}
         </Text>
 
         <form action="/vegetais" method="get" className="mt-2 flex">
           <Input
             type="text"
             name="nome"
-            placeholder={content.searchPlaceholder}
+            placeholder={m.proof_safe_warbler_arise()}
             className="h-[2.525rem] rounded-r-none"
           />
           <Button type="submit" className="rounded-l-none">
-            <SearchIcon className="w-4" /> {content.searchButton}
+            <SearchIcon className="w-4" /> {m.left_lower_cobra_borrow()}
           </Button>
         </form>
       </section>
@@ -172,7 +88,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
               href={paths.vegetablesIndex()}
               className="link text-xl font-medium"
             >
-              {content.browseAllVegetables}
+              {m.stock_weak_goat_race()}
             </Link>
           </div>
         </>
@@ -182,19 +98,26 @@ export default async function HomePage(data: Partial<HomePageData>) {
           <BulbIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
           <div>
             <Text level="h2" as="h2">
-              {content.encyclopediaTitle}
+              {m.main_trite_thrush_prosper()}
             </Text>
             <Text level="h3" className="max-w-lg font-normal">
-              {content.encyclopediaDescription}
+              <ReplaceI18nFragments
+                message={m.this_caring_hound_praise()}
+                fragments={{
+                  strong: (props) => (
+                    <strong className="font-semibold">{props.children}</strong>
+                  ),
+                }}
+              />
             </Text>
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 lg:pt-10">
               <Button asChild>
                 <Link href={paths.vegetablesIndex()}>
-                  {content.allVegetablesButton}
+                  {m.weary_great_mule_charm()}
                 </Link>
               </Button>
               <Link href={paths.newVegetable()} className="link font-medium">
-                {content.submitNewVegetable}
+                {m.spicy_flaky_antelope_lead()}
               </Link>
             </div>
           </div>
@@ -203,7 +126,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
         <div className="max-w-[min(100vw,70rem)] flex-1 xl:-mt-4">
           <Image
             src={wikiPreview}
-            alt="Foto da página do milho na enciclopédia do Gororobas"
+            alt={m.legal_ago_turkey_devour()}
             quality={100}
           />
         </div>
@@ -224,21 +147,6 @@ export default async function HomePage(data: Partial<HomePageData>) {
                 </Text>
               </div>
             </CardHeader>
-            <CardContent>
-              <Text>
-                Trabajas con programación y quieres ayudar?
-                <br /> Nustro codigo es abierto y buscamos alguién para la{' '}
-                <a
-                  href="https://github.com/hdoro/gororobas/issues/82"
-                  className="link font-semibold"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  tarea de internacionalización del aplicativo
-                </a>{' '}
-                🙏
-              </Text>
-            </CardContent>
           </Card>
         </section>
       )}
@@ -249,17 +157,19 @@ export default async function HomePage(data: Partial<HomePageData>) {
             <NoteIcon variant="color" className="w-8 flex-[0_0_2rem] lg:mt-1" />
             <div>
               <Text level="h2" as="h2">
-                {content.notesTitle}
+                {m.loud_any_puffin_gleam()}
               </Text>
               <Text level="h3" className="max-w-lg font-normal">
-                {content.notesDescription}
+                {m.witty_tasty_skunk_pause()}
               </Text>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 lg:pt-10">
                 <Button asChild>
-                  <Link href={paths.newNote()}>{content.submitYourNote}</Link>
+                  <Link href={paths.newNote()}>
+                    {m.lost_main_kudu_engage()}
+                  </Link>
                 </Button>
                 <Link href={paths.notesIndex()} className="link font-medium">
-                  {content.allNotes}
+                  {m.helpful_loose_gecko_jest()}
                 </Link>
               </div>
             </div>
@@ -280,22 +190,22 @@ export default async function HomePage(data: Partial<HomePageData>) {
             />
             <div>
               <Text level="h2" as="h2">
-                {content.libraryTitle}
+                {m.north_green_worm_loop()}
               </Text>
               <Text level="h3" className="max-w-lg font-normal">
-                {content.libraryDescription}
+                {m.basic_teal_fish_laugh()}
               </Text>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 lg:pt-10">
                 <Button asChild>
                   <Link href={paths.newResource()}>
-                    {content.submitMaterial}
+                    {m.loud_extra_squirrel_value()}
                   </Link>
                 </Button>
                 <Link
                   href={paths.resourcesIndex()}
                   className="link font-medium"
                 >
-                  {content.allMaterials}
+                  {m.direct_ok_lamb_snip()}
                 </Link>
               </div>
             </div>
@@ -319,7 +229,7 @@ export default async function HomePage(data: Partial<HomePageData>) {
       {data.recent_contributions && data.recent_contributions.length > 0 && (
         <section className="mt-36">
           <SectionTitle Icon={HistoryIcon}>
-            {content.recentContributions}
+            {m.heroic_jolly_pug_clap()}
           </SectionTitle>
           <SuggestionsGrid
             suggestions={data.recent_contributions}
@@ -331,21 +241,16 @@ export default async function HomePage(data: Partial<HomePageData>) {
       {profiles && profiles.length > 0 && (
         <section className="mt-36">
           <SectionTitle Icon={RainbowIcon}>
-            {content.whoIsInvolved}
+            {m.equal_shy_chicken_burn()}
           </SectionTitle>
           <Text level="h3" className="px-pageX font-normal">
-            {content.communityDescription}
+            {m.topical_gross_macaw_trust()}
           </Text>
           <ProfilesGrid profiles={profiles} className="px-pageX mt-8" />
         </section>
       )}
 
-      <ContributionCTA
-        title={content.contributionCTA.title}
-        subtitle={content.contributionCTA.subtitle}
-        newNoteLabel={content.contributionCTA.newNoteLabel}
-        newVegetableLabel={content.contributionCTA.newVegetableLabel}
-      />
+      <ContributionCTA />
 
       <div aria-hidden className="mt-36" />
     </>

@@ -1,12 +1,12 @@
 'use client'
 
 import { updateVegetableTipAction } from '@/actions/updateVegetableTip'
+import { m } from '@/paraglide/messages'
 import type { VegetablePageData, VegetableTipCardData } from '@/queries'
 import type { RichTextValue, VegetableTipInForm } from '@/schemas'
-import { gender } from '@/utils/strings'
 import { Edit2Icon } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import Carrot from './icons/Carrot'
+import LoadingSpinner from './LoadingSpinner'
 import SparklesIcon from './icons/SparklesIcon'
 import { Button } from './ui/button'
 import {
@@ -20,12 +20,7 @@ import {
 import { Text } from './ui/text'
 
 const VegetableTipForm = dynamic(() => import('./VegetableTipForm'), {
-  loading: () => (
-    <div className="flex items-center justify-center gap-3 p-3 py-12">
-      <Carrot className="h-6 w-6 animate-spin" />
-      Carregando...
-    </div>
-  ),
+  loading: () => <LoadingSpinner />,
 })
 
 export function EditTipDialog({
@@ -79,9 +74,10 @@ export function EditTipDialog({
       >
         <DialogHeader>
           <DialogTitle>
-            Enviar uma dica sobre{' '}
-            {gender.preposition(vegetable.gender || 'NEUTRO')}{' '}
-            {vegetable.names[0]}
+            {m.mushy_due_beaver_shine({
+              name: vegetable.names[0],
+              gender: vegetable.gender || 'NEUTRO',
+            })}
           </DialogTitle>
         </DialogHeader>
         <VegetableTipForm
@@ -100,12 +96,12 @@ export function EditTipDialog({
                   className="mb-3 inline-block w-12"
                 />
                 <Text level="h2" as="h2">
-                  Dica atualizada!
+                  {m.new_spry_llama_harbor()}
                 </Text>
                 <div className="wrap mt-4 flex justify-center gap-2">
                   <DialogClose asChild>
                     <Button mode="outline" tone="neutral">
-                      Continuar navegando
+                      {m.topical_red_mantis_enchant()}
                     </Button>
                   </DialogClose>
                 </div>

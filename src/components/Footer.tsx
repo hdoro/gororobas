@@ -1,7 +1,6 @@
 import Link from '@/components/LinkWithTransition'
-import { getLocale } from '@/paraglide/runtime'
+import { m } from '@/paraglide/messages'
 import { SOURCE_CODE_URL } from '@/utils/config'
-import type { Locale } from '@/utils/i18n'
 import { paths } from '@/utils/urls'
 import {
   GithubIcon,
@@ -15,43 +14,55 @@ import GororobasLogo from './icons/GororobasLogo'
 const FOOTER_LINKS = [
   {
     href: paths.vegetablesIndex(),
-    text: { pt: 'Vegetais', es: 'Vegetales' },
+    get text() {
+      return m.tired_level_snail_roar()
+    },
     icon: SproutIcon,
   },
   {
     href: paths.notesIndex(),
-    text: { pt: 'Notas', es: 'Notas' },
+    get text() {
+      return m.least_polite_elephant_burn()
+    },
     icon: NotebookPenIcon,
   },
   {
     href: paths.resourcesIndex(),
-    text: { pt: 'Biblioteca Agroecológica', es: 'Biblioteca Agroecológica' },
+    get text() {
+      return m.noble_good_tortoise_rush()
+    },
     icon: LibraryBigIcon,
   },
   {
     href: SOURCE_CODE_URL,
-    text: { pt: 'Código fonte', es: 'Código fuente' },
+    get text() {
+      return m.quaint_nimble_racoon_talk()
+    },
     icon: GithubIcon,
   },
 ] as const satisfies {
   href: string
-  text: Record<Locale, string>
+  text: string
   icon: LucideIcon
 }[]
 
 export default async function Footer() {
-  const locale = getLocale()
   return (
     <footer
       className="border-t-primary-100 bg-background-card px-pageX flex flex-col items-center gap-[var(--page-padding-x)] border-t py-10 max-md:pb-28 md:flex-row md:items-start md:justify-start md:py-16 lg:py-24"
-      aria-label="Rodapé"
+      aria-label={m.tired_every_warbler_lock()}
       id="global-footer"
     >
-      <Link href={paths.home()} rel="home" title="Página inicial">
+      <Link
+        href={paths.home()}
+        rel="home"
+        title={m.broad_deft_cockroach_spin()}
+      >
         <GororobasLogo />
       </Link>
       <nav
-        aria-label="Rodapé"
+        aria-label={m.alive_drab_squirrel_explore()}
+        id="global-footer-nav"
         className="flex flex-wrap items-center justify-center gap-10"
       >
         {FOOTER_LINKS.map((link) => {
@@ -60,7 +71,7 @@ export default async function Footer() {
           const Content = (
             <>
               <link.icon className="text-primary-700 size-[1.25em]" />{' '}
-              {link.text[locale]}
+              {link.text}
             </>
           )
 

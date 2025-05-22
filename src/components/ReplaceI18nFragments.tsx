@@ -9,14 +9,14 @@ type I18nReplacerProps = {
   fragments?: Fragments
 }
 
-const DEFAULT_FRAGMENTS: Fragments = {
+export const DEFAULT_FRAGMENTS: Fragments = {
   br: (props) => (
     <>
       <br />
       {props.children}
     </>
   ),
-}
+} as const
 
 type Part =
   | { type: 'text'; content: string }
