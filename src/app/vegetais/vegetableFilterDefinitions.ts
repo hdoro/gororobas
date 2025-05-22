@@ -1,4 +1,5 @@
 import type SliderRangeInput from '@/components/forms/SliderRangeInput'
+import { m } from '@/paraglide/messages'
 import {
   MAX_ACCEPTED_DEVELOPMENT_CYCLE_DAYS,
   MAX_ACCEPTED_TEMPERATURE,
@@ -51,14 +52,18 @@ export const FILTER_DEFINITIONS = [
   {
     queryKey: 'nome',
     filterKey: 'search_query',
-    label: 'Buscar por nome',
+    get label() {
+      return m.each_home_thrush_forgive()
+    },
     type: 'search_query',
     icon: SearchIcon,
   },
   {
     queryKey: 'estrato',
     filterKey: 'strata',
-    label: 'Estrato',
+    get label() {
+      return m.neat_lucky_badger_zoom()
+    },
     type: 'multiselect',
     values: Object.keys(STRATUM_TO_LABEL),
     valueLabels: STRATUM_TO_LABEL,
@@ -67,7 +72,9 @@ export const FILTER_DEFINITIONS = [
   {
     queryKey: 'usos',
     filterKey: 'uses',
-    label: 'Principais usos',
+    get label() {
+      return m.zany_aware_beaver_pet()
+    },
     type: 'multiselect',
     values: Object.keys(USAGE_TO_LABEL),
     valueLabels: USAGE_TO_LABEL,
@@ -76,7 +83,9 @@ export const FILTER_DEFINITIONS = [
   {
     queryKey: 'comestivel',
     filterKey: 'edible_parts',
-    label: 'Partes comestíveis',
+    get label() {
+      return m.fluffy_aqua_ibex_love()
+    },
     type: 'multiselect',
     values: Object.keys(EDIBLE_PART_TO_LABEL),
     valueLabels: EDIBLE_PART_TO_LABEL,
@@ -85,7 +94,9 @@ export const FILTER_DEFINITIONS = [
   {
     queryKey: 'plantio',
     filterKey: 'planting_methods',
-    label: 'Plantio por',
+    get label() {
+      return m.great_true_sloth_flip()
+    },
     type: 'multiselect',
     values: Object.keys(PLANTING_METHOD_TO_LABEL),
     valueLabels: PLANTING_METHOD_TO_LABEL,
@@ -94,7 +105,9 @@ export const FILTER_DEFINITIONS = [
   {
     queryKey: 'ciclo',
     filterKey: 'lifecycles',
-    label: 'Ciclo de vida',
+    get label() {
+      return 'Ciclo de vida'
+    },
     type: 'multiselect',
     values: Object.keys(VEGETABLE_LIFECYCLE_TO_LABEL),
     valueLabels: VEGETABLE_LIFECYCLE_TO_LABEL,
@@ -103,7 +116,9 @@ export const FILTER_DEFINITIONS = [
   {
     queryKey: 'dias',
     filterKey: 'development_cycle',
-    label: 'Tempo até produzir',
+    get label() {
+      return m.witty_glad_ocelot_persist()
+    },
     type: 'range',
     format: 'days',
     icon: CalendarClockIcon,
@@ -114,7 +129,9 @@ export const FILTER_DEFINITIONS = [
   {
     queryKey: 'altura',
     filterKey: 'height',
-    label: 'Altura',
+    get label() {
+      return m.tiny_careful_boar_hack()
+    },
     type: 'range',
     format: 'centimeters',
     icon: RulerIcon,
@@ -125,7 +142,9 @@ export const FILTER_DEFINITIONS = [
   {
     queryKey: 'temperatura',
     filterKey: 'temperature',
-    label: 'Temperatura',
+    get label() {
+      return m.gray_agent_tuna_wave()
+    },
     type: 'range',
     format: 'temperature',
     icon: ThermometerIcon,

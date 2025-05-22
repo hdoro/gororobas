@@ -1,10 +1,21 @@
 import { Fragment, type JSX, type PropsWithChildren } from 'react'
 
+type Fragments = {
+  [tag: string]: (props: PropsWithChildren) => JSX.Element
+}
+
 type I18nReplacerProps = {
   message: string
-  fragments: {
-    [tag: string]: (props: PropsWithChildren) => JSX.Element
-  }
+  fragments?: Fragments
+}
+
+const DEFAULT_FRAGMENTS: Fragments = {
+  br: (props) => (
+    <>
+      <br />
+      {props.children}
+    </>
+  ),
 }
 
 type Part =
@@ -14,7 +25,8 @@ type Part =
 /**
  * Takes an i18n message with `<italics>multiple</italics> <strong>content in fragments</strong>` and renders them accordingly.
  *
- * ⚠️ Does not support nesting one fragment inside another
+ * ⚠️ Does not support nesting one fragment inside another.
+ * 🌟 Already includes a default fragment for line breaks (`<br></br>` in the message)
  * 
  * @example
  * <ReplaceI18nFragment
@@ -41,7 +53,9 @@ export default function ReplaceI18nFragments(props: I18nReplacerProps) {
         ) : (
           // biome-ignore lint: For this, it's fine to use the index as part of the key
           <Fragment key={i + part.content}>
-            {props.fragments[part.tag]({ children: part.content })}
+            {(props.fragments || DEFAULT_FRAGMENTS)[part.tag]({
+              children: part.content,
+            })}
           </Fragment>
         ),
       )}
@@ -50,7 +64,7 @@ export default function ReplaceI18nFragments(props: I18nReplacerProps) {
 }
 
 function extractPartsFromMessage({
-  fragments,
+  fragments = DEFAULT_FRAGMENTS,
   message,
 }: I18nReplacerProps): Part[] {
   // Build a regex that matches any of the fragment tags

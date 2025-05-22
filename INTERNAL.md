@@ -33,3 +33,8 @@ That said, we need to document the **quirks we're facing** for our future usage:
 - When rendering JSX fragments in the middle of the translation, use `ReplaceI18nFragments`
 - Sometimes Sherlock throws your work out with no explanation. Make recurring, small commits.
 - Be especially careful when running machine-translate. I have no clue how to even start debugging that.
+- **When adding translations to constants** that aren't initialized inside a function (such as routes or components), AKA module-level variables, make sure to put the messages inside `get` object properties. This way, the i18n function will run every time you require the variable, which makes it dynamic to the currently-set locale.
+  - For Next route metadata, we can use `generateMetadata` instead of the static `metadata`, at which point we get this for free
+  - Perhaps there could be a custom ESLint rule for this? Not sure the level of effort involved.
+
+Henrique's note (2025-05): As I write these, I realize how frought this solution is. Open to alternatives!
