@@ -14,6 +14,7 @@ import {
 } from 'react-hook-form'
 
 import { Label } from '@/components/ui/label'
+import { m } from '@/paraglide/messages'
 import { cn } from '@/utils/cn'
 import { CircleAlertIcon } from 'lucide-react'
 import { Text } from './text'
@@ -160,9 +161,7 @@ const FormMessage = React.forwardRef<
     const subFieldsWithError = error.filter(
       (e) => typeof e === 'object' && !!e && Object.keys(e).length > 0,
     ).length
-    body = `${subFieldsWithError} campo${
-      subFieldsWithError > 1 ? 's' : ''
-    } com erro`
+    body = m.merry_many_walrus_favor({ subFieldsWithError })
   } else if (typeof error === 'object' && 'message' in error) {
     body = String(error?.message)
   }

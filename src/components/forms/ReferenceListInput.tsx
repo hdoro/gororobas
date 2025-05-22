@@ -1,4 +1,5 @@
 import { listReferenceOptions } from '@/actions/listReferenceOptions'
+import { m } from '@/paraglide/messages'
 import type {
   ReferenceObjectType,
   ReferenceOption,
@@ -158,7 +159,7 @@ export default function ReferenceListInput<
                   image={option.image}
                   maxWidth={24}
                   className="block h-6 w-6 rounded-full object-cover"
-                  alt={`Foto de ${option.label}`}
+                  alt={m.gaudy_fluffy_fox_intend({ label: option.label })}
                 />
               )}
               <span>{option.label}</span>
@@ -220,7 +221,7 @@ export default function ReferenceListInput<
                   image={option.image}
                   maxWidth={24}
                   className="block h-6 w-6 rounded-full object-cover"
-                  alt={`Foto de ${option.label}`}
+                  alt={m.gaudy_fluffy_fox_intend({ label: option.label })}
                 />
               )}
               <span>{option.label}</span>
@@ -247,7 +248,7 @@ export default function ReferenceListInput<
                     image={option.image}
                     maxWidth={24}
                     className="block h-6 w-6 rounded-full object-cover"
-                    alt={`Foto de ${option.label}`}
+                    alt={m.gaudy_fluffy_fox_intend({ label: option.label })}
                   />
                 )}
                 <span className="pr-1">{option.label}</span>

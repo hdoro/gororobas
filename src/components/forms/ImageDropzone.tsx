@@ -1,5 +1,6 @@
 'use client'
 
+import { m } from '@/paraglide/messages'
 import { cn } from '@/utils/cn'
 import { generateId } from '@/utils/ids'
 import { CircleXIcon, UploadCloudIcon } from 'lucide-react'
@@ -49,14 +50,14 @@ export default function ImageDropzone<
       const fileRejection = fileRejections[0]
       if (fileRejection.errors[0].code === 'file-invalid-type') {
         toast({
-          title: 'Arquivo inválido',
-          description: 'Apenas imagens são aceitas.',
+          title: m.major_hour_okapi_hope(),
+          description: m.fancy_actual_albatross_gaze(),
           variant: 'destructive',
         })
       } else if (fileRejection.errors[0].code === 'file-too-large') {
         toast({
-          title: 'Imagem muito grande',
-          description: 'Envie uma imagem de até 3MB.',
+          title: m.novel_fluffy_orangutan_love(),
+          description: m.muddy_these_crab_lend(),
           variant: 'destructive',
         })
       }
@@ -109,7 +110,7 @@ export default function ImageDropzone<
           {value instanceof File && (
             <img
               src={URL.createObjectURL(value)}
-              alt="Imagem selecionada"
+              alt={m.direct_pink_rook_tickle()}
               className="block h-full w-full object-contain"
             />
           )}
@@ -117,7 +118,7 @@ export default function ImageDropzone<
             <Button
               onClick={clearField}
               className="absolute top-2 right-2 rounded-full"
-              aria-label="Remover imagem"
+              aria-label={m.helpful_house_carp_promise()}
               tone="destructive"
               mode="outline"
               size="icon"
@@ -130,7 +131,7 @@ export default function ImageDropzone<
         <FormLabel>
           <div className="flex flex-col items-center justify-center gap-1 p-4 text-center text-xs font-normal">
             <UploadCloudIcon className="opacity-80" />
-            Clique aqui ou arraste a foto
+            {m.ornate_such_weasel_reap()}
           </div>
         </FormLabel>
       )}

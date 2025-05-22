@@ -1,5 +1,6 @@
 'use client'
 
+import { m } from '@/paraglide/messages'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Schema } from 'effect'
 import { TrashIcon } from 'lucide-react'
@@ -93,7 +94,7 @@ export default function LinkEditor({ editor, editorId, send }: EditorUIProps) {
             aria-disabled={form.formState.disabled}
           >
             <DialogHeader>
-              <DialogTitle>Editar link</DialogTitle>
+              <DialogTitle>{m.close_slimy_cowfish_hunt()}</DialogTitle>
             </DialogHeader>
             <DialogBody>
               <Field
@@ -114,7 +115,7 @@ export default function LinkEditor({ editor, editorId, send }: EditorUIProps) {
                   type="submit"
                   disabled={form.formState.disabled}
                 >
-                  Salvar e fechar
+                  {m.petty_born_termite_jump()}
                 </Button>
                 <Button
                   onClick={deleteLink}
@@ -122,7 +123,7 @@ export default function LinkEditor({ editor, editorId, send }: EditorUIProps) {
                   mode="bleed"
                   size="sm"
                 >
-                  <TrashIcon className="mr-2" /> Deletar link
+                  <TrashIcon className="mr-2" /> {m.just_just_fireant_dart()}
                 </Button>
               </div>
             </DialogBody>

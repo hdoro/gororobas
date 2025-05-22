@@ -1,5 +1,6 @@
 'use client'
 
+import { m } from '@/paraglide/messages'
 import {
   RichTextVideoAttributes,
   YoutubeVideoURL,
@@ -88,7 +89,7 @@ export default function VideoEditor({ editor, editorId, send }: EditorUIProps) {
             aria-disabled={form.formState.disabled}
           >
             <DialogHeader>
-              <DialogTitle>Adicionar vídeo</DialogTitle>
+              <DialogTitle>{m.slimy_funny_tuna_favor()}</DialogTitle>
             </DialogHeader>
             <DialogBody>
               <Field
@@ -105,7 +106,7 @@ export default function VideoEditor({ editor, editorId, send }: EditorUIProps) {
                   type="submit"
                   disabled={form.formState.disabled}
                 >
-                  Adicionar
+                  {m.tasty_lazy_quail_endure()}
                 </Button>
               </div>
             </DialogBody>

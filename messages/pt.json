@@ -732,5 +732,101 @@
   "still_inclusive_jellyfish_prosper": "📚 Contribuir para a biblioteca de recursos sobre agroecologia e agrofloresta, salvando suas reflexões sobre cada conteúdo",
   "frail_weary_slug_flop": "Gororobas Agroecologia",
   "mellow_busy_jackdaw_bless": "disponível em:",
-  "great_light_barbel_sew": "Por"
+  "great_light_barbel_sew": "Por",
+  "just_left_termite_inspire": "Novo item",
+  "slow_plain_giraffe_fear": "Segure para mover",
+  "patient_witty_gecko_enchant": "Deletar item #{number}",
+  "drab_late_snail_gaze": "Hoje",
+  "active_formal_wallaby_snip": "Escolha uma data",
+  "major_hour_okapi_hope": "Arquivo inválido",
+  "fancy_actual_albatross_gaze": "Apenas imagens são aceitas.",
+  "novel_fluffy_orangutan_love": "Imagem muito grande",
+  "muddy_these_crab_lend": "Envie uma imagem de até 3MB.",
+  "direct_pink_rook_tickle": "Imagem selecionada",
+  "helpful_house_carp_promise": "Remover imagem",
+  "ornate_such_weasel_reap": "Clique aqui ou arraste a foto",
+  "misty_lower_quail_fond": "Rótulo",
+  "merry_misty_tapir_buzz": "Sobre o que é a imagem?",
+  "actual_elegant_buzzard_sway": "Fontes",
+  "slow_nice_puma_pride": "Nova fonte",
+  "large_helpful_myna_dash": "Imagem",
+  "weary_real_mantis_burn": "Remover imagem",
+  "gaudy_fluffy_fox_intend": "Foto de {label}",
+  "new_shy_gibbon_edit": "Origem da {label}",
+  "awake_least_javelina_forgive": "Créditos",
+  "bright_small_niklas_approve": "Que pessoa ou organização produziu a {label}?",
+  "small_jolly_lemur_yell": "Fonte",
+  "brief_jolly_buzzard_grasp": "De preferência um link our URL",
+  "dirty_silly_rook_rush": "Ex: https://site.br/pagina-da-{label}",
+  "spare_dizzy_earthworm_trust": "Pessoas",
+  "keen_brief_goose_enjoy": "Variedade sem nome",
+  "key_lofty_cuckoo_persist": "Editar variedade",
+  "mad_dark_haddock_achieve": "Fechar",
+  "neat_maroon_peacock_splash": "Nomes",
+  "inner_crisp_anaconda_nail": "Novo nome",
+  "livid_great_opossum_affirm": "Nome da variedade #{number}",
+  "pretty_arable_jan_cook": "Fotos",
+  "sharp_knotty_niklas_flop": "Nova foto",
+  "zesty_only_panda_absorb": "Foto #{number}",
+  "dirty_round_buzzard_empower": "Link",
+  "awake_wise_lobster_support": "Menções",
+  "merry_spare_bat_yell": "Imagem",
+  "mellow_white_grizzly_support": "Video",
+  "aqua_blue_rabbit_delight": "Negrito",
+  "inner_plane_finch_seek": "Itálico",
+  "slow_sharp_wombat_persist": "Riscado",
+  "stout_novel_wolf_dust": "Lista não ordenada",
+  "next_yummy_okapi_kick": "Lista numérica",
+  "raw_heavy_antelope_clap": "Link",
+  "minor_icy_dachshund_exhale": "Erro ao enviar foto",
+  "steep_sharp_mammoth_succeed": "Confira se tem conexão à internet e tente novamente",
+  "tiny_each_zebra_mend": "Subindo imagem...",
+  "mad_left_nils_roar": "Foto",
+  "livid_topical_fish_renew": "Adicionar",
+  "fit_inclusive_dove_dine": [
+    {
+      "declarations": [
+        "input label",
+        "input sources"
+      ],
+      "selectors": [
+        "label",
+        "sources"
+      ],
+      "match": {
+        "label=false, sources=false": "imagem",
+        "label=false, sources=*": "imagem de {label}",
+        "label=*, sources=false": "imagem por {sources}",
+        "label=*": "imagem de {label} por {sources}"
+      }
+    }
+  ],
+  "close_slimy_cowfish_hunt": "Editar link",
+  "petty_born_termite_jump": "Salvar e fechar",
+  "just_just_fireant_dart": "Deletar link",
+  "jumpy_soft_nils_hack": "(menção)",
+  "crazy_tame_duck_achieve": "Carregando menções...",
+  "wide_small_peacock_ask": "Nenhum resultado encontrado",
+  "slimy_funny_tuna_favor": "Adicionar vídeo",
+  "tasty_lazy_quail_endure": "Adicionar",
+  "large_awake_hyena_arise": "Vídeo de YouTube",
+  "real_few_gopher_bump": "Slide anterior",
+  "grassy_same_toucan_delight": "Próximo slide",
+  "smart_formal_flea_buy": "Fechar",
+  "merry_many_walrus_favor": [
+    {
+      "declarations": [
+        "input subFieldsWithError",
+        "local plural = subFieldsWithError: plural"
+      ],
+      "selectors": [
+        "plural"
+      ],
+      "match": {
+        "plural=one": "{subFieldsWithError} campo com erro",
+        "plural=*": "{subFieldsWithError} campos com erro"
+      }
+    }
+  ],
+  "every_calm_termite_accept": "Close"
 }

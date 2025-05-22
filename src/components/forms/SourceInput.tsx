@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import type { SourceType } from '@/types'
 import { SOURCE_TYPE_TO_LABEL } from '@/utils/labels'
 import {
@@ -28,7 +29,7 @@ export default function SourceInput<
     <div className="space-y-4">
       <Field
         form={form}
-        label={`Origem da ${label}`}
+        label={m.new_shy_gibbon_edit({ label })}
         name={`${field.name}.type`}
         render={({ field: sourceTypeField }) => (
           <RadioGroupInput
@@ -50,28 +51,28 @@ export default function SourceInput<
         <>
           <Field
             form={form}
-            label="Créditos"
+            label={m.awake_least_javelina_forgive()}
             name={`${field.name}.credits`}
             render={({ field: creditsField }) => (
               <Input
                 {...creditsField}
                 value={creditsField.value || ''}
                 type="text"
-                placeholder={`Que pessoa ou organização produziu a ${label}?`}
+                placeholder={m.bright_small_niklas_approve({ label })}
               />
             )}
           />
           <Field
             form={form}
-            label="Fonte"
-            description="De preferência um link our URL"
+            label={m.small_jolly_lemur_yell()}
+            description={m.brief_jolly_buzzard_grasp()}
             name={`${field.name}.origin`}
             render={({ field: originField }) => (
               <Input
                 {...originField}
                 value={originField.value || ''}
                 type="text"
-                placeholder={`Ex: https://site.br/pagina-da-${label}`}
+                placeholder={m.dirty_silly_rook_rush({ label })}
               />
             )}
           />
@@ -80,7 +81,7 @@ export default function SourceInput<
       {type === 'GOROROBAS' && (
         <Field
           form={form}
-          label="Pessoas"
+          label={m.spare_dizzy_earthworm_trust()}
           name={`${field.name}.userIds`}
           render={({ field: userIdsField }) => (
             <ReferenceListInput

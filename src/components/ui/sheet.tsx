@@ -5,6 +5,7 @@ import { X } from 'lucide-react'
 import * as React from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 
+import { m } from '@/paraglide/messages'
 import { cn } from '@/utils/cn'
 
 const Sheet = SheetPrimitive.Root
@@ -65,7 +66,7 @@ const SheetContent = React.forwardRef<
       {children}
       <SheetPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
         <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
+        <span className="sr-only">{m.every_calm_termite_accept()}</span>
       </SheetPrimitive.Close>
     </SheetPrimitive.Content>
   </SheetPortal>

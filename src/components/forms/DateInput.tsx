@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { m } from '@/paraglide/messages'
 import { cn } from '@/utils/cn'
 import { isToday } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
@@ -48,7 +49,7 @@ export default function DateInput<
             <CalendarIcon className="h-auto w-[1.25em]" />
             {date ? (
               isToday(date) ? (
-                'Hoje'
+                m.drab_late_snail_gaze()
               ) : (
                 date.toLocaleDateString('pt-BR', {
                   month: '2-digit',
@@ -57,7 +58,7 @@ export default function DateInput<
                 })
               )
             ) : (
-              <span>Escolha uma data</span>
+              <span>{m.active_formal_wallaby_snip()}</span>
             )}
           </Button>
         </PopoverTrigger>

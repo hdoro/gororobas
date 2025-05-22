@@ -1,5 +1,6 @@
 'use client'
 
+import { m } from '@/paraglide/messages'
 import { AtSignIcon, ImageUpIcon, LinkIcon, YoutubeIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 import ResponsiveFloater from './ResponsiveFloater'
@@ -23,7 +24,7 @@ export default function BlocksToolbar({
         disabled={!editor.can().chain().focus().toggleLink({ href: '' }).run()}
         mode={editor.isActive('link') ? 'outline' : 'bleed'}
         size="icon"
-        aria-label="Link"
+        aria-label={m.dirty_round_buzzard_empower()}
       >
         <LinkIcon />
       </Button>
@@ -41,7 +42,7 @@ export default function BlocksToolbar({
         disabled={!editor.can().chain().focus().toggleLink({ href: '' }).run()}
         mode={editor.isActive('mention') ? 'outline' : 'bleed'}
         size="icon"
-        aria-label="Menções"
+        aria-label={m.awake_wise_lobster_support()}
       >
         <AtSignIcon />
       </Button>
@@ -51,7 +52,7 @@ export default function BlocksToolbar({
         }}
         mode={editor.isActive('image') ? 'outline' : 'bleed'}
         size="icon"
-        aria-label="Imagem"
+        aria-label={m.merry_spare_bat_yell()}
       >
         <ImageUpIcon />
       </Button>
@@ -61,7 +62,7 @@ export default function BlocksToolbar({
         }}
         mode={editor.isActive('video') ? 'outline' : 'bleed'}
         size="icon"
-        aria-label="Video"
+        aria-label={m.mellow_white_grizzly_support()}
       >
         <YoutubeIcon />
       </Button>

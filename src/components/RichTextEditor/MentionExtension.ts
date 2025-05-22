@@ -6,6 +6,7 @@
  * - different data structure - RichTextMentionData instead of `id` and `label`, which allows for images
  */
 
+import { m } from '@/paraglide/messages'
 import {
   RichTextMentionAttributes,
   type RichTextMentionAttributesInDB,
@@ -119,7 +120,7 @@ export const Mention = Node.create<MentionOptions>({
 
       return TRIGGER_CHAR + data.label
     } catch (error) {
-      return '(menção)'
+      return m.jumpy_soft_nils_hack()
     }
   },
 
