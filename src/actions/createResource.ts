@@ -29,7 +29,7 @@ export function createResource(input: ResourceForDBWithImages, client: Client) {
         Effect.tryPromise({
           try: () => getTransaction(input, client),
           catch: (error) => {
-            console.log('Failed creating resource', error)
+            console.log('[createResource] failed creating resource', error)
             return new UnknownGelDBError(error)
           },
         }),

@@ -42,7 +42,7 @@ export async function createVegetableTipAction(input: {
           // Create the tip with the user's session to include correct Auditable data
           try: () => createOrUpdateTipTransaction(input, session.client),
           catch: (error) => {
-            console.log('Failed creating tip', error)
+            console.log('[createVegetableTip] failed creating tip', error)
             return new UnknownGelDBError(error)
           },
         }),

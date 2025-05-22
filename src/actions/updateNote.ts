@@ -32,7 +32,7 @@ export function updateNote(
             },
           }),
         catch: (error) => {
-          console.log('Failed creating notes', error)
+          console.log('[updateNote] failed creating notes', error)
           return new UnknownGelDBError(error)
         },
       }),

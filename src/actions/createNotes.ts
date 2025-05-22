@@ -14,7 +14,7 @@ export function createNotes(input: NotesForDB, client: Client) {
       Effect.tryPromise({
         try: () => getTransaction(notes, client),
         catch: (error) => {
-          console.log('Failed creating notes', error)
+          console.log('[createNotes] failed creating notes', error)
           return new UnknownGelDBError(error)
         },
       }),

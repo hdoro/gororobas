@@ -8,7 +8,7 @@ import { auth } from '@/gel'
 import { m } from '@/paraglide/messages'
 import { getLocale } from '@/paraglide/runtime'
 import { cn } from '@/utils/cn'
-import { configureServerLocale } from '@/utils/i18n.server'
+import { configureRequestLocale } from '@/utils/i18n.server'
 import { pathToAbsUrl } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans } from 'next/font/google'
@@ -62,7 +62,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const locale = await configureServerLocale()
+  const locale = await configureRequestLocale()
   const session = await auth.getSession()
   const signedIn = await session.isSignedIn()
 

@@ -39,7 +39,7 @@ export async function updateVegetableTipAction(input: {
         Effect.tryPromise({
           try: () => createOrUpdateTipTransaction(input, session.client),
           catch: (error) => {
-            console.log('Failed updating tip', error)
+            console.log('[updateVegetableTipAction] failed updating tip', error)
             return new UnknownGelDBError(error)
           },
         }),
