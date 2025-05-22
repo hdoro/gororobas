@@ -4,8 +4,13 @@
   "livid_vivid_bullock_foster": "Mais informação sobre",
   "every_inclusive_buzzard_greet": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
       "match": {
         "countPlural=one": "Vegetal relacionado",
         "countPlural=other": "Vegetais relacionados"
@@ -223,8 +228,14 @@
   "flat_same_sloth_succeed": "Muuuuuito obrigado pela força - viva a agroecologia!",
   "inner_sad_sloth_pout": [
     {
-      "declarations": ["input is_owner", "input name"],
-      "selectors": ["is_owner", "name"],
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
       "match": {
         "is_owner=true": "Você ainda não fez nenhuma contribuição",
         "name=*": "{name} ainda não fez nenhuma contribuição"
@@ -233,8 +244,14 @@
   ],
   "simple_smart_cougar_lend": [
     {
-      "declarations": ["input is_owner", "input name"],
-      "selectors": ["is_owner", "name"],
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
       "match": {
         "is_owner=true": "Fotos que você enviou",
         "name=*": "Fotos de {name}"
@@ -244,8 +261,14 @@
   "great_heroic_butterfly_buy": "Enviar mais uma nota",
   "bright_agent_finch_thrive": [
     {
-      "declarations": ["input is_owner", "input name"],
-      "selectors": ["is_owner", "name"],
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
       "match": {
         "is_owner=true": "Compartilhe suas experiências e aprendizados com a comunidade",
         "name=*": "{name} ainda não compartilhou nenhuma notinha"
@@ -254,8 +277,14 @@
   ],
   "busy_red_weasel_pause": [
     {
-      "declarations": ["input is_owner", "input name"],
-      "selectors": ["is_owner", "name"],
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
       "match": {
         "is_owner=true": "Suas contribuições",
         "name=*": "Contribuições de {name}"
@@ -264,8 +293,13 @@
   ],
   "tasty_vivid_jan_bless": [
     {
-      "declarations": ["input is_owner", "input name"],
-      "selectors": ["is_owner"],
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner"
+      ],
       "match": {
         "is_owner=true": "Notinhas que você compartilhou",
         "is_owner=*": "Notinhas que {name} compartilhou"
@@ -283,8 +317,13 @@
   "nice_tired_lionfish_sprout": "Contribuições",
   "this_stock_puma_engage": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
       "match": {
         "countPlural=*": "e {count} outros",
         "countPlural=one": "e {count} outro"
@@ -301,8 +340,12 @@
   "cute_slimy_pelican_lift": "{firstName} é de {location}",
   "crazy_ornate_marlin_cuddle": [
     {
-      "declarations": ["input planted_count"],
-      "selectors": ["planted_count"],
+      "declarations": [
+        "input planted_count"
+      ],
+      "selectors": [
+        "planted_count"
+      ],
       "match": {
         "planted_count=one": "está cultivando {planted_count} vegetal",
         "planted_count=other": "está cultivando {planted_count} vegetais"
@@ -311,8 +354,12 @@
   ],
   "yummy_still_eel_bloom": [
     {
-      "declarations": ["input desired_count"],
-      "selectors": ["desired_count"],
+      "declarations": [
+        "input desired_count"
+      ],
+      "selectors": [
+        "desired_count"
+      ],
       "match": {
         "desired_count=one": "quer cultivar uma outra planta",
         "desired_count=other": "quer cultivar outras {desired_count} plantas"
@@ -325,8 +372,13 @@
   "warm_bold_cat_slide": "Sugestão de edição de {name} | Gororobas Agroecologia",
   "civil_deft_dove_achieve": [
     {
-      "declarations": ["input gender", "input name"],
-      "selectors": ["gender"],
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
       "match": {
         "gender=FEMININO": "Sobre a {name}",
         "gender=MASCULINO": "Sobre o {name}",
@@ -336,8 +388,13 @@
   ],
   "slow_neat_niklas_bump": [
     {
-      "declarations": ["input gender", "input name"],
-      "selectors": ["gender"],
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
       "match": {
         "gender=FEMININO": "Amigues da {name}",
         "gender=MASCULINO": "Amigues do {name}",
@@ -347,8 +404,14 @@
   ],
   "noble_east_jurgen_gleam": [
     {
-      "declarations": ["input gender", "input name"],
-      "selectors": ["gender", "name"],
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender",
+        "name"
+      ],
       "match": {
         "gender=FEMININO": "Plantas que gostam de serem plantadas e estarem próximas à {name}",
         "gender=MASCULINO": "Plantas que gostam de serem plantadas e estarem próximas ao {name}",
@@ -359,8 +422,12 @@
   "tidy_swift_wren_breathe": "vegetal",
   "noble_spicy_wolf_feast": [
     {
-      "declarations": ["input gender"],
-      "selectors": ["gender"],
+      "declarations": [
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
       "match": {
         "gender=FEMININO": "Sugestões para a",
         "gender=MASCULINO": "Sugestões para o",
@@ -370,15 +437,26 @@
   ],
   "teal_mellow_cod_grip": [
     {
-      "declarations": ["input count"],
-      "selectors": ["count"],
-      "match": { "count=one": "Enviada por:", "count=other": "Enviadas por:" }
+      "declarations": [
+        "input count"
+      ],
+      "selectors": [
+        "count"
+      ],
+      "match": {
+        "count=one": "Enviada por:",
+        "count=other": "Enviadas por:"
+      }
     }
   ],
   "ornate_smart_skunk_buy": [
     {
-      "declarations": ["input count"],
-      "selectors": ["count"],
+      "declarations": [
+        "input count"
+      ],
+      "selectors": [
+        "count"
+      ],
       "match": {
         "count=one": "{count} alteração",
         "count=other": "{count} alterações"
@@ -393,8 +471,14 @@
   "stale_only_parakeet_engage": "{name} na Agroecologia | Gororobas",
   "next_curly_weasel_build": [
     {
-      "declarations": ["input image_label", "input name"],
-      "selectors": ["image_label", "name"],
+      "declarations": [
+        "input image_label",
+        "input name"
+      ],
+      "selectors": [
+        "image_label",
+        "name"
+      ],
       "match": {
         "name=*": "Foto de {name}",
         "image_label=*": "Foto de {name} ({image_label})"
@@ -403,8 +487,13 @@
   ],
   "mad_antsy_lobster_engage": [
     {
-      "declarations": ["input gender", "input name"],
-      "selectors": ["gender"],
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
       "match": {
         "gender=MASCULINO": "O {name}",
         "gender=FEMININO": "A {name}",
@@ -414,8 +503,13 @@
   ],
   "sharp_wacky_nuthatch_thrive": [
     {
-      "declarations": ["input alt_names", "input gender"],
-      "selectors": ["gender"],
+      "declarations": [
+        "input alt_names",
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
       "match": {
         "gender=MASCULINO": ", também conhecido como {alt_names}",
         "gender=FEMININO": ", também conhecida como {alt_names}",
@@ -425,8 +519,13 @@
   ],
   "even_legal_tortoise_dash": [
     {
-      "declarations": ["input is_conjunction", "input remaining"],
-      "selectors": ["is_conjunction"],
+      "declarations": [
+        "input is_conjunction",
+        "input remaining"
+      ],
+      "selectors": [
+        "is_conjunction"
+      ],
       "match": {
         "is_conjunction=true": "mais {remaining}",
         "is_conjunction=false": "{remaining} outro"
@@ -436,8 +535,13 @@
   "gaudy_bland_racoon_pick": ", surgiu de {origin}",
   "wild_green_antelope_snap": [
     {
-      "declarations": ["input gender", "input methods"],
-      "selectors": ["gender"],
+      "declarations": [
+        "input gender",
+        "input methods"
+      ],
+      "selectors": [
+        "gender"
+      ],
       "match": {
         "gender=MASCULINO": "Plantamos ele através de {methods}.",
         "gender=FEMININO": "Plantamos ela através de {methods}.",
@@ -452,7 +556,9 @@
         "input strata_count",
         "local plural = strata_count: plural"
       ],
-      "selectors": ["plural"],
+      "selectors": [
+        "plural"
+      ],
       "match": {
         "plural=one": "Se desenvolve no estrato {strata}.",
         "plural=other": "Se desenvolve nos estratos {strata}."
@@ -461,8 +567,13 @@
   ],
   "loose_bad_bat_ascend": [
     {
-      "declarations": ["input friends", "input gender"],
-      "selectors": ["gender"],
+      "declarations": [
+        "input friends",
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
       "match": {
         "gender=MASCULINO": "Ele se dá bem em consórcios com {friends}.",
         "gender=FEMININO": "Ela se dá bem em consórcios com {friends}.",
@@ -475,8 +586,13 @@
   "tidy_quiet_cow_clasp": "Pessoas no Gororobas que contribuíram com fotos, dicas e/ou edições",
   "watery_born_duck_view": [
     {
-      "declarations": ["input gender", "input name"],
-      "selectors": ["gender"],
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
       "match": {
         "gender=MASCULINO": "Últimas mudanças na página do {name}",
         "gender=FEMININO": "Últimas mudanças na página da {name}",
@@ -495,8 +611,13 @@
   "steep_weird_kudu_gaze": "enviar uma",
   "tame_loud_alligator_zap": [
     {
-      "declarations": ["input gender", "input name"],
-      "selectors": ["gender"],
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
       "match": {
         "gender=MASCULINO": "Editar página do {name}",
         "gender=FEMININO": "Editar página da {name}",
@@ -506,8 +627,12 @@
   ],
   "spare_good_boar_compose": [
     {
-      "declarations": ["input gender"],
-      "selectors": ["gender"],
+      "declarations": [
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
       "match": {
         "gender=FEMININO": "Também conhecida como",
         "gender=*": "Também conhecido como"
@@ -526,8 +651,12 @@
   "away_elegant_earthworm_offer": "Temperatura ideal",
   "away_cuddly_elephant_twist": [
     {
-      "declarations": ["input gender"],
-      "selectors": ["gender"],
+      "declarations": [
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
       "match": {
         "gender=FEMININO": "Altura quando adulta",
         "gender=*": "Altura quando adulto"
@@ -600,5 +729,8 @@
   "arable_major_seahorse_seek": "🌱 Salvar vegetais que quer plantar, já plantou ou está cultivando",
   "dry_soft_chipmunk_buy": "📝 Escrever e compartilhar notinhas sobre seus aprendizados na cozinha e na terra",
   "raw_same_cod_absorb": "💬 Contribuir com melhores informações sobre vegetais e envie suas dicas e recomendações",
-  "still_inclusive_jellyfish_prosper": "📚 Contribuir para a biblioteca de recursos sobre agroecologia e agrofloresta, salvando suas reflexões sobre cada conteúdo"
+  "still_inclusive_jellyfish_prosper": "📚 Contribuir para a biblioteca de recursos sobre agroecologia e agrofloresta, salvando suas reflexões sobre cada conteúdo",
+  "frail_weary_slug_flop": "Gororobas Agroecologia",
+  "mellow_busy_jackdaw_bless": "disponível em:",
+  "great_light_barbel_sew": "Por"
 }

@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import type { SourceCardData } from '@/queries'
 import type { SourceInForm } from '@/schemas'
 import { semanticListItems } from './strings'
@@ -5,7 +6,7 @@ import { semanticListItems } from './strings'
 export function sourcesToPlainText({
   sources,
   maxDisplay,
-  prefix = 'Por',
+  prefix = m.great_light_barbel_sew(),
 }: {
   sources?:
     | (SourceCardData | typeof SourceInForm.Type)[]
@@ -26,7 +27,7 @@ export function sourcesToPlainText({
         return undefined
       }
       if (source.origin) {
-        return `${source.credits} (${URL.canParse(source.origin) ? `disponível em: ${source.origin}` : source.origin})`
+        return `${source.credits} (${URL.canParse(source.origin) ? `${m.mellow_busy_jackdaw_bless()} ${source.origin}` : source.origin})`
       }
       return source.credits
     })

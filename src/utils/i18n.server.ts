@@ -22,7 +22,7 @@ overwriteGetLocale(() => {
   try {
     return assertIsLocale(ssrLocale().locale)
   } catch (error) {
-    return 'pt'
+    return baseLocale
   }
 })
 overwriteGetUrlOrigin(() => ssrLocale().origin)
