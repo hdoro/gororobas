@@ -11,33 +11,28 @@ import { Suspense } from 'react'
 import UserNav from './UserNav'
 import GororobasLogo from './icons/GororobasLogo'
 
-const HEADER_LINKS = [
-  {
-    href: paths.vegetablesIndex(),
-    get text() {
-      return m.known_patient_iguana_race()
+const HEADER_LINKS = () =>
+  [
+    {
+      href: paths.vegetablesIndex(),
+      text: m.known_patient_iguana_race(),
+      icon: SproutIcon,
     },
-    icon: SproutIcon,
-  },
-  {
-    href: paths.notesIndex(),
-    get text() {
-      return m.cool_arable_jackal_jest()
+    {
+      href: paths.notesIndex(),
+      text: m.cool_arable_jackal_jest(),
+      icon: NotebookPenIcon,
     },
-    icon: NotebookPenIcon,
-  },
-  {
-    href: paths.resourcesIndex(),
-    get text() {
-      return m.glad_agent_canary_peek()
+    {
+      href: paths.resourcesIndex(),
+      text: m.glad_agent_canary_peek(),
+      icon: LibraryBigIcon,
     },
-    icon: LibraryBigIcon,
-  },
-] as const satisfies {
-  href: string
-  text: string
-  icon: LucideIcon
-}[]
+  ] as const satisfies {
+    href: string
+    text: string
+    icon: LucideIcon
+  }[]
 
 export default async function HeaderNav({ signedIn }: { signedIn: boolean }) {
   return (
@@ -51,7 +46,7 @@ export default async function HeaderNav({ signedIn }: { signedIn: boolean }) {
         </Link>
 
         <div className="flex flex-wrap items-center gap-x-10 gap-y-3">
-          {HEADER_LINKS.map((link) => (
+          {HEADER_LINKS().map((link) => (
             <Link
               key={link.href}
               href={link.href}

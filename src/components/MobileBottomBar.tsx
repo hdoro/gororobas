@@ -2,9 +2,8 @@
 
 import Link from '@/components/LinkWithTransition'
 import { m } from '@/paraglide/messages'
-import { getLocale } from '@/paraglide/runtime'
 import { cn } from '@/utils/cn'
-import { formatPath, paths } from '@/utils/urls'
+import { paths, preparePath } from '@/utils/urls'
 import { FilePlus2Icon } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import type { JSX, SVGProps } from 'react'
@@ -22,7 +21,7 @@ function LinkButton(props: {
   ) => JSX.Element
   label: string
 }) {
-  const isActive = formatPath(usePathname()) === formatPath(props.href)
+  const isActive = preparePath(usePathname()) === preparePath(props.href)
 
   return (
     <Button
@@ -48,7 +47,6 @@ function LinkButton(props: {
 }
 
 export default function MobileBottomBar({ signedIn }: { signedIn: boolean }) {
-  const locale = getLocale()
   const pathname = usePathname()
 
   if (

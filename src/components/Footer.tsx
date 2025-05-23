@@ -11,40 +11,33 @@ import {
 } from 'lucide-react'
 import GororobasLogo from './icons/GororobasLogo'
 
-const FOOTER_LINKS = [
-  {
-    href: paths.vegetablesIndex(),
-    get text() {
-      return m.tired_level_snail_roar()
+const FOOTER_LINKS = () =>
+  [
+    {
+      href: paths.vegetablesIndex(),
+      text: m.tired_level_snail_roar(),
+      icon: SproutIcon,
     },
-    icon: SproutIcon,
-  },
-  {
-    href: paths.notesIndex(),
-    get text() {
-      return m.least_polite_elephant_burn()
+    {
+      href: paths.notesIndex(),
+      text: m.least_polite_elephant_burn(),
+      icon: NotebookPenIcon,
     },
-    icon: NotebookPenIcon,
-  },
-  {
-    href: paths.resourcesIndex(),
-    get text() {
-      return m.noble_good_tortoise_rush()
+    {
+      href: paths.resourcesIndex(),
+      text: m.noble_good_tortoise_rush(),
+      icon: LibraryBigIcon,
     },
-    icon: LibraryBigIcon,
-  },
-  {
-    href: SOURCE_CODE_URL,
-    get text() {
-      return m.quaint_nimble_racoon_talk()
+    {
+      href: SOURCE_CODE_URL,
+      text: m.quaint_nimble_racoon_talk(),
+      icon: GithubIcon,
     },
-    icon: GithubIcon,
-  },
-] as const satisfies {
-  href: string
-  text: string
-  icon: LucideIcon
-}[]
+  ] as const satisfies {
+    href: string
+    text: string
+    icon: LucideIcon
+  }[]
 
 export default async function Footer() {
   return (
@@ -65,7 +58,7 @@ export default async function Footer() {
         id="global-footer-nav"
         className="flex flex-wrap items-center justify-center gap-10"
       >
-        {FOOTER_LINKS.map((link) => {
+        {FOOTER_LINKS().map((link) => {
           const className =
             'text-primary-800 inline-flex items-center gap-2 text-lg'
           const Content = (
