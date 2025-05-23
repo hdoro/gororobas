@@ -1,1 +1,1093 @@
-{"$schema":"https://inlang.com/schema/inlang-message-format","example_message":"Olá mundo {username}","livid_vivid_bullock_foster":"Mais informação sobre","every_inclusive_buzzard_greet":[{"declarations":["input count","local countPlural = count: plural"],"selectors":["countPlural"],"match":{"countPlural=one":"Vegetal relacionado","countPlural=other":"Vegetais relacionados"}}],"format_book":"Livro","format_movie":"Filme","format_social_media":"Rede Social","m_format_video":"Vídeo","format_article":"Artigo","format_podcast":"Podcast","format_academic_work":"Trabalho Acadêmico","format_course":"Curso","format_dataset":"Base de Dados","format_organization":"Organização","format_other":"Outro","format_video":"Vídeo","vegetable_field_content":"Conteúdo livre sobre o vegetal","vegetable_field_edible_parts":"Partes comestíveis","vegetable_field_friends":"Amigues","vegetable_field_gender":"Gênero gramatical","vegetable_field_handle":"Endereço no site","vegetable_field_lifecycles":"Ciclo de vida","vegetable_field_names":"Nomes","vegetable_field_origin":"Origem","vegetable_field_photos":"Fotos","vegetable_field_planting_methods":"Plantio por","vegetable_field_scientific_names":"Nomes científicos","vegetable_field_sources":"Fontes","vegetable_field_strata":"Estrato de cultivo","vegetable_field_development_cycle_max":"Tempo de desenvolvimento máximo","vegetable_field_development_cycle_min":"Tempo de desenvolvimento mínimo","vegetable_field_height_max":"Altura adulta máxima","vegetable_field_height_min":"Altura adulta mínima","vegetable_field_temperature_max":"Temperatura ideal máxima","vegetable_field_temperature_min":"Temperatura ideal mínima","vegetable_field_uses":"Principais usos","vegetable_field_varieties":"Variedades","publish_status_private":"Nota Privada","publish_status_community":"Nota da comunidade","publish_status_public":"Nota Pública","edit_suggestion_status_pending_review":"Em revisão","edit_suggestion_status_merged":"Aprovadas","edit_suggestion_status_rejected":"Rejeitadas","note_type_descoberta":"Descoberta","note_type_ensinamento":"Me ensinaram","note_type_descoberta_experimento":"Experimento","note_type_pergunta":"Pergunta","note_type_inspiracao":"Inspiração","note_type_experimento":"Experimento","wishlist_status_quero_cultivar":"Quero cultivar","wishlist_status_sem_interesse":"Sem interesse","wishlist_status_ja_cultivei":"Já cultivei","wishlist_status_estou_cultivando":"Estou cultivando","gender_feminino":"Feminino","gender_masculino":"Masculino","gender_neutro":"Neutro","source_type_gororobas":"Pessoa no Gororobas","source_type_external":"Externa","tip_subject_plantio":"Plantio","tip_subject_crescimento":"Crescimento","tip_subject_colheita":"Colheita e pós colheita","resource_field_title":"Título","resource_field_format":"Formato","resource_field_url":"URL","resource_field_description":"Sobre esse material","resource_field_tags":"Classificação","resource_field_related_vegetables":"Vegetais relacionados","resource_field_credit_line":"Créditos ou autoria","resource_field_thumbnail":"Imagem de capa","resource_format_action_book":"Ler livro","resource_format_action_film":"Assistir","resource_format_action_social_media":"Acessar","resource_format_action_video":"Assistir","resource_format_action_article":"Ler artigo","resource_format_action_podcast":"Escutar","resource_format_action_course":"Assistir","resource_format_action_academic_work":"Ler","resource_format_action_dataset":"Acessar","resource_format_action_organization":"Conhecer organização","resource_format_action_other":"Acessar","planting_method_broto":"Broto","planting_method_enxerto":"Enxerto ou clonagem","planting_method_estaca":"Estaca, rama ou folha","planting_method_rizoma":"Rizoma","planting_method_semente":"Semente","planting_method_tuberculo":"Tubérculo","edible_part_fruto":"Fruto","edible_part_flor":"Flor","edible_part_folha":"Folha","edible_part_caule":"Caule","edible_part_semente":"Semente","edible_part_casca":"Casca","edible_part_bulbo":"Bulbo","edible_part_broto":"Broto","edible_part_raiz":"Raiz","edible_part_tuberculo":"Tubérculo","edible_part_rizoma":"Rizoma","vegetable_usage_alimento_animal":"Alimento Animal","vegetable_usage_alimento_humano":"Alimento Humano","vegetable_usage_construcao":"Construção","vegetable_usage_cosmetico":"Cosmético","vegetable_usage_materia_organica":"Matéria orgânica","vegetable_usage_medicinal":"Medicinal","vegetable_usage_ornamental":"Ornamental","vegetable_usage_ritualistico":"Ritualístico","vegetable_usage_ecologico":"Ecológico / ambiental","vegetable_lifecycle_explainer_semestral":"Plantas que removemos ou colhemos em até 6 meses ou que morrem naturalmente nesse período","vegetable_lifecycle_explainer_anual":"Plantas que removemos ou colhemos entre 6 meses e 1 ano ou que morrem naturalmente nesse período","vegetable_lifecycle_explainer_bienal":"Plantas que removemos ou colhemos em 1 a 2 anos ou que morrem naturalmente nesse período","vegetable_lifecycle_explainer_perene":"Plantas que cultivamos por mais de 2 anos, como árvores frutíferas. \"Perene\" não significa pra sempre: muitas delas replantamos eventualmente para maximizar a produção, como o café, a banana, a parreira, etc.","vegetable_lifecycle_semestral":"Semestral","vegetable_lifecycle_anual":"Anual","vegetable_lifecycle_bienal":"Bienal","vegetable_lifecycle_perene":"Perene","stratum_explainer_emergente":"Plantas que devem estar acima de todas as outras e receber o máximo de luz - toleram até ~20% de sombra ao longo do dia","stratum_explainer_alto":"Plantas que só ficam abaixo das de estrato emergente - toleram até ~40% de sombra ao longo do dia","stratum_explainer_medio":"Plantas que ficam abaixo das de estrato alto - toleram até ~60% de sombra ao longo do dia","stratum_explainer_baixo":"Plantas que ficam abaixo das de estrato médio - toleram até ~80% de sombra ao longo do dia","stratum_explainer_rasteiro":"Plantas de solo de floresta, sobrevivem sem luz direta","stratum_emergente":"Emergente","stratum_alto":"Alto","stratum_medio":"Médio","stratum_baixo":"Baixo","stratum_rasteiro":"Rasteiro","planting_method_explainer_broto":"Brotos retirados da planta mãe, como gemas ou brotações laterais. Exemplos incluem batata doce, couve, mamão, etc.","planting_method_explainer_enxerto":"Técnica de unir partes de duas plantas diferentes para combinar características desejáveis. Uma parte (o enxerto ou clone) é inserida em outra planta (o porta-enxerto ou cavalo) para que cresçam juntas. Grande parte da produção comercial de muitas frutíferas é feita assim (cacau, cítricas, amoras, etc.).","planting_method_explainer_estaca":"Plantar um pedaço (estaca ou rama) do caule, folha ou raiz de uma planta. A estaca cria raízes e se desenvolve em uma nova planta geneticamente idêntica à original. Usado em roseiras, mandioca e muitas outras.","planting_method_explainer_rizoma":"Rizomas são caules subterrâneos que crescem (também) horizontalmente e emitem raízes e brotos. Cortamos pedaços e plantamos, cada um originando uma nova planta. Banana é o exemplo clássico, mas também a cúrcuma, gengibre e bambu","planting_method_explainer_semente":"Sejam plantadas diretamente no solo, ou em mudas a serem transplantadas","planting_method_explainer_tuberculo":"Tubérculos são caules subterrâneos engrossados que armazenam nutrientes e possuem gemas que originam brotos. O plantio por tubérculo consiste em plantar o tubérculo inteiro ou seccionado, cada parte gerando uma nova planta. Nossas ancestrais já plantaram muuuita batata e inhame assim.","neat_salty_frog_scold":"Email de login enviado ✨","stout_bland_panther_renew":"Clique no link que enviamos para você entrar no Gororobas","weak_watery_leopard_love":"Entrar ou criar conta","major_weird_snake_believe":"Entrar com\n            Google","orange_deft_eagle_dine":"ou via email","solid_deft_worm_endure":"Por que criar um perfil?","round_ornate_bison_pick":"Salve vegetais que quer plantar, já plantou ou está cultivando","helpful_giant_wombat_taste":"Escreva e compartilhe notinhas sobre seus aprendizados na\n                cozinha e na terra","zippy_every_anaconda_believe":"Contribua com melhores informações sobre vegetais e envie suas\n                dicas e recomendações","drab_away_starfish_gleam":"Erro ao enviar email","nice_crisp_wombat_quiz":"Email","stock_crisp_buzzard_feel":"Enviar","this_patient_ant_enrich":"Enviar sua nota","cuddly_misty_gopher_type":"Entrar","royal_least_dog_pop":"Outros materiais","east_spry_mare_race":"Envie um material à biblioteca","soft_equal_trout_empower":"Biblioteca Agroecológica | Gororobas","crisp_front_warthog_hope":"Livros, organizações, vídeos e mais sobre agroecologia, agrofloresta e a luta por terra e território.","mealy_tough_oryx_read":"Buscar por título","main_equal_swallow_clasp":"Formato","gaudy_caring_hare_arise":"Etiquetas","proof_major_ant_trim":"Vegetais","late_grand_grebe_fry":"Biblioteca Agroecológica","tough_teary_dachshund_arise":"Livros, organizações, vídeos e mais sobre agroecologia, agrofloresta e\n          a luta por terra e território.","green_fair_carp_climb":"Nome","big_smug_crocodile_adore":"Buscar por título","north_pretty_scallop_hint":"Filtros","crazy_awful_worm_vent":"Voltar","lofty_mellow_gazelle_empower":"opções","active_legal_albatross_play":"Remover filtro para","maroon_that_turtle_comfort":"Enviar material","fresh_caring_gecko_value":"Nenhum material encontrado","weird_jumpy_tuna_tend":"Conhece algum que não está na biblioteca? O Gororobas é\n                colaborativo, você pode ajudar:","low_smug_mink_pout":"Enviar um material","fluffy_flat_jackal_intend":"Carregar próxima página","simple_civil_tiger_commend":"Foto de {label}","real_ago_yak_adore":"Carregando","aloof_deft_elephant_accept":"Tudo certo, nada foi alterado","tame_zany_giraffe_amaze":"Falha ao atualizar nota","dark_these_gopher_enjoy":"Nota deletada","topical_neat_squid_mend":"Erro ao deletar a nota","cool_mealy_slug_offer":"Por favor, tente novamente.","aloof_heroic_weasel_spin":"Nota deletada","grand_due_squirrel_fall":"Te levando pra outras notas, vai que você se inspira a\n                  escrever mais?","less_alert_larva_stir":"Deletar nota?","tidy_good_racoon_hush":"Essa ação é irreversível, você tem certeza que quer privar o mundo da beleza das suas palavras e curiosidade?","cancel":"Cancelar","delete":"Deletar","edit":"Editar","best_quaint_seal_edit":"Enviada por:","game_wacky_warthog_pet":"Sobre {name}","zany_zany_moose_grow":"Vegetais citados","due_dark_cod_express":"Enviar sua nota","send_note_cta":"Enviar sua nota","notes":"Notas","seemly_odd_cheetah_skip":"Aprendizados e experimentos na cozinha, no plantio e no sacolão","filter_results":"Filtre os resultados","note_types_label":"Tipo(s) de nota","teary_crazy_snake_dash":"Nenhuma nota encontrada","quaint_seemly_beetle_gaze":"Tem algum experimento ou aprendizado pra compartilhar?","load_next_page":"Carregar próxima página","related_notes":"Notas relacionadas","proof_that_cockroach_link":"Ainda não temos notas que conversem com essa. Que tal %LINK%enviar uma%LINK%?","lazy_simple_swan_push":"Enviada por {name} em {date}","round_stout_deer_catch":"Editar perfil","only_this_reindeer_accept":"Tudo certo, nada foi alterado","novel_sound_trout_glow":"Perfil editado com sucesso ✨","good_such_jannes_fetch":"Te enviando pra sua página...","vivid_hour_osprey_honor":"Erro ao editar","bald_merry_cheetah_fetch":"Por favor, tente novamente.","even_only_bison_support":"Modifique seu perfil","patient_bold_antelope_hunt":"Salvar alterações","tidy_careful_florian_gleam":"O nome que você preferir que te chamem, sem formalidades","patient_awful_felix_greet":"Nome","east_key_rook_approve":"Território ou localidade","zesty_funny_herring_pave":"Endereço do seu perfil no site","odd_raw_penguin_mend":"Curiosidades sobre você","smug_front_warthog_flow":"O que quiser falar! Por exemplo: o que te encanta na cozinha? O que te levou à agroecologia?","best_lazy_dragonfly_play":"Caso queira, claro. Pode ser de vegetais que cê gosta, inclusive ✨","upper_full_dragonfly_reap":"Fotinha!","quaint_grassy_puma_beam":"SEM NOME","jolly_just_grizzly_devour":"Como vai aparecer no site:","flat_same_sloth_succeed":"Muuuuuito obrigado pela força - viva a agroecologia!","inner_sad_sloth_pout":[{"declarations":["input is_owner","input name"],"selectors":["is_owner","name"],"match":{"is_owner=true":"Você ainda não fez nenhuma contribuição","name=*":"{name} ainda não fez nenhuma contribuição"}}],"simple_smart_cougar_lend":[{"declarations":["input is_owner","input name"],"selectors":["is_owner","name"],"match":{"is_owner=true":"Fotos que você enviou","name=*":"Fotos de {name}"}}],"great_heroic_butterfly_buy":"Enviar mais uma nota","bright_agent_finch_thrive":[{"declarations":["input is_owner","input name"],"selectors":["is_owner","name"],"match":{"is_owner=true":"Compartilhe suas experiências e aprendizados com a comunidade","name=*":"{name} ainda não compartilhou nenhuma notinha"}}],"busy_red_weasel_pause":[{"declarations":["input is_owner","input name"],"selectors":["is_owner","name"],"match":{"is_owner=true":"Suas contribuições","name=*":"Contribuições de {name}"}}],"tasty_vivid_jan_bless":[{"declarations":["input is_owner","input name"],"selectors":["is_owner"],"match":{"is_owner=true":"Notinhas que você compartilhou","is_owner=*":"Notinhas que {name} compartilhou"}}],"maroon_spry_wombat_flop":"Mostrando apenas {note_count} notas aleatórias","few_warm_quail_dust":"Editar perfil","whole_livid_ox_heal":"Sair ou trocar conta","soft_aloof_wasp_smile":"Sobre {name}","fit_watery_shad_value":"Planta (ou já plantou):","equal_key_mantis_attend":"Quer plantar:","careful_misty_blackbird_value":"Notas","few_flat_wolf_dash":"Fotos","nice_tired_lionfish_sprout":"Contribuições","this_stock_puma_engage":[{"declarations":["input count","local countPlural = count: plural"],"selectors":["countPlural"],"match":{"countPlural=*":"e {count} outros","countPlural=one":"e {count} outro"}}],"teal_flat_osprey_skip":"Sugestão rejeitada","sea_dizzy_raven_find":"Erro ao rejeitar sugestão","wacky_orange_skunk_type":"Sugestão aceita ✨","day_proud_duck_pinch":"Erro ao aceitar sugestão","weary_level_camel_startle":"Aceitar e publicar","chunky_weary_dove_clip":"Rejeitar","large_neat_octopus_aim":"Variedades","cute_slimy_pelican_lift":"{firstName} é de {location}","crazy_ornate_marlin_cuddle":[{"declarations":["input planted_count"],"selectors":["planted_count"],"match":{"planted_count=one":"está cultivando {planted_count} vegetal","planted_count=other":"está cultivando {planted_count} vegetais"}}],"yummy_still_eel_bloom":[{"declarations":["input desired_count"],"selectors":["desired_count"],"match":{"desired_count=one":"quer cultivar uma outra planta","desired_count=other":"quer cultivar outras {desired_count} plantas"}}],"calm_spry_trout_hunt":"Foto de {name}","royal_large_mayfly_stab":"Quem se envolve","quick_dirty_mouse_twist":"Cultivando sabedoria e compartilhando experiências para agroecologizar o\n        mundo ✨","warm_bold_cat_slide":"Sugestão de edição de {name} | Gororobas Agroecologia","civil_deft_dove_achieve":[{"declarations":["input gender","input name"],"selectors":["gender"],"match":{"gender=FEMININO":"Sobre a {name}","gender=MASCULINO":"Sobre o {name}","gender=*":"Sobre {name}"}}],"slow_neat_niklas_bump":[{"declarations":["input gender","input name"],"selectors":["gender"],"match":{"gender=FEMININO":"Amigues da {name}","gender=MASCULINO":"Amigues do {name}","gender=*":"Amigues de {name}"}}],"noble_east_jurgen_gleam":[{"declarations":["input gender","input name"],"selectors":["gender","name"],"match":{"gender=FEMININO":"Plantas que gostam de serem plantadas e estarem próximas à {name}","gender=MASCULINO":"Plantas que gostam de serem plantadas e estarem próximas ao {name}","gender=*":"Plantas que gostam de serem plantadas e estarem próximas a {name}"}}],"tidy_swift_wren_breathe":"vegetal","noble_spicy_wolf_feast":[{"declarations":["input gender"],"selectors":["gender"],"match":{"gender=FEMININO":"Sugestões para a","gender=MASCULINO":"Sugestões para o","gender=*":"Sugestões para"}}],"teal_mellow_cod_grip":[{"declarations":["input count"],"selectors":["count"],"match":{"count=one":"Enviada por:","count=other":"Enviadas por:"}}],"ornate_smart_skunk_buy":[{"declarations":["input count"],"selectors":["count"],"match":{"count=one":"{count} alteração","count=other":"{count} alterações"}}],"male_polite_myna_arrive":"Sugestões em aberto | Gororobas Agroecologia","aqua_swift_jaguar_dash":"Sugestões em aberto","jolly_key_maggot_flip":"Não há sugestões precisando de revisão. Tudo certin ✨","aloof_acidic_dachshund_pout":"Tudo certo, nada foi alterado","sweet_simple_butterfly_drum":"Editar {name} | Gororobas","stale_only_parakeet_engage":"{name} na Agroecologia | Gororobas","next_curly_weasel_build":[{"declarations":["input image_label","input name"],"selectors":["image_label","name"],"match":{"name=*":"Foto de {name}","image_label=*":"Foto de {name} ({image_label})"}}],"mad_antsy_lobster_engage":[{"declarations":["input gender","input name"],"selectors":["gender"],"match":{"gender=MASCULINO":"O {name}","gender=FEMININO":"A {name}","gender=*":"{name}"}}],"sharp_wacky_nuthatch_thrive":[{"declarations":["input alt_names","input gender"],"selectors":["gender"],"match":{"gender=MASCULINO":", também conhecido como {alt_names}","gender=FEMININO":", também conhecida como {alt_names}","gender=*":", ou {alt_names}"}}],"even_legal_tortoise_dash":[{"declarations":["input is_conjunction","input remaining"],"selectors":["is_conjunction"],"match":{"is_conjunction=true":"mais {remaining}","is_conjunction=false":"{remaining} outro"}}],"gaudy_bland_racoon_pick":", surgiu de {origin}","wild_green_antelope_snap":[{"declarations":["input gender","input methods"],"selectors":["gender"],"match":{"gender=MASCULINO":"Plantamos ele através de {methods}.","gender=FEMININO":"Plantamos ela através de {methods}.","gender=*":"Plantamos através de {methods}."}}],"silly_plain_vulture_lead":[{"declarations":["input strata","input strata_count","local plural = strata_count: plural"],"selectors":["plural"],"match":{"plural=one":"Se desenvolve no estrato {strata}.","plural=other":"Se desenvolve nos estratos {strata}."}}],"loose_bad_bat_ascend":[{"declarations":["input friends","input gender"],"selectors":["gender"],"match":{"gender=MASCULINO":"Ele se dá bem em consórcios com {friends}.","gender=FEMININO":"Ela se dá bem em consórcios com {friends}.","gender=*":"Se dá bem em consórcios com {friends}."}}],"minor_sweet_martin_trust":"Suas variedades incluem {varieties}.","nice_topical_dolphin_hike":"Quem contribuiu","tidy_quiet_cow_clasp":"Pessoas no Gororobas que contribuíram com fotos, dicas e/ou edições","watery_born_duck_view":[{"declarations":["input gender","input name"],"selectors":["gender"],"match":{"gender=MASCULINO":"Últimas mudanças na página do {name}","gender=FEMININO":"Últimas mudanças na página da {name}","gender=*":"Últimas mudanças na página de {name}"}}],"late_arable_bulldog_blink":"Ainda não temos dicas sobre esse vegetal. Que tal enviar a sua?","patient_real_crab_nail":"Sugestões e dicas","busy_candid_cockroach_radiate":"Variedades","loud_happy_rooster_tap":"Fontes e recursos","stale_last_bulldog_rush":"Fontes que embasaram essas informações e recursos para ir mais a\n              fundo","bad_honest_salmon_arise":"Enviar sua nota","orange_front_myna_revive":"Aprendizados e experimentos","simple_heroic_cougar_catch":"Ainda não temos notas sobre esse vegetal. Que tal","steep_weird_kudu_gaze":"enviar uma","tame_loud_alligator_zap":[{"declarations":["input gender","input name"],"selectors":["gender"],"match":{"gender=MASCULINO":"Editar página do {name}","gender=FEMININO":"Editar página da {name}","gender=*":"Editar página de {name}"}}],"spare_good_boar_compose":[{"declarations":["input gender"],"selectors":["gender"],"match":{"gender=FEMININO":"Também conhecida como","gender=*":"Também conhecido como"}}],"late_dry_salmon_pinch":"Nomes científicos","empty_acidic_alligator_renew":"Origem","smug_misty_barbel_thrive":"Principais usos","stout_acidic_antelope_dig":"Partes comestíveis","tame_pink_toad_relish":"Estrato","wise_bald_eel_treat":"Camada vertical conforme necessidade de luz","equal_big_piranha_zoom":"Duração do o plantio até a morte ou colheita","last_awful_mink_assure":"Ciclo de vida","loved_odd_leopard_dare":"Métodos de plantio e propagação","away_elegant_earthworm_offer":"Temperatura ideal","away_cuddly_elephant_twist":[{"declarations":["input gender"],"selectors":["gender"],"match":{"gender=FEMININO":"Altura quando adulta","gender=*":"Altura quando adulto"}}],"hour_born_dragonfly_favor":"Tempo até produzir","less_top_meerkat_flip":"Quanto tempo até começarmos a colher","east_best_tadpole_treat":"Alguma informação errada ou faltando?","ago_mad_penguin_bump":"Você pode <link>enviar uma sugestão</link>, essa enciclopédia é colaborativa!","weird_slow_impala_loop":"Quem já planta","yummy_cute_panda_approve":"Quem quer plantar","flat_key_warthog_bless":"Erro ao atualizar seu interesse","giant_witty_hyena_jump":"Interesse atualizado!","seemly_crazy_beetle_kiss":"Crie uma conta no Gororobas","dirty_giant_cougar_ask":"Para salvar sua listinha de plantas você precisa ter uma conta. Só\n              assim podemos lembrar suas escolhas sem embolar quem escolheu o\n              quê 🤗","equal_north_mammoth_jest":"Entrar ou criar conta","tangy_slimy_shrimp_offer":"Qual seu interesse nesta planta?","petty_best_snake_coax":"Visão geral","extra_novel_robin_loop":"Sugestões e dicas","loud_real_jackal_gaze":"Variedades","pretty_active_jannes_twirl":"Curiosidades","tangy_patchy_salmon_treat":"Amizades e consórcios","top_muddy_skunk_seek":"Fontes e recursos","wide_topical_blackbird_dial":"Quem contribuiu","major_slimy_badger_play":"Aprendizados e experimentos","cute_ago_niklas_scoop":"Tabela de conteúdo","vexed_upper_lemur_aim":"Sugerir edição","mellow_fair_scallop_nurture":"Todos os vegetais e suas propriedades agroecológicas | Gororobas","bland_ok_pigeon_sway":"Descubra como plantar centenas de vegetais de forma agroecológica. O Gororobas é uma enciclopédia colaborativa, participe também :)","each_home_thrush_forgive":"Buscar por nome","neat_lucky_badger_zoom":"Estrato","zany_aware_beaver_pet":"Principais usos","great_true_sloth_flip":"Plantio por","fluffy_aqua_ibex_love":"Partes comestíveis","witty_glad_ocelot_persist":"Tempo até produzir","tiny_careful_boar_hack":"Altura","gray_agent_tuna_wave":"Temperatura","cozy_formal_kestrel_peel":"Vegetais","minor_large_toucan_devour":"Conhecimento em agroecologia sobre mais de 400 vegetais","day_tense_goose_spur":"Nome","grassy_calm_baboon_lead":"Buscar por nome","pretty_simple_seahorse_cut":"Filtros","mushy_bad_lynx_rest":"Voltar","dizzy_that_robin_conquer":"Remover filtro para {label}","dull_real_mammoth_affirm":"Nenhum vegetal encontrado","silly_main_goat_tend":"Conhece algum que não está na Gororobas? Esse site é\n                colaborativo, você pode ajudar:","basic_free_mouse_revive":"Enviar um vegetal","fun_bold_vulture_believe":"Carregar próxima página","north_frail_grebe_walk":"Gororobas","vexed_dry_sparrow_express":"Aprendendo juntes a fazer agroecologia - Por terra, território, e gororobas!","moving_red_hornet_hike":"Gororobas Agroecologia","pretty_fancy_camel_grip":"Fotos de vegetais com o título: Por terra, território, e gororobas","dull_long_mantis_flow":"Página não <br></br>encontrada","real_elegant_bison_drip":"Voltar à página inicial","tasty_bland_grebe_endure":"Ilustração de vegetais flutuando no espaço","round_tense_cow_clasp":"Página não encontrada","fair_clear_shrimp_flow":"Gororobas - Território Digital de Agroecologia","lazy_salty_kitten_cuddle":"Enciclopédia colaborativa de conhecimento em agroecologia sobre mais de 400 vegetais","fresh_new_panther_quiz":"Gororobas Agroecologia","zesty_zany_felix_flow":"O Gororobas sonha ser um território digital de encontro entre arquipélagos dos seres em transição agroecológica, compartilhando conhecimento territorializado sobre plantar, cozinhar e compartilhar o alimento, o cuidado, a luta, e a terra. Um espaço para encantar e esperançar como um verbo, mobilizando a ação.","gororobas_email":"ola@gororobas.com","patchy_plane_sawfish_shine":"Sugestão de edição enviada","knotty_soft_mantis_create":"Recebemos sua sugestão e vamos avaliar em breve - brigadin! 🤗","helpful_tangy_impala_jest":"Entrar no Gororobas","tasty_happy_midge_laugh":"Boas vindas ao Gororobas!","sea_giant_ray_race":"O Gororobas sonha ser um território digital de encontro entre arquipélagos dos seres em transição agroecológica, compartilhando conhecimento territorializado sobre plantar, cozinhar e compartilhar o alimento, o cuidado, a luta, e a terra. Um espaço para encantar e esperançar como um verbo, mobilizando a ação.","great_tangy_bullock_love":"🥕 Entrar na sua conta","awful_aqua_tern_flip":"O que você pode fazer no Gororobas:","arable_major_seahorse_seek":"🌱 Salvar vegetais que quer plantar, já plantou ou está cultivando","dry_soft_chipmunk_buy":"📝 Escrever e compartilhar notinhas sobre seus aprendizados na cozinha e na terra","raw_same_cod_absorb":"💬 Contribuir com melhores informações sobre vegetais e envie suas dicas e recomendações","still_inclusive_jellyfish_prosper":"📚 Contribuir para a biblioteca de recursos sobre agroecologia e agrofloresta, salvando suas reflexões sobre cada conteúdo","frail_weary_slug_flop":"Gororobas Agroecologia","mellow_busy_jackdaw_bless":"disponível em:","great_light_barbel_sew":"Por","just_left_termite_inspire":"Novo item","slow_plain_giraffe_fear":"Segure para mover","patient_witty_gecko_enchant":"Deletar item #{number}","drab_late_snail_gaze":"Hoje","active_formal_wallaby_snip":"Escolha uma data","major_hour_okapi_hope":"Arquivo inválido","fancy_actual_albatross_gaze":"Apenas imagens são aceitas.","novel_fluffy_orangutan_love":"Imagem muito grande","muddy_these_crab_lend":"Envie uma imagem de até 3MB.","direct_pink_rook_tickle":"Imagem selecionada","helpful_house_carp_promise":"Remover imagem","ornate_such_weasel_reap":"Clique aqui ou arraste a foto","misty_lower_quail_fond":"Rótulo","merry_misty_tapir_buzz":"Sobre o que é a imagem?","actual_elegant_buzzard_sway":"Fontes","slow_nice_puma_pride":"Nova fonte","large_helpful_myna_dash":"Imagem","weary_real_mantis_burn":"Remover imagem","gaudy_fluffy_fox_intend":"Foto de {label}","new_shy_gibbon_edit":"Origem da {label}","awake_least_javelina_forgive":"Créditos","bright_small_niklas_approve":"Que pessoa ou organização produziu a {label}?","small_jolly_lemur_yell":"Fonte","brief_jolly_buzzard_grasp":"De preferência um link our URL","dirty_silly_rook_rush":"Ex: https://site.br/pagina-da-{label}","spare_dizzy_earthworm_trust":"Pessoas","keen_brief_goose_enjoy":"Variedade sem nome","key_lofty_cuckoo_persist":"Editar variedade","mad_dark_haddock_achieve":"Fechar","neat_maroon_peacock_splash":"Nomes","inner_crisp_anaconda_nail":"Novo nome","livid_great_opossum_affirm":"Nome da variedade #{number}","pretty_arable_jan_cook":"Fotos","sharp_knotty_niklas_flop":"Nova foto","zesty_only_panda_absorb":"Foto #{number}","dirty_round_buzzard_empower":"Link","awake_wise_lobster_support":"Menções","merry_spare_bat_yell":"Imagem","mellow_white_grizzly_support":"Video","aqua_blue_rabbit_delight":"Negrito","inner_plane_finch_seek":"Itálico","slow_sharp_wombat_persist":"Riscado","stout_novel_wolf_dust":"Lista não ordenada","next_yummy_okapi_kick":"Lista numérica","raw_heavy_antelope_clap":"Link","minor_icy_dachshund_exhale":"Erro ao enviar foto","steep_sharp_mammoth_succeed":"Confira se tem conexão à internet e tente novamente","tiny_each_zebra_mend":"Subindo imagem...","mad_left_nils_roar":"Foto","livid_topical_fish_renew":"Adicionar","fit_inclusive_dove_dine":[{"declarations":["input label","input sources"],"selectors":["label","sources"],"match":{"label=false, sources=false":"imagem","label=false, sources=*":"imagem de {label}","label=*, sources=false":"imagem por {sources}","label=*":"imagem de {label} por {sources}"}}],"close_slimy_cowfish_hunt":"Editar link","petty_born_termite_jump":"Salvar e fechar","just_just_fireant_dart":"Deletar link","jumpy_soft_nils_hack":"(menção)","crazy_tame_duck_achieve":"Carregando menções...","wide_small_peacock_ask":"Nenhum resultado encontrado","slimy_funny_tuna_favor":"Adicionar vídeo","tasty_lazy_quail_endure":"Adicionar","large_awake_hyena_arise":"Vídeo de YouTube","real_few_gopher_bump":"Slide anterior","grassy_same_toucan_delight":"Próximo slide","smart_formal_flea_buy":"Fechar","merry_many_walrus_favor":[{"declarations":["input subFieldsWithError","local plural = subFieldsWithError: plural"],"selectors":["plural"],"match":{"plural=one":"{subFieldsWithError} campo com erro","plural=*":"{subFieldsWithError} campos com erro"}}],"every_calm_termite_accept":"Close","warm_active_horse_persist":"Gororobas é um espaço colaborativo","pink_neat_guppy_create":"Iríamos adorar receber suas notinhas ou conhecimento sobre plantas e agroecologia","proof_orange_gadfly_coax":"Envie sua nota","smart_slimy_hedgehog_radiate":"Envie material à biblioteca","mushy_due_beaver_shine":[{"declarations":["input gender","input name"],"selectors":["gender"],"match":{"gender=MASCULINO":"Enviar uma dica sobre o {name}","gender=FEMININO":"Enviar uma dica sobre a {name}","gender=*":"Enviar uma dica sobre {name}"}}],"new_spry_llama_harbor":"Dica atualizada!","topical_red_mantis_enchant":"Continuar navegando","tired_level_snail_roar":"Vegetais","least_polite_elephant_burn":"Notas","noble_good_tortoise_rush":"Biblioteca Agroecológica","quaint_nimble_racoon_talk":"Código fonte","broad_deft_cockroach_spin":"Página inicial","tired_every_warbler_lock":"Rodapé","alive_drab_squirrel_explore":"Navegação do rodapé","mellow_born_mammoth_mop":"Fotos em tela cheia","known_patient_iguana_race":"Vegetais","cool_arable_jackal_jest":"Notas","glad_agent_canary_peek":"Biblioteca","fine_factual_hound_compose":"Navegação do cabeçalho","grand_same_puffin_stir":"Por terra, território, <br></br> e <strong>gororobas</strong>","actual_every_halibut_find":"Enciclopédia colaborativa de conhecimento em agroecologia sobre mais de 400 vegetais","proof_safe_warbler_arise":"Buscar vegetais...","left_lower_cobra_borrow":"Buscar","stock_weak_goat_race":"Navegue todos os vegetais","legal_ago_turkey_devour":"Foto da página do milho na enciclopédia do Gororobas","main_trite_thrush_prosper":"Enciclopédia agroecológica","this_caring_hound_praise":"Informações sobre centenas de vegetais baseadas em conhecimentos e experiências de diversas pessoas, <strong>incluindo você</strong>","weary_great_mule_charm":"Todos os vegetais","spicy_flaky_antelope_lead":"Envie novo vegetal","loud_any_puffin_gleam":"Aprendizados e experimentos","witty_tasty_skunk_pause":"Na cozinha, no plantio e no sacolão. Uma rede social agroecológica, por assim dizer","lost_main_kudu_engage":"Enviar sua nota","helpful_loose_gecko_jest":"Todas as notas","north_green_worm_loop":"Biblioteca agroecológica","basic_teal_fish_laugh":"Livros, organizações, vídeos e mais sobre agroecologia, agrofloresta e a luta por terra e território.","loud_extra_squirrel_value":"Enviar um material","direct_ok_lamb_snip":"Todos materiais","heroic_jolly_pug_clap":"Contribuições recentes","equal_shy_chicken_burn":"Quem se envolve","topical_gross_macaw_trust":"Cultivando sabedoria e compartilhando experiências para agroecologizar o mundo ✨","witty_long_lynx_launch":"Enviar nota","swift_neat_bulldog_dazzle":"Notas","alive_sunny_raven_dazzle":"Vegetais","these_shy_millipede_evoke":"Biblioteca"}
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "example_message": "Olá mundo {username}",
+  "livid_vivid_bullock_foster": "Mais informação sobre",
+  "every_inclusive_buzzard_greet": [
+    {
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
+      "match": {
+        "countPlural=one": "Vegetal relacionado",
+        "countPlural=other": "Vegetais relacionados"
+      }
+    }
+  ],
+  "format_book": "Livro",
+  "format_movie": "Filme",
+  "format_social_media": "Rede Social",
+  "m_format_video": "Vídeo",
+  "format_article": "Artigo",
+  "format_podcast": "Podcast",
+  "format_academic_work": "Trabalho Acadêmico",
+  "format_course": "Curso",
+  "format_dataset": "Base de Dados",
+  "format_organization": "Organização",
+  "format_other": "Outro",
+  "format_video": "Vídeo",
+  "vegetable_field_content": "Conteúdo livre sobre o vegetal",
+  "vegetable_field_edible_parts": "Partes comestíveis",
+  "vegetable_field_friends": "Amigues",
+  "vegetable_field_gender": "Gênero gramatical",
+  "vegetable_field_handle": "Endereço no site",
+  "vegetable_field_lifecycles": "Ciclo de vida",
+  "vegetable_field_names": "Nomes",
+  "vegetable_field_origin": "Origem",
+  "vegetable_field_photos": "Fotos",
+  "vegetable_field_planting_methods": "Plantio por",
+  "vegetable_field_scientific_names": "Nomes científicos",
+  "vegetable_field_sources": "Fontes",
+  "vegetable_field_strata": "Estrato de cultivo",
+  "vegetable_field_development_cycle_max": "Tempo de desenvolvimento máximo",
+  "vegetable_field_development_cycle_min": "Tempo de desenvolvimento mínimo",
+  "vegetable_field_height_max": "Altura adulta máxima",
+  "vegetable_field_height_min": "Altura adulta mínima",
+  "vegetable_field_temperature_max": "Temperatura ideal máxima",
+  "vegetable_field_temperature_min": "Temperatura ideal mínima",
+  "vegetable_field_uses": "Principais usos",
+  "vegetable_field_varieties": "Variedades",
+  "publish_status_private": "Nota Privada",
+  "publish_status_community": "Nota da comunidade",
+  "publish_status_public": "Nota Pública",
+  "edit_suggestion_status_pending_review": "Em revisão",
+  "edit_suggestion_status_merged": "Aprovadas",
+  "edit_suggestion_status_rejected": "Rejeitadas",
+  "note_type_descoberta": "Descoberta",
+  "note_type_ensinamento": "Me ensinaram",
+  "note_type_descoberta_experimento": "Experimento",
+  "note_type_pergunta": "Pergunta",
+  "note_type_inspiracao": "Inspiração",
+  "note_type_experimento": "Experimento",
+  "wishlist_status_quero_cultivar": "Quero cultivar",
+  "wishlist_status_sem_interesse": "Sem interesse",
+  "wishlist_status_ja_cultivei": "Já cultivei",
+  "wishlist_status_estou_cultivando": "Estou cultivando",
+  "gender_feminino": "Feminino",
+  "gender_masculino": "Masculino",
+  "gender_neutro": "Neutro",
+  "source_type_gororobas": "Pessoa no Gororobas",
+  "source_type_external": "Externa",
+  "tip_subject_plantio": "Plantio",
+  "tip_subject_crescimento": "Crescimento",
+  "tip_subject_colheita": "Colheita e pós colheita",
+  "resource_field_title": "Título",
+  "resource_field_format": "Formato",
+  "resource_field_url": "URL",
+  "resource_field_description": "Sobre esse material",
+  "resource_field_tags": "Classificação",
+  "resource_field_related_vegetables": "Vegetais relacionados",
+  "resource_field_credit_line": "Créditos ou autoria",
+  "resource_field_thumbnail": "Imagem de capa",
+  "resource_format_action_book": "Ler livro",
+  "resource_format_action_film": "Assistir",
+  "resource_format_action_social_media": "Acessar",
+  "resource_format_action_video": "Assistir",
+  "resource_format_action_article": "Ler artigo",
+  "resource_format_action_podcast": "Escutar",
+  "resource_format_action_course": "Assistir",
+  "resource_format_action_academic_work": "Ler",
+  "resource_format_action_dataset": "Acessar",
+  "resource_format_action_organization": "Conhecer organização",
+  "resource_format_action_other": "Acessar",
+  "planting_method_broto": "Broto",
+  "planting_method_enxerto": "Enxerto ou clonagem",
+  "planting_method_estaca": "Estaca, rama ou folha",
+  "planting_method_rizoma": "Rizoma",
+  "planting_method_semente": "Semente",
+  "planting_method_tuberculo": "Tubérculo",
+  "edible_part_fruto": "Fruto",
+  "edible_part_flor": "Flor",
+  "edible_part_folha": "Folha",
+  "edible_part_caule": "Caule",
+  "edible_part_semente": "Semente",
+  "edible_part_casca": "Casca",
+  "edible_part_bulbo": "Bulbo",
+  "edible_part_broto": "Broto",
+  "edible_part_raiz": "Raiz",
+  "edible_part_tuberculo": "Tubérculo",
+  "edible_part_rizoma": "Rizoma",
+  "vegetable_usage_alimento_animal": "Alimento Animal",
+  "vegetable_usage_alimento_humano": "Alimento Humano",
+  "vegetable_usage_construcao": "Construção",
+  "vegetable_usage_cosmetico": "Cosmético",
+  "vegetable_usage_materia_organica": "Matéria orgânica",
+  "vegetable_usage_medicinal": "Medicinal",
+  "vegetable_usage_ornamental": "Ornamental",
+  "vegetable_usage_ritualistico": "Ritualístico",
+  "vegetable_usage_ecologico": "Ecológico / ambiental",
+  "vegetable_lifecycle_explainer_semestral": "Plantas que removemos ou colhemos em até 6 meses ou que morrem naturalmente nesse período",
+  "vegetable_lifecycle_explainer_anual": "Plantas que removemos ou colhemos entre 6 meses e 1 ano ou que morrem naturalmente nesse período",
+  "vegetable_lifecycle_explainer_bienal": "Plantas que removemos ou colhemos em 1 a 2 anos ou que morrem naturalmente nesse período",
+  "vegetable_lifecycle_explainer_perene": "Plantas que cultivamos por mais de 2 anos, como árvores frutíferas. \"Perene\" não significa pra sempre: muitas delas replantamos eventualmente para maximizar a produção, como o café, a banana, a parreira, etc.",
+  "vegetable_lifecycle_semestral": "Semestral",
+  "vegetable_lifecycle_anual": "Anual",
+  "vegetable_lifecycle_bienal": "Bienal",
+  "vegetable_lifecycle_perene": "Perene",
+  "stratum_explainer_emergente": "Plantas que devem estar acima de todas as outras e receber o máximo de luz - toleram até ~20% de sombra ao longo do dia",
+  "stratum_explainer_alto": "Plantas que só ficam abaixo das de estrato emergente - toleram até ~40% de sombra ao longo do dia",
+  "stratum_explainer_medio": "Plantas que ficam abaixo das de estrato alto - toleram até ~60% de sombra ao longo do dia",
+  "stratum_explainer_baixo": "Plantas que ficam abaixo das de estrato médio - toleram até ~80% de sombra ao longo do dia",
+  "stratum_explainer_rasteiro": "Plantas de solo de floresta, sobrevivem sem luz direta",
+  "stratum_emergente": "Emergente",
+  "stratum_alto": "Alto",
+  "stratum_medio": "Médio",
+  "stratum_baixo": "Baixo",
+  "stratum_rasteiro": "Rasteiro",
+  "planting_method_explainer_broto": "Brotos retirados da planta mãe, como gemas ou brotações laterais. Exemplos incluem batata doce, couve, mamão, etc.",
+  "planting_method_explainer_enxerto": "Técnica de unir partes de duas plantas diferentes para combinar características desejáveis. Uma parte (o enxerto ou clone) é inserida em outra planta (o porta-enxerto ou cavalo) para que cresçam juntas. Grande parte da produção comercial de muitas frutíferas é feita assim (cacau, cítricas, amoras, etc.).",
+  "planting_method_explainer_estaca": "Plantar um pedaço (estaca ou rama) do caule, folha ou raiz de uma planta. A estaca cria raízes e se desenvolve em uma nova planta geneticamente idêntica à original. Usado em roseiras, mandioca e muitas outras.",
+  "planting_method_explainer_rizoma": "Rizomas são caules subterrâneos que crescem (também) horizontalmente e emitem raízes e brotos. Cortamos pedaços e plantamos, cada um originando uma nova planta. Banana é o exemplo clássico, mas também a cúrcuma, gengibre e bambu",
+  "planting_method_explainer_semente": "Sejam plantadas diretamente no solo, ou em mudas a serem transplantadas",
+  "planting_method_explainer_tuberculo": "Tubérculos são caules subterrâneos engrossados que armazenam nutrientes e possuem gemas que originam brotos. O plantio por tubérculo consiste em plantar o tubérculo inteiro ou seccionado, cada parte gerando uma nova planta. Nossas ancestrais já plantaram muuuita batata e inhame assim.",
+  "neat_salty_frog_scold": "Email de login enviado ✨",
+  "stout_bland_panther_renew": "Clique no link que enviamos para você entrar no Gororobas",
+  "weak_watery_leopard_love": "Entrar ou criar conta",
+  "major_weird_snake_believe": "Entrar com\n            Google",
+  "orange_deft_eagle_dine": "ou via email",
+  "solid_deft_worm_endure": "Por que criar um perfil?",
+  "round_ornate_bison_pick": "Salve vegetais que quer plantar, já plantou ou está cultivando",
+  "helpful_giant_wombat_taste": "Escreva e compartilhe notinhas sobre seus aprendizados na\n                cozinha e na terra",
+  "zippy_every_anaconda_believe": "Contribua com melhores informações sobre vegetais e envie suas\n                dicas e recomendações",
+  "drab_away_starfish_gleam": "Erro ao enviar email",
+  "nice_crisp_wombat_quiz": "Email",
+  "stock_crisp_buzzard_feel": "Enviar",
+  "this_patient_ant_enrich": "Enviar sua nota",
+  "cuddly_misty_gopher_type": "Entrar",
+  "royal_least_dog_pop": "Outros materiais",
+  "east_spry_mare_race": "Envie um material à biblioteca",
+  "soft_equal_trout_empower": "Biblioteca Agroecológica | Gororobas",
+  "crisp_front_warthog_hope": "Livros, organizações, vídeos e mais sobre agroecologia, agrofloresta e a luta por terra e território.",
+  "mealy_tough_oryx_read": "Buscar por título",
+  "main_equal_swallow_clasp": "Formato",
+  "gaudy_caring_hare_arise": "Etiquetas",
+  "proof_major_ant_trim": "Vegetais",
+  "late_grand_grebe_fry": "Biblioteca Agroecológica",
+  "tough_teary_dachshund_arise": "Livros, organizações, vídeos e mais sobre agroecologia, agrofloresta e\n          a luta por terra e território.",
+  "green_fair_carp_climb": "Nome",
+  "big_smug_crocodile_adore": "Buscar por título",
+  "north_pretty_scallop_hint": "Filtros",
+  "crazy_awful_worm_vent": "Voltar",
+  "lofty_mellow_gazelle_empower": "opções",
+  "active_legal_albatross_play": "Remover filtro para",
+  "maroon_that_turtle_comfort": "Enviar material",
+  "fresh_caring_gecko_value": "Nenhum material encontrado",
+  "weird_jumpy_tuna_tend": "Conhece algum que não está na biblioteca? O Gororobas é\n                colaborativo, você pode ajudar:",
+  "low_smug_mink_pout": "Enviar um material",
+  "fluffy_flat_jackal_intend": "Carregar próxima página",
+  "simple_civil_tiger_commend": "Foto de {label}",
+  "real_ago_yak_adore": "Carregando",
+  "aloof_deft_elephant_accept": "Tudo certo, nada foi alterado",
+  "tame_zany_giraffe_amaze": "Falha ao atualizar nota",
+  "dark_these_gopher_enjoy": "Nota deletada",
+  "topical_neat_squid_mend": "Erro ao deletar a nota",
+  "cool_mealy_slug_offer": "Por favor, tente novamente.",
+  "aloof_heroic_weasel_spin": "Nota deletada",
+  "grand_due_squirrel_fall": "Te levando pra outras notas, vai que você se inspira a\n                  escrever mais?",
+  "less_alert_larva_stir": "Deletar nota?",
+  "tidy_good_racoon_hush": "Essa ação é irreversível, você tem certeza que quer privar o mundo da beleza das suas palavras e curiosidade?",
+  "cancel": "Cancelar",
+  "delete": "Deletar",
+  "edit": "Editar",
+  "best_quaint_seal_edit": "Enviada por:",
+  "game_wacky_warthog_pet": "Sobre {name}",
+  "zany_zany_moose_grow": "Vegetais citados",
+  "due_dark_cod_express": "Enviar sua nota",
+  "send_note_cta": "Enviar sua nota",
+  "notes": "Notas",
+  "seemly_odd_cheetah_skip": "Aprendizados e experimentos na cozinha, no plantio e no sacolão",
+  "filter_results": "Filtre os resultados",
+  "note_types_label": "Tipo(s) de nota",
+  "teary_crazy_snake_dash": "Nenhuma nota encontrada",
+  "quaint_seemly_beetle_gaze": "Tem algum experimento ou aprendizado pra compartilhar?",
+  "load_next_page": "Carregar próxima página",
+  "related_notes": "Notas relacionadas",
+  "proof_that_cockroach_link": "Ainda não temos notas que conversem com essa. Que tal %LINK%enviar uma%LINK%?",
+  "lazy_simple_swan_push": "Enviada por {name} em {date}",
+  "round_stout_deer_catch": "Editar perfil",
+  "only_this_reindeer_accept": "Tudo certo, nada foi alterado",
+  "novel_sound_trout_glow": "Perfil editado com sucesso ✨",
+  "good_such_jannes_fetch": "Te enviando pra sua página...",
+  "vivid_hour_osprey_honor": "Erro ao editar",
+  "bald_merry_cheetah_fetch": "Por favor, tente novamente.",
+  "even_only_bison_support": "Modifique seu perfil",
+  "patient_bold_antelope_hunt": "Salvar alterações",
+  "tidy_careful_florian_gleam": "O nome que você preferir que te chamem, sem formalidades",
+  "patient_awful_felix_greet": "Nome",
+  "east_key_rook_approve": "Território ou localidade",
+  "zesty_funny_herring_pave": "Endereço do seu perfil no site",
+  "odd_raw_penguin_mend": "Curiosidades sobre você",
+  "smug_front_warthog_flow": "O que quiser falar! Por exemplo: o que te encanta na cozinha? O que te levou à agroecologia?",
+  "best_lazy_dragonfly_play": "Caso queira, claro. Pode ser de vegetais que cê gosta, inclusive ✨",
+  "upper_full_dragonfly_reap": "Fotinha!",
+  "quaint_grassy_puma_beam": "SEM NOME",
+  "jolly_just_grizzly_devour": "Como vai aparecer no site:",
+  "flat_same_sloth_succeed": "Muuuuuito obrigado pela força - viva a agroecologia!",
+  "inner_sad_sloth_pout": [
+    {
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
+      "match": {
+        "is_owner=true": "Você ainda não fez nenhuma contribuição",
+        "name=*": "{name} ainda não fez nenhuma contribuição"
+      }
+    }
+  ],
+  "simple_smart_cougar_lend": [
+    {
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
+      "match": {
+        "is_owner=true": "Fotos que você enviou",
+        "name=*": "Fotos de {name}"
+      }
+    }
+  ],
+  "great_heroic_butterfly_buy": "Enviar mais uma nota",
+  "bright_agent_finch_thrive": [
+    {
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
+      "match": {
+        "is_owner=true": "Compartilhe suas experiências e aprendizados com a comunidade",
+        "name=*": "{name} ainda não compartilhou nenhuma notinha"
+      }
+    }
+  ],
+  "busy_red_weasel_pause": [
+    {
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner",
+        "name"
+      ],
+      "match": {
+        "is_owner=true": "Suas contribuições",
+        "name=*": "Contribuições de {name}"
+      }
+    }
+  ],
+  "tasty_vivid_jan_bless": [
+    {
+      "declarations": [
+        "input is_owner",
+        "input name"
+      ],
+      "selectors": [
+        "is_owner"
+      ],
+      "match": {
+        "is_owner=true": "Notinhas que você compartilhou",
+        "is_owner=*": "Notinhas que {name} compartilhou"
+      }
+    }
+  ],
+  "maroon_spry_wombat_flop": "Mostrando apenas {note_count} notas aleatórias",
+  "few_warm_quail_dust": "Editar perfil",
+  "whole_livid_ox_heal": "Sair ou trocar conta",
+  "soft_aloof_wasp_smile": "Sobre {name}",
+  "fit_watery_shad_value": "Planta (ou já plantou):",
+  "equal_key_mantis_attend": "Quer plantar:",
+  "careful_misty_blackbird_value": "Notas",
+  "few_flat_wolf_dash": "Fotos",
+  "nice_tired_lionfish_sprout": "Contribuições",
+  "this_stock_puma_engage": [
+    {
+      "declarations": [
+        "input count",
+        "local countPlural = count: plural"
+      ],
+      "selectors": [
+        "countPlural"
+      ],
+      "match": {
+        "countPlural=*": "e {count} outros",
+        "countPlural=one": "e {count} outro"
+      }
+    }
+  ],
+  "teal_flat_osprey_skip": "Sugestão rejeitada",
+  "sea_dizzy_raven_find": "Erro ao rejeitar sugestão",
+  "wacky_orange_skunk_type": "Sugestão aceita ✨",
+  "day_proud_duck_pinch": "Erro ao aceitar sugestão",
+  "weary_level_camel_startle": "Aceitar e publicar",
+  "chunky_weary_dove_clip": "Rejeitar",
+  "large_neat_octopus_aim": "Variedades",
+  "cute_slimy_pelican_lift": "{firstName} é de {location}",
+  "crazy_ornate_marlin_cuddle": [
+    {
+      "declarations": [
+        "input planted_count"
+      ],
+      "selectors": [
+        "planted_count"
+      ],
+      "match": {
+        "planted_count=one": "está cultivando {planted_count} vegetal",
+        "planted_count=other": "está cultivando {planted_count} vegetais"
+      }
+    }
+  ],
+  "yummy_still_eel_bloom": [
+    {
+      "declarations": [
+        "input desired_count"
+      ],
+      "selectors": [
+        "desired_count"
+      ],
+      "match": {
+        "desired_count=one": "quer cultivar uma outra planta",
+        "desired_count=other": "quer cultivar outras {desired_count} plantas"
+      }
+    }
+  ],
+  "calm_spry_trout_hunt": "Foto de {name}",
+  "royal_large_mayfly_stab": "Quem se envolve",
+  "quick_dirty_mouse_twist": "Cultivando sabedoria e compartilhando experiências para agroecologizar o\n        mundo ✨",
+  "warm_bold_cat_slide": "Sugestão de edição de {name} | Gororobas Agroecologia",
+  "civil_deft_dove_achieve": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=FEMININO": "Sobre a {name}",
+        "gender=MASCULINO": "Sobre o {name}",
+        "gender=*": "Sobre {name}"
+      }
+    }
+  ],
+  "slow_neat_niklas_bump": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=FEMININO": "Amigues da {name}",
+        "gender=MASCULINO": "Amigues do {name}",
+        "gender=*": "Amigues de {name}"
+      }
+    }
+  ],
+  "noble_east_jurgen_gleam": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender",
+        "name"
+      ],
+      "match": {
+        "gender=FEMININO": "Plantas que gostam de serem plantadas e estarem próximas à {name}",
+        "gender=MASCULINO": "Plantas que gostam de serem plantadas e estarem próximas ao {name}",
+        "gender=*": "Plantas que gostam de serem plantadas e estarem próximas a {name}"
+      }
+    }
+  ],
+  "tidy_swift_wren_breathe": "vegetal",
+  "noble_spicy_wolf_feast": [
+    {
+      "declarations": [
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=FEMININO": "Sugestões para a",
+        "gender=MASCULINO": "Sugestões para o",
+        "gender=*": "Sugestões para"
+      }
+    }
+  ],
+  "teal_mellow_cod_grip": [
+    {
+      "declarations": [
+        "input count"
+      ],
+      "selectors": [
+        "count"
+      ],
+      "match": {
+        "count=one": "Enviada por:",
+        "count=other": "Enviadas por:"
+      }
+    }
+  ],
+  "ornate_smart_skunk_buy": [
+    {
+      "declarations": [
+        "input count"
+      ],
+      "selectors": [
+        "count"
+      ],
+      "match": {
+        "count=one": "{count} alteração",
+        "count=other": "{count} alterações"
+      }
+    }
+  ],
+  "male_polite_myna_arrive": "Sugestões em aberto | Gororobas Agroecologia",
+  "aqua_swift_jaguar_dash": "Sugestões em aberto",
+  "jolly_key_maggot_flip": "Não há sugestões precisando de revisão. Tudo certin ✨",
+  "aloof_acidic_dachshund_pout": "Tudo certo, nada foi alterado",
+  "sweet_simple_butterfly_drum": "Editar {name} | Gororobas",
+  "stale_only_parakeet_engage": "{name} na Agroecologia | Gororobas",
+  "next_curly_weasel_build": [
+    {
+      "declarations": [
+        "input image_label",
+        "input name"
+      ],
+      "selectors": [
+        "image_label",
+        "name"
+      ],
+      "match": {
+        "name=*": "Foto de {name}",
+        "image_label=*": "Foto de {name} ({image_label})"
+      }
+    }
+  ],
+  "mad_antsy_lobster_engage": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "O {name}",
+        "gender=FEMININO": "A {name}",
+        "gender=*": "{name}"
+      }
+    }
+  ],
+  "sharp_wacky_nuthatch_thrive": [
+    {
+      "declarations": [
+        "input alt_names",
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": ", também conhecido como {alt_names}",
+        "gender=FEMININO": ", também conhecida como {alt_names}",
+        "gender=*": ", ou {alt_names}"
+      }
+    }
+  ],
+  "even_legal_tortoise_dash": [
+    {
+      "declarations": [
+        "input is_conjunction",
+        "input remaining"
+      ],
+      "selectors": [
+        "is_conjunction"
+      ],
+      "match": {
+        "is_conjunction=true": "mais {remaining}",
+        "is_conjunction=false": "{remaining} outro"
+      }
+    }
+  ],
+  "gaudy_bland_racoon_pick": ", surgiu de {origin}",
+  "wild_green_antelope_snap": [
+    {
+      "declarations": [
+        "input gender",
+        "input methods"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "Plantamos ele através de {methods}.",
+        "gender=FEMININO": "Plantamos ela através de {methods}.",
+        "gender=*": "Plantamos através de {methods}."
+      }
+    }
+  ],
+  "silly_plain_vulture_lead": [
+    {
+      "declarations": [
+        "input strata",
+        "input strata_count",
+        "local plural = strata_count: plural"
+      ],
+      "selectors": [
+        "plural"
+      ],
+      "match": {
+        "plural=one": "Se desenvolve no estrato {strata}.",
+        "plural=other": "Se desenvolve nos estratos {strata}."
+      }
+    }
+  ],
+  "loose_bad_bat_ascend": [
+    {
+      "declarations": [
+        "input friends",
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "Ele se dá bem em consórcios com {friends}.",
+        "gender=FEMININO": "Ela se dá bem em consórcios com {friends}.",
+        "gender=*": "Se dá bem em consórcios com {friends}."
+      }
+    }
+  ],
+  "minor_sweet_martin_trust": "Suas variedades incluem {varieties}.",
+  "nice_topical_dolphin_hike": "Quem contribuiu",
+  "tidy_quiet_cow_clasp": "Pessoas no Gororobas que contribuíram com fotos, dicas e/ou edições",
+  "watery_born_duck_view": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "Últimas mudanças na página do {name}",
+        "gender=FEMININO": "Últimas mudanças na página da {name}",
+        "gender=*": "Últimas mudanças na página de {name}"
+      }
+    }
+  ],
+  "late_arable_bulldog_blink": "Ainda não temos dicas sobre esse vegetal. Que tal enviar a sua?",
+  "patient_real_crab_nail": "Sugestões e dicas",
+  "busy_candid_cockroach_radiate": "Variedades",
+  "loud_happy_rooster_tap": "Fontes e recursos",
+  "stale_last_bulldog_rush": "Fontes que embasaram essas informações e recursos para ir mais a\n              fundo",
+  "bad_honest_salmon_arise": "Enviar sua nota",
+  "orange_front_myna_revive": "Aprendizados e experimentos",
+  "simple_heroic_cougar_catch": "Ainda não temos notas sobre esse vegetal. Que tal",
+  "steep_weird_kudu_gaze": "enviar uma",
+  "tame_loud_alligator_zap": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "Editar página do {name}",
+        "gender=FEMININO": "Editar página da {name}",
+        "gender=*": "Editar página de {name}"
+      }
+    }
+  ],
+  "spare_good_boar_compose": [
+    {
+      "declarations": [
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=FEMININO": "Também conhecida como",
+        "gender=*": "Também conhecido como"
+      }
+    }
+  ],
+  "late_dry_salmon_pinch": "Nomes científicos",
+  "empty_acidic_alligator_renew": "Origem",
+  "smug_misty_barbel_thrive": "Principais usos",
+  "stout_acidic_antelope_dig": "Partes comestíveis",
+  "tame_pink_toad_relish": "Estrato",
+  "wise_bald_eel_treat": "Camada vertical conforme necessidade de luz",
+  "equal_big_piranha_zoom": "Duração do o plantio até a morte ou colheita",
+  "last_awful_mink_assure": "Ciclo de vida",
+  "loved_odd_leopard_dare": "Métodos de plantio e propagação",
+  "away_elegant_earthworm_offer": "Temperatura ideal",
+  "away_cuddly_elephant_twist": [
+    {
+      "declarations": [
+        "input gender"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=FEMININO": "Altura quando adulta",
+        "gender=*": "Altura quando adulto"
+      }
+    }
+  ],
+  "hour_born_dragonfly_favor": "Tempo até produzir",
+  "less_top_meerkat_flip": "Quanto tempo até começarmos a colher",
+  "east_best_tadpole_treat": "Alguma informação errada ou faltando?",
+  "ago_mad_penguin_bump": "Você pode <link>enviar uma sugestão</link>, essa enciclopédia é colaborativa!",
+  "weird_slow_impala_loop": "Quem já planta",
+  "yummy_cute_panda_approve": "Quem quer plantar",
+  "flat_key_warthog_bless": "Erro ao atualizar seu interesse",
+  "giant_witty_hyena_jump": "Interesse atualizado!",
+  "seemly_crazy_beetle_kiss": "Crie uma conta no Gororobas",
+  "dirty_giant_cougar_ask": "Para salvar sua listinha de plantas você precisa ter uma conta. Só\n              assim podemos lembrar suas escolhas sem embolar quem escolheu o\n              quê 🤗",
+  "equal_north_mammoth_jest": "Entrar ou criar conta",
+  "tangy_slimy_shrimp_offer": "Qual seu interesse nesta planta?",
+  "petty_best_snake_coax": "Visão geral",
+  "extra_novel_robin_loop": "Sugestões e dicas",
+  "loud_real_jackal_gaze": "Variedades",
+  "pretty_active_jannes_twirl": "Curiosidades",
+  "tangy_patchy_salmon_treat": "Amizades e consórcios",
+  "top_muddy_skunk_seek": "Fontes e recursos",
+  "wide_topical_blackbird_dial": "Quem contribuiu",
+  "major_slimy_badger_play": "Aprendizados e experimentos",
+  "cute_ago_niklas_scoop": "Tabela de conteúdo",
+  "vexed_upper_lemur_aim": "Sugerir edição",
+  "mellow_fair_scallop_nurture": "Todos os vegetais e suas propriedades agroecológicas | Gororobas",
+  "bland_ok_pigeon_sway": "Descubra como plantar centenas de vegetais de forma agroecológica. O Gororobas é uma enciclopédia colaborativa, participe também :)",
+  "each_home_thrush_forgive": "Buscar por nome",
+  "neat_lucky_badger_zoom": "Estrato",
+  "zany_aware_beaver_pet": "Principais usos",
+  "great_true_sloth_flip": "Plantio por",
+  "fluffy_aqua_ibex_love": "Partes comestíveis",
+  "witty_glad_ocelot_persist": "Tempo até produzir",
+  "tiny_careful_boar_hack": "Altura",
+  "gray_agent_tuna_wave": "Temperatura",
+  "cozy_formal_kestrel_peel": "Vegetais",
+  "minor_large_toucan_devour": "Conhecimento em agroecologia sobre mais de 400 vegetais",
+  "day_tense_goose_spur": "Nome",
+  "grassy_calm_baboon_lead": "Buscar por nome",
+  "pretty_simple_seahorse_cut": "Filtros",
+  "mushy_bad_lynx_rest": "Voltar",
+  "dizzy_that_robin_conquer": "Remover filtro para {label}",
+  "dull_real_mammoth_affirm": "Nenhum vegetal encontrado",
+  "silly_main_goat_tend": "Conhece algum que não está na Gororobas? Esse site é\n                colaborativo, você pode ajudar:",
+  "basic_free_mouse_revive": "Enviar um vegetal",
+  "fun_bold_vulture_believe": "Carregar próxima página",
+  "north_frail_grebe_walk": "Gororobas",
+  "vexed_dry_sparrow_express": "Aprendendo juntes a fazer agroecologia - Por terra, território, e gororobas!",
+  "moving_red_hornet_hike": "Gororobas Agroecologia",
+  "pretty_fancy_camel_grip": "Fotos de vegetais com o título: Por terra, território, e gororobas",
+  "dull_long_mantis_flow": "Página não <br></br>encontrada",
+  "real_elegant_bison_drip": "Voltar à página inicial",
+  "tasty_bland_grebe_endure": "Ilustração de vegetais flutuando no espaço",
+  "round_tense_cow_clasp": "Página não encontrada",
+  "fair_clear_shrimp_flow": "Gororobas - Território Digital de Agroecologia",
+  "lazy_salty_kitten_cuddle": "Enciclopédia colaborativa de conhecimento em agroecologia sobre mais de 400 vegetais",
+  "fresh_new_panther_quiz": "Gororobas Agroecologia",
+  "zesty_zany_felix_flow": "O Gororobas sonha ser um território digital de encontro entre arquipélagos dos seres em transição agroecológica, compartilhando conhecimento territorializado sobre plantar, cozinhar e compartilhar o alimento, o cuidado, a luta, e a terra. Um espaço para encantar e esperançar como um verbo, mobilizando a ação.",
+  "gororobas_email": "ola@gororobas.com",
+  "patchy_plane_sawfish_shine": "Sugestão de edição enviada",
+  "knotty_soft_mantis_create": "Recebemos sua sugestão e vamos avaliar em breve - brigadin! 🤗",
+  "helpful_tangy_impala_jest": "Entrar no Gororobas",
+  "tasty_happy_midge_laugh": "Boas vindas ao Gororobas!",
+  "sea_giant_ray_race": "O Gororobas sonha ser um território digital de encontro entre arquipélagos dos seres em transição agroecológica, compartilhando conhecimento territorializado sobre plantar, cozinhar e compartilhar o alimento, o cuidado, a luta, e a terra. Um espaço para encantar e esperançar como um verbo, mobilizando a ação.",
+  "great_tangy_bullock_love": "🥕 Entrar na sua conta",
+  "awful_aqua_tern_flip": "O que você pode fazer no Gororobas:",
+  "arable_major_seahorse_seek": "🌱 Salvar vegetais que quer plantar, já plantou ou está cultivando",
+  "dry_soft_chipmunk_buy": "📝 Escrever e compartilhar notinhas sobre seus aprendizados na cozinha e na terra",
+  "raw_same_cod_absorb": "💬 Contribuir com melhores informações sobre vegetais e envie suas dicas e recomendações",
+  "still_inclusive_jellyfish_prosper": "📚 Contribuir para a biblioteca de recursos sobre agroecologia e agrofloresta, salvando suas reflexões sobre cada conteúdo",
+  "frail_weary_slug_flop": "Gororobas Agroecologia",
+  "mellow_busy_jackdaw_bless": "disponível em:",
+  "great_light_barbel_sew": "Por",
+  "just_left_termite_inspire": "Novo item",
+  "slow_plain_giraffe_fear": "Segure para mover",
+  "patient_witty_gecko_enchant": "Deletar item #{number}",
+  "drab_late_snail_gaze": "Hoje",
+  "active_formal_wallaby_snip": "Escolha uma data",
+  "major_hour_okapi_hope": "Arquivo inválido",
+  "fancy_actual_albatross_gaze": "Apenas imagens são aceitas.",
+  "novel_fluffy_orangutan_love": "Imagem muito grande",
+  "muddy_these_crab_lend": "Envie uma imagem de até 3MB.",
+  "direct_pink_rook_tickle": "Imagem selecionada",
+  "helpful_house_carp_promise": "Remover imagem",
+  "ornate_such_weasel_reap": "Clique aqui ou arraste a foto",
+  "misty_lower_quail_fond": "Rótulo",
+  "merry_misty_tapir_buzz": "Sobre o que é a imagem?",
+  "actual_elegant_buzzard_sway": "Fontes",
+  "slow_nice_puma_pride": "Nova fonte",
+  "large_helpful_myna_dash": "Imagem",
+  "weary_real_mantis_burn": "Remover imagem",
+  "gaudy_fluffy_fox_intend": "Foto de {label}",
+  "new_shy_gibbon_edit": "Origem da {label}",
+  "awake_least_javelina_forgive": "Créditos",
+  "bright_small_niklas_approve": "Que pessoa ou organização produziu a {label}?",
+  "small_jolly_lemur_yell": "Fonte",
+  "brief_jolly_buzzard_grasp": "De preferência um link our URL",
+  "dirty_silly_rook_rush": "Ex: https://site.br/pagina-da-{label}",
+  "spare_dizzy_earthworm_trust": "Pessoas",
+  "keen_brief_goose_enjoy": "Variedade sem nome",
+  "key_lofty_cuckoo_persist": "Editar variedade",
+  "mad_dark_haddock_achieve": "Fechar",
+  "neat_maroon_peacock_splash": "Nomes",
+  "inner_crisp_anaconda_nail": "Novo nome",
+  "livid_great_opossum_affirm": "Nome da variedade #{number}",
+  "pretty_arable_jan_cook": "Fotos",
+  "sharp_knotty_niklas_flop": "Nova foto",
+  "zesty_only_panda_absorb": "Foto #{number}",
+  "dirty_round_buzzard_empower": "Link",
+  "awake_wise_lobster_support": "Menções",
+  "merry_spare_bat_yell": "Imagem",
+  "mellow_white_grizzly_support": "Video",
+  "aqua_blue_rabbit_delight": "Negrito",
+  "inner_plane_finch_seek": "Itálico",
+  "slow_sharp_wombat_persist": "Riscado",
+  "stout_novel_wolf_dust": "Lista não ordenada",
+  "next_yummy_okapi_kick": "Lista numérica",
+  "raw_heavy_antelope_clap": "Link",
+  "minor_icy_dachshund_exhale": "Erro ao enviar foto",
+  "steep_sharp_mammoth_succeed": "Confira se tem conexão à internet e tente novamente",
+  "tiny_each_zebra_mend": "Subindo imagem...",
+  "mad_left_nils_roar": "Foto",
+  "livid_topical_fish_renew": "Adicionar",
+  "fit_inclusive_dove_dine": [
+    {
+      "declarations": [
+        "input label",
+        "input sources"
+      ],
+      "selectors": [
+        "label",
+        "sources"
+      ],
+      "match": {
+        "label=false, sources=false": "imagem",
+        "label=false, sources=*": "imagem de {label}",
+        "label=*, sources=false": "imagem por {sources}",
+        "label=*": "imagem de {label} por {sources}"
+      }
+    }
+  ],
+  "close_slimy_cowfish_hunt": "Editar link",
+  "petty_born_termite_jump": "Salvar e fechar",
+  "just_just_fireant_dart": "Deletar link",
+  "jumpy_soft_nils_hack": "(menção)",
+  "crazy_tame_duck_achieve": "Carregando menções...",
+  "wide_small_peacock_ask": "Nenhum resultado encontrado",
+  "slimy_funny_tuna_favor": "Adicionar vídeo",
+  "tasty_lazy_quail_endure": "Adicionar",
+  "large_awake_hyena_arise": "Vídeo de YouTube",
+  "real_few_gopher_bump": "Slide anterior",
+  "grassy_same_toucan_delight": "Próximo slide",
+  "smart_formal_flea_buy": "Fechar",
+  "merry_many_walrus_favor": [
+    {
+      "declarations": [
+        "input subFieldsWithError",
+        "local plural = subFieldsWithError: plural"
+      ],
+      "selectors": [
+        "plural"
+      ],
+      "match": {
+        "plural=one": "{subFieldsWithError} campo com erro",
+        "plural=*": "{subFieldsWithError} campos com erro"
+      }
+    }
+  ],
+  "every_calm_termite_accept": "Close",
+  "warm_active_horse_persist": "Gororobas é um espaço colaborativo",
+  "pink_neat_guppy_create": "Iríamos adorar receber suas notinhas ou conhecimento sobre plantas e agroecologia",
+  "proof_orange_gadfly_coax": "Envie sua nota",
+  "smart_slimy_hedgehog_radiate": "Envie material à biblioteca",
+  "mushy_due_beaver_shine": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "Enviar uma dica sobre o {name}",
+        "gender=FEMININO": "Enviar uma dica sobre a {name}",
+        "gender=*": "Enviar uma dica sobre {name}"
+      }
+    }
+  ],
+  "new_spry_llama_harbor": "Dica atualizada!",
+  "topical_red_mantis_enchant": "Continuar navegando",
+  "tired_level_snail_roar": "Vegetais",
+  "least_polite_elephant_burn": "Notas",
+  "noble_good_tortoise_rush": "Biblioteca Agroecológica",
+  "quaint_nimble_racoon_talk": "Código fonte",
+  "broad_deft_cockroach_spin": "Página inicial",
+  "tired_every_warbler_lock": "Rodapé",
+  "alive_drab_squirrel_explore": "Navegação do rodapé",
+  "mellow_born_mammoth_mop": "Fotos em tela cheia",
+  "known_patient_iguana_race": "Vegetais",
+  "cool_arable_jackal_jest": "Notas",
+  "glad_agent_canary_peek": "Biblioteca",
+  "fine_factual_hound_compose": "Navegação do cabeçalho",
+  "grand_same_puffin_stir": "Por terra, território, <br></br> e <strong>gororobas</strong>",
+  "actual_every_halibut_find": "Enciclopédia colaborativa de conhecimento em agroecologia sobre mais de 400 vegetais",
+  "proof_safe_warbler_arise": "Buscar vegetais...",
+  "left_lower_cobra_borrow": "Buscar",
+  "stock_weak_goat_race": "Navegue todos os vegetais",
+  "legal_ago_turkey_devour": "Foto da página do milho na enciclopédia do Gororobas",
+  "main_trite_thrush_prosper": "Enciclopédia agroecológica",
+  "this_caring_hound_praise": "Informações sobre centenas de vegetais baseadas em conhecimentos e experiências de diversas pessoas, <strong>incluindo você</strong>",
+  "weary_great_mule_charm": "Todos os vegetais",
+  "spicy_flaky_antelope_lead": "Envie novo vegetal",
+  "loud_any_puffin_gleam": "Aprendizados e experimentos",
+  "witty_tasty_skunk_pause": "Na cozinha, no plantio e no sacolão. Uma rede social agroecológica, por assim dizer",
+  "lost_main_kudu_engage": "Enviar sua nota",
+  "helpful_loose_gecko_jest": "Todas as notas",
+  "north_green_worm_loop": "Biblioteca agroecológica",
+  "basic_teal_fish_laugh": "Livros, organizações, vídeos e mais sobre agroecologia, agrofloresta e a luta por terra e território.",
+  "loud_extra_squirrel_value": "Enviar um material",
+  "direct_ok_lamb_snip": "Todos materiais",
+  "heroic_jolly_pug_clap": "Contribuições recentes",
+  "equal_shy_chicken_burn": "Quem se envolve",
+  "topical_gross_macaw_trust": "Cultivando sabedoria e compartilhando experiências para agroecologizar o mundo ✨",
+  "witty_long_lynx_launch": "Enviar nota",
+  "swift_neat_bulldog_dazzle": "Notas",
+  "alive_sunny_raven_dazzle": "Vegetais",
+  "these_shy_millipede_evoke": "Biblioteca",
+  "east_lost_chicken_jump": "Compartilhar",
+  "close_plain_pigeon_favor": "Privada",
+  "red_giant_florian_hurl": "apenas você pode ver",
+  "house_long_llama_savor": "Restrita",
+  "north_house_sloth_hike": "pra quem tem conta do Gororobas",
+  "close_whole_monkey_chop": "Pública",
+  "ornate_stout_jan_assure": "pra qualquer pessoa da internet",
+  "legal_tough_jackal_clip": "Nota salva ✨",
+  "that_cuddly_cowfish_cook": "Te enviando pra página dela...",
+  "just_teal_okapi_gasp": [
+    {
+      "declarations": [
+        "input operation"
+      ],
+      "selectors": [
+        "operation"
+      ],
+      "match": {
+        "operation=create": "Erro ao salvar a nota",
+        "operation=*": "Erro ao atualizar a nota"
+      }
+    }
+  ],
+  "dull_brief_turtle_reap": "Por favor, tente novamente.",
+  "sunny_noisy_walrus_view": "Te levando pra página\n              da nota...",
+  "glad_quaint_manatee_hint": [
+    {
+      "declarations": [
+        "input operation"
+      ],
+      "selectors": [
+        "operation"
+      ],
+      "match": {
+        "operation=edit": "Nota atualizada com sucesso!",
+        "operation=create": "Nota criada com sucesso!"
+      }
+    }
+  ],
+  "house_busy_grebe_view": "Título da nota",
+  "gray_late_shark_scoop": "O que experimentou, aprendeu ou descobriu hoje?",
+  "loved_patient_antelope_tap": "Tipo(s) da nota",
+  "flaky_alert_mongoose_learn": "Corpo",
+  "mellow_jolly_capybara_imagine": "Algo mais que gostaria de escrever sobre?",
+  "fair_key_pigeon_mop": "Enviada em",
+  "spicy_zesty_camel_catch": "Visibilidade da nota",
+  "candid_loose_liger_inspire": "Enviar",
+  "extra_green_liger_boil": "Por",
+  "tidy_true_mole_gasp": "Foto de perfil",
+  "agent_lucky_macaw_cook": [
+    {
+      "declarations": [
+        "input name"
+      ],
+      "selectors": [
+        "name"
+      ],
+      "match": {
+        "name=false": "Foto de perfil",
+        "name=*": "Foto de perfil de {name}"
+      }
+    }
+  ],
+  "jumpy_ok_sheep_comfort": "Tem certeza que quer sair sem salvar as alterações?",
+  "shy_watery_thrush_create": "Material enviado com sucesso ✨",
+  "only_born_canary_laugh": "Te enviando pra página dele...",
+  "watery_polite_jurgen_nurture": "Erro ao adicionar material",
+  "crisp_lime_orangutan_dart": "Por favor, tente novamente.",
+  "odd_heroic_hawk_empower": "Recurso enviado com sucesso!",
+  "salty_tasty_baboon_mop": "Te levando pra página\n              do recurso...",
+  "novel_cuddly_lemming_kiss": "Criar material",
+  "agent_stale_peacock_imagine": "Sugerir edição para {title}",
+  "grassy_east_horse_slurp": "Enviar",
+  "quick_bland_whale_zip": "Visão geral",
+  "level_steep_dolphin_aim": "Propriedades",
+  "watery_real_seahorse_rise": "Classificação do material na biblioteca",
+  "still_keen_martin_tickle": "Se não encontrou a etiqueta que buscava, pode mandar um email pra gente em ola@gororobas.com, por favorzinho? 🤗",
+  "fair_sound_javelina_spur": "Caso este material seja sobre um ou mais vegetais",
+  "few_chunky_earthworm_nail": "Envie uma dica",
+  "busy_level_trout_pout": "Crie uma conta no Gororobas",
+  "last_fancy_jay_comfort": "Para enviar uma sugestão, você precisa ter uma conta. Só assim\n                podemos lembrar suas escolhas sem embolar quem escolheu o quê 🤗",
+  "next_that_iguana_charm": "Entrar ou criar conta",
+  "extra_moving_warthog_twirl": "Envie uma dica",
+  "polite_vivid_koala_relish": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "Enviar uma dica sobre o {name}",
+        "gender=FEMININO": "Enviar uma dica sobre a {name}",
+        "gender=*": "Enviar uma dica sobre {name}"
+      }
+    }
+  ],
+  "born_sleek_beaver_pout": "Recebemos sua dica!",
+  "fit_elegant_eagle_fear": "Você pode enviar quantas quiser e contribuir/aprender com a página de outros vegetais também, fica a vontade :)",
+  "spare_cool_wasp_feast": "Continuar navegando",
+  "acidic_few_jackdaw_harbor": "Enviar outra dica",
+  "royal_sad_poodle_animate": [
+    {
+      "declarations": [
+        "input count",
+        "input date",
+        "local plural = count: plural"
+      ],
+      "selectors": [
+        "date",
+        "plural"
+      ],
+      "match": {
+        "date=false, plural=one": "{count} mudança",
+        "date=false, plural=*": "{count} mudanças",
+        "date=*, plural=one": "{count} mudança em {date}",
+        "date=*, plural=*": "{count} mudanças em {date}"
+      }
+    }
+  ],
+  "proof_slimy_firefox_snap": "Vegetal criado com sucesso ✨",
+  "proud_acidic_walrus_bless": "Te enviando pra página dele...",
+  "elegant_that_pigeon_compose": "Erro ao adicionar vegetal",
+  "polite_zippy_finch_surge": "Por favor, tente novamente.",
+  "patient_key_stork_nudge": "Vegetal criado com sucesso!",
+  "jolly_only_hamster_devour": "Te levando pra página\n              do vegetal...",
+  "loose_soft_shark_embrace": "Visão geral",
+  "ideal_sharp_moose_kick": "Novo nome",
+  "weary_late_raven_lift": "Novo nome científico",
+  "top_clear_samuel_pout": "Quantos meses até produzir a 1ª vez?",
+  "maroon_main_fox_honor": "Plantas que gostam de serem plantadas e estarem próximas. Simbioses e consórcios também entram :)",
+  "agent_gross_tortoise_snap": "Alguma curiosidade, história, ritual, ou dica solta que gostaria de compartilhar?",
+  "any_lazy_penguin_honor": "Nova fonte",
+  "fancy_even_marmot_tap": "informação",
+  "aloof_busy_bulldog_wave": "Nova foto",
+  "new_big_cuckoo_lend": "Nova variedade",
+  "known_short_mare_accept": "Propriedades",
+  "crisp_pretty_quail_buy": "Informações básicas sobre o uso e características do vegetal.",
+  "gray_neat_jurgen_yell": "Variedade #{number}",
+  "quick_active_termite_dazzle": "Foto #{number}",
+  "zany_trite_badger_prosper": "Nome científico #{number}",
+  "that_super_fireant_animate": "Nome #{number}",
+  "gaudy_tasty_crow_promise": "Enviar",
+  "frail_only_fly_savor": "Criar vegetal",
+  "aloof_gross_gopher_push": [
+    {
+      "declarations": [
+        "input gender",
+        "input name"
+      ],
+      "selectors": [
+        "gender"
+      ],
+      "match": {
+        "gender=MASCULINO": "Sugerir edição para o {name}",
+        "gender=FEMININO": "Sugerir edição para a {name}",
+        "gender=*": "Sugerir edição para {name}"
+      }
+    }
+  ],
+  "wild_alive_kitten_urge": [
+    {
+      "declarations": [
+        "input count",
+        "local plural = count: plural"
+      ],
+      "selectors": [
+        "plural"
+      ],
+      "match": {
+        "plural=one": "Fonte",
+        "plural=*": "Fontes"
+      }
+    }
+  ],
+  "jumpy_honest_manatee_adore": [
+    {
+      "declarations": [
+        "input operation"
+      ],
+      "selectors": [
+        "operation"
+      ],
+      "match": {
+        "operation=create": "Erro ao criar dica",
+        "operation=edit": "Erro ao atualizar dica"
+      }
+    }
+  ],
+  "polite_gray_otter_delight": "Por favor, tente novamente.",
+  "vivid_north_chicken_cherish": "Truques, cuidados, surpresas ou sugestão que gostaria de compartilhar?",
+  "candid_slimy_toucan_chop": "Dica ou recomendação",
+  "arable_least_guppy_grip": "Nova fonte",
+  "flat_antsy_horse_ripple": "Fonte(s)",
+  "glad_vexed_toad_mop": "Fonte #{number}",
+  "ideal_fit_dove_agree": "dica",
+  "low_next_sloth_honor": "Atualizar",
+  "formal_lower_parrot_treat": "Enviar",
+  "solid_low_cobra_explore": "Cancelar",
+  "sound_still_earthworm_grasp": "Assunto(s)"
+}

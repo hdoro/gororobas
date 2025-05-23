@@ -1,5 +1,6 @@
 'use client'
 
+import { m } from '@/paraglide/messages'
 import {
   VegetableTipData,
   type VegetableTipForDB,
@@ -66,18 +67,12 @@ export default function VegetableTipForm(props: {
         // refresh to keep data fresh while the user hasn't yet closed the dialog
         router.refresh()
 
-        toast({
-          variant: 'default',
-          title:
-            result.message?.title ||
-            `Dica ${props.operation === 'create' ? 'criada' : 'atualizada'} com sucesso ✨`,
-        })
         setStatus('success')
       } else {
         toast({
           variant: 'destructive',
-          title: `Erro ao ${props.operation === 'create' ? 'criar' : 'editar'} dica`,
-          description: 'Por favor, tente novamente.',
+          title: m.jumpy_honest_manatee_adore({ operation: props.operation }),
+          description: m.polite_gray_otter_delight(),
         })
         setStatus('idle')
       }
@@ -96,18 +91,18 @@ export default function VegetableTipForm(props: {
           <Field
             form={form}
             name={'content'}
-            label="Dica ou recomendação"
+            label={m.candid_slimy_toucan_chop()}
             render={({ field }) => (
               <RichTextInput
                 field={field}
-                placeholder="Truques, cuidados, surpresas ou sugestão que gostaria de compartilhar?"
+                placeholder={m.vivid_north_chicken_cherish()}
               />
             )}
           />
           <Field
             form={form}
             name={'subjects'}
-            label="Assunto(s)"
+            label={m.sound_still_earthworm_grasp()}
             render={({ field }) => (
               <CheckboxesInput
                 field={field}
@@ -122,20 +117,23 @@ export default function VegetableTipForm(props: {
           />
           <ArrayField
             form={form}
-            label="Fontes"
+            label={m.flat_antsy_horse_ripple()}
             name={'sources'}
             render={({ field: sourcesField }) => (
               <ArrayInput
                 field={sourcesField}
-                newItemLabel="Nova fonte"
+                newItemLabel={m.arable_least_guppy_grip()}
                 renderItem={(index) => (
                   <Field
                     form={form}
                     name={`${sourcesField.name}.${index}`}
-                    label={`Fonte #${index + 1}`}
+                    label={m.glad_vexed_toad_mop({ number: index + 1 })}
                     hideLabel
                     render={({ field: subField }) => (
-                      <SourceInput field={subField} label="dica" />
+                      <SourceInput
+                        field={subField}
+                        label={m.ideal_fit_dove_agree()}
+                      />
                     )}
                   />
                 )}
@@ -145,12 +143,14 @@ export default function VegetableTipForm(props: {
         </DialogBody>
         <DialogFooter>
           <Button type="submit" disabled={form.formState.disabled} size="lg">
-            {props.operation === 'edit' ? 'Atualizar' : 'Enviar'}
+            {props.operation === 'edit'
+              ? m.low_next_sloth_honor()
+              : m.formal_lower_parrot_treat()}
           </Button>
           {status === 'idle' && (
             <DialogClose asChild>
               <Button mode="bleed" tone="neutral" size="lg">
-                Cancelar
+                {m.solid_low_cobra_explore()}
               </Button>
             </DialogClose>
           )}

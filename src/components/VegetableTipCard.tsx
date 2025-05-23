@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import type { VegetablePageData, VegetableTipCardData } from '@/queries'
 import { isRenderableRichText } from '@/utils/tiptap'
 import React from 'react'
@@ -44,7 +45,7 @@ export default function VegetableTipCard({
       {orderedSources.length > 0 && (
         <div className="mt-2 flex items-start gap-2">
           <Text className="text-muted-foreground pt-0.5" level="sm">
-            Fonte{orderedSources.length > 1 ? 's' : ''}{' '}
+            {m.wild_alive_kitten_urge({ count: orderedSources.length })}
           </Text>
           <div className="space-y-3 text-base">
             {orderedSources.map((source) => {

@@ -7,13 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { m } from '@/paraglide/messages'
 import {
   VegetableData,
   type VegetableForDBWithImages,
   type VegetableInForm,
   VegetableWithUploadedImages,
 } from '@/schemas'
-import type { VegetableLifeCycle, VegetableUsage } from '@/types'
+import type { VegetableUsage } from '@/types'
 import { removeNullishKeys } from '@/utils/diffs'
 import { generateId } from '@/utils/ids'
 import {
@@ -25,7 +26,6 @@ import {
   VEGETABLE_FIELD_LABELS_MAP,
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
-import { gender } from '@/utils/strings'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { Effect, Schema, pipe } from 'effect'
 import { SendIcon } from 'lucide-react'
@@ -92,7 +92,7 @@ export default function VegetableForm(props: {
       // Standard way to show the browser's "Leave Site?" dialog
       e.preventDefault()
       // Required for older browsers, some browsers show this message
-      e.returnValue = 'Tem certeza que quer sair sem salvar as alterações?'
+      e.returnValue = m.jumpy_ok_sheep_comfort()
     }
 
     window.addEventListener('beforeunload', handleBeforeUnload)
@@ -134,19 +134,13 @@ export default function VegetableForm(props: {
       )
       const result = await Effect.runPromise(program)
       if (result.success) {
-        toast({
-          variant: 'default',
-          title: result.message?.title || 'Vegetal criado com sucesso ✨',
-          description:
-            result.message?.description || 'Te enviando pra página dele...',
-        })
         router.push(result.redirectTo)
         setStatus('success')
       } else {
         toast({
           variant: 'destructive',
-          title: 'Erro ao adicionar vegetal',
-          description: 'Por favor, tente novamente.',
+          title: m.elegant_that_pigeon_compose(),
+          description: m.polite_zippy_finch_surge(),
         })
         setStatus('idle')
       }
@@ -162,12 +156,12 @@ export default function VegetableForm(props: {
       >
         <Card className="space-y-4 px-5 py-3">
           <CardHeader>
-            <CardTitle>Vegetal criado com sucesso!</CardTitle>
+            <CardTitle>{m.patient_key_stork_nudge()}</CardTitle>
           </CardHeader>
           <CardContent>
             <Text className="flex items-center justify-center gap-3">
-              <Carrot className="h-6 w-6 animate-spin" /> Te levando pra página
-              do vegetal...
+              <Carrot className="h-6 w-6 animate-spin" />{' '}
+              {m.jolly_only_hamster_devour()}
             </Text>
           </CardContent>
         </Card>
@@ -186,17 +180,19 @@ export default function VegetableForm(props: {
             <div className="m-auto flex max-w-[90rem] items-center justify-between gap-4">
               <Text as="h1" level="h3">
                 {props.initialValue
-                  ? `Sugerir edição para ${gender.article(props.initialValue.gender || 'NEUTRO')} ${
-                      props.initialValue.names?.[0]?.value || 'vegetal'
-                    }`
-                  : 'Criar vegetal'}
+                  ? m.aloof_gross_gopher_push({
+                      gender: props.initialValue.gender || 'NEUTRO',
+                      name: props.initialValue.names?.[0]?.value || 'vegetal',
+                    })
+                  : m.frail_only_fly_savor()}
               </Text>
               <Button
                 type="submit"
                 disabled={form.formState.disabled}
                 className="px-10"
               >
-                <SendIcon className="w-[1.25em]" /> Enviar
+                <SendIcon className="w-[1.25em]" />{' '}
+                {m.gaudy_tasty_crow_promise()}
               </Button>
             </div>
           </div>
@@ -204,7 +200,7 @@ export default function VegetableForm(props: {
             <div className="grid auto-rows-max items-start gap-4 md:sticky md:top-4 lg:col-span-2 lg:gap-8">
               <Card>
                 <CardHeader>
-                  <CardTitle>Visão geral</CardTitle>
+                  <CardTitle>{m.loose_soft_shark_embrace()}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <ArrayField
@@ -215,12 +211,14 @@ export default function VegetableForm(props: {
                       <ArrayInput
                         field={field}
                         newItemValue={{ value: '' }}
-                        newItemLabel="Novo nome"
+                        newItemLabel={m.ideal_sharp_moose_kick()}
                         renderItem={(index) => (
                           <Field
                             form={form}
                             name={`${field.name}.${index}.value`}
-                            label={`Nome ${index + 1}`}
+                            label={m.that_super_fireant_animate({
+                              number: index + 1,
+                            })}
                             hideLabel
                             render={({ field: subField }) => (
                               <Input {...subField} />
@@ -246,12 +244,14 @@ export default function VegetableForm(props: {
                       <ArrayInput
                         field={field}
                         newItemValue={{ value: '' }}
-                        newItemLabel="Novo nome científico"
+                        newItemLabel={m.weary_late_raven_lift()}
                         renderItem={(index) => (
                           <Field
                             form={form}
                             name={`${field.name}.${index}.value`}
-                            label={`Nome científico ${index + 1}`}
+                            label={m.zany_trite_badger_prosper({
+                              number: index + 1,
+                            })}
                             hideLabel
                             render={({ field: subField }) => (
                               <Input {...subField} />
@@ -311,7 +311,7 @@ export default function VegetableForm(props: {
                       form={form}
                       name="development_cycle_min"
                       label={VEGETABLE_FIELD_LABELS_MAP.development_cycle_min}
-                      description="Quantos meses até produzir a 1ª vez?"
+                      description={m.top_clear_samuel_pout()}
                       render={({ field }) => (
                         <NumberInput field={field} format="days" />
                       )}
@@ -329,7 +329,7 @@ export default function VegetableForm(props: {
                     form={form}
                     name="friends"
                     label={VEGETABLE_FIELD_LABELS_MAP.friends}
-                    description="Plantas que gostam de serem plantadas e estarem próximas. Simbioses e consórcios também entram :)"
+                    description={m.maroon_main_fox_honor()}
                     render={({ field }) => (
                       <ReferenceListInput
                         field={field}
@@ -344,7 +344,7 @@ export default function VegetableForm(props: {
                     render={({ field }) => (
                       <RichTextInput
                         field={field}
-                        placeholder="Alguma curiosidade, história, ritual, ou dica solta que gostaria de compartilhar?"
+                        placeholder={m.agent_gross_tortoise_snap()}
                       />
                     )}
                   />
@@ -355,17 +355,19 @@ export default function VegetableForm(props: {
                     render={({ field: sourcesField }) => (
                       <ArrayInput
                         field={sourcesField}
-                        newItemLabel="Nova fonte"
+                        newItemLabel={m.any_lazy_penguin_honor()}
                         renderItem={(index) => (
                           <Field
                             form={form}
                             name={`${sourcesField.name}.${index}`}
-                            label={`Fonte #${index + 1}`}
+                            label={m.quick_active_termite_dazzle({
+                              number: index + 1,
+                            })}
                             hideLabel
                             render={({ field: subField }) => (
                               <SourceInput
                                 field={subField}
-                                label="informação"
+                                label={m.fancy_even_marmot_tap()}
                               />
                             )}
                           />
@@ -389,12 +391,14 @@ export default function VegetableForm(props: {
                       return (
                         <ArrayInput
                           field={field}
-                          newItemLabel="Nova foto"
+                          newItemLabel={m.aloof_busy_bulldog_wave()}
                           renderItem={(index) => (
                             <Field
                               form={form}
                               name={`${field.name}.${index}`}
-                              label={`Foto #${index + 1}`}
+                              label={m.quick_active_termite_dazzle({
+                                number: index + 1,
+                              })}
                               hideLabel
                               render={({ field: subField }) => (
                                 <ImageInput field={subField} />
@@ -424,13 +428,15 @@ export default function VegetableForm(props: {
                           newItemValue={{
                             names: [{ value: '' }],
                           }}
-                          newItemLabel="Nova variedade"
+                          newItemLabel={m.new_big_cuckoo_lend()}
                           inputType="dialog"
                           renderItem={(index) => (
                             <Field
                               form={form}
                               name={`${field.name}.${index}`}
-                              label={`Variedade #${index + 1}`}
+                              label={m.gray_neat_jurgen_yell({
+                                number: index + 1,
+                              })}
                               hideLabel
                               render={({ field: subField }) => (
                                 <VegetableVarietyInput
@@ -450,10 +456,9 @@ export default function VegetableForm(props: {
             <div className="grid auto-rows-max items-start gap-4 md:sticky md:top-4 lg:gap-8">
               <Card className="overflow-hidden">
                 <CardHeader>
-                  <CardTitle>Propriedades</CardTitle>
+                  <CardTitle>{m.known_short_mare_accept()}</CardTitle>
                   <CardDescription>
-                    Informações básicas sobre o uso e características do
-                    vegetal.
+                    {m.crisp_pretty_quail_buy()}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -536,29 +541,6 @@ export default function VegetableForm(props: {
         </form>
       </FormProvider>
     </main>
-  )
-}
-
-/** Only show the development cycle fields if the planting method is not perennial */
-function DevelopmentCycleFields() {
-  const form = useFormContext()
-  const lifecycles = (form.watch('lifecycles') || []) as VegetableLifeCycle[]
-
-  return (
-    <div className="grid grid-cols-2 gap-4">
-      <Field
-        form={form}
-        name="development_cycle_min"
-        label={VEGETABLE_FIELD_LABELS_MAP.development_cycle_min}
-        render={({ field }) => <NumberInput field={field} format="days" />}
-      />
-      <Field
-        form={form}
-        name="development_cycle_max"
-        label={VEGETABLE_FIELD_LABELS_MAP.development_cycle_max}
-        render={({ field }) => <NumberInput field={field} format="days" />}
-      />
-    </div>
   )
 }
 

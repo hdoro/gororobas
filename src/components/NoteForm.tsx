@@ -11,6 +11,7 @@ import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
 import type { NotePublishStatus } from '@/gel.interfaces'
 import { useFixedBottomPosition } from '@/hooks/useFixedBottomPosition'
+import { m } from '@/paraglide/messages'
 import { NoteData, type NoteForDB, type NoteInForm } from '@/schemas'
 import { cn } from '@/utils/cn'
 import { generateId } from '@/utils/ids'
@@ -41,20 +42,26 @@ type PublishStatusExplainer = {
 }
 
 export const PUBLISH_STATUS_EXPLAINERS = {
-  PRIVATE: {
-    label: 'Privada',
-    description: 'apenas você pode ver',
-    icon: LockIcon,
+  get PRIVATE() {
+    return {
+      label: m.close_plain_pigeon_favor(),
+      description: m.red_giant_florian_hurl(),
+      icon: LockIcon,
+    }
   },
-  COMMUNITY: {
-    label: 'Restrita',
-    description: 'pra quem tem conta do Gororobas',
-    icon: CarrotIcon,
+  get COMMUNITY() {
+    return {
+      label: m.house_long_llama_savor(),
+      description: m.north_house_sloth_hike(),
+      icon: CarrotIcon,
+    }
   },
-  PUBLIC: {
-    label: 'Pública',
-    description: 'pra qualquer pessoa da internet',
-    icon: GlobeIcon,
+  get PUBLIC() {
+    return {
+      label: m.close_whole_monkey_chop(),
+      description: m.ornate_stout_jan_assure(),
+      icon: GlobeIcon,
+    }
   },
 } as const satisfies Record<NotePublishStatus, PublishStatusExplainer>
 
@@ -149,20 +156,17 @@ export default function NoteForm(props: {
     if (response.success === true) {
       toast({
         variant: 'default',
-        title: response.message?.title || 'Nota salva ✨',
+        title: response.message?.title || m.legal_tough_jackal_clip(),
         description:
-          response.message?.description || 'Te enviando pra página dela...',
+          response.message?.description || m.that_cuddly_cowfish_cook(),
       })
       router.push(response.redirectTo)
       setStatus('success')
     } else {
       toast({
         variant: 'destructive',
-        title:
-          props.operation === 'create'
-            ? 'Erro ao salvar a nota'
-            : 'Erro ao atualizar a nota',
-        description: 'Por favor, tente novamente.',
+        title: m.just_teal_okapi_gasp({ operation: props.operation }),
+        description: m.dull_brief_turtle_reap(),
       })
       setStatus('idle')
     }
@@ -177,14 +181,13 @@ export default function NoteForm(props: {
         <Card className="space-y-4 px-5 py-3">
           <CardHeader>
             <CardTitle>
-              Nota {props.operation === 'create' ? 'criada' : 'atualizada'} com
-              sucesso!
+              {m.glad_quaint_manatee_hint({ operation: props.operation })}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <Text className="flex items-center justify-center gap-3">
-              <Carrot className="h-6 w-6 animate-spin" /> Te levando pra página
-              da nota...
+              <Carrot className="h-6 w-6 animate-spin" />{' '}
+              {m.sunny_noisy_walrus_view()}
             </Text>
           </CardContent>
         </Card>
@@ -205,11 +208,11 @@ export default function NoteForm(props: {
               form={form}
               name="title"
               hideLabel
-              label="Título da nota"
+              label={m.house_busy_grebe_view()}
               render={({ field }) => (
                 <RichTextInput
                   field={field}
-                  placeholder="O que experimentou, aprendeu ou descobriu hoje?"
+                  placeholder={m.gray_late_shark_scoop()}
                   type="noteTitle"
                   characterLimit={240}
                 />
@@ -219,7 +222,7 @@ export default function NoteForm(props: {
               form={form}
               name="types"
               hideLabel
-              label="Tipo(s) da nota"
+              label={m.loved_patient_antelope_tap()}
               render={({ field }) => (
                 <CheckboxesInput
                   field={field}
@@ -236,13 +239,13 @@ export default function NoteForm(props: {
               form={form}
               name="body"
               hideLabel
-              label="Corpo"
+              label={m.flaky_alert_mongoose_learn()}
               // Hacky way of making the Prosemirror contenteditable span the remaining space to make it clickable
               classNames={{ root: 'flex-1' }}
               render={({ field }) => (
                 <RichTextInput
                   field={field}
-                  placeholder="Algo mais que gostaria de escrever sobre?"
+                  placeholder={m.mellow_jolly_capybara_imagine()}
                   type="noteBody"
                 />
               )}
@@ -254,7 +257,7 @@ export default function NoteForm(props: {
               <Field
                 form={form}
                 name="published_at"
-                label="Enviada em"
+                label={m.fair_key_pigeon_mop()}
                 classNames={{
                   label: 'max-md:sr-only md:ml-3 md:mb-1',
                   root: 'md:-ml-3',
@@ -266,7 +269,7 @@ export default function NoteForm(props: {
               <Field
                 form={form}
                 name="publish_status"
-                label="Visibilidade da nota"
+                label={m.spicy_zesty_camel_catch()}
                 classNames={{
                   label: 'max-md:sr-only',
                   root: 'space-y-0',
@@ -291,7 +294,7 @@ export default function NoteForm(props: {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel className="text-base font-normal">
-                            Visibilidade da nota
+                            {m.spicy_zesty_camel_catch()}
                           </SelectLabel>
                           {Object.keys(NOTE_PUBLISH_STATUS_TO_LABEL).map(
                             (optionValue) => {
@@ -324,7 +327,7 @@ export default function NoteForm(props: {
               disabled={form.formState.disabled}
               className="flex-[0_0_max-content] md:h-11 md:px-9"
             >
-              Enviar
+              {m.candid_loose_liger_inspire()}
             </Button>
           </ActionBar>
         </form>

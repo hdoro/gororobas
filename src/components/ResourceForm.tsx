@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { m } from '@/paraglide/messages'
 import {
   ImageInForm,
   ResourceData,
@@ -75,7 +76,7 @@ export default function ResourceForm(props: {
       // Standard way to show the browser's "Leave Site?" dialog
       e.preventDefault()
       // Required for older browsers, some browsers show this message
-      e.returnValue = 'Tem certeza que quer sair sem salvar as alterações?'
+      e.returnValue = m.jumpy_ok_sheep_comfort()
     }
 
     window.addEventListener('beforeunload', handleBeforeUnload)
@@ -116,17 +117,17 @@ export default function ResourceForm(props: {
       if (result.success) {
         toast({
           variant: 'default',
-          title: result.message?.title || 'Material enviado com sucesso ✨',
+          title: result.message?.title || m.shy_watery_thrush_create(),
           description:
-            result.message?.description || 'Te enviando pra página dele...',
+            result.message?.description || m.only_born_canary_laugh(),
         })
         router.push(result.redirectTo)
         setStatus('success')
       } else {
         toast({
           variant: 'destructive',
-          title: 'Erro ao adicionar material',
-          description: 'Por favor, tente novamente.',
+          title: m.watery_polite_jurgen_nurture(),
+          description: m.crisp_lime_orangutan_dart(),
         })
         setStatus('idle')
       }
@@ -142,12 +143,12 @@ export default function ResourceForm(props: {
       >
         <Card className="space-y-4 px-5 py-3">
           <CardHeader>
-            <CardTitle>Recurso enviado com sucesso!</CardTitle>
+            <CardTitle>{m.odd_heroic_hawk_empower()}</CardTitle>
           </CardHeader>
           <CardContent>
             <Text className="flex items-center justify-center gap-3">
-              <Carrot className="h-6 w-6 animate-spin" /> Te levando pra página
-              do recurso...
+              <Carrot className="h-6 w-6 animate-spin" />{' '}
+              {m.salty_tasty_baboon_mop()}
             </Text>
           </CardContent>
         </Card>
@@ -166,17 +167,18 @@ export default function ResourceForm(props: {
             <div className="m-auto flex max-w-[90rem] items-center justify-between gap-4">
               <Text as="h1" level="h3">
                 {props.initialValue
-                  ? `Sugerir edição para ${
-                      props.initialValue.title || 'material'
-                    }`
-                  : 'Criar material'}
+                  ? m.agent_stale_peacock_imagine({
+                      title: props.initialValue.title || 'material',
+                    })
+                  : m.novel_cuddly_lemming_kiss()}
               </Text>
               <Button
                 type="submit"
                 disabled={form.formState.disabled}
                 className="px-10"
               >
-                <SendIcon className="w-[1.25em]" /> Enviar
+                <SendIcon className="w-[1.25em]" />{' '}
+                {m.grassy_east_horse_slurp()}
               </Button>
             </div>
           </div>
@@ -184,7 +186,7 @@ export default function ResourceForm(props: {
             <div className="grid auto-rows-max items-start gap-4 md:sticky md:top-4 lg:col-span-2 lg:gap-8">
               <Card>
                 <CardHeader>
-                  <CardTitle>Visão geral</CardTitle>
+                  <CardTitle>{m.quick_bland_whale_zip()}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <Field
@@ -236,9 +238,9 @@ export default function ResourceForm(props: {
             <div className="grid auto-rows-max items-start gap-4 md:sticky md:top-4 lg:gap-8">
               <Card className="overflow-hidden">
                 <CardHeader>
-                  <CardTitle>Propriedades</CardTitle>
+                  <CardTitle>{m.level_steep_dolphin_aim()}</CardTitle>
                   <CardDescription>
-                    Classificação do material na biblioteca
+                    {m.watery_real_seahorse_rise()}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -246,7 +248,7 @@ export default function ResourceForm(props: {
                     form={form}
                     name="tags"
                     label={RESOURCE_FIELD_LABELS_MAP.tags}
-                    description="Se não encontrou a etiqueta que buscava, pode mandar um email pra gente em ola@gororobas.com, por favorzinho? 🤗"
+                    description={m.still_keen_martin_tickle()}
                     render={({ field }) => (
                       <ReferenceListInput field={field} objectTypes={['Tag']} />
                     )}
@@ -255,7 +257,7 @@ export default function ResourceForm(props: {
                     form={form}
                     name="related_vegetables"
                     label={RESOURCE_FIELD_LABELS_MAP.related_vegetables}
-                    description="Caso este material seja sobre um ou mais vegetais"
+                    description={m.fair_sound_javelina_spur()}
                     render={({ field }) => (
                       <ReferenceListInput
                         field={field}

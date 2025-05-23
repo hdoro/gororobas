@@ -7,7 +7,6 @@ import { Toaster } from '@/components/ui/toaster'
 import { auth } from '@/gel'
 import { m } from '@/paraglide/messages'
 import { getLocale } from '@/paraglide/runtime'
-import { cn } from '@/utils/cn'
 import { configureRequestLocale } from '@/utils/i18n.server'
 import { pathToAbsUrl } from '@/utils/urls'
 import type { Metadata } from 'next'
@@ -67,7 +66,7 @@ export default async function RootLayout({
   const signedIn = await session.isSignedIn()
 
   return (
-    <html lang={getLocale()}>
+    <html lang={getLocale()} className={fontFamily.className}>
       <head>
         <link
           rel="search"
@@ -76,7 +75,7 @@ export default async function RootLayout({
           href="/opensearch.xml"
         />
       </head>
-      <body className={cn(fontFamily.className, 'flex min-h-dvh flex-col')}>
+      <body className={'flex min-h-dvh flex-col'}>
         <LocaleInjection locale={locale} />
         <TanstackQueryProvider>
           <RouteTransitionProvider>

@@ -1,15 +1,15 @@
 'use client'
 
 import { createVegetableTipAction } from '@/actions/createVegetableTip'
+import { m } from '@/paraglide/messages'
 import type { VegetablePageData } from '@/queries'
 import { generateId } from '@/utils/ids'
-import { gender } from '@/utils/strings'
 import { paths } from '@/utils/urls'
 import { MessageSquarePlus } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import Carrot from './icons/Carrot'
+import LoadingSpinner from './LoadingSpinner'
 import SparklesIcon from './icons/SparklesIcon'
 import { Button } from './ui/button'
 import {
@@ -25,12 +25,7 @@ import {
 import { Text } from './ui/text'
 
 const VegetableTipForm = dynamic(() => import('./VegetableTipForm'), {
-  loading: () => (
-    <div className="flex items-center justify-center gap-3 p-3 py-12">
-      <Carrot className="h-6 w-6 animate-spin" />
-      Carregando...
-    </div>
-  ),
+  loading: () => <LoadingSpinner />,
 })
 
 export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
@@ -48,24 +43,22 @@ export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
       <Dialog>
         <DialogTrigger asChild>
           <Button mode="outline">
-            <MessageSquarePlus className="w-[1.25em]" /> Envie uma dica
+            <MessageSquarePlus className="w-[1.25em]" />{' '}
+            {m.few_chunky_earthworm_nail()}
           </Button>
         </DialogTrigger>
         <DialogContent className="max-w-lg">
           <DialogBody className="space-y-2 pt-10">
             <DialogTitle asChild>
-              <Text level="h2">Crie uma conta no Gororobas</Text>
+              <Text level="h2">{m.busy_level_trout_pout()}</Text>
             </DialogTitle>
             <DialogDescription asChild>
-              <Text level="p">
-                Para enviar uma sugestão, você precisa ter uma conta. Só assim
-                podemos lembrar suas escolhas sem embolar quem escolheu o quê 🤗
-              </Text>
+              <Text level="p">{m.last_fancy_jay_comfort()}</Text>
             </DialogDescription>
             <div className="flex items-center gap-2 pt-2">
               <Button asChild>
                 <a href={paths.signInOrSignUp(pathname)}>
-                  Entrar ou criar conta
+                  {m.next_that_iguana_charm()}
                 </a>
               </Button>
             </div>
@@ -79,7 +72,8 @@ export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
     <Dialog>
       <DialogTrigger asChild>
         <Button mode="outline">
-          <MessageSquarePlus className="w-[1.25em]" /> Envie uma dica
+          <MessageSquarePlus className="w-[1.25em]" />{' '}
+          {m.extra_moving_warthog_twirl()}
         </Button>
       </DialogTrigger>
       <DialogContent
@@ -88,9 +82,10 @@ export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
       >
         <DialogHeader>
           <DialogTitle>
-            Enviar uma dica sobre{' '}
-            {gender.preposition(vegetable.gender || 'NEUTRO')}{' '}
-            {vegetable.names[0]}
+            {m.polite_vivid_koala_relish({
+              gender: vegetable.gender || 'NEUTRO',
+              name: vegetable.names[0],
+            })}
           </DialogTitle>
         </DialogHeader>
         <VegetableTipForm
@@ -119,20 +114,17 @@ export function SendTipDialog({ vegetable }: { vegetable: VegetablePageData }) {
                   className="mb-3 inline-block w-12"
                 />
                 <Text level="h2" as="h2">
-                  Recebemos sua dica!
+                  {m.born_sleek_beaver_pout()}
                 </Text>
-                <Text>
-                  Você pode enviar quantas quiser e contribuir/aprender com a
-                  página de outros vegetais também, fica a vontade {':)'}
-                </Text>
+                <Text>{m.fit_elegant_eagle_fear()}</Text>
                 <div className="wrap mt-4 flex justify-center gap-2">
                   <DialogClose asChild>
                     <Button mode="outline" tone="neutral">
-                      Continuar navegando
+                      {m.spare_cool_wasp_feast()}
                     </Button>
                   </DialogClose>
                   <Button mode="outline" tone="primary" onClick={resetForm}>
-                    Enviar outra dica
+                    {m.acidic_few_jackdaw_harbor()}
                   </Button>
                 </div>
               </section>
