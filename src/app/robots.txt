@@ -45,3 +45,7 @@ User-agent: VelenPublicWebCrawler
 User-agent: Webzio-Extended
 User-agent: YouBot
 Disallow: /
+
+# Disallow crawling pages in Spanish
+User-Agent: *
+Disallow: /es/

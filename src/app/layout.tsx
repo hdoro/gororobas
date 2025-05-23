@@ -6,7 +6,6 @@ import TanstackQueryProvider from '@/components/TanstackQueryProvider'
 import { Toaster } from '@/components/ui/toaster'
 import { auth } from '@/gel'
 import { m } from '@/paraglide/messages'
-import { getLocale } from '@/paraglide/runtime'
 import { configureRequestLocale } from '@/utils/i18n.server'
 import { pathToAbsUrl } from '@/utils/urls'
 import type { Metadata } from 'next'
@@ -66,7 +65,7 @@ export default async function RootLayout({
   const signedIn = await session.isSignedIn()
 
   return (
-    <html lang={getLocale()} className={fontFamily.className}>
+    <html lang={locale} className={fontFamily.className}>
       <head>
         <link
           rel="search"
@@ -74,6 +73,7 @@ export default async function RootLayout({
           title="Gororobas"
           href="/opensearch.xml"
         />
+        {locale === 'es' && <meta name="robots" content="noindex nofollow" />}
       </head>
       <body className={'flex min-h-dvh flex-col'}>
         <LocaleInjection locale={locale} />
