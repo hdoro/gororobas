@@ -9,6 +9,7 @@ import {
   NotebookPenIcon,
   SproutIcon,
 } from 'lucide-react'
+import LocaleSelector from './LocaleSelector'
 import GororobasLogo from './icons/GororobasLogo'
 
 const FOOTER_LINKS = () =>
@@ -88,6 +89,7 @@ export default async function Footer() {
             </Link>
           )
         })}
+        <LocaleSelector placement="footer" />
       </nav>
     </footer>
   )

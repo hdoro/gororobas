@@ -81,7 +81,10 @@ export default async function RootLayout({
           <RouteTransitionProvider>
             <HeaderNav signedIn={signedIn} />
             <MobileBottomBar signedIn={signedIn} />
-            <div className="flex-1">{children}</div>
+            {/* The key ensures children are re-rendered when `locale` changes */}
+            <div className="flex-1" key={locale}>
+              {children}
+            </div>
             <Footer />
             <Toaster />
           </RouteTransitionProvider>

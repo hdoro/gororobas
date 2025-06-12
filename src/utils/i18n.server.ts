@@ -4,13 +4,16 @@ import {
   type Locale,
   assertIsLocale,
   baseLocale,
+  cookieName,
+  isLocale,
   overwriteGetLocale,
   overwriteGetUrlOrigin,
 } from '@/paraglide/runtime'
 import type { UsersToMentionData } from '@/queries'
-import { headers } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { cache } from 'react'
 import { BASE_URL } from './config'
+import { LOCALE_HEADER_KEY } from './i18n'
 
 export const ssrLocale = cache(() => ({
   locale: baseLocale,
@@ -37,10 +40,21 @@ overwriteGetUrlOrigin(() => ssrLocale().origin)
  * For client components, refer to `LocaleInjection.tsx`
  */
 export async function configureRequestLocale() {
-  const locale = (await headers()).get('x-gororobas-locale') as Locale
+  const locale = (await headers()).get(LOCALE_HEADER_KEY) as Locale
   ssrLocale().locale = locale
 
   return locale
+}
+
+/** Used in Next route handlers, such as `api/select-locale/route.ts` */
+export async function getLocaleFromRequest(request: Request) {
+  const cookieStore = await cookies()
+  const localeFromCookie = cookieStore.get(cookieName)
+
+  if (isLocale(localeFromCookie)) return localeFromCookie
+
+  const localeFromHeader = request.headers.get(LOCALE_HEADER_KEY)
+  return isLocale(localeFromHeader) ? localeFromHeader : baseLocale
 }
 
 /**

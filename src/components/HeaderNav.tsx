@@ -8,6 +8,7 @@ import {
   SproutIcon,
 } from 'lucide-react'
 import { Suspense } from 'react'
+import LocaleSelector from './LocaleSelector'
 import UserNav from './UserNav'
 import GororobasLogo from './icons/GororobasLogo'
 
@@ -56,9 +57,12 @@ export default async function HeaderNav({ signedIn }: { signedIn: boolean }) {
               {link.text}
             </Link>
           ))}
-          <Suspense fallback={signedIn ? <div className="w-7" /> : null}>
-            <UserNav signedIn={signedIn} />
-          </Suspense>
+          <div className="flex items-center gap-x-3">
+            <LocaleSelector placement="header" />
+            <Suspense fallback={signedIn ? <div className="w-7" /> : null}>
+              <UserNav signedIn={signedIn} />
+            </Suspense>
+          </div>
         </div>
       </nav>
     </>
