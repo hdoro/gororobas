@@ -64,9 +64,7 @@ export default function ProfilePageHeader({
                     </Link>
                   </Button>
                   <Button size="sm" asChild tone="secondary" mode="outline">
-                    <Link href={paths.signout()} prefetch={false}>
-                      {m.whole_livid_ox_heal()}
-                    </Link>
+                    <a href={paths.signout()}>{m.whole_livid_ox_heal()}</a>
                   </Button>
                 </div>
               )}

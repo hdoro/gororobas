@@ -4,7 +4,6 @@ import Link from '@/components/LinkWithTransition'
 import NotesGrid from '@/components/NotesGrid'
 import ResourceCard from '@/components/ResourceCard'
 import SectionTitle from '@/components/SectionTitle'
-import { SendTipDialog } from '@/components/SendTipDialog'
 import SourcesGrid from '@/components/SourcesGrid'
 import VegetableVarietyCard from '@/components/VegetableVarietyCard'
 import VegetablesGrid from '@/components/VegetablesGrid'
@@ -12,7 +11,6 @@ import BulbIcon from '@/components/icons/BulbIcon'
 import NoteIcon from '@/components/icons/NoteIcon'
 import QuoteIcon from '@/components/icons/QuoteIcon'
 import RainbowIcon from '@/components/icons/RainbowIcon'
-import ShovelIcon from '@/components/icons/ShovelIcon'
 import VegetableFriendsIcon from '@/components/icons/VegetableFriendsIcon'
 import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Button } from '@/components/ui/button'
@@ -26,7 +24,6 @@ import { Suspense } from 'react'
 import VegetableContributors from './VegetableContributors'
 import { VegetablePageHero } from './VegetablePageHero'
 import VegetablePageSidebar from './VegetablePageSidebar'
-import VegetableTips from './VegetableTips'
 
 export default function VegetablePage({
   vegetable,
@@ -71,26 +68,6 @@ export default function VegetablePage({
             hasExternalSources={externalSources.length > 0}
           />
         </div>
-        <section className="my-36" id="sugestoes">
-          <SectionTitle
-            Icon={ShovelIcon}
-            CTA={
-              vegetable.tips.length > 0 ? (
-                <SendTipDialog vegetable={vegetable} />
-              ) : null
-            }
-          >
-            {m.patient_real_crab_nail()}
-          </SectionTitle>
-          {vegetable.tips.length > 0 ? (
-            <VegetableTips tips={vegetable.tips} vegetable={vegetable} />
-          ) : (
-            <div className="px-pageX mt-1 space-y-2">
-              <Text level="p">{m.late_arable_bulldog_blink()}</Text>
-              <SendTipDialog vegetable={vegetable} />
-            </div>
-          )}
-        </section>
         {Array.isArray(vegetable.varieties) &&
           vegetable.varieties.length > 0 && (
             <section className="my-36" id="variedades">

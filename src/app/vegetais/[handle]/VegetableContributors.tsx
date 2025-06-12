@@ -43,7 +43,6 @@ export default async function VegetableContributors({
   )
 
   const allSources = [
-    ...(vegetable.tips || []).flatMap((tip) => tip?.sources || []),
     ...(vegetable.photos || []).flatMap((photo) => photo?.sources || []),
     ...(vegetable.varieties || []).flatMap(
       (variety) =>
