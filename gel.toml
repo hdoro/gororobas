@@ -1,5 +1,5 @@
 [instance]
-server-version = "6.4"
+server-version = "6.5"
 
 [hooks]
 schema.update.after = """

@@ -46,7 +46,10 @@ export async function acceptEditSuggestionAction({
         Effect.tryPromise({
           try: () => getTransaction(data, session.client),
           catch: (error) => {
-            console.log('Failed applying edit suggestion\n', error)
+            console.log(
+              '[acceptEditSuggestion] failed applying edit suggestion\n',
+              error,
+            )
             return error
           },
         }),

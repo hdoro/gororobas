@@ -1,11 +1,12 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
+import LoadingSpinner from '@/components/LoadingSpinner'
 import VegetableCard from '@/components/VegetableCard'
 import { VegetablesGridWrapper } from '@/components/VegetablesGrid'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
 import SliderRangeInput from '@/components/forms/SliderRangeInput'
-import Carrot from '@/components/icons/Carrot'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -15,6 +16,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Text } from '@/components/ui/text'
+import { m } from '@/paraglide/messages'
 import type { VegetablesIndexFilterParams } from '@/queries'
 import type { RangeFormValue } from '@/schemas'
 import { VEGETABLES_PER_PAGE } from '@/utils/config'
@@ -29,7 +31,6 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { ArrowLeft, ArrowRightCircle, FilterIcon, XIcon } from 'lucide-react'
 import { AnimatePresence } from 'motion/react'
 import * as motion from 'motion/react-client'
-import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -132,10 +133,10 @@ export default function VegetablesIndex() {
     <main className="px-pageX py-10">
       <div className="space-y-1">
         <Text level="h1" as="h1">
-          Vegetais
+          {m.cozy_formal_kestrel_peel()}
         </Text>
         <Text level="h2" as="p" className="font-normal">
-          Conhecimento em agroecologia sobre mais de 400 vegetais
+          {m.minor_large_toucan_devour()}
         </Text>
       </div>
       <FormProvider {...form}>
@@ -145,13 +146,13 @@ export default function VegetablesIndex() {
               <Field
                 form={form}
                 name="search_query"
-                label="Nome"
+                label={m.day_tense_goose_spur()}
                 render={({ field }) => (
                   <Input
                     {...field}
                     value={field.value || ''}
                     type="text"
-                    placeholder="Buscar por nome"
+                    placeholder={m.grassy_calm_baboon_lead()}
                     className="md:min-w-2xs"
                   />
                 )}
@@ -174,7 +175,7 @@ export default function VegetablesIndex() {
                 >
                   <Button>
                     <FilterIcon className="mr-2 h-auto w-[1.25em]" />
-                    Filtros
+                    {m.pretty_simple_seahorse_cut()}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="p-1">
@@ -194,7 +195,9 @@ export default function VegetablesIndex() {
                             tone="neutral"
                           >
                             <ArrowLeft className="size-4 opacity-90" />
-                            <span className="sr-only">Voltar</span>
+                            <span className="sr-only">
+                              {m.mushy_bad_lynx_rest()}
+                            </span>
                           </Button>
                           <Text level="p" as="p" aria-hidden weight="semibold">
                             {activeFilter.label}
@@ -342,7 +345,9 @@ export default function VegetablesIndex() {
                           onClick={() =>
                             form.setValue(definition.filterKey, undefined)
                           }
-                          title={`Remover filtro para ${definition.label}`}
+                          title={m.dizzy_that_robin_conquer({
+                            label: definition.label,
+                          })}
                           className="rounded-none px-2"
                         >
                           <XIcon className="size-[1em]" />
@@ -358,12 +363,7 @@ export default function VegetablesIndex() {
       </FormProvider>
       <div className="relative mt-2 space-y-6">
         <VegetablesGridWrapper>
-          {isFetching && !isFetchingNextPage && (
-            <div className="bg-background bg-opacity-50 absolute inset-0 flex items-center justify-center gap-3">
-              <Carrot className="h-6 w-6 animate-spin" />
-              Carregando...
-            </div>
-          )}
+          {isFetching && !isFetchingNextPage && <LoadingSpinner />}
           {data?.pages?.map((page) => (
             <React.Fragment key={page.queryParams.offset}>
               {(page.vegetables || []).map((vegetable) => (
@@ -371,26 +371,20 @@ export default function VegetablesIndex() {
               ))}
             </React.Fragment>
           ))}
-          {isFetchingNextPage && (
-            <div className="flex items-center justify-center gap-3 py-10">
-              <Carrot className="h-6 w-6 animate-spin" />
-              Carregando...
-            </div>
-          )}
+          {isFetchingNextPage && <LoadingSpinner />}
         </VegetablesGridWrapper>
         {/* EMPTY STATE */}
         {isEmpty && (
           <Card aria-live="polite">
             <CardHeader>
-              <CardTitle>Nenhum vegetal encontrado</CardTitle>
-              <Text>
-                Conhece algum que não está na Gororobas? Esse site é
-                colaborativo, você pode ajudar:
-              </Text>
+              <CardTitle>{m.dull_real_mammoth_affirm()}</CardTitle>
+              <Text>{m.silly_main_goat_tend()}</Text>
             </CardHeader>
             <CardContent>
               <Button asChild>
-                <Link href={paths.newVegetable()}>Enviar um vegetal</Link>
+                <Link href={paths.newVegetable()}>
+                  {m.basic_free_mouse_revive()}
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -416,7 +410,7 @@ export default function VegetablesIndex() {
                 }}
                 mode="outline"
               >
-                Carregar próxima página
+                {m.fun_bold_vulture_believe()}
               </Button>
             </div>
           ))}

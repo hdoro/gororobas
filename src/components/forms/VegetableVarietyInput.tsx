@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { m } from '@/paraglide/messages'
 import type { VegetableVarietyInForm } from '@/schemas'
 import { cn } from '@/utils/cn'
 import { truncate } from '@/utils/strings'
@@ -80,7 +81,7 @@ export default function VegetableVarietyInput<
           </div>
           <div className="space-y-1 text-left">
             <h2 className={names[0]?.value ? '' : 'text-primary-700'}>
-              {names[0]?.value || 'Variedade sem nome'}
+              {names[0]?.value || m.keen_brief_goose_enjoy()}
             </h2>
             {names.length > 1 && (
               <p className="text-xs">
@@ -99,18 +100,18 @@ export default function VegetableVarietyInput<
       <DialogContent hasClose={false}>
         <DialogHeader>
           <DialogTitle>
-            Editar variedade{' '}
+            {m.key_lofty_cuckoo_persist()}{' '}
             {typeof varietyIndex === 'number' && `#${varietyIndex + 1}`}
           </DialogTitle>
           <DialogClose asChild>
             <Button mode="outline" tone="neutral" size="sm">
-              Fechar
+              {m.mad_dark_haddock_achieve()}
             </Button>
           </DialogClose>
         </DialogHeader>
         <DialogBody className="space-y-6">
           <ArrayField
-            label="Nomes"
+            label={m.neat_maroon_peacock_splash()}
             name={`${rootField.name}.names`}
             form={form}
             render={({ field: namesField }) => (
@@ -118,12 +119,12 @@ export default function VegetableVarietyInput<
                 field={namesField}
                 // @ts-expect-error no way for TS to know the type of `newItemValue`
                 newItemValue={{ value: '' }}
-                newItemLabel="Novo nome"
+                newItemLabel={m.inner_crisp_anaconda_nail()}
                 renderItem={(index) => (
                   <Field
                     form={form}
                     name={`${namesField.name}.${index}.value`}
-                    label={`Nome ${index + 1}`}
+                    label={m.livid_great_opossum_affirm({ number: index + 1 })}
                     hideLabel
                     render={({ field: subField }) => <Input {...subField} />}
                   />
@@ -134,17 +135,17 @@ export default function VegetableVarietyInput<
           <ArrayField
             form={form}
             name={`${rootField.name}.photos`}
-            label="Fotos"
+            label={m.pretty_arable_jan_cook()}
             render={({ field: photosField }) => {
               return (
                 <ArrayInput
                   field={photosField}
-                  newItemLabel="Nova foto"
+                  newItemLabel={m.sharp_knotty_niklas_flop()}
                   renderItem={(index) => (
                     <Field
                       form={form}
                       name={`${photosField.name}.${index}`}
-                      label={`Foto #${index + 1}`}
+                      label={m.zesty_only_panda_absorb({ number: index + 1 })}
                       hideLabel
                       render={({ field: subField }) => (
                         <ImageInput field={subField} />

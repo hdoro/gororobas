@@ -1,12 +1,13 @@
+import Link from '@/components/LinkWithTransition'
 import NotesGrid from '@/components/NotesGrid'
 import SectionTitle from '@/components/SectionTitle'
 import NoteIcon from '@/components/icons/NoteIcon'
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
+import { m } from '@/paraglide/messages'
 import type { ProfileNotesData } from '@/queries'
 import { truncate } from '@/utils/strings'
 import { paths } from '@/utils/urls'
-import Link from 'next/link'
 
 export default function ProfileNotes({
   notes,
@@ -21,17 +22,22 @@ export default function ProfileNotes({
         CTA={
           is_owner ? (
             <Button asChild>
-              <Link href={paths.newNote()}>Enviar mais uma nota</Link>
+              <Link href={paths.newNote()}>
+                {m.great_heroic_butterfly_buy()}
+              </Link>
             </Button>
           ) : null
         }
       >
-        Notinhas que {is_owner ? 'você' : truncate(name, 20)} compartilhou
+        {m.tasty_vivid_jan_bless({
+          is_owner: is_owner.toString(),
+          name: truncate(name, 25),
+        })}
       </SectionTitle>
 
       {note_count > notes.length && (
         <Text level="h3" className="px-pageX font-normal">
-          Mostrando apenas {notes.length} notas aleatórias
+          {m.maroon_spry_wombat_flop({ note_count: notes.length })}
         </Text>
       )}
       {/* @TODO: infinite scrolling for profile's notes */}
@@ -39,9 +45,10 @@ export default function ProfileNotes({
         <NotesGrid notes={notes} />
       ) : (
         <Text level="h3" as="p" className="px-pageX text-muted-foreground mt-3">
-          {is_owner
-            ? 'Compartilhe suas experiências e aprendizados com a comunidade'
-            : `${name} ainda não compartilhou nenhuma notinha`}
+          {m.bright_agent_finch_thrive({
+            is_owner: is_owner.toString(),
+            name: truncate(name, 25),
+          })}
         </Text>
       )}
     </section>

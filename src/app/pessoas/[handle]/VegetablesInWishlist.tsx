@@ -3,6 +3,7 @@
 import VegetableBadge from '@/components/VegetableChip'
 import { Text } from '@/components/ui/text'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { m } from '@/paraglide/messages'
 import type { WishlistForProfile } from '@/queries'
 import type { JSX, SVGProps } from 'react'
 
@@ -32,7 +33,9 @@ export function VegetablesInWishlist(props: {
               level="sm"
               className="text-muted-foreground inline-block pl-4"
             >
-              e {props.count - props.list.length} outros
+              {m.this_stock_puma_engage({
+                count: props.count - props.list.length,
+              })}
             </Text>
           )}
         </div>

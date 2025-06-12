@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
   HydrationBoundary,
@@ -9,11 +10,10 @@ import ResourcesIndex from './ResourcesIndex'
 import fetchResourcesIndex from './fetchResourcesIndex'
 import { resourcesNextSearchParamsToQueryParams } from './resourcesFilters'
 
-export const metadata: Metadata = {
-  title: 'Biblioteca Agroecológica | Gororobas',
-  description:
-    'Livros, organizações, vídeos e mais sobre agroecologia, agrofloresta e a luta por terra e território.',
-}
+export const generateMetadata = (): Metadata => ({
+  title: m.soft_equal_trout_empower(),
+  description: m.crisp_front_warthog_hope(),
+})
 
 export default async function ResourcesRoute(props: {
   searchParams: Promise<{

@@ -2,7 +2,9 @@ import SectionTitle from '@/components/SectionTitle'
 import SuggestionsGrid from '@/components/SuggestionsGrid'
 import HistoryIcon from '@/components/icons/HistoryIcon'
 import { Text } from '@/components/ui/text'
+import { m } from '@/paraglide/messages'
 import type { ProfileContributionsData } from '@/queries'
+import { truncate } from '@/utils/strings'
 
 export default function ProfileContributions({
   contributions,
@@ -12,11 +14,14 @@ export default function ProfileContributions({
   return (
     <section className="mt-16">
       <SectionTitle Icon={HistoryIcon}>
-        {is_owner ? 'Suas contribuições' : `Contribuições de ${name}`}
+        {m.busy_red_weasel_pause({
+          is_owner: is_owner.toString(),
+          name: truncate(name, 25),
+        })}
       </SectionTitle>
       {is_owner && contributions.length > 0 && (
         <Text level="h3" className="px-pageX font-normal">
-          Muuuuuito obrigado pela força - viva a agroecologia!
+          {m.flat_same_sloth_succeed()}
         </Text>
       )}
       {contributions && contributions.length > 0 ? (
@@ -26,9 +31,10 @@ export default function ProfileContributions({
         />
       ) : (
         <Text level="h3" as="p" className="px-pageX text-muted-foreground mt-3">
-          {is_owner
-            ? 'Você ainda não fez nenhuma contribuição'
-            : `${name} ainda não fez nenhuma contribuição`}
+          {m.inner_sad_sloth_pout({
+            is_owner: is_owner.toString(),
+            name: truncate(name, 25),
+          })}
         </Text>
       )}
     </section>

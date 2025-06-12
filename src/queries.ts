@@ -128,7 +128,7 @@ export type NoteCardData = Omit<
   created_by?: NoteForCardResult['created_by']
 }
 
-const vegetableVarietyForCard = e.shape(e.VegetableVariety, (variety) => ({
+const vegetableVarietyForCard = e.shape(e.VegetableVariety, () => ({
   handle: true,
   names: true,
   photos: (image) => ({
@@ -144,27 +144,6 @@ const vegetableVarietyForCard = e.shape(e.VegetableVariety, (variety) => ({
 
 export type VegetableVarietyCardData = Exclude<
   $infer<typeof vegetableVarietyForCard>,
-  null
->[number]
-
-const vegetableTipForCard = e.shape(e.VegetableTip, (tip) => ({
-  id: true,
-  handle: true,
-  subjects: true,
-  content: true,
-  sources: (source) => ({
-    ...sourceForCard(source),
-
-    order_by: {
-      expression: source['@order_index'],
-      direction: 'ASC',
-      empty: e.EMPTY_LAST,
-    },
-  }),
-}))
-
-export type VegetableTipCardData = Exclude<
-  $infer<typeof vegetableTipForCard>,
   null
 >[number]
 
@@ -240,15 +219,6 @@ const vegetablePageShape = e.shape(e.Vegetable, (vegetable) => ({
       empty: e.EMPTY_LAST,
     },
   }),
-  tips: (tip) => ({
-    ...vegetableTipForCard(tip),
-
-    order_by: {
-      expression: tip['@order_index'],
-      direction: 'ASC',
-      empty: e.EMPTY_LAST,
-    },
-  }),
   friends: vegetableForCard,
   sources: sourceForCard,
 
@@ -299,16 +269,6 @@ const vegetableEditingShape = e.shape(e.Vegetable, (vegetable) => ({
 
     order_by: {
       expression: variety['@order_index'],
-      direction: 'ASC',
-      empty: e.EMPTY_LAST,
-    },
-  }),
-  tips: (tip) => ({
-    ...vegetableTipForCard(tip),
-    id: true,
-
-    order_by: {
-      expression: tip['@order_index'],
       direction: 'ASC',
       empty: e.EMPTY_LAST,
     },
@@ -1080,7 +1040,10 @@ export const profileNotesQuery = e.params(
     })),
 )
 
-export type ProfileNotesData = Exclude<$infer<typeof profileNotesQuery>, null>
+export type ProfileNotesData = Omit<
+  Exclude<$infer<typeof profileNotesQuery>, null>,
+  'is_owner'
+> & { is_owner: boolean }
 
 export const profileContributionsQuery = e.params(
   {
@@ -1109,10 +1072,10 @@ export const profileContributionsQuery = e.params(
     })),
 )
 
-export type ProfileContributionsData = Exclude<
-  $infer<typeof profileContributionsQuery>,
-  null
->
+export type ProfileContributionsData = Omit<
+  Exclude<$infer<typeof profileContributionsQuery>, null>,
+  'is_owner'
+> & { is_owner: boolean }
 
 export const profileGalleryQuery = e.params(
   {
@@ -1137,10 +1100,12 @@ export const profileGalleryQuery = e.params(
     })),
 )
 
-export type ProfileGalleryData = Exclude<
-  $infer<typeof profileGalleryQuery>,
-  null
->
+export type ProfileGalleryData = Omit<
+  Exclude<$infer<typeof profileGalleryQuery>, null>,
+  'is_owner'
+> & {
+  is_owner: boolean
+}
 
 export const getMentionsDataQuery = e.params(
   { ids: e.array(e.uuid) },

@@ -1,30 +1,31 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
+import LoadingSpinner from '@/components/LoadingSpinner'
 import NoteCard from '@/components/NoteCard'
 import { NotesGridWrapper } from '@/components/NotesGrid'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
-import Carrot from '@/components/icons/Carrot'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
+import { m } from '@/paraglide/messages'
 import type { NotesIndexFilterParams } from '@/queries'
 import { NOTES_PER_PAGE } from '@/utils/config'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
+import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
   paths,
   persistParamsInUrl,
   searchParamsToNextSearchParams,
 } from '@/utils/urls'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { InView } from 'react-intersection-observer'
 import { useDebounce } from 'use-debounce'
-import { queryParamsToQueryKey } from '../../utils/queryParams'
 import type { NotesIndexRouteData } from './fetchNotesIndex'
 import {
   notesNextSearchParamsToQueryParams,
@@ -107,13 +108,13 @@ export default function NotesIndex() {
           as="h1"
           className="flex flex-wrap items-center justify-between"
         >
-          Notas
+          {m.notes()}
           <Button asChild>
-            <Link href={paths.newNote()}>Enviar sua nota</Link>
+            <Link href={paths.newNote()}>{m.send_note_cta()}</Link>
           </Button>
         </Text>
         <Text level="h2" as="p" className="max-w-md font-normal">
-          Aprendizados e experimentos na cozinha, no plantio e no sacolão
+          {m.seemly_odd_cheetah_skip()}
         </Text>
       </div>
       <FormProvider {...form}>
@@ -135,13 +136,13 @@ export default function NotesIndex() {
           />
           <Card className="flex-1 pr-0">
             <CardHeader className="sr-only">
-              <CardTitle>Filtre os resultados</CardTitle>
+              <CardTitle>{m.filter_results()}</CardTitle>
             </CardHeader>
             <CardContent className="py-0 pr-0 md:py-0">
               <Field
                 form={form}
                 name="types"
-                label="Tipo(s) de nota"
+                label={m.note_types_label()}
                 classNames={{
                   root: 'flex space-y-0 gap-x-2 gap-y-3 items-center flex-wrap py-2',
                   label: 'flex-[0_0_max-content]',
@@ -164,12 +165,7 @@ export default function NotesIndex() {
         </form>
       </FormProvider>
       <NotesGridWrapper className="hide-scrollbar relative justify-start overflow-x-hidden py-4">
-        {isFetching && !isFetchingNextPage && (
-          <div className="bg-background bg-opacity-50 absolute inset-0 flex items-center justify-center gap-3">
-            <Carrot className="h-6 w-6 animate-spin" />
-            Carregando...
-          </div>
-        )}
+        {isFetching && !isFetchingNextPage && <LoadingSpinner />}
         {data?.pages?.map((page) => (
           <React.Fragment key={page.queryParams.offset}>
             {(page.notes || []).map((note) => (
@@ -177,23 +173,18 @@ export default function NotesIndex() {
             ))}
           </React.Fragment>
         ))}
-        {isFetchingNextPage && (
-          <div className="flex items-center justify-center gap-3 py-10">
-            <Carrot className="h-6 w-6 animate-spin" />
-            Carregando...
-          </div>
-        )}
+        {isFetchingNextPage && <LoadingSpinner />}
       </NotesGridWrapper>
       {/* EMPTY STATE */}
       {isEmpty && (
         <Card aria-live="polite">
           <CardHeader>
-            <CardTitle>Nenhuma nota encontrada</CardTitle>
-            <Text>Tem algum experimento ou aprendizado pra compartilhar?</Text>
+            <CardTitle>{m.teary_crazy_snake_dash()}</CardTitle>
+            <Text>{m.quaint_seemly_beetle_gaze()}</Text>
           </CardHeader>
           <CardContent>
             <Button asChild>
-              <Link href={paths.newNote()}>Enviar uma nota</Link>
+              <Link href={paths.newNote()}>{m.send_note_cta()}</Link>
             </Button>
           </CardContent>
         </Card>
@@ -219,7 +210,7 @@ export default function NotesIndex() {
               }}
               mode="outline"
             >
-              Carregar próxima página
+              {m.load_next_page()}
             </Button>
           </div>
         ))}

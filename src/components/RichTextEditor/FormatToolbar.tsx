@@ -1,5 +1,6 @@
 'use client'
 
+import { m } from '@/paraglide/messages'
 import {
   BoldIcon,
   ItalicIcon,
@@ -30,7 +31,7 @@ export default function FormatToolbar({
         disabled={!editor.can().chain().focus().toggleBold().run()}
         mode={editor.isActive('bold') ? 'outline' : 'bleed'}
         size="icon"
-        aria-label="Negrito"
+        aria-label={m.aqua_blue_rabbit_delight()}
       >
         <BoldIcon />
       </Button>
@@ -39,7 +40,7 @@ export default function FormatToolbar({
         disabled={!editor.can().chain().focus().toggleItalic().run()}
         mode={editor.isActive('italic') ? 'outline' : 'bleed'}
         size="icon"
-        aria-label="Itálico"
+        aria-label={m.inner_plane_finch_seek()}
       >
         <ItalicIcon />
       </Button>
@@ -48,7 +49,7 @@ export default function FormatToolbar({
         disabled={!editor.can().chain().focus().toggleStrike().run()}
         mode={editor.isActive('strike') ? 'outline' : 'bleed'}
         size="icon"
-        aria-label="Riscado"
+        aria-label={m.slow_sharp_wombat_persist()}
       >
         <StrikethroughIcon />
       </Button>
@@ -57,7 +58,7 @@ export default function FormatToolbar({
         disabled={!editor.can().chain().focus().toggleBulletList().run()}
         mode={editor.isActive('bulletList') ? 'outline' : 'bleed'}
         size="icon"
-        aria-label="Lista não ordenada"
+        aria-label={m.stout_novel_wolf_dust()}
       >
         <ListIcon />
       </Button>
@@ -66,7 +67,7 @@ export default function FormatToolbar({
         disabled={!editor.can().chain().focus().toggleOrderedList().run()}
         mode={editor.isActive('orderedList') ? 'outline' : 'bleed'}
         size="icon"
-        aria-label="Lista numérica"
+        aria-label={m.next_yummy_okapi_kick()}
       >
         <ListOrderedIcon />
       </Button>
@@ -75,7 +76,7 @@ export default function FormatToolbar({
         disabled={!editor.can().chain().focus().toggleLink({ href: '' }).run()}
         mode={editor.isActive('link') ? 'outline' : 'bleed'}
         size="icon"
-        aria-label="Link"
+        aria-label={m.raw_heavy_antelope_clap()}
       >
         <LinkIcon />
       </Button>

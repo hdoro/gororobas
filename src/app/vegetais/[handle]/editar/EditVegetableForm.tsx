@@ -1,6 +1,7 @@
 'use client'
 
 import { createEditSuggestionAction } from '@/actions/createEditSuggestion'
+import { m } from '@/paraglide/messages'
 import type { VegetableForDBWithImages, VegetableInForm } from '@/schemas'
 import { getChangedObjectSubset, removeNullishKeys } from '@/utils/diffs'
 import { paths } from '@/utils/urls'
@@ -29,8 +30,7 @@ export default function EditVegetableForm(props: {
           return {
             success: true,
             message: {
-              title: 'Tudo certo, nada foi alterado',
-              description: '',
+              title: m.aloof_acidic_dachshund_pout(),
             },
             redirectTo: paths.vegetable(props.vegetableForDBWithImages.handle),
           }

@@ -1,4 +1,5 @@
 import { auth } from '@/gel'
+import { m } from '@/paraglide/messages'
 import { editProfileQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { getAuthRedirect, paths } from '@/utils/urls'
@@ -8,7 +9,8 @@ import { notFound, redirect } from 'next/navigation'
 import ProfileForm from './ProfileForm'
 
 export const metadata: Metadata = {
-  title: 'Editar perfil | Gororobas',
+  title: `${m.round_stout_deer_catch()} | Gororobas Agroecologia`,
+  robots: { index: false, follow: false },
 }
 
 export default async function ProfileRoute() {

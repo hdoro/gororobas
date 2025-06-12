@@ -38,7 +38,7 @@ export function createVegetable(
         Effect.tryPromise({
           try: () => getTransaction(input, client),
           catch: (error) => {
-            console.log('Failed creating vegetable', error)
+            console.log('[createVegetable] failed creating vegetable', error)
             return new UnknownGelDBError(error)
           },
         }),

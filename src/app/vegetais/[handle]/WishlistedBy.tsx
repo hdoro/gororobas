@@ -2,6 +2,7 @@ import ProfilesStrip from '@/components/ProfilesStrip'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import { Text } from '@/components/ui/text'
 import { client } from '@/gel'
+import { m } from '@/paraglide/messages'
 import { wishlistedByQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
@@ -47,7 +48,7 @@ export default async function WishlistedBy(props: { vegetable_id: string }) {
         <div className="mt-10 -mr-[var(--page-padding-x)] space-y-3">
           <Text as="h2" level="h3" className="flex gap-1">
             <SeedlingIcon variant="color" className="w-[1.5em]" />
-            Quem já planta
+            {m.weird_slow_impala_loop()}
           </Text>
           <ProfilesStrip profiles={plantedBy} />
         </div>
@@ -56,7 +57,7 @@ export default async function WishlistedBy(props: { vegetable_id: string }) {
         <div className="mt-10 -mr-[var(--page-padding-x)] space-y-3">
           <Text as="h2" level="h3" className="flex gap-1">
             <SeedlingIcon variant="color" className="w-[1.5em]" />
-            Quem quer plantar
+            {m.yummy_cute_panda_approve()}
           </Text>
           <ProfilesStrip profiles={desiredBy} />
         </div>

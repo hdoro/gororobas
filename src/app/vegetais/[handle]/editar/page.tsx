@@ -1,4 +1,5 @@
 import { auth } from '@/gel'
+import { m } from '@/paraglide/messages'
 import {
   type ImageForRenderingData,
   type SourceCardData,
@@ -118,7 +119,9 @@ export async function generateMetadata(props: {
   }
 
   return {
-    title: `Editar ${vegetable.names[0] || 'Vegetal'} | Gororobas`,
+    title: m.sweet_simple_butterfly_drum({
+      name: vegetable.names[0] || 'Vegetal',
+    }),
   }
 }
 

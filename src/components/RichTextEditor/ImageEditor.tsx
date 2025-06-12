@@ -1,5 +1,6 @@
 'use client'
 
+import { m } from '@/paraglide/messages'
 import {
   ImageFormToDBTransformer,
   ImageInForm,
@@ -75,8 +76,8 @@ export default function ImageEditor({ editor, editorId, send }: EditorUIProps) {
       }),
       Effect.catchAll(() => {
         toast({
-          title: 'Erro ao enviar foto',
-          description: 'Confira se tem conexão à internet e tente novamente',
+          title: m.minor_icy_dachshund_exhale(),
+          description: m.steep_sharp_mammoth_succeed(),
           variant: 'destructive',
         })
         return Effect.succeed({ error: 'upload-error' } as const)
@@ -113,7 +114,9 @@ export default function ImageEditor({ editor, editorId, send }: EditorUIProps) {
             {form.formState.isSubmitting && (
               <Text className="text-muted-foreground absolute inset-0 z-50 flex items-center justify-center gap-3 bg-white">
                 <Carrot className="h-5 w-5 animate-spin" />
-                <span className="animate-pulse">Subindo imagem...</span>
+                <span className="animate-pulse">
+                  {m.tiny_each_zebra_mend()}
+                </span>
               </Text>
             )}
             <DialogHeader>
@@ -123,7 +126,7 @@ export default function ImageEditor({ editor, editorId, send }: EditorUIProps) {
               <Field
                 form={form}
                 name="image"
-                label="Foto"
+                label={m.mad_left_nils_roar()}
                 render={({ field }) => (
                   <ImageInput field={field} includeMetadata={false} />
                 )}
@@ -136,7 +139,7 @@ export default function ImageEditor({ editor, editorId, send }: EditorUIProps) {
                     form.formState.disabled || form.formState.isSubmitting
                   }
                 >
-                  Adicionar
+                  {m.livid_topical_fish_renew()}
                 </Button>
               </div>
             </DialogBody>

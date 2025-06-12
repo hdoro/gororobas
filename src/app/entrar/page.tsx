@@ -6,6 +6,10 @@ import LoginForm from './LoginForm'
 
 export const metadata: Metadata = {
   title: 'Entrar no Gororobas',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
 export default async function ProfileRoute(props: {

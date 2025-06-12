@@ -1,3 +1,4 @@
+import Link from '@/components/LinkWithTransition'
 import {
   RichTextImageAttributes,
   RichTextMentionAttributes,
@@ -6,7 +7,6 @@ import {
 } from '@/schemas'
 import { BASE_URL } from '@/utils/config'
 import { Schema } from 'effect'
-import Link from 'next/link'
 import { Children } from 'react'
 import { SanityImage } from '../SanityImage'
 import YoutubeVideo from '../YoutubeVideo'

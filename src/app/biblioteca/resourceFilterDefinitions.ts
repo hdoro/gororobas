@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import type { ReferenceObjectType } from '@/types'
 import { RESOURCE_FORMAT_TO_LABEL } from '@/utils/labels'
 import type { LucideIcon } from 'lucide-react'
@@ -27,14 +28,18 @@ export const FILTER_DEFINITIONS = [
   {
     queryKey: 'titulo',
     filterKey: 'search_query',
-    label: 'Buscar por título',
+    get label() {
+      return m.mealy_tough_oryx_read()
+    },
     type: 'search_query',
     icon: SearchIcon,
   },
   {
     queryKey: 'formato',
     filterKey: 'formats',
-    label: 'Formato',
+    get label() {
+      return m.main_equal_swallow_clasp()
+    },
     type: 'multiselect',
     values: Object.keys(RESOURCE_FORMAT_TO_LABEL),
     valueLabels: RESOURCE_FORMAT_TO_LABEL,
@@ -43,7 +48,9 @@ export const FILTER_DEFINITIONS = [
   {
     queryKey: 'etiquetas',
     filterKey: 'tags',
-    label: 'Etiquetas',
+    get label() {
+      return m.gaudy_caring_hare_arise()
+    },
     type: 'reference',
     objectType: 'Tag',
     icon: TagsIcon,
@@ -51,7 +58,9 @@ export const FILTER_DEFINITIONS = [
   {
     queryKey: 'vegetais',
     filterKey: 'vegetables',
-    label: 'Vegetais',
+    get label() {
+      return m.proof_major_ant_trim()
+    },
     type: 'reference',
     objectType: 'Vegetable',
     icon: CarrotIcon,

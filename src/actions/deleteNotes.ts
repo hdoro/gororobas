@@ -24,7 +24,7 @@ export function deleteNotes(
           Effect.tryPromise({
             try: () => deleteNotesMutation.run(client, { noteIds }),
             catch: (error) => {
-              console.log('Failed deleting notes', error)
+              console.log('[deleteNotes] failed deleting notes', error)
             },
           }),
         ),

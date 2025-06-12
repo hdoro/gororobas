@@ -4,6 +4,7 @@ import { acceptEditSuggestionAction } from '@/actions/acceptEditSuggestion'
 import { rejectEditSuggestionAction } from '@/actions/rejectEditSuggestion'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
+import { m } from '@/paraglide/messages'
 import { CheckIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -24,13 +25,13 @@ export default function JudgeSuggestion({
     const worked = await rejectEditSuggestionAction({ suggestion_id })
     if (worked) {
       toast({
-        title: 'Sugestão rejeitada',
+        title: m.teal_flat_osprey_skip(),
       })
       router.refresh()
       setStatus('success')
     } else {
       toast({
-        title: 'Erro ao rejeitar sugestão',
+        title: m.sea_dizzy_raven_find(),
         variant: 'destructive',
       })
       setStatus('idle')
@@ -42,13 +43,13 @@ export default function JudgeSuggestion({
     const result = await acceptEditSuggestionAction({ suggestion_id })
     if (result.success) {
       toast({
-        title: 'Sugestão aceita ✨',
+        title: m.wacky_orange_skunk_type(),
       })
       router.push(result.redirectTo)
       setStatus('success')
     } else {
       toast({
-        title: 'Erro ao aceitar sugestão',
+        title: m.day_proud_duck_pinch(),
         variant: 'destructive',
       })
       setStatus('idle')
@@ -63,10 +64,10 @@ export default function JudgeSuggestion({
         onClick={rejectSuggestion}
         mode="outline"
       >
-        Rejeitar
+        {m.chunky_weary_dove_clip()}
       </Button>
       <Button onClick={acceptSuggestion} disabled={status !== 'idle'}>
-        <CheckIcon className="w-[1.25em]" /> Aceitar e publicar
+        <CheckIcon className="w-[1.25em]" /> {m.weary_level_camel_startle()}
       </Button>
     </>
   )

@@ -1,4 +1,6 @@
 import type { Gender } from '@/gel.interfaces'
+import { m } from '@/paraglide/messages'
+import { getLocale } from '@/paraglide/runtime'
 
 /**
  * Limits a string to a certain length for UI or SEO purposes.
@@ -65,7 +67,7 @@ export function semanticListItems(
 ) {
   if (!input_items || !input_items.length) return ''
 
-  const formatter = new Intl.ListFormat('pt-BR', {
+  const formatter = new Intl.ListFormat(getLocale(), {
     style: 'long',
     type: 'conjunction',
     ...(options || {}),
@@ -75,9 +77,13 @@ export function semanticListItems(
   if (maxDisplay && items.length > maxDisplay) {
     return formatter.format([
       ...items.slice(0, maxDisplay),
-      formatter.resolvedOptions().type === 'conjunction'
-        ? `e mais ${items.length - maxDisplay}`
-        : `${items.length - maxDisplay} outro`,
+
+      m.even_legal_tortoise_dash({
+        remaining: items.length - maxDisplay,
+        is_conjunction: String(
+          formatter.resolvedOptions().type === 'conjunction',
+        ),
+      }),
     ])
   }
   return formatter.format(items)

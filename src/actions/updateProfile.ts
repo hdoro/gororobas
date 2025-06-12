@@ -26,7 +26,7 @@ export async function updateProfileAction(
       Effect.tryPromise({
         try: () => getTransaction(input, session.client),
         catch: (error) => {
-          console.log('Failed updating profile', error)
+          console.log('[updateProfileAction] failed updating profile', error)
         },
       }),
       Effect.map(() => true),

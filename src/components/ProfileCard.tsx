@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import type { ProfileData, StoredImageDataInForm } from '@/schemas'
 import type { ImageForRendering } from '@/types'
 import { cn } from '@/utils/cn'
@@ -122,7 +123,7 @@ export function ProfilePhoto({
     return (
       <img
         src={URL.createObjectURL(photo.file)}
-        alt={'Foto de perfil'}
+        alt={m.tidy_true_mole_gasp()}
         className={classes.image()}
       />
     )
@@ -134,7 +135,7 @@ export function ProfilePhoto({
         image={{
           sanity_id: photo.sanity_id,
         }}
-        alt={`Foto de perfil ${profile.name ? ` de ${profile.name}` : ''}`}
+        alt={m.agent_lucky_macaw_cook({ name: profile.name ?? 'false' })}
         maxWidth={SIZE_MAP[size]}
         className={classes.image()}
       />

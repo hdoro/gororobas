@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { m } from '@/paraglide/messages'
 import type { ImageForRenderingData } from '@/queries'
 import { cn } from '@/utils/cn'
 import {
@@ -94,7 +95,9 @@ function FullscreenPhotosInner({
         }}
         className="block! h-screen max-h-[var(--dialog-h)] w-screen max-w-[var(--dialog-w)]"
       >
-        <DialogTitle className="sr-only">Fotos em tela cheia</DialogTitle>
+        <DialogTitle className="sr-only">
+          {m.mellow_born_mammoth_mop()}
+        </DialogTitle>
         <DialogBody className="h-full overflow-hidden px-0 pb-0">
           {activePhoto && (
             <div className="w-ful relative h-[var(--photo-height)]">

@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import {
   RichTextImageAttributes,
   type RichTextImageAttributesInDB,
@@ -94,19 +95,18 @@ export const Image = Node.create<ImageOptions>({
   },
 
   renderText({ node }) {
-    let label = 'imagem'
+    let label = m.fit_inclusive_dove_dine({ label: 'false', sources: 'false' })
     try {
       const {
         data: { image },
       } = Schema.encodeUnknownSync(RichTextImageAttributes)(node.attrs)
 
-      label = [
-        'imagem',
-        image.label && `de ${image.label}`,
-        sourcesToPlainText({ sources: image.sources, prefix: 'por' }),
-      ]
-        .filter(Boolean)
-        .join(' ')
+      label = m.fit_inclusive_dove_dine({
+        label: image.label || 'false',
+        sources:
+          sourcesToPlainText({ sources: image.sources, prefix: 'por' }) ||
+          'false',
+      })
     } catch (error) {}
 
     return `\n(${label})\n`

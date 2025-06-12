@@ -2,6 +2,7 @@
 
 import { auth } from '@/gel'
 import { insertEditSuggestionMutation } from '@/mutations'
+import { m } from '@/paraglide/messages'
 import {
   type VegetableForDBWithImages,
   VegetableWithUploadedImages,
@@ -82,9 +83,8 @@ export async function createEditSuggestionAction({
             redirectTo: paths.editSuggestion(createdObject.id),
 
             message: {
-              title: 'Sugestão de edição enviada',
-              description:
-                'Recebemos sua sugestão e vamos avaliar em breve - brigadin! 🤗',
+              title: m.patchy_plane_sawfish_shine(),
+              description: m.knotty_soft_mantis_create(),
             },
           }) as const,
       ),

@@ -1,11 +1,12 @@
 import AnchorLink from '@/components/AnchorLink'
+import Link from '@/components/LinkWithTransition'
 import { Button } from '@/components/ui/button'
+import { m } from '@/paraglide/messages'
 import type { VegetablePageData } from '@/queries'
 import { cn } from '@/utils/cn'
 import { isRenderableRichText } from '@/utils/tiptap'
 import { paths } from '@/utils/urls'
 import { Edit2Icon } from 'lucide-react'
-import Link from 'next/link'
 import { Suspense } from 'react'
 import WishlistedBy from './WishlistedBy'
 
@@ -18,45 +19,45 @@ export default function VegetablePageSidebar({
 }) {
   const links = [
     {
-      label: 'Visão geral',
+      label: m.petty_best_snake_coax(),
       href: '#visao-geral',
       active: true,
     },
     {
-      label: 'Sugestões e dicas',
+      label: m.extra_novel_robin_loop(),
       href: '#sugestoes',
     },
     vegetable.varieties &&
       vegetable.varieties.length > 0 && {
-        label: 'Variedades',
+        label: m.loud_real_jackal_gaze(),
         href: '#variedades',
       },
     isRenderableRichText(vegetable.content) && {
-      label: 'Curiosidades',
+      label: m.pretty_active_jannes_twirl(),
       href: '#curiosidades',
     },
     vegetable.friends &&
       vegetable.friends.length > 0 && {
-        label: 'Amizades e consórcios',
+        label: m.tangy_patchy_salmon_treat(),
         href: '#amizades',
       },
     hasExternalSources && {
-      label: 'Fontes e recursos',
+      label: m.top_muddy_skunk_seek(),
       href: '#fontes',
     },
     {
-      label: 'Quem contribuiu',
+      label: m.wide_topical_blackbird_dial(),
       href: '#contribuintes',
     },
     {
-      label: 'Aprendizados e experimentos',
+      label: m.major_slimy_badger_play(),
       href: '#notas',
     },
   ].flatMap((link) => link || [])
 
   return (
     <div className="flex-1 lg:sticky lg:top-2">
-      <nav aria-label="Tabela de conteúdo">
+      <nav aria-label={m.cute_ago_niklas_scoop()}>
         {links.map((link, index) => (
           <AnchorLink
             key={link.href}
@@ -90,7 +91,7 @@ export default function VegetablePageSidebar({
         <Button tone="secondary" mode="outline" asChild className="mt-4">
           <Link href={paths.editVegetable(vegetable.handle)}>
             <Edit2Icon className="w-[1.25em]" />
-            Sugerir edição
+            {m.vexed_upper_lemur_aim()}
           </Link>
         </Button>
       </nav>

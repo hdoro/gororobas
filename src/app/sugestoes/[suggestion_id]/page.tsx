@@ -1,6 +1,6 @@
 import { getEditSuggestionData } from '@/actions/getEditSuggestionData'
+import { m } from '@/paraglide/messages'
 import { runServerEffect } from '@/services/runtime'
-import { gender } from '@/utils/strings'
 import { Effect } from 'effect'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -26,7 +26,7 @@ export async function generateMetadata(props: {
   if (!data?.target_object?.names) return {}
 
   return {
-    title: `Sugestão de edição d${gender.suffix(data.toRender.gender || 'NEUTRO')} ${data.toRender.names[0]} | Gororobas`,
+    title: m.warm_bold_cat_slide({ name: data.toRender.names[0] }),
     robots: {
       index: false,
       follow: false,

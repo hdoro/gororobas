@@ -1,29 +1,16 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
+import { m } from '@/paraglide/messages'
 import { cn } from '@/utils/cn'
-import type { Locale } from '@/utils/i18n'
-import { formatPath, paths } from '@/utils/urls'
+import { paths, preparePath } from '@/utils/urls'
 import { FilePlus2Icon } from 'lucide-react'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { JSX, SVGProps } from 'react'
 import LibraryIcon from './icons/LibraryIcon'
 import NoteIcon from './icons/NoteIcon'
 import SeedlingIcon from './icons/SeedlingIcon'
 import { Button } from './ui/button'
-
-const LOCALIZED_CONTENT = {
-  pt: {
-    notes: 'Notas',
-    vegetables: 'Vegetais',
-    biblioteca: 'Biblioteca',
-  },
-  es: {
-    notes: 'Notas',
-    vegetables: 'Vegetales',
-    biblioteca: 'Biblioteca',
-  },
-} as const satisfies Record<Locale, unknown>
 
 function LinkButton(props: {
   href: string
@@ -34,7 +21,7 @@ function LinkButton(props: {
   ) => JSX.Element
   label: string
 }) {
-  const isActive = formatPath(usePathname()) === formatPath(props.href)
+  const isActive = preparePath(usePathname()) === preparePath(props.href)
 
   return (
     <Button
@@ -59,13 +46,7 @@ function LinkButton(props: {
   )
 }
 
-export default function MobileBottomBar({
-  signedIn,
-  locale,
-}: {
-  signedIn: boolean
-  locale: Locale
-}) {
+export default function MobileBottomBar({ signedIn }: { signedIn: boolean }) {
   const pathname = usePathname()
 
   if (
@@ -81,17 +62,17 @@ export default function MobileBottomBar({
       <LinkButton
         href={paths.notesIndex()}
         Icon={NoteIcon}
-        label={LOCALIZED_CONTENT[locale].notes}
+        label={m.swift_neat_bulldog_dazzle()}
       />
       <LinkButton
         href={paths.vegetablesIndex()}
         Icon={SeedlingIcon}
-        label={LOCALIZED_CONTENT[locale].vegetables}
+        label={m.alive_sunny_raven_dazzle()}
       />
       <LinkButton
         href={paths.resourcesIndex()}
         Icon={LibraryIcon}
-        label={LOCALIZED_CONTENT[locale].biblioteca}
+        label={m.these_shy_millipede_evoke()}
       />
       {signedIn && pathname !== paths.newNote() && (
         <Link
@@ -99,7 +80,7 @@ export default function MobileBottomBar({
           className="bg-primary-500 text-primary-50 flex size-12 flex-[0_0_3rem] -translate-y-3 items-center justify-center rounded-full border-4 border-white"
         >
           <FilePlus2Icon className="size-5" />{' '}
-          <span className="sr-only">Enviar nota</span>
+          <span className="sr-only">{m.witty_long_lynx_launch()}</span>
         </Link>
       )}
     </div>

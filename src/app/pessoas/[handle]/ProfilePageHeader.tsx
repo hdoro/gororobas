@@ -1,15 +1,17 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
 import { ProfilePhoto } from '@/components/ProfileCard'
 import RainbowIcon from '@/components/icons/RainbowIcon'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
+import { m } from '@/paraglide/messages'
 import type { ProfileLayoutData } from '@/queries'
+import { truncate } from '@/utils/strings'
 import { paths } from '@/utils/urls'
 import { Edit2Icon } from 'lucide-react'
-import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { VegetablesInWishlist } from './VegetablesInWishlist'
 
@@ -58,13 +60,11 @@ export default function ProfilePageHeader({
                   <Button size="sm" asChild>
                     <Link href={paths.editProfile()}>
                       <Edit2Icon className="w-[1.25em]" />
-                      Editar perfil
+                      {m.few_warm_quail_dust()}
                     </Link>
                   </Button>
                   <Button size="sm" asChild tone="secondary" mode="outline">
-                    <Link href={paths.signout()} prefetch={false}>
-                      Sair ou trocar conta
-                    </Link>
+                    <a href={paths.signout()}>{m.whole_livid_ox_heal()}</a>
                   </Button>
                 </div>
               )}
@@ -75,7 +75,11 @@ export default function ProfilePageHeader({
 
             {profile.bio ? (
               <Text className="mt-2 box-content max-w-md" as="div">
-                <h2 className="sr-only">Sobre {profile.name}</h2>
+                <h2 className="sr-only">
+                  {m.soft_aloof_wasp_smile({
+                    name: truncate(profile.name, 25),
+                  })}
+                </h2>
                 <TipTapRenderer content={profile.bio} />
               </Text>
             ) : null}
@@ -85,7 +89,7 @@ export default function ProfilePageHeader({
                 {profile.planted.length > 0 && (
                   <VegetablesInWishlist
                     list={profile.planted}
-                    title="Planta (ou já plantou):"
+                    title={m.fit_watery_shad_value()}
                     Icon={RainbowIcon}
                     count={profile.planted_count}
                   />
@@ -93,7 +97,7 @@ export default function ProfilePageHeader({
                 {profile.desired.length > 0 && (
                   <VegetablesInWishlist
                     list={profile.desired}
-                    title="Quer plantar:"
+                    title={m.equal_key_mantis_attend()}
                     Icon={SeedlingIcon}
                     count={profile.desired_count}
                   />

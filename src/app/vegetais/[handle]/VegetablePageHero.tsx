@@ -1,4 +1,6 @@
 import ChangeIndicator from '@/components/ChangeIndicator'
+import Link from '@/components/LinkWithTransition'
+import ReplaceI18nFragment from '@/components/ReplaceI18nFragments'
 import { SanityImage } from '@/components/SanityImage'
 import { Badge } from '@/components/ui/badge'
 import { Text } from '@/components/ui/text'
@@ -8,6 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { m } from '@/paraglide/messages'
 import type { VegetablePageData } from '@/queries'
 import { cn } from '@/utils/cn'
 import {
@@ -21,10 +24,8 @@ import {
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
 import { rangeValueToLabel } from '@/utils/numbers'
-import { gender } from '@/utils/strings'
 import { paths } from '@/utils/urls'
 import { CircleHelp, Edit2Icon, InfoIcon } from 'lucide-react'
-import Link from 'next/link'
 import { Fragment, Suspense } from 'react'
 import { VegetableHeroPhotos } from './VegetableHeroPhotos'
 import WishlistButtonData from './WishlistButtonData'
@@ -87,9 +88,9 @@ export function VegetablePageHero({
         <div className="mt-6 space-y-8">
           {names.length > 1 && (
             <TwoColInfo
-              left={`Também conhecid${gender.suffix(
-                vegetable.gender || 'MASCULINO',
-              )} como`}
+              left={m.spare_good_boar_compose({
+                gender: vegetable.gender || 'NEUTRO',
+              })}
               right={names.slice(1).join(', ')}
               hasChanged={diffKeys?.includes('names')}
             />
@@ -97,36 +98,36 @@ export function VegetablePageHero({
           {vegetable.scientific_names &&
             vegetable.scientific_names.length > 1 && (
               <TwoColInfo
-                left={'Nomes científicos'}
+                left={m.late_dry_salmon_pinch()}
                 right={vegetable.scientific_names.join(', ')}
                 hasChanged={diffKeys?.includes('scientific_names')}
               />
             )}
           {vegetable.origin && (
             <TwoColInfo
-              left={'Origem'}
+              left={m.empty_acidic_alligator_renew()}
               right={vegetable.origin}
               hasChanged={diffKeys?.includes('origin')}
             />
           )}
           {vegetable.uses && (
             <TwoColInfo
-              left={'Principais usos'}
+              left={m.smug_misty_barbel_thrive()}
               right={vegetable.uses.map((u) => USAGE_TO_LABEL[u])}
               hasChanged={diffKeys?.includes('uses')}
             />
           )}
           {vegetable.edible_parts && (
             <TwoColInfo
-              left={'Partes comestíveis'}
+              left={m.vegetable_field_edible_parts()}
               right={vegetable.edible_parts.map((u) => EDIBLE_PART_TO_LABEL[u])}
               hasChanged={diffKeys?.includes('edible_parts')}
             />
           )}
           {vegetable.strata && (
             <TwoColInfo
-              left={'Estrato'}
-              leftDescription="Camada vertical conforme necessidade de luz"
+              left={m.tame_pink_toad_relish()}
+              leftDescription={m.wise_bald_eel_treat()}
               right={vegetable.strata.map((u) => ({
                 label: STRATUM_TO_LABEL[u],
                 explainer: STRATUM_EXPLAINERS[u],
@@ -136,8 +137,8 @@ export function VegetablePageHero({
           )}
           {vegetable.lifecycles && (
             <TwoColInfo
-              left={'Ciclo de vida'}
-              leftDescription="Duração do o plantio até a morte ou colheita"
+              left={m.last_awful_mink_assure()}
+              leftDescription={m.equal_big_piranha_zoom()}
               right={vegetable.lifecycles.map((u) => ({
                 label: VEGETABLE_LIFECYCLE_TO_LABEL[u],
                 explainer: VEGETABLE_LIFECYCLE_EXPLAINERS[u],
@@ -147,7 +148,7 @@ export function VegetablePageHero({
           )}
           {vegetable.planting_methods && (
             <TwoColInfo
-              left={'Métodos de plantio e propagação'}
+              left={m.loved_odd_leopard_dare()}
               right={vegetable.planting_methods.map((u) => ({
                 label: PLANTING_METHOD_TO_LABEL[u],
                 explainer: PLANTING_METHOD_EXPLAINERS[u],
@@ -157,7 +158,7 @@ export function VegetablePageHero({
           )}
           {(vegetable.temperature_min || vegetable.temperature_max) && (
             <TwoColInfo
-              left={'Temperatura ideal'}
+              left={m.away_elegant_earthworm_offer()}
               right={rangeValueToLabel(
                 [vegetable.temperature_min, vegetable.temperature_max],
                 'temperature',
@@ -170,7 +171,9 @@ export function VegetablePageHero({
           )}
           {(vegetable.height_min || vegetable.height_max) && (
             <TwoColInfo
-              left={`Altura quando adult${gender.suffix(vegetable.gender || 'FEMININO')}`}
+              left={m.away_cuddly_elephant_twist({
+                gender: vegetable.gender || 'NEUTRO',
+              })}
               right={rangeValueToLabel(
                 [vegetable.height_min, vegetable.height_max],
                 'centimeters',
@@ -184,8 +187,8 @@ export function VegetablePageHero({
           {(vegetable.development_cycle_min ||
             vegetable.development_cycle_max) && (
             <TwoColInfo
-              left={'Tempo até produzir'}
-              leftDescription="Quanto tempo até começarmos a colher"
+              left={m.hour_born_dragonfly_favor()}
+              leftDescription={m.less_top_meerkat_flip()}
               right={rangeValueToLabel(
                 [
                   vegetable.development_cycle_min,
@@ -206,17 +209,22 @@ export function VegetablePageHero({
         <InfoIcon className="mt-1 h-6 w-6 flex-[0_0_1.5rem] opacity-80" />
         <div className="space-y-1">
           <Text level="h3" weight="semibold">
-            Alguma informação errada ou faltando?
+            {m.east_best_tadpole_treat()}
           </Text>
           <Text level="sm">
-            Você pode{' '}
-            <Link
-              href={paths.editVegetable(vegetable.handle)}
-              className="font-semibold underline"
-            >
-              <Edit2Icon className="inline-block h-4 w-4" /> enviar uma sugestão
-            </Link>
-            , essa enciclopédia é colaborativa!
+            <ReplaceI18nFragment
+              message={m.ago_mad_penguin_bump()}
+              fragments={{
+                link: ({ children }) => (
+                  <Link
+                    href={paths.editVegetable(vegetable.handle)}
+                    className="font-semibold underline"
+                  >
+                    <Edit2Icon className="inline-block h-4 w-4" /> {children}
+                  </Link>
+                ),
+              }}
+            />
           </Text>
         </div>
       </div>

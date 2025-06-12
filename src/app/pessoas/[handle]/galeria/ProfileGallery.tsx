@@ -8,7 +8,9 @@ import { SanityImage } from '@/components/SanityImage'
 import SectionTitle from '@/components/SectionTitle'
 import CameraIcon from '@/components/icons/CameraIcon'
 import { Text } from '@/components/ui/text'
+import { m } from '@/paraglide/messages'
 import type { ProfileGalleryData } from '@/queries'
+import { truncate } from '@/utils/strings'
 
 function ImageInGallery({
   image,
@@ -48,7 +50,10 @@ export default function ProfileGallery({
     <FullscreenPhotos photos={images}>
       <section className="mt-16">
         <SectionTitle Icon={CameraIcon}>
-          Fotos {is_owner ? 'que você enviou' : `de ${name}`}
+          {m.simple_smart_cougar_lend({
+            is_owner: is_owner.toString(),
+            name: truncate(name, 25),
+          })}
         </SectionTitle>
 
         {images && images.length > 0 ? (
@@ -64,9 +69,10 @@ export default function ProfileGallery({
             as="p"
             className="px-pageX text-muted-foreground mt-3"
           >
-            {is_owner
-              ? 'Você ainda não fez nenhuma contribuição'
-              : `${name} ainda não fez nenhuma contribuição`}
+            {m.inner_sad_sloth_pout({
+              is_owner: is_owner.toString(),
+              name: truncate(name, 25),
+            })}
           </Text>
         )}
       </section>

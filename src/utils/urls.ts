@@ -1,3 +1,4 @@
+import { localizeHref } from '@/paraglide/runtime'
 import type { NextSearchParams } from '@/types'
 import type { BuiltinOAuthProviderNames } from '@gel/auth-core'
 import type { ReadonlyURLSearchParams } from 'next/navigation'
@@ -13,7 +14,7 @@ export function pathToAbsUrl<P extends string | undefined>(
 
   return ((forceProduction ? PRODUCTION_URL : BASE_URL) +
     // When creating absolute URLs, ensure the homepage doesn't have a trailing slash
-    (path === '/' ? '' : formatPath(path))) as P extends string
+    (path === '/' ? '' : preparePath(path))) as P extends string
     ? string
     : undefined
 }
@@ -59,25 +60,28 @@ export function getPathVariations(path: string): string[] {
   ]
 }
 
-export function formatPath(path?: string): string {
+export function preparePath(path?: string): string {
   if (typeof path !== 'string') {
     return '/'
   }
 
-  return `/${stripMarginSlashes(path)}`
+  return localizeHref(`/${stripMarginSlashes(path)}`)
 }
 
 export const paths = {
-  home: () => '/' as const,
+  home: () => preparePath('/'),
 
   editProfile: (isFirstTime = false) =>
-    `/perfil${isFirstTime ? '?bem-vinde=true' : ''}` as const,
-  userProfile: (handle: string) => formatPath(`/pessoas/${handle}`),
-  userGallery: (handle: string) => formatPath(`/pessoas/${handle}/galeria`),
+    preparePath(`/perfil${isFirstTime ? '?bem-vinde=true' : ''}`),
+  userProfile: (handle: string) => preparePath(`/pessoas/${handle}`),
+  userGallery: (handle: string) => preparePath(`/pessoas/${handle}/galeria`),
   userContributions: (handle: string) =>
-    formatPath(`/pessoas/${handle}/contribuicoes`),
+    preparePath(`/pessoas/${handle}/contribuicoes`),
+
   signInOrSignUp: (onAuthRedirectTo?: string) =>
-    `/entrar${onAuthRedirectTo ? `?redirecionar=${encodeURIComponent(onAuthRedirectTo)}` : ''}` as const,
+    preparePath(
+      `/entrar${onAuthRedirectTo ? `?redirecionar=${encodeURIComponent(onAuthRedirectTo)}` : ''}`,
+    ),
   signout: () => '/auth/signout',
   oauthLogin: (
     provider: BuiltinOAuthProviderNames,
@@ -89,21 +93,21 @@ export const paths = {
         : ''
     }`,
 
-  vegetablesIndex: () => '/vegetais' as const,
-  vegetable: (handle: string) => formatPath(`/vegetais/${handle}`),
-  editVegetable: (handle: string) => formatPath(`/vegetais/${handle}/editar`),
-  newVegetable: () => '/vegetais/novo' as const,
+  vegetablesIndex: () => preparePath('/vegetais' as const),
+  vegetable: (handle: string) => preparePath(`/vegetais/${handle}`),
+  editVegetable: (handle: string) => preparePath(`/vegetais/${handle}/editar`),
+  newVegetable: () => preparePath('/vegetais/novo'),
   editSuggestion: (suggestionId: string) =>
-    formatPath(`/sugestoes/${suggestionId}`),
+    preparePath(`/sugestoes/${suggestionId}`),
 
-  resourcesIndex: () => '/biblioteca' as const,
-  resource: (handle: string) => formatPath(`/biblioteca/${handle}`),
-  newResource: () => '/biblioteca/novo-material' as const,
+  resourcesIndex: () => preparePath('/biblioteca'),
+  resource: (handle: string) => preparePath(`/biblioteca/${handle}`),
+  newResource: () => preparePath('/biblioteca/novo-material'),
 
-  notesIndex: () => '/notas' as const,
-  note: (handle: string) => formatPath(`/notas/${handle}`),
-  newNote: () => '/notas/nova' as const,
-  editNote: (handle: string) => formatPath(`/notas/${handle}/editar`),
+  notesIndex: () => preparePath('/notas'),
+  note: (handle: string) => preparePath(`/notas/${handle}`),
+  newNote: () => preparePath('/notas/nova'),
+  editNote: (handle: string) => preparePath(`/notas/${handle}/editar`),
 } as const
 
 export function getAuthRedirect(isSignedIn: boolean, onAuthRedirectTo: string) {

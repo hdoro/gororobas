@@ -1,16 +1,17 @@
+import { m } from '@/paraglide/messages'
 import { render } from '@react-email/components'
 import { Config, Effect } from 'effect'
 import type { CreateEmailOptions } from 'resend'
 import * as Mailpit from '../services/mailpit'
 import * as Resend from '../services/resend'
 
-const FROM_NAME = 'Gororobas Agroecologia'
-const FROM_EMAIL = 'ola@gororobas.com'
-
 export const sendEmail = (
   payload: Omit<CreateEmailOptions, 'from'> & { react: React.ReactNode },
 ) =>
   Effect.gen(function* () {
+    const fromName = m.frail_weary_slug_flop()
+    const fromEmail = m.gororobas_email()
+
     const nodeEnv = yield* Config.string('NODE_ENV')
     const isDev = nodeEnv === 'development'
 
@@ -26,7 +27,7 @@ export const sendEmail = (
       })
       const result = yield* mailpit.use((client) =>
         client.sendMessage({
-          From: { Email: FROM_EMAIL, Name: FROM_NAME },
+          From: { Email: fromEmail, Name: fromName },
           To: [payload.to].flat().map((email) => ({ Email: email })),
           HTML: html,
           Bcc: payload.bcc ? [payload.bcc].flat() : [],
@@ -50,7 +51,7 @@ export const sendEmail = (
     const result = yield* resend.use((client) =>
       client.emails.send({
         ...payload,
-        from: `${FROM_NAME} <${FROM_EMAIL}>`,
+        from: `${fromName} <${fromEmail}>`,
       }),
     )
     if (!result.data?.id) {

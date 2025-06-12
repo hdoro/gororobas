@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import type { VegetablePageData } from '@/queries'
 import { cn } from '@/utils/cn'
 import React from 'react'
@@ -27,7 +28,7 @@ export default function PhotoLabelAndSources({
       )}
       {photo.sources && photo.sources.length > 0 && (
         <div className="text-muted-foreground max-w-full overflow-hidden text-[0.75em] leading-tight font-normal text-ellipsis">
-          Por{' '}
+          {m.extra_green_liger_boil()}{' '}
           {(photo.sources || []).map((source) => {
             if (source.type === 'GOROROBAS') {
               return (

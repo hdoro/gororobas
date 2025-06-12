@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import { notePageQuery } from '@/queries'
 import { runQuery } from '@/services/runQuery'
 import { runServerEffect } from '@/services/runtime'
@@ -40,13 +41,12 @@ export async function generateMetadata(props: {
 
   const body = note.body ? tiptapJSONtoPlainText(note.body) : undefined
   return {
-    title: `${truncate(title, 60)} | Gororobas`,
-    description: `Enviada por ${truncate(
-      note.created_by?.name || 'alguém',
-      20,
-    )} em ${new Date(note.published_at).toLocaleDateString('pt-BR', {})}.${
-      body ? `\n\n${truncate(body, 120)}` : ''
-    }`,
+    title: `${truncate(title, 60)} | Gororobas Agroecologia`,
+    description:
+      m.lazy_simple_swan_push({
+        name: truncate(note.created_by?.name || 'alguém', 20),
+        date: new Date(note.published_at).toLocaleDateString('pt-BR', {}),
+      }) + (body ? `\n\n${truncate(body, 120)}` : ''),
     openGraph: {
       url: pathToAbsUrl(paths.note(note.handle)),
     },

@@ -1,3 +1,5 @@
+import Link from '@/components/LinkWithTransition'
+import { m } from '@/paraglide/messages'
 import type { NoteCardData } from '@/queries'
 import { cn } from '@/utils/cn'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
@@ -6,7 +8,6 @@ import { truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { paths } from '@/utils/urls'
 import { Share2Icon } from 'lucide-react'
-import Link from 'next/link'
 import NoteCardFlipper from './NoteCardFlipper'
 import ProfileCard from './ProfileCard'
 import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
@@ -80,7 +81,7 @@ export default function NoteCard({
               >
                 <Link href={paths.note(note.handle)}>
                   <span className="opacity-0 transition-opacity select-none group-hover:opacity-100">
-                    Compartilhar
+                    {m.east_lost_chicken_jump()}
                   </span>
                   <Share2Icon className="stroke-current" />
                 </Link>

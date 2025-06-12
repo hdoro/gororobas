@@ -1,5 +1,6 @@
+import Link from '@/components/LinkWithTransition'
+import { m } from '@/paraglide/messages'
 import { SOURCE_CODE_URL } from '@/utils/config'
-import { type Locale, getUserLocale } from '@/utils/i18n'
 import { paths } from '@/utils/urls'
 import {
   GithubIcon,
@@ -8,58 +9,63 @@ import {
   NotebookPenIcon,
   SproutIcon,
 } from 'lucide-react'
-import Link from 'next/link'
+import LocaleSelector from './LocaleSelector'
 import GororobasLogo from './icons/GororobasLogo'
 
-const FOOTER_LINKS = [
-  {
-    href: paths.vegetablesIndex(),
-    text: { pt: 'Vegetais', es: 'Vegetales' },
-    icon: SproutIcon,
-  },
-  {
-    href: paths.notesIndex(),
-    text: { pt: 'Notas', es: 'Notas' },
-    icon: NotebookPenIcon,
-  },
-  {
-    href: paths.resourcesIndex(),
-    text: { pt: 'Biblioteca Agroecológica', es: 'Biblioteca Agroecológica' },
-    icon: LibraryBigIcon,
-  },
-  {
-    href: SOURCE_CODE_URL,
-    text: { pt: 'Código fonte', es: 'Código fuente' },
-    icon: GithubIcon,
-  },
-] as const satisfies {
-  href: string
-  text: Record<Locale, string>
-  icon: LucideIcon
-}[]
+const FOOTER_LINKS = () =>
+  [
+    {
+      href: paths.vegetablesIndex(),
+      text: m.tired_level_snail_roar(),
+      icon: SproutIcon,
+    },
+    {
+      href: paths.notesIndex(),
+      text: m.least_polite_elephant_burn(),
+      icon: NotebookPenIcon,
+    },
+    {
+      href: paths.resourcesIndex(),
+      text: m.noble_good_tortoise_rush(),
+      icon: LibraryBigIcon,
+    },
+    {
+      href: SOURCE_CODE_URL,
+      text: m.quaint_nimble_racoon_talk(),
+      icon: GithubIcon,
+    },
+  ] as const satisfies {
+    href: string
+    text: string
+    icon: LucideIcon
+  }[]
 
 export default async function Footer() {
-  const locale = await getUserLocale()
   return (
     <footer
       className="border-t-primary-100 bg-background-card px-pageX flex flex-col items-center gap-[var(--page-padding-x)] border-t py-10 max-md:pb-28 md:flex-row md:items-start md:justify-start md:py-16 lg:py-24"
-      aria-label="Rodapé"
+      aria-label={m.tired_every_warbler_lock()}
       id="global-footer"
     >
-      <Link href={paths.home()} rel="home" title="Página inicial">
+      <Link
+        href={paths.home()}
+        rel="home"
+        title={m.broad_deft_cockroach_spin()}
+      >
         <GororobasLogo />
       </Link>
       <nav
-        aria-label="Rodapé"
+        aria-label={m.alive_drab_squirrel_explore()}
+        id="global-footer-nav"
         className="flex flex-wrap items-center justify-center gap-10"
       >
-        {FOOTER_LINKS.map((link) => {
+        {FOOTER_LINKS().map((link) => {
           const className =
             'text-primary-800 inline-flex items-center gap-2 text-lg'
           const Content = (
             <>
               <link.icon className="text-primary-700 size-[1.25em]" />{' '}
-              {link.text[locale]}
+              {link.text}
             </>
           )
 
@@ -83,6 +89,7 @@ export default async function Footer() {
             </Link>
           )
         })}
+        <LocaleSelector placement="footer" />
       </nav>
     </footer>
   )

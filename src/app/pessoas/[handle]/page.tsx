@@ -29,5 +29,5 @@ export default async function UserProfilePage(props: {
 
   if (!data) return notFound()
 
-  return <ProfileNotes {...data} />
+  return <ProfileNotes {...data} is_owner={data.is_owner ?? false} />
 }

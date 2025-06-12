@@ -1,7 +1,7 @@
 'use client'
 
 import { deleteNotesAction } from '@/actions/deleteNotes.action'
-import Carrot from '@/components/icons/Carrot'
+import LoadingSpinner from '@/components/LoadingSpinner'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dialog'
 import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
+import { m } from '@/paraglide/messages'
 import { paths } from '@/utils/urls'
 import { TrashIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -33,15 +34,15 @@ export default function DeleteNoteButton({ noteId }: { noteId: string }) {
     if (response === true) {
       toast.toast({
         variant: 'default',
-        title: 'Nota deletada',
+        title: m.dark_these_gopher_enjoy(),
       })
       router.push(paths.notesIndex())
       setStatus('success')
     } else {
       toast.toast({
         variant: 'destructive',
-        title: 'Erro ao deletar a nota',
-        description: 'Por favor, tente novamente.',
+        title: m.topical_neat_squid_mend(),
+        description: m.cool_mealy_slug_offer(),
       })
       setStatus('idle')
     }
@@ -50,7 +51,12 @@ export default function DeleteNoteButton({ noteId }: { noteId: string }) {
   return (
     <Dialog>
       <DialogTrigger asChild disabled={status === 'submitting'}>
-        <Button mode="bleed" tone="destructive" size="xs" title="Deletar nota">
+        <Button
+          mode="bleed"
+          tone="destructive"
+          size="xs"
+          title={m.less_alert_larva_stir()}
+        >
           <TrashIcon className="w-[1.25em]" />
         </Button>
       </DialogTrigger>
@@ -59,43 +65,34 @@ export default function DeleteNoteButton({ noteId }: { noteId: string }) {
           {status === 'success' && (
             <>
               <DialogTitle asChild>
-                <Text level="h2">Nota deletada</Text>
+                <Text level="h2">{m.aloof_heroic_weasel_spin()}</Text>
               </DialogTitle>
               <DialogDescription asChild>
-                <Text level="p">
-                  Te levando pra outras notas, vai que você se inspira a
-                  escrever mais?
-                </Text>
+                <Text level="p">{m.grand_due_squirrel_fall()}</Text>
               </DialogDescription>
             </>
           )}
           {status === 'submitting' && (
-            <DialogTitle asChild>
-              <Text level="h2" className="flex items-center gap-3">
-                <Carrot className="h-6 w-6 animate-spin" />
-                Robôs trabalhando...
-              </Text>
+            <DialogTitle>
+              <LoadingSpinner />
             </DialogTitle>
           )}
           {status === 'idle' && (
             <>
               <DialogTitle asChild>
-                <Text level="h2">Deletar nota?</Text>
+                <Text level="h2">{m.less_alert_larva_stir()}</Text>
               </DialogTitle>
               <DialogDescription asChild>
-                <Text level="p">
-                  Essa ação é irreversível, você tem certeza que quer privar o
-                  mundo da beleza das suas palavras e curiosidade?
-                </Text>
+                <Text level="p">{m.tidy_good_racoon_hush()}</Text>
               </DialogDescription>
               <div className="flex items-center gap-2 pt-2">
                 <DialogClose asChild>
                   <Button mode="outline" tone="neutral" size="xs">
-                    Cancelar
+                    {m.cancel()}
                   </Button>
                 </DialogClose>
                 <Button tone="destructive" size="xs" onClick={deleteNote}>
-                  Deletar
+                  {m.delete()}
                 </Button>
               </div>
             </>

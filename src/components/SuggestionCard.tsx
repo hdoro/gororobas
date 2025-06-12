@@ -1,7 +1,9 @@
+import Link from '@/components/LinkWithTransition'
+import { m } from '@/paraglide/messages'
+import { getLocale } from '@/paraglide/runtime'
 import type { EditSuggestionCardData } from '@/queries'
 import { paths } from '@/utils/urls'
 import { type Changeset, atomizeChangeset } from 'json-diff-ts'
-import Link from 'next/link'
 import ProfileCard from './ProfileCard'
 import { SanityImage } from './SanityImage'
 import { Text } from './ui/text'
@@ -36,17 +38,16 @@ export default function SuggestionCard({
         </div>
       )}
       <Text level="sm" className="text-muted-foreground">
-        {atomized.length} mudança{atomized.length > 1 ? 's' : ''}{' '}
-        {suggestion.created_at && (
-          <>
-            em{' '}
-            {suggestion.created_at.toLocaleDateString('pt-BR', {
-              month: '2-digit',
-              day: '2-digit',
-              year: 'numeric',
-            })}
-          </>
-        )}
+        {m.royal_sad_poodle_animate({
+          count: atomized.length,
+          date: suggestion.created_at
+            ? suggestion.created_at.toLocaleDateString(getLocale(), {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+              })
+            : false,
+        })}
       </Text>
       {suggestion.created_by && (
         <ProfileCard profile={suggestion.created_by} linkToProfile={false} />

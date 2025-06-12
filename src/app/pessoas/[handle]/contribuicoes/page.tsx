@@ -31,5 +31,5 @@ export default async function UserContributionsPage(props: {
 
   if (!data) return notFound()
 
-  return <ProfileContributions {...data} />
+  return <ProfileContributions {...data} is_owner={data.is_owner ?? false} />
 }

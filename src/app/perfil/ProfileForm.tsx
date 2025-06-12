@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
+import { m } from '@/paraglide/messages'
 import type { EditProfilePageData } from '@/queries'
 import {
   ImageInForm,
@@ -70,7 +71,7 @@ export default function ProfileForm({
     if (Object.keys(dataThatChanged).length === 0) {
       toast.toast({
         variant: 'default',
-        title: 'Tudo certo, nada foi alterado',
+        title: m.only_this_reindeer_accept(),
       })
     }
 
@@ -105,15 +106,15 @@ export default function ProfileForm({
     if (result === true) {
       toast.toast({
         variant: 'default',
-        title: 'Perfil editado com sucesso ✨',
-        description: 'Te enviando pra sua página...',
+        title: m.novel_sound_trout_glow(),
+        description: m.good_such_jannes_fetch(),
       })
       router.push(`${paths.userProfile(data.handle)}?atualizado`)
     } else {
       toast.toast({
         variant: 'destructive',
-        title: 'Erro ao editar',
-        description: 'Por favor, tente novamente.',
+        title: m.vivid_hour_osprey_honor(),
+        description: m.bald_merry_cheetah_fetch(),
       })
       setStatus('idle')
     }
@@ -129,9 +130,9 @@ export default function ProfileForm({
         >
           <Card>
             <CardHeader className="flex flex-row! flex-wrap items-center justify-between">
-              <CardTitle>Modifique seu perfil</CardTitle>
+              <CardTitle>{m.even_only_bison_support()}</CardTitle>
               <Button type="submit" disabled={form.formState.disabled}>
-                Salvar alterações
+                {m.patient_bold_antelope_hunt()}
               </Button>
             </CardHeader>
             <CardContent className="@container space-y-6">
@@ -139,8 +140,8 @@ export default function ProfileForm({
                 <Field
                   form={form}
                   name="name"
-                  label="Nome"
-                  description="O nome que você preferir que te chamem, sem formalidades"
+                  label={m.patient_awful_felix_greet()}
+                  description={m.tidy_careful_florian_gleam()}
                   render={({ field }) => (
                     <Input {...field} value={field.value || ''} type="text" />
                   )}
@@ -148,7 +149,7 @@ export default function ProfileForm({
                 <Field
                   form={form}
                   name="location"
-                  label="Território ou localidade"
+                  label={m.east_key_rook_approve()}
                   render={({ field }) => (
                     <Input {...field} value={field.value || ''} type="text" />
                   )}
@@ -158,7 +159,7 @@ export default function ProfileForm({
                 <Field
                   form={form}
                   name="handle"
-                  label="Endereço do seu perfil no site"
+                  label={m.zesty_funny_herring_pave()}
                   render={({ field }) => (
                     <HandleInput field={field} path="pessoas" />
                   )}
@@ -166,11 +167,11 @@ export default function ProfileForm({
                 <Field
                   form={form}
                   name="bio"
-                  label="Curiosidades sobre você"
+                  label={m.odd_raw_penguin_mend()}
                   render={({ field }) => (
                     <RichTextInput
                       field={field}
-                      placeholder="O que quiser falar! Por exemplo: o que te encanta na cozinha? O que te levou à agroecologia?"
+                      placeholder={m.smug_front_warthog_flow()}
                     />
                   )}
                 />
@@ -178,8 +179,8 @@ export default function ProfileForm({
               <Field
                 form={form}
                 name="photo"
-                label="Fotinha!"
-                description="Caso queira, claro. Pode ser de vegetais que cê gosta, inclusive ✨"
+                label={m.upper_full_dragonfly_reap()}
+                description={m.best_lazy_dragonfly_play()}
                 render={({ field }) => (
                   <ImageInput field={field} includeMetadata={false} />
                 )}
@@ -195,7 +196,7 @@ export default function ProfileForm({
 
 function ProfilePreview() {
   const form = useFormContext<ProfileDataInForm>()
-  const name = form.watch('name') || 'SEM NOME'
+  const name = form.watch('name') || m.quaint_grassy_puma_beam()
   const [fallbackTone] = useState(() =>
     name.length % 2 === 0 ? ('primary' as const) : ('secondary' as const),
   )
@@ -207,7 +208,7 @@ function ProfilePreview() {
       {name && (
         <div>
           <Text level="h2" as="h2" className="text-lg font-bold">
-            Como vai aparecer no site:
+            {m.jolly_just_grizzly_devour()}
           </Text>
         </div>
       )}

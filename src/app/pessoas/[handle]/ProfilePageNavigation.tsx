@@ -1,24 +1,29 @@
 'use client'
 
+import Link from '@/components/LinkWithTransition'
 import CameraIcon from '@/components/icons/CameraIcon'
 import HistoryIcon from '@/components/icons/HistoryIcon'
 import NoteIcon from '@/components/icons/NoteIcon'
+import { m } from '@/paraglide/messages'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export function ProfilePageNavigation(props: { handle: string }) {
   const pathname = usePathname()
   const links = [
-    { label: 'Notas', href: paths.userProfile(props.handle), icon: NoteIcon },
     {
-      label: 'Fotos',
+      label: m.careful_misty_blackbird_value(),
+      href: paths.userProfile(props.handle),
+      icon: NoteIcon,
+    },
+    {
+      label: m.few_flat_wolf_dash(),
       href: paths.userGallery(props.handle),
       icon: CameraIcon,
     },
     {
-      label: 'Contribuições',
+      label: m.nice_tired_lionfish_sprout(),
       href: paths.userContributions(props.handle),
       icon: HistoryIcon,
     },

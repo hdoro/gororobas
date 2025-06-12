@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import { generateId } from '@/utils/ids'
 import {
   DndContext,
@@ -34,7 +35,7 @@ export default function ArrayInput<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   field,
-  newItemLabel = 'Novo item',
+  newItemLabel = m.just_left_termite_inspire(),
   newItemValue,
   renderItem,
   inputType = 'regular',
@@ -161,7 +162,7 @@ export function SortableItem(
       <Button
         mode="bleed"
         size="icon"
-        title="Segure para mover"
+        title={m.slow_plain_giraffe_fear()}
         tone="neutral"
         disabled={props.disabled}
         {...attributes}
@@ -175,7 +176,7 @@ export function SortableItem(
         mode="bleed"
         tone="destructive"
         size="icon"
-        title={`Deletar item #${props.index + 1}`}
+        title={m.patient_witty_gecko_enchant({ number: props.index + 1 })}
         onClick={props.removeItem}
         disabled={props.disabled}
         className="group h-10 w-8"

@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import type { ProfileLayoutData } from '@/queries'
 import { imageBuilder } from '@/utils/imageBuilder'
 import { truncate } from '@/utils/strings'
@@ -9,33 +10,29 @@ export default function getUserProfileMetadata(
 ): Metadata {
   const name = profile?.name
 
-  if (!profile)
+  if (!name)
     return {
-      title: 'Perfil não encontrado no Gororobas',
+      robots: {
+        index: false,
+        follow: false,
+      },
     }
-
-  if (!name) {
-    return {
-      title: 'Pessoa sem nome | Gororobas',
-    }
-  }
 
   const firstName = name.split(' ')[0]
   const description = [
-    profile.location && `${firstName} é de ${profile.location}`,
+    profile.location &&
+      m.cute_slimy_pelican_lift({ firstName, location: profile.location }),
     profile.planted_count > 0 &&
-      `está cultivando ${profile.planted_count} vegetais`,
+      m.crazy_ornate_marlin_cuddle({ planted_count: profile.planted_count }),
     profile.desired_count > 0 &&
-      `quer cultivar ${
-        profile.desired_count > 0 ? 'outras ' : ''
-      }${profile.desired_count} plantas`,
+      m.yummy_still_eel_bloom({ desired_count: profile.desired_count }),
   ]
     .flatMap((p) => p || [])
     .join(',')
 
   const { photo } = profile
   return {
-    title: `${name} | Gororobas`,
+    title: `${name} | Gororobas Agroecologia`,
     description: truncate(description, 240),
     alternates: {
       canonical: pathToAbsUrl(paths.userProfile(profile.handle)),
@@ -66,7 +63,7 @@ export default function getUserProfileMetadata(
                 .url(),
               width: 1200,
               height: 630,
-              alt: `Foto de ${name}`,
+              alt: m.calm_spry_trout_hunt({ name }),
             },
             // For WhatsApp
             {
@@ -86,7 +83,7 @@ export default function getUserProfileMetadata(
                 .url(),
               width: 600,
               height: 600,
-              alt: `Foto de ${name}`,
+              alt: m.calm_spry_trout_hunt({ name }),
             },
           ]
         : undefined,

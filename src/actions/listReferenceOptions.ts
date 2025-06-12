@@ -25,7 +25,10 @@ export async function listReferenceOptions(
       Effect.tryPromise({
         try: () => vegetablesForReferenceQuery.run(session.client),
         catch: (error) => {
-          console.log('Failed listing reference options', error)
+          console.log(
+            '[listReferenceOptions/vegetableFetcher] failed listing reference options',
+            error,
+          )
           return error
         },
       }),
@@ -47,7 +50,10 @@ export async function listReferenceOptions(
     Effect.tryPromise({
       try: () => profilesForReferenceQuery.run(session.client),
       catch: (error) => {
-        console.log('Failed listing reference options', error)
+        console.log(
+          '[listReferenceOptions/userProfileFetcher] failed listing reference options',
+          error,
+        )
         return error
       },
     }),
@@ -68,7 +74,10 @@ export async function listReferenceOptions(
     Effect.tryPromise({
       try: () => tagsForReferenceQuery.run(session.client),
       catch: (error) => {
-        console.log('Failed listing reference options', error)
+        console.log(
+          '[listReferenceOptions/tagFetcher] failed listing reference options',
+          error,
+        )
         return error
       },
     }),

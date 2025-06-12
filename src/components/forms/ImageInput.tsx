@@ -1,5 +1,6 @@
 'use client'
 
+import { m } from '@/paraglide/messages'
 import type { ImageInForm } from '@/schemas'
 import { generateId } from '@/utils/ids'
 import { CircleXIcon } from 'lucide-react'
@@ -49,25 +50,25 @@ export default function ImageInput<
       <div className="flex-1 space-y-4">
         <Field
           form={form}
-          label="Rótulo"
+          label={m.misty_lower_quail_fond()}
           name={`${rootField.name}.label`}
           render={({ field: labelField }) => (
             <Input
               {...labelField}
               value={labelField.value || ''}
               type="text"
-              placeholder="Sobre o que é a imagem?"
+              placeholder={m.merry_misty_tapir_buzz()}
             />
           )}
         />
         <ArrayField
           form={form}
-          label="Fontes"
+          label={m.actual_elegant_buzzard_sway()}
           name={`${rootField.name}.sources`}
           render={({ field: sourcesField }) => (
             <ArrayInput
               field={sourcesField}
-              newItemLabel="Nova fonte"
+              newItemLabel={m.slow_nice_puma_pride()}
               renderItem={(index) => (
                 <Field
                   form={form}
@@ -75,7 +76,10 @@ export default function ImageInput<
                   label={`Fonte #${index + 1}`}
                   hideLabel
                   render={({ field: subField }) => (
-                    <SourceInput field={subField} label="imagem" />
+                    <SourceInput
+                      field={subField}
+                      label={m.large_helpful_myna_dash()}
+                    />
                   )}
                 />
               )}
@@ -112,7 +116,7 @@ function ImageField<
     return (
       <Field
         form={form}
-        label="Imagem"
+        label={m.large_helpful_myna_dash()}
         hideLabel
         name={rootField.name}
         render={({ field }) => (
@@ -122,7 +126,7 @@ function ImageField<
                 <Button
                   onClick={clearValue}
                   className="absolute top-2 right-2 rounded-full"
-                  aria-label="Remover imagem"
+                  aria-label={m.weary_real_mantis_burn()}
                   tone="destructive"
                   mode="outline"
                   size="icon"
@@ -142,7 +146,7 @@ function ImageField<
   return (
     <Field
       form={form}
-      label="Imagem"
+      label={m.large_helpful_myna_dash()}
       hideLabel
       name={`${rootField.name}.file`}
       render={({ field: fileField }) => (

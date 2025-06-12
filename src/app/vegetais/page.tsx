@@ -1,3 +1,4 @@
+import { m } from '@/paraglide/messages'
 import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
   HydrationBoundary,
@@ -9,10 +10,11 @@ import VegetablesIndex from './VegetablesIndex'
 import fetchVegetablesIndex from './fetchVegetablesIndex'
 import { vegetablesNextSearchParamsToQueryParams } from './vegetablesFilters'
 
-export const metadata: Metadata = {
-  title: 'Todos os vegetais e suas propriedades agroecológicas | Gororobas',
-  description:
-    'Descubra como plantar centenas de vegetais de forma agroecológica. O Gororobas é uma enciclopédia colaborativa, participe também :)',
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: m.mellow_fair_scallop_nurture(),
+    description: m.bland_ok_pigeon_sway(),
+  }
 }
 
 export default async function VegetablesRoute(props: {

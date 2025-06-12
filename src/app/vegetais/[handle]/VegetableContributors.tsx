@@ -4,6 +4,7 @@ import SuggestionsGrid from '@/components/SuggestionsGrid'
 import SparklesIcon from '@/components/icons/SparklesIcon'
 import { Text } from '@/components/ui/text'
 import { client } from '@/gel'
+import { m } from '@/paraglide/messages'
 import {
   type SourceCardData,
   type VegetablePageData,
@@ -11,7 +12,6 @@ import {
 } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { generateId } from '@/utils/ids'
-import { gender } from '@/utils/strings'
 import { Effect, pipe } from 'effect'
 
 const fetchEditHistory = (vegetable_id: string) =>
@@ -43,7 +43,6 @@ export default async function VegetableContributors({
   )
 
   const allSources = [
-    ...(vegetable.tips || []).flatMap((tip) => tip?.sources || []),
     ...(vegetable.photos || []).flatMap((photo) => photo?.sources || []),
     ...(vegetable.varieties || []).flatMap(
       (variety) =>
@@ -91,17 +90,21 @@ export default async function VegetableContributors({
 
   return (
     <section className="my-36" id="contribuintes">
-      <SectionTitle Icon={SparklesIcon}>Quem contribuiu</SectionTitle>
+      <SectionTitle Icon={SparklesIcon}>
+        {m.nice_topical_dolphin_hike()}
+      </SectionTitle>
       <div className="px-pageX">
         <Text level="h3" className="font-normal">
-          Pessoas no Gororobas que contribuíram com fotos, dicas e/ou edições
+          {m.tidy_quiet_cow_clasp()}
         </Text>
         <SourcesGrid sources={internalSources} className="mt-3 flex-1 gap-8" />
         {acceptedSuggestions && acceptedSuggestions.length > 0 && (
           <div className="bg-background-card mt-6 space-y-3 rounded-md border-2 px-6 py-4">
             <Text as="h3">
-              Últimas mudanças na página d
-              {gender.suffix(vegetable.gender || 'NEUTRO')} {vegetable.names[0]}
+              {m.watery_born_duck_view({
+                gender: vegetable.gender || 'NEUTRO',
+                name: vegetable.names[0],
+              })}
             </Text>
 
             <SuggestionsGrid suggestions={acceptedSuggestions} />

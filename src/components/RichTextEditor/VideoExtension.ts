@@ -9,6 +9,7 @@
  * - eventually could include other videos
  */
 
+import { m } from '@/paraglide/messages'
 import {
   RichTextVideoAttributes,
   type RichTextVideoAttributesInDB,
@@ -110,7 +111,7 @@ export const Video = Node.create<VideoOptions>({
       )
       return getYoutubeVideoURL(data.id as YoutubeVideoIdType)
     } catch (error) {
-      return 'Vídeo de YouTube'
+      return m.large_awake_hyena_arise()
     }
   },
 

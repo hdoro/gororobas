@@ -1,6 +1,7 @@
 'use client'
 
 import useGlobalKeyDown from '@/hooks/useGlobalKeyDown'
+import { m } from '@/paraglide/messages'
 import {
   RichTextMentionAttributes,
   type RichTextMentionAttributesInForm,
@@ -116,7 +117,7 @@ export default function MentionList({
         {isLoading ? (
           <Text className="text-muted-foreground flex h-full items-center justify-center gap-3">
             <Carrot className="h-5 w-5 animate-spin" />
-            <span className="animate-pulse">Carregando menções...</span>
+            <span className="animate-pulse">{m.crazy_tame_duck_achieve()}</span>
           </Text>
         ) : matches.length ? (
           Object.entries(byObjectType).map(([objectType, items]) => {
@@ -161,7 +162,7 @@ export default function MentionList({
           })
         ) : (
           <div className="text-muted-foreground flex h-full items-center justify-center text-sm">
-            Nenhuma pessoa ou vegetal encontrado
+            {m.wide_small_peacock_ask()}
           </div>
         )}
       </div>

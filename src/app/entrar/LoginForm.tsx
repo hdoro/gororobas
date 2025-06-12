@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Text } from '@/components/ui/text'
+import { m } from '@/paraglide/messages'
 import { paths } from '@/utils/urls'
 import { SendIcon } from 'lucide-react'
 import { useActionState } from 'react'
@@ -38,10 +39,10 @@ function MagicLinkForm({
         value={redirectTo || '/'}
         readOnly
       />
-      {state.status === 'error' && <div>Erro ao enviar email</div>}
+      {state.status === 'error' && <div>{m.drab_away_starfish_gleam()}</div>}
       <div className="flex items-end gap-2">
         <div className="flex-1 space-y-1">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{m.nice_crisp_wombat_quiz()}</Label>
           <Input
             id="email"
             name="email"
@@ -51,7 +52,8 @@ function MagicLinkForm({
           />
         </div>
         <Button type="submit" disabled={pending}>
-          <SendIcon className="mr-1 w-[1.25em]" /> Enviar
+          <SendIcon className="mr-1 w-[1.25em]" />{' '}
+          {m.stock_crisp_buzzard_feel()}
         </Button>
       </div>
     </>
@@ -79,11 +81,11 @@ export default function LoginForm({
       >
         <Card className="space-y-4 px-5 py-3">
           <CardHeader>
-            <CardTitle>Email de login enviado ✨</CardTitle>
+            <CardTitle>{m.neat_salty_frog_scold()}</CardTitle>
           </CardHeader>
           <CardContent>
             <Text className="flex items-center justify-center gap-3">
-              Clique no link que enviamos para você entrar no Gororobas
+              {m.stout_bland_panther_renew()}
             </Text>
           </CardContent>
         </Card>
@@ -95,7 +97,7 @@ export default function LoginForm({
     <main className="px-pageX py-pageY flex flex-col gap-8 lg:flex-row lg:gap-16 lg:py-20">
       <form action={formAction} className="-order-1 max-w-sm flex-1 space-y-1">
         <Text as="h1" level="h2" className="pb-4">
-          Entrar ou criar conta
+          {m.weak_watery_leopard_love()}
         </Text>
         <Button
           asChild
@@ -105,8 +107,8 @@ export default function LoginForm({
           className="flex"
         >
           <a href={paths.oauthLogin('builtin::oauth_google', redirectTo)}>
-            <GoogleMonogram variant="color" className="w-[1.25em]" /> Entrar com
-            Google
+            <GoogleMonogram variant="color" className="w-[1.25em]" />{' '}
+            {m.major_weird_snake_believe()}
           </a>
         </Button>
 
@@ -116,7 +118,7 @@ export default function LoginForm({
             level="sm"
             className="bg-background relative z-10 inline-block p-3"
           >
-            ou via email
+            {m.orange_deft_eagle_dine()}
           </Text>
         </div>
 
@@ -125,7 +127,7 @@ export default function LoginForm({
       <Card className="max-w-md">
         <CardHeader className="md:py-4">
           <CardTitle className="text-base md:text-lg">
-            Por que criar um perfil?
+            {m.solid_deft_worm_endure()}
           </CardTitle>
         </CardHeader>
         <CardContent className="pb-4 md:pb-8">
@@ -136,7 +138,7 @@ export default function LoginForm({
                 className="mr-1 w-[2.25em] flex-[0_0_2.25em]"
               />
               <Text className="-mt-1" as="div">
-                Salve vegetais que quer plantar, já plantou ou está cultivando
+                {m.round_ornate_bison_pick()}
               </Text>
             </li>
             <li className="flex items-start gap-2">
@@ -145,8 +147,7 @@ export default function LoginForm({
                 className="mr-1 w-[2.25em] flex-[0_0_2.25em]"
               />
               <Text className="-mt-1" as="div">
-                Escreva e compartilhe notinhas sobre seus aprendizados na
-                cozinha e na terra
+                {m.helpful_giant_wombat_taste()}
               </Text>
             </li>
             <li className="flex items-start gap-2">
@@ -155,8 +156,7 @@ export default function LoginForm({
                 className="mr-1 w-[2.25em] flex-[0_0_2.25em]"
               />
               <Text className="-mt-1" as="div">
-                Contribua com melhores informações sobre vegetais e envie suas
-                dicas e recomendações
+                {m.zippy_every_anaconda_believe()}
               </Text>
             </li>
           </ul>

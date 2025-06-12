@@ -14,7 +14,10 @@ export async function findUsersToMention(query: string) {
         try: () =>
           findUsersToMentionQuery.run(session.client, { query: `%${query}%` }),
         catch: (error) => {
-          console.log('Failed finding users to mention', error)
+          console.log(
+            '[findUsersToMention] failed finding users to mention',
+            error,
+          )
         },
       }),
       ...buildTraceAndMetrics('find_users_to_mention'),
