@@ -62,7 +62,7 @@ export const FILTER_DEFINITIONS = [
     queryKey: 'estrato',
     filterKey: 'strata',
     get label() {
-      return m.neat_lucky_badger_zoom()
+      return m.vegetable_field_strata()
     },
     type: 'multiselect',
     values: Object.keys(STRATUM_TO_LABEL),
@@ -73,7 +73,7 @@ export const FILTER_DEFINITIONS = [
     queryKey: 'usos',
     filterKey: 'uses',
     get label() {
-      return m.zany_aware_beaver_pet()
+      return m.vegetable_field_uses()
     },
     type: 'multiselect',
     values: Object.keys(USAGE_TO_LABEL),
@@ -84,7 +84,7 @@ export const FILTER_DEFINITIONS = [
     queryKey: 'comestivel',
     filterKey: 'edible_parts',
     get label() {
-      return m.fluffy_aqua_ibex_love()
+      return m.vegetable_field_edible_parts()
     },
     type: 'multiselect',
     values: Object.keys(EDIBLE_PART_TO_LABEL),
@@ -95,7 +95,7 @@ export const FILTER_DEFINITIONS = [
     queryKey: 'plantio',
     filterKey: 'planting_methods',
     get label() {
-      return m.great_true_sloth_flip()
+      return m.vegetable_field_planting_methods()
     },
     type: 'multiselect',
     values: Object.keys(PLANTING_METHOD_TO_LABEL),
@@ -106,7 +106,7 @@ export const FILTER_DEFINITIONS = [
     queryKey: 'ciclo',
     filterKey: 'lifecycles',
     get label() {
-      return 'Ciclo de vida'
+      return m.vegetable_field_lifecycles()
     },
     type: 'multiselect',
     values: Object.keys(VEGETABLE_LIFECYCLE_TO_LABEL),
@@ -130,7 +130,7 @@ export const FILTER_DEFINITIONS = [
     queryKey: 'altura',
     filterKey: 'height',
     get label() {
-      return m.tiny_careful_boar_hack()
+      return m.away_cuddly_elephant_twist({ gender: 'MASCULINO' })
     },
     type: 'range',
     format: 'centimeters',
@@ -143,7 +143,7 @@ export const FILTER_DEFINITIONS = [
     queryKey: 'temperatura',
     filterKey: 'temperature',
     get label() {
-      return m.gray_agent_tuna_wave()
+      return m.away_elegant_earthworm_offer()
     },
     type: 'range',
     format: 'temperature',

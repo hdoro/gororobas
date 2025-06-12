@@ -119,7 +119,7 @@ export function VegetablePageHero({
           )}
           {vegetable.edible_parts && (
             <TwoColInfo
-              left={m.stout_acidic_antelope_dig()}
+              left={m.vegetable_field_edible_parts()}
               right={vegetable.edible_parts.map((u) => EDIBLE_PART_TO_LABEL[u])}
               hasChanged={diffKeys?.includes('edible_parts')}
             />

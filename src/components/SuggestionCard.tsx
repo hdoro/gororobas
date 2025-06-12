@@ -1,5 +1,6 @@
 import Link from '@/components/LinkWithTransition'
 import { m } from '@/paraglide/messages'
+import { getLocale } from '@/paraglide/runtime'
 import type { EditSuggestionCardData } from '@/queries'
 import { paths } from '@/utils/urls'
 import { type Changeset, atomizeChangeset } from 'json-diff-ts'
@@ -40,7 +41,7 @@ export default function SuggestionCard({
         {m.royal_sad_poodle_animate({
           count: atomized.length,
           date: suggestion.created_at
-            ? suggestion.created_at.toLocaleDateString('pt-BR', {
+            ? suggestion.created_at.toLocaleDateString(getLocale(), {
                 month: '2-digit',
                 day: '2-digit',
                 year: 'numeric',
