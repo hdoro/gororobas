@@ -155,9 +155,9 @@ module default {
     trigger log_insert after insert for each do (
       insert HistoryLog {
         action := HistoryAction.`INSERT`,
-        target := __new__,
+        target := __new__ {**},
         performed_by := __new__.created_by,
-        new := <json>__new__
+        new := <json>__new__ {**}
       }
     );
 
@@ -166,8 +166,8 @@ module default {
         action := HistoryAction.`UPDATE`,
         target := __new__,
         performed_by := global current_user_profile,
-        old := <json>__old__,
-        new := <json>__new__,
+        old := <json>__old__ {**},
+        new := <json>__new__ {**},
       }
     );
 
@@ -176,7 +176,7 @@ module default {
         action := HistoryAction.`DELETE`,
         target := __old__,
         performed_by := global current_user_profile,
-        old := <json>__old__
+        old := <json>__old__ {**}
       }
     );
   }
