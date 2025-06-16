@@ -131,8 +131,7 @@ const gelAuthHandlers = auth.createAuthRouteHandlers({
   async onSignout() {
     // @TODO remove once @gel/auth-nextjs fixes sign-out not working on Next dev
     await auth.deleteAuthCookie()
-    // Hacky way of ensuring UserNav is revalidated. `revalidatePath` wasn't working
-    redirect(`${paths.home()}?sair=true`, RedirectType.replace)
+    redirect(paths.home(), RedirectType.replace)
   },
 })
 

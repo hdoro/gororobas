@@ -7,7 +7,7 @@ export default function GoogleMonogram({
   variant: 'color' | 'monochrome'
 }) {
   return (
-    <svg width="0.98em" height="auto" viewBox="0 0 256 262" {...props}>
+    <svg width="0.98em" viewBox="0 0 256 262" {...props}>
       <path
         fill={variant === 'color' ? '#EB4335' : 'currentColor'}
         opacity={variant === 'monochrome' ? 0.7 : undefined}

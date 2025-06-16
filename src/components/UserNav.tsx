@@ -5,7 +5,6 @@ import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 import LoginButton from './LoginButton'
 import ProfileCard from './ProfileCard'
-import UserNavReactToLogOut from './UserNavReactToLogOut'
 
 export default async function UserNav({ signedIn }: { signedIn: boolean }) {
   const session = await auth.getSession()
@@ -38,7 +37,6 @@ export default async function UserNav({ signedIn }: { signedIn: boolean }) {
 
   return (
     <>
-      <UserNavReactToLogOut />
       <ProfileCard
         size="sm"
         fallbackTone={Math.random() > 0.5 ? 'primary' : 'secondary'}
