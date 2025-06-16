@@ -1,10 +1,10 @@
 import { cookieName, isLocale, localizeHref } from '@/paraglide/runtime'
 import { LOCALE_HEADER_KEY } from '@/utils/i18n'
-import { getLocaleFromRequest } from '@/utils/i18n.server'
+import { configureRequestLocale } from '@/utils/i18n.server'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request): Promise<Response> {
-  const currentLocale = await getLocaleFromRequest(request)
+  const currentLocale = await configureRequestLocale(request)
   const newLocale = new URL(request.url).searchParams.get('locale')
   const targetLocale = isLocale(newLocale) ? newLocale : currentLocale
 

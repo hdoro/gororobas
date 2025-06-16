@@ -37,24 +37,39 @@ overwriteGetUrlOrigin(() => ssrLocale().origin)
  * Then, we overwrite the `ssrLocale` in the cache so it's accessible to any server component
  * or function down the rendering line.
  *
- * For client components, refer to `LocaleInjection.tsx`
+ * This is also used in route handlers, such as `api/select-locale/route.ts`
+ *
+ * For client components, refer to `LocaleInjection.tsx`.
  */
-export async function configureRequestLocale() {
-  const locale = (await headers()).get(LOCALE_HEADER_KEY) as Locale
-  ssrLocale().locale = locale
+export async function configureRequestLocale(
+  request?: Request,
+): Promise<Locale> {
+  const localeFromHeaderNextAPI = (await headers()).get(
+    LOCALE_HEADER_KEY,
+  ) as Locale
 
-  return locale
-}
+  if (isLocale(localeFromHeaderNextAPI)) {
+    ssrLocale().locale = localeFromHeaderNextAPI
+    return localeFromHeaderNextAPI
+  }
 
-/** Used in Next route handlers, such as `api/select-locale/route.ts` */
-export async function getLocaleFromRequest(request: Request) {
   const cookieStore = await cookies()
   const localeFromCookie = cookieStore.get(cookieName)
 
-  if (isLocale(localeFromCookie)) return localeFromCookie
+  if (isLocale(localeFromCookie)) {
+    ssrLocale().locale = localeFromCookie
+    return localeFromCookie
+  }
 
-  const localeFromHeader = request.headers.get(LOCALE_HEADER_KEY)
-  return isLocale(localeFromHeader) ? localeFromHeader : baseLocale
+  if (!request) return baseLocale
+
+  const localeFromHeaderRequest = request.headers.get(LOCALE_HEADER_KEY)
+  if (isLocale(localeFromHeaderRequest)) {
+    ssrLocale().locale = localeFromHeaderRequest
+    return localeFromHeaderRequest
+  }
+
+  return baseLocale
 }
 
 /**

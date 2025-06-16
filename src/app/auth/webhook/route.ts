@@ -3,6 +3,7 @@ import MagicLinkEmail from '@/emails/magic-link'
 import { getUserEmail } from '@/queries'
 import { Gel, Mailpit, Resend } from '@/services'
 import { runServerEffect } from '@/services/runtime'
+import { configureRequestLocale } from '@/utils/i18n.server'
 import * as Email from '@/utils/sendEmail'
 import { paths } from '@/utils/urls'
 import { Config, Data, Effect, Layer, LogLevel, Logger, Schema } from 'effect'
@@ -168,9 +169,15 @@ const sendMagicLink = (event: typeof MagicLinkRequested.Type) =>
     yield* Effect.logDebug('[AuthWebhook/sendMagicLink] link sent')
   })
 
-export async function POST(request: NextRequest) {
-  return await runServerEffect(
+export function POST(request: NextRequest) {
+  return runServerEffect(
     Effect.gen(function* () {
+      // Configure the locale so we can localize the redirect below
+      yield* Effect.tryPromise({
+        try: () => configureRequestLocale(),
+        catch: () => Effect.succeed(null),
+      })
+
       const event = yield* validateRequest(request)
       yield* Effect.logDebug(`\n[AuthWebhook] ${event.event_type}`, event)
 

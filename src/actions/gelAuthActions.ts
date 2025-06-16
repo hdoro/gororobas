@@ -1,5 +1,3 @@
-'use server'
-
 import { auth } from '@/gel'
 const authActions = auth.createServerActions()
 

@@ -19,7 +19,7 @@ const gelAuthHandlers = auth.createAuthRouteHandlers({
       Effect.gen(function* () {
         // Configure the locale so we can localize the redirect below
         yield* Effect.tryPromise({
-          try: configureRequestLocale,
+          try: () => configureRequestLocale(),
           catch: () => Effect.succeed(null),
         })
 
