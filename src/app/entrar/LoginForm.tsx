@@ -26,7 +26,7 @@ function MagicLinkForm({
   const { pending } = useFormStatus()
 
   if (state.status === 'success') {
-    return <div>Email enviado</div>
+    return <div>{m.neat_salty_frog_scold()}</div>
   }
 
   return (

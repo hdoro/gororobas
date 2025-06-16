@@ -1,6 +1,7 @@
 import { auth } from '@/gel'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { EmailNotVerifiedError, SigninFailedError } from '@/types/errors'
+import { configureRequestLocale } from '@/utils/i18n.server'
 import { paths } from '@/utils/urls'
 import { Effect } from 'effect'
 import { RedirectType, redirect } from 'next/navigation'
@@ -15,7 +16,13 @@ import getGoogleMetadata from './getGoogleMetadata'
 const gelAuthHandlers = auth.createAuthRouteHandlers({
   async onOAuthCallback(props) {
     const response = await runServerEffect(
-      Effect.gen(function* (_) {
+      Effect.gen(function* () {
+        // Configure the locale so we can localize the redirect below
+        yield* Effect.tryPromise({
+          try: configureRequestLocale,
+          catch: () => Effect.succeed(null),
+        })
+
         yield* Effect.logInfo('onOAuthCallback', props)
         if (props.error) {
           yield* Effect.logError('[onOAuthCallback] error:', props.error)
@@ -81,7 +88,10 @@ const gelAuthHandlers = auth.createAuthRouteHandlers({
       Effect.gen(function* (_) {
         yield* Effect.logInfo('onMagicLinkCallback', props)
         if (props.error) {
-          yield* Effect.logError('[onMagicLinkCallback] error:', props.error)
+          yield* Effect.logError(
+            '[onMagicLinkCallback] error:',
+            JSON.stringify(props.error),
+          )
           return yield* Effect.fail(new SigninFailedError(props.error))
         }
 
