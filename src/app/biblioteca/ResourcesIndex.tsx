@@ -189,9 +189,9 @@ export default function ResourcesIndex() {
                   <AnimatePresence mode="popLayout">
                     {activeFilter ? (
                       <motion.div
-                        initial={{ opacity: 0, translateX: 32 }}
-                        animate={{ opacity: 1, translateX: 0 }}
-                        exit={{ opacity: 0, translateX: -32 }}
+                        initial={{ opacity: 0, x: 32 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -32 }}
                         key="active-filter"
                       >
                         <div className="sticky top-0 flex items-center bg-white pt-1">
@@ -253,9 +253,9 @@ export default function ResourcesIndex() {
                     ) : (
                       <motion.div
                         className="space-y-0"
-                        initial={{ opacity: 0, translateX: -32 }}
-                        animate={{ opacity: 1, translateX: 0 }}
-                        exit={{ opacity: 0, translateX: 32 }}
+                        initial={{ opacity: 0, x: -32 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 32 }}
                         key="filter-list"
                       >
                         {FILTER_DEFINITIONS.map((definition) => {

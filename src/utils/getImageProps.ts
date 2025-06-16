@@ -104,8 +104,8 @@ function createGetImageProps(imageBuilder: ImageUrlBuilder) {
       React.ImgHTMLAttributes<HTMLImageElement>,
       HTMLImageElement
     >,
-    'src' | 'srcSet' | 'style' | 'sizes' | 'width' | 'height'
-  > {
+    'srcSet' | 'style' | 'sizes' | 'width' | 'height'
+  > & { src?: string } {
     if (!props.image?.sanity_id) {
       return {}
     }

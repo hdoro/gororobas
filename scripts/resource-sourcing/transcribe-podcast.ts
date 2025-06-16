@@ -38,9 +38,7 @@ const processAudioFile = (audioPath: string) => {
           `❌ Error processing ${audioPath}: ${error.message}`,
         )
       }
-      return Effect.logError(
-        `❌ Error processing ${audioPath}: ${error.message}`,
-      )
+      return Effect.logError(`❌ Error processing ${audioPath}`)
     }),
     Effect.withLogSpan('processAudioFile'),
   )

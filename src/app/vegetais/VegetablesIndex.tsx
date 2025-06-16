@@ -182,9 +182,9 @@ export default function VegetablesIndex() {
                   <AnimatePresence mode="popLayout">
                     {activeFilter ? (
                       <motion.div
-                        initial={{ opacity: 0, translateX: 32 }}
-                        animate={{ opacity: 1, translateX: 0 }}
-                        exit={{ opacity: 0, translateX: -32 }}
+                        initial={{ opacity: 0, x: 32 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -32 }}
                         key="active-filter"
                       >
                         <div className="flex items-center">
@@ -247,9 +247,9 @@ export default function VegetablesIndex() {
                     ) : (
                       <motion.div
                         className="space-y-0"
-                        initial={{ opacity: 0, translateX: -32 }}
-                        animate={{ opacity: 1, translateX: 0 }}
-                        exit={{ opacity: 0, translateX: 32 }}
+                        initial={{ opacity: 0, x: -32 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 32 }}
                         key="filter-list"
                       >
                         {FILTER_DEFINITIONS.map((definition) => {
