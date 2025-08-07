@@ -1,16 +1,16 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
+  "$schema": "https://biomejs.dev/schemas/2.1.3/schema.json",
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "files": {
-    "include": [
-      "src/**/*",
-      "dbschema/**/*.ts",
-      "./tailwind.config.ts",
-      "./package.json"
-    ],
-    "ignore": ["src/edgeql/**/*", "src/gel.interfaces.ts", "src/paraglide/**/*"]
+    "includes": [
+      "**/src/**/*",
+      "**/dbschema/**/*.ts",
+      "tailwind.config.ts",
+      "package.json",
+      "!**/src/edgeql/**/*",
+      "!**/src/gel.interfaces.ts",
+      "!**/src/paraglide/**/*"
+    ]
   },
   "linter": {
     "enabled": true,
@@ -29,7 +29,7 @@
         "noUnusedImports": "error"
       }
     },
-    "ignore": ["src/playground/**/*"]
+    "includes": ["**", "!**/src/playground/**/*"]
   },
   "formatter": {
     "enabled": false

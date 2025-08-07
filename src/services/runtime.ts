@@ -23,8 +23,9 @@ export function buildTraceAndMetrics(
 
   return [
     Metric.trackDuration(metrics.duration),
-    Metric.trackSuccessWith(metrics.success, () => 1),
-    Metric.trackErrorWith(metrics.success, () => 1),
+    // @TODO: reactivate tracking success & error once type inference is fixed
+    // Metric.trackSuccessWith(metrics.success, () => 1),
+    // Metric.trackErrorWith(metrics.success, () => 1),
     Effect.withSpan(endpoint_id, { attributes: spanAttributes }),
     Effect.withLogSpan(endpoint_id),
   ] as const

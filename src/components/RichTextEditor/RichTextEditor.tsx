@@ -1,6 +1,6 @@
 'use client'
 
-import CharacterCount from '@tiptap/extension-character-count'
+import { CharacterCount } from '@tiptap/extensions'
 import { EditorContent, type JSONContent, useEditor } from '@tiptap/react'
 import { useMachine } from '@xstate/react'
 import { useEffect, useId, useMemo, useRef } from 'react'
@@ -54,7 +54,9 @@ export default function RichTextEditor(
     extensions,
     content: props.editorState,
     onUpdate: (data) => {
-      props.onChange(Object.assign({}, data.editor.getJSON(), { version: 1 }))
+      props.onChange(
+        Object.assign({ version: 1 }, data.editor.getJSON()) as JSONContent,
+      )
       send({ type: 'UPDATE', data })
     },
     onSelectionUpdate: (data) => {

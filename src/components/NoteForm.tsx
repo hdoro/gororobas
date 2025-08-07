@@ -284,12 +284,10 @@ export default function NoteForm(props: {
                       disabled={form.formState.disabled}
                     >
                       <SelectTrigger className="h-auto gap-2 px-2 md:@container md:mt-2 md:px-4">
-                        <SelectValue>
-                          <VisibilityOption
-                            {...valueExplainers}
-                            placement="trigger"
-                          />
-                        </SelectValue>
+                        <VisibilityOption
+                          {...valueExplainers}
+                          placement="trigger"
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
