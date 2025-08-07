@@ -1,6 +1,4 @@
 import { cn } from '@/utils/cn'
-import Link from '@tiptap/extension-link'
-import { ListKeymap } from '@tiptap/extension-list'
 import { Placeholder } from '@tiptap/extensions'
 import type { Extensions } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -53,6 +51,12 @@ export function getTiptapExtensions({
           class: classes.tiptapStrikethrough(),
         },
       },
+      link: {
+        openOnClick: false,
+        HTMLAttributes: {
+          class: classes.tiptapLink(),
+        },
+      },
     }),
     Placeholder.configure({
       placeholder: placeholder || '',
@@ -61,15 +65,8 @@ export function getTiptapExtensions({
         classes.placeholder(),
       ) as string,
     }),
-    Link.configure({
-      openOnClick: false,
-      HTMLAttributes: {
-        class: classes.tiptapLink(),
-      },
-    }),
     Mention.configure(),
     Video.configure(),
     Image.configure(),
-    ListKeymap.configure(),
   ]
 }
