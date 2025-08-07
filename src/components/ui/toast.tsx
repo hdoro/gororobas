@@ -1,7 +1,7 @@
 'use client'
 
-import * as ToastPrimitives from '@radix-ui/react-toast'
 import { X } from 'lucide-react'
+import { Toast as ToastPrimitives } from 'radix-ui'
 import * as React from 'react'
 import { type VariantProps, tv } from 'tailwind-variants'
 

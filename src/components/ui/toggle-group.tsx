@@ -1,6 +1,6 @@
 'use client'
 
-import * as ToggleGroupPrimitive from '@radix-ui/react-toggle-group'
+import { ToggleGroup as ToggleGroupPrimitive } from 'radix-ui'
 import * as React from 'react'
 import type { VariantProps } from 'tailwind-variants'
 
