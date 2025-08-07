@@ -3,10 +3,10 @@
 import FullscreenPhotos, {
   useFullscreenPhotos,
 } from '@/components/FullscreenPhotos'
+import CameraIcon from '@/components/icons/CameraIcon'
 import PhotoLabelAndSources from '@/components/PhotoLabelAndSources'
 import { SanityImage } from '@/components/SanityImage'
 import SectionTitle from '@/components/SectionTitle'
-import CameraIcon from '@/components/icons/CameraIcon'
 import { Text } from '@/components/ui/text'
 import { m } from '@/paraglide/messages'
 import type { ProfileGalleryData } from '@/queries'

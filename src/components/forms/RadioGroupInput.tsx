@@ -1,9 +1,9 @@
-import type { FormOption } from '@/types'
 import type {
   ControllerRenderProps,
   FieldPath,
   FieldValues,
 } from 'react-hook-form'
+import type { FormOption } from '@/types'
 import { FormControl, FormItem, FormLabel } from '../ui/form'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 

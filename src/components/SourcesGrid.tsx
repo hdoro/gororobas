@@ -1,6 +1,6 @@
+import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 import type { SourceCardData } from '@/queries'
 import { cn } from '@/utils/cn'
-import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 import SourceCard from './SourceCard'
 
 export default function SourcesGrid({

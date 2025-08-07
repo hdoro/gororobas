@@ -1,7 +1,7 @@
+import React from 'react'
 import { m } from '@/paraglide/messages'
 import type { VegetablePageData } from '@/queries'
 import { cn } from '@/utils/cn'
-import React from 'react'
 import { Badge } from './ui/badge'
 
 export default function PhotoLabelAndSources({

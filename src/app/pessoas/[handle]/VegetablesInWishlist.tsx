@@ -1,11 +1,11 @@
 'use client'
 
-import VegetableBadge from '@/components/VegetableChip'
+import type { JSX, SVGProps } from 'react'
 import { Text } from '@/components/ui/text'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import VegetableBadge from '@/components/VegetableChip'
 import { m } from '@/paraglide/messages'
 import type { WishlistForProfile } from '@/queries'
-import type { JSX, SVGProps } from 'react'
 
 export function VegetablesInWishlist(props: {
   title: string

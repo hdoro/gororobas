@@ -1,7 +1,7 @@
-import { m } from '@/paraglide/messages'
 import { render } from '@react-email/components'
 import { Config, Effect } from 'effect'
 import type { CreateEmailOptions } from 'resend'
+import { m } from '@/paraglide/messages'
 import * as Mailpit from '../services/mailpit'
 import * as Resend from '../services/resend'
 

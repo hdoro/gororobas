@@ -9,6 +9,9 @@
  * - eventually could include other videos
  */
 
+import { mergeAttributes, Node, nodePasteRule } from '@tiptap/core'
+import { PluginKey } from '@tiptap/pm/state'
+import { Schema } from 'effect'
 import { m } from '@/paraglide/messages'
 import {
   RichTextVideoAttributes,
@@ -18,9 +21,6 @@ import {
   YoutubeVideoURL,
 } from '@/schemas'
 import { getYoutubeVideoURL } from '@/utils/youtube'
-import { Node, mergeAttributes, nodePasteRule } from '@tiptap/core'
-import { PluginKey } from '@tiptap/pm/state'
-import { Schema } from 'effect'
 import { getVideoTiptapContent } from './VideoEditor'
 
 export type VideoOptions<
@@ -99,7 +99,7 @@ export const Video = Node.create<VideoOptions>({
           },
         ],
       ]
-    } catch (error) {
+    } catch (_error) {
       return ['div']
     }
   },
@@ -110,7 +110,7 @@ export const Video = Node.create<VideoOptions>({
         node.attrs,
       )
       return getYoutubeVideoURL(data.id as YoutubeVideoIdType)
-    } catch (error) {
+    } catch (_error) {
       return m.large_awake_hyena_arise()
     }
   },
@@ -124,7 +124,7 @@ export const Video = Node.create<VideoOptions>({
           try {
             const url = Schema.decodeUnknownSync(YoutubeVideoURL)(match.input)
             return { data: getVideoTiptapContent(url).attrs.data }
-          } catch (error) {
+          } catch (_error) {
             return null
           }
         },

@@ -1,5 +1,15 @@
 'use client'
 
+import {
+  createContext,
+  type Dispatch,
+  type PropsWithChildren,
+  type SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import PhotoLabelAndSources from '@/components/PhotoLabelAndSources'
 import { SanityImage } from '@/components/SanityImage'
 import {
@@ -11,16 +21,6 @@ import {
 import { m } from '@/paraglide/messages'
 import type { ImageForRenderingData } from '@/queries'
 import { cn } from '@/utils/cn'
-import {
-  type Dispatch,
-  type PropsWithChildren,
-  type SetStateAction,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
 
 type Context = {
   currentIndex: number

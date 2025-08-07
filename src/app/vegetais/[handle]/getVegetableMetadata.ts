@@ -1,10 +1,10 @@
+import type { Metadata } from 'next'
 import { m } from '@/paraglide/messages'
 import type { VegetablePageData } from '@/queries'
 import { imageBuilder } from '@/utils/imageBuilder'
 import { PLANTING_METHOD_TO_LABEL, STRATUM_TO_LABEL } from '@/utils/labels'
 import { semanticListItems, truncate } from '@/utils/strings'
-import { pathToAbsUrl, paths } from '@/utils/urls'
-import type { Metadata } from 'next'
+import { paths, pathToAbsUrl } from '@/utils/urls'
 
 function getDescription(vegetable: VegetablePageData) {
   const parts = [

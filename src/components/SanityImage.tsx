@@ -1,9 +1,9 @@
 'use client'
 
-import { getImageProps } from '@/utils/getImageProps'
 import type { SanityImageHotspot } from '@sanity/image-url/lib/types/types'
 import type React from 'react'
 import { type CSSProperties, useEffect, useRef, useState } from 'react'
+import { getImageProps } from '@/utils/getImageProps'
 
 export function SanityImage({
   alt,

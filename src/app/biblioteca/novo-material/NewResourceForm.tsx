@@ -1,7 +1,7 @@
 'use client'
 
-import { createResourceAction } from '@/actions/createResource.action'
 import dynamic from 'next/dynamic'
+import { createResourceAction } from '@/actions/createResource.action'
 
 // Skipping SSR to prevent hydration errors on react-hook-form changing IDs
 const ResourceForm = dynamic(() => import('@/components/ResourceForm'), {

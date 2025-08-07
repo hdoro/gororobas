@@ -1,3 +1,5 @@
+import { Effect, pipe, Schema } from 'effect'
+import type { Client } from 'gel'
 import { insertResourceMutation, upsertSourcesMutation } from '@/mutations'
 import {
   type ResourceForDBWithImages,
@@ -13,8 +15,6 @@ import {
 } from '@/utils/mutation.utils'
 import { slugify, truncate } from '@/utils/strings'
 import { paths } from '@/utils/urls'
-import { Effect, Schema, pipe } from 'effect'
-import type { Client } from 'gel'
 
 export function createResource(input: ResourceForDBWithImages, client: Client) {
   return runServerEffect(

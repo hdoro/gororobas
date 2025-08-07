@@ -1,13 +1,13 @@
+import { PlusCircleIcon } from 'lucide-react'
 import { ContributionCTA } from '@/components/ContributionCTA'
+import BulbIcon from '@/components/icons/BulbIcon'
 import Link from '@/components/LinkWithTransition'
 import ResourceCard, { FullResourceDisplay } from '@/components/ResourceCard'
 import SectionTitle from '@/components/SectionTitle'
-import BulbIcon from '@/components/icons/BulbIcon'
 import { Button } from '@/components/ui/button'
 import { m } from '@/paraglide/messages'
 import type { ResourceCardData, ResourcePageData } from '@/queries'
 import { paths } from '@/utils/urls'
-import { PlusCircleIcon } from 'lucide-react'
 
 export default function ResourcePage({
   resource,

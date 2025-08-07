@@ -1,5 +1,5 @@
+import { Effect, pipe, Request, RequestResolver } from 'effect'
 import type { ReferenceOption } from '@/types'
-import { Effect, Request, RequestResolver, pipe } from 'effect'
 import { getMentionsDataAction } from './getMentionsData.action'
 
 export type FreshMentionData = ReferenceOption & { handle: string }

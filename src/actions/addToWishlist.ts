@@ -1,10 +1,10 @@
 'use server'
 
+import { Effect, pipe } from 'effect'
 import { auth } from '@/gel'
 import type { VegetableWishlistStatus } from '@/gel.interfaces'
 import { updateWishlistStatusMutation } from '@/mutations'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { Effect, pipe } from 'effect'
 
 export async function addToWishlist(
   vegetable_id: string,

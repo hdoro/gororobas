@@ -1,13 +1,13 @@
+import { Effect, pipe } from 'effect'
+import { notFound } from 'next/navigation'
+import RainbowIcon from '@/components/icons/RainbowIcon'
 import ProfilesGrid from '@/components/ProfilesGrid'
 import SectionTitle from '@/components/SectionTitle'
-import RainbowIcon from '@/components/icons/RainbowIcon'
 import { Text } from '@/components/ui/text'
 import { auth, client } from '@/gel'
 import { m } from '@/paraglide/messages'
 import { peopleIndexQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { Effect, pipe } from 'effect'
-import { notFound } from 'next/navigation'
 
 export default async function PeopleIndexRoute() {
   const session = await auth.getSession()

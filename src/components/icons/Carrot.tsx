@@ -1,5 +1,5 @@
-import { cn } from '@/utils/cn'
 import type { SVGProps } from 'react'
+import { cn } from '@/utils/cn'
 
 export default function Carrot(props: SVGProps<SVGSVGElement>) {
   return (

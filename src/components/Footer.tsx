@@ -1,7 +1,3 @@
-import Link from '@/components/LinkWithTransition'
-import { m } from '@/paraglide/messages'
-import { SOURCE_CODE_URL } from '@/utils/config'
-import { paths } from '@/utils/urls'
 import {
   GithubIcon,
   LibraryBigIcon,
@@ -9,8 +5,12 @@ import {
   NotebookPenIcon,
   SproutIcon,
 } from 'lucide-react'
-import LocaleSelector from './LocaleSelector'
+import Link from '@/components/LinkWithTransition'
+import { m } from '@/paraglide/messages'
+import { SOURCE_CODE_URL } from '@/utils/config'
+import { paths } from '@/utils/urls'
 import GororobasLogo from './icons/GororobasLogo'
+import LocaleSelector from './LocaleSelector'
 
 const FOOTER_LINKS = () =>
   [
@@ -44,7 +44,7 @@ export default async function Footer() {
   return (
     <footer
       className="border-t-primary-100 bg-background-card px-pageX flex flex-col items-center gap-[var(--page-padding-x)] border-t py-10 max-md:pb-28 md:flex-row md:items-start md:justify-start md:py-16 lg:py-24"
-      aria-label={m.tired_every_warbler_lock()}
+      title={m.tired_every_warbler_lock()}
       id="global-footer"
     >
       <Link

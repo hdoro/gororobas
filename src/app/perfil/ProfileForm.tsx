@@ -1,12 +1,20 @@
 'use client'
 
+import { Effect, Either, pipe, Schema } from 'effect'
+import { useRouter } from 'next/navigation'
+import { useMemo, useState } from 'react'
+import {
+  FormProvider,
+  type SubmitHandler,
+  useFormContext,
+} from 'react-hook-form'
 import { updateProfileAction } from '@/actions/updateProfile'
-import ProfileCard from '@/components/ProfileCard'
 import Field from '@/components/forms/Field'
 import HandleInput from '@/components/forms/HandleInput'
 import ImageInput from '@/components/forms/ImageInput'
 import RichTextInput from '@/components/forms/RichTextInput'
 import TwoColumnFields from '@/components/forms/TwoColumnFields'
+import ProfileCard from '@/components/ProfileCard'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -26,14 +34,6 @@ import { getChangedObjectSubset } from '@/utils/diffs'
 import { generateId } from '@/utils/ids'
 import { paths } from '@/utils/urls'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
-import { Effect, Either, Schema, pipe } from 'effect'
-import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
-import {
-  FormProvider,
-  type SubmitHandler,
-  useFormContext,
-} from 'react-hook-form'
 
 export default function ProfileForm({
   profile: profileInDb,
@@ -63,7 +63,7 @@ export default function ProfileForm({
     disabled: status === 'submitting',
   })
 
-  const onSubmit: SubmitHandler<ProfileDataInForm> = async (data, event) => {
+  const onSubmit: SubmitHandler<ProfileDataInForm> = async (data) => {
     const dataThatChanged = getChangedObjectSubset({
       prev: initialValue,
       next: data,

@@ -1,5 +1,9 @@
 'use client'
 
+import type { JSONContent } from '@tiptap/react'
+import { Schema } from 'effect'
+import React, { useEffect } from 'react'
+import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { m } from '@/paraglide/messages'
 import {
   RichTextVideoAttributes,
@@ -8,10 +12,6 @@ import {
 } from '@/schemas'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
 import { getYouTubeID } from '@/utils/youtube'
-import type { JSONContent } from '@tiptap/react'
-import { Schema } from 'effect'
-import React, { useEffect } from 'react'
-import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import Field from '../forms/Field'
 import { Button } from '../ui/button'
 import {

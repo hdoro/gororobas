@@ -1,8 +1,8 @@
+import { Effect, pipe } from 'effect'
 import createUserProfile from '@/app/auth/[...auth]/createUserProfile'
 import { auth } from '@/gel'
 import { profileForNavQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { Effect, pipe } from 'effect'
 import LoginButton from './LoginButton'
 import ProfileCard from './ProfileCard'
 

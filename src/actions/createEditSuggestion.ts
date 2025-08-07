@@ -1,5 +1,7 @@
 'use server'
 
+import { Effect, pipe, Schema } from 'effect'
+import { diff as jsonDiff } from 'json-diff-ts'
 import { auth } from '@/gel'
 import { insertEditSuggestionMutation } from '@/mutations'
 import { m } from '@/paraglide/messages'
@@ -10,8 +12,6 @@ import {
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { UnknownGelDBError } from '@/types/errors'
 import { paths } from '@/utils/urls'
-import { Effect, Schema, pipe } from 'effect'
-import { diff as jsonDiff } from 'json-diff-ts'
 
 /**
  * Thinking through editing vegetables:

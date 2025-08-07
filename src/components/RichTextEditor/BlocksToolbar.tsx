@@ -1,7 +1,7 @@
 'use client'
 
-import { m } from '@/paraglide/messages'
 import { AtSignIcon, ImageUpIcon, LinkIcon, YoutubeIcon } from 'lucide-react'
+import { m } from '@/paraglide/messages'
 import { Button } from '../ui/button'
 import ResponsiveFloater from './ResponsiveFloater'
 import type { EditorUIProps } from './tiptapStateMachine'

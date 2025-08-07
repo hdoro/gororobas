@@ -1,3 +1,5 @@
+import { Schema } from 'effect'
+import { Children } from 'react'
 import Link from '@/components/LinkWithTransition'
 import {
   RichTextImageAttributes,
@@ -6,8 +8,6 @@ import {
   type YoutubeVideoIdType,
 } from '@/schemas'
 import { BASE_URL } from '@/utils/config'
-import { Schema } from 'effect'
-import { Children } from 'react'
 import { SanityImage } from '../SanityImage'
 import YoutubeVideo from '../YoutubeVideo'
 import { Mention } from './Mention'

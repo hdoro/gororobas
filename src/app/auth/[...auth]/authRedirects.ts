@@ -1,7 +1,7 @@
-import { PathSchema } from '@/schemas'
-import { paths } from '@/utils/urls'
 import { Schema } from 'effect'
 import { cookies } from 'next/headers'
+import { PathSchema } from '@/schemas'
+import { paths } from '@/utils/urls'
 
 const COOKIE_NAME = 'gororobas--auth-redirect'
 
@@ -11,7 +11,7 @@ export async function setAuthRedirectCookie(redirectTo?: unknown) {
 
     const cookieStore = await cookies()
     cookieStore.set(COOKIE_NAME, parsedRedirectTo)
-  } catch (error) {}
+  } catch (_error) {}
 }
 
 export async function getAuthRedirectCookie() {
@@ -20,7 +20,7 @@ export async function getAuthRedirectCookie() {
     const redirectTo = cookieStore.get(COOKIE_NAME)?.value
 
     return Schema.decodeUnknownSync(PathSchema)(redirectTo)
-  } catch (error) {
+  } catch (_error) {
     return paths.home()
   }
 }

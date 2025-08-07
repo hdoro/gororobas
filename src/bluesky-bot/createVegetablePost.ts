@@ -1,9 +1,9 @@
+import { Effect, Schema } from 'effect'
 import type { ContentToPostData } from '@/queries'
 import * as Bluesky from '@/services/bluesky'
 import { PLANTING_METHOD_TO_LABEL, STRATUM_TO_LABEL } from '@/utils/labels'
 import { gender, semanticListItems, truncate } from '@/utils/strings'
-import { pathToAbsUrl, paths } from '@/utils/urls'
-import { Effect, Schema } from 'effect'
+import { paths, pathToAbsUrl } from '@/utils/urls'
 
 type VegetableForPostData = ContentToPostData['vegetables'][number]
 

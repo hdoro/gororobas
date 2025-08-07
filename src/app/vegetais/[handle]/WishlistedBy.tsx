@@ -1,11 +1,11 @@
-import ProfilesStrip from '@/components/ProfilesStrip'
+import { Effect, pipe } from 'effect'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
+import ProfilesStrip from '@/components/ProfilesStrip'
 import { Text } from '@/components/ui/text'
 import { client } from '@/gel'
 import { m } from '@/paraglide/messages'
 import { wishlistedByQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { Effect, pipe } from 'effect'
 
 const fetchWishlistedBy = (vegetable_id: string) =>
   pipe(

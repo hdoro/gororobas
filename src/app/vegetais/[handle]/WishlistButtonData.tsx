@@ -1,8 +1,8 @@
+import { Effect } from 'effect'
 import { auth } from '@/gel'
 import { userWishlistQuery } from '@/queries'
 import { runQuery } from '@/services/runQuery'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { Effect } from 'effect'
 import WishlistButton, { type WishlistInfo } from './WishlistButton'
 
 const fetchWishlistStatus = (vegetable_id: string) =>

@@ -1,10 +1,10 @@
+import { Effect, pipe } from 'effect'
 import { auth } from '@/gel'
 import { resourcesIndexQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { NextSearchParams } from '@/types'
 import { shuffleArray } from '@/utils/arrays'
 import { searchParamsToNextSearchParams } from '@/utils/urls'
-import { Effect, pipe } from 'effect'
 import { resourcesNextSearchParamsToQueryParams } from './resourcesFilters'
 
 export type ResourcesIndexRouteData = Awaited<

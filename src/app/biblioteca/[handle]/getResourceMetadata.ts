@@ -1,9 +1,9 @@
+import type { Metadata } from 'next'
 import type { ResourcePageData } from '@/queries'
 import { imageBuilder } from '@/utils/imageBuilder'
 import { truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
-import { pathToAbsUrl, paths } from '@/utils/urls'
-import type { Metadata } from 'next'
+import { paths, pathToAbsUrl } from '@/utils/urls'
 
 export default function getResourceMetadata(
   resource: ResourcePageData | null,

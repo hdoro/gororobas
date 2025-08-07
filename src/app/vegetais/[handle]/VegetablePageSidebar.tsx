@@ -1,3 +1,5 @@
+import { Edit2Icon } from 'lucide-react'
+import { Suspense } from 'react'
 import AnchorLink from '@/components/AnchorLink'
 import Link from '@/components/LinkWithTransition'
 import { Button } from '@/components/ui/button'
@@ -6,8 +8,6 @@ import type { VegetablePageData } from '@/queries'
 import { cn } from '@/utils/cn'
 import { isRenderableRichText } from '@/utils/tiptap'
 import { paths } from '@/utils/urls'
-import { Edit2Icon } from 'lucide-react'
-import { Suspense } from 'react'
 import WishlistedBy from './WishlistedBy'
 
 export default function VegetablePageSidebar({

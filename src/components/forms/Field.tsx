@@ -1,4 +1,3 @@
-import { cn } from '@/utils/cn'
 import type { ComponentProps } from 'react'
 import type {
   ControllerProps,
@@ -6,6 +5,7 @@ import type {
   FieldValues,
   UseFormReturn,
 } from 'react-hook-form'
+import { cn } from '@/utils/cn'
 import {
   FormDescription,
   FormField,

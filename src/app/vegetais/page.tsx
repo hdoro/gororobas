@@ -1,13 +1,13 @@
-import { m } from '@/paraglide/messages'
-import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
+  dehydrate,
   HydrationBoundary,
   QueryClient,
-  dehydrate,
 } from '@tanstack/react-query'
 import type { Metadata } from 'next'
-import VegetablesIndex from './VegetablesIndex'
+import { m } from '@/paraglide/messages'
+import { queryParamsToQueryKey } from '@/utils/queryParams'
 import fetchVegetablesIndex from './fetchVegetablesIndex'
+import VegetablesIndex from './VegetablesIndex'
 import { vegetablesNextSearchParamsToQueryParams } from './vegetablesFilters'
 
 export async function generateMetadata(): Promise<Metadata> {

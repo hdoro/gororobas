@@ -1,13 +1,13 @@
 'use client'
 
-import Link from '@/components/LinkWithTransition'
+import { usePathname } from 'next/navigation'
 import CameraIcon from '@/components/icons/CameraIcon'
 import HistoryIcon from '@/components/icons/HistoryIcon'
 import NoteIcon from '@/components/icons/NoteIcon'
+import Link from '@/components/LinkWithTransition'
 import { m } from '@/paraglide/messages'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
-import { usePathname } from 'next/navigation'
 
 export function ProfilePageNavigation(props: { handle: string }) {
   const pathname = usePathname()

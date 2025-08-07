@@ -1,8 +1,8 @@
+import { Effect, pipe, Schema } from 'effect'
+import type { Client } from 'gel'
 import { deleteNotesMutation } from '@/mutations'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { InvalidInputError } from '@/types/errors'
-import { Effect, Schema, pipe } from 'effect'
-import type { Client } from 'gel'
 
 export const DeleteNotesInput = Schema.NonEmptyArray(Schema.UUID)
 

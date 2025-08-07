@@ -1,9 +1,9 @@
+import { Effect } from 'effect'
 import { auth } from '@/gel'
 import { buildTraceAndMetrics } from '@/services/runtime'
 import { UnknownGelDBError } from '@/types/errors'
 import { generateId } from '@/utils/ids'
 import { getStandardHandle } from '@/utils/urls'
-import { Effect } from 'effect'
 
 export default function createUserProfile(
   /** Keep track of retries to gauge how many auth callbacks are failing */

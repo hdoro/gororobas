@@ -1,10 +1,10 @@
 'use client'
 
+import { autoPlacement, offset, useFloating } from '@floating-ui/react'
+import { type PropsWithChildren, useEffect } from 'react'
 import { useFixedBottomPosition } from '@/hooks/useFixedBottomPosition'
 import useViewport from '@/hooks/useViewport'
 import { cn } from '@/utils/cn'
-import { autoPlacement, offset, useFloating } from '@floating-ui/react'
-import { type PropsWithChildren, useEffect } from 'react'
 import type { EditorUIProps } from './tiptapStateMachine'
 import { getEditorDomRect } from './tiptapUtils'
 

@@ -1,7 +1,7 @@
-import { auth } from '@/gel'
-import { getAuthRedirect, paths } from '@/utils/urls'
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import { auth } from '@/gel'
+import { getAuthRedirect, paths } from '@/utils/urls'
 import LoginForm from './LoginForm'
 
 export const metadata: Metadata = {

@@ -1,5 +1,8 @@
 'use client'
 
+import { ChevronDownIcon } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { addToWishlist } from '@/actions/addToWishlist'
 import { Button } from '@/components/ui/button'
 import {
@@ -24,9 +27,6 @@ import type { VegetableWishlistStatus } from '@/gel.interfaces'
 import { m } from '@/paraglide/messages'
 import { WISHLIST_STATUS_TO_LABEL } from '@/utils/labels'
 import { paths } from '@/utils/urls'
-import { ChevronDownIcon } from 'lucide-react'
-import { usePathname, useRouter } from 'next/navigation'
-import { useState } from 'react'
 
 export type WishlistInfo =
   | { isSignedIn: false }

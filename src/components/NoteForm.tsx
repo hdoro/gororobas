@@ -1,5 +1,10 @@
 'use client'
 
+import { Effect, pipe, Schema } from 'effect'
+import { CarrotIcon, GlobeIcon, LockIcon, type LucideIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { type PropsWithChildren, useState } from 'react'
+import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import DateInput from '@/components/forms/DateInput'
 import Field from '@/components/forms/Field'
@@ -20,11 +25,6 @@ import {
   NOTE_TYPE_TO_LABEL,
 } from '@/utils/labels'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
-import { Effect, Schema, pipe } from 'effect'
-import { CarrotIcon, GlobeIcon, LockIcon, type LucideIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { type PropsWithChildren, useState } from 'react'
-import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import {
   Select,
   SelectContent,
@@ -32,7 +32,6 @@ import {
   SelectItem,
   SelectLabel,
   SelectTrigger,
-  SelectValue,
 } from './ui/select'
 
 type PublishStatusExplainer = {

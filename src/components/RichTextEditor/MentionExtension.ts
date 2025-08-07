@@ -6,15 +6,15 @@
  * - different data structure - RichTextMentionData instead of `id` and `label`, which allows for images
  */
 
+import { mergeAttributes, Node } from '@tiptap/core'
+import { PluginKey } from '@tiptap/pm/state'
+import { Schema } from 'effect'
 import { m } from '@/paraglide/messages'
 import {
   RichTextMentionAttributes,
   type RichTextMentionAttributesInDB,
 } from '@/schemas'
 import { getImageProps } from '@/utils/getImageProps'
-import { Node, mergeAttributes } from '@tiptap/core'
-import { PluginKey } from '@tiptap/pm/state'
-import { Schema } from 'effect'
 
 const TRIGGER_CHAR = '@'
 
@@ -107,7 +107,7 @@ export const Mention = Node.create<MentionOptions>({
           : [TRIGGER_CHAR]),
         data.label,
       ]
-    } catch (error) {
+    } catch (_error) {
       return ['span', {}, node.attrs.id]
     }
   },
@@ -119,7 +119,7 @@ export const Mention = Node.create<MentionOptions>({
       )
 
       return TRIGGER_CHAR + data.label
-    } catch (error) {
+    } catch (_error) {
       return m.jumpy_soft_nils_hack()
     }
   },

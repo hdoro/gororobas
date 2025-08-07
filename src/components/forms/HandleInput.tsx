@@ -1,9 +1,9 @@
-import { slugify } from '@/utils/strings'
 import type {
   ControllerRenderProps,
   FieldPath,
   FieldValues,
 } from 'react-hook-form'
+import { slugify } from '@/utils/strings'
 import { Input } from '../ui/input'
 
 export default function HandleInput<

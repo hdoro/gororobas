@@ -31,11 +31,8 @@ export default function AnchorLink({
   )
 
   return (
-    <a
-      {...props}
-      // biome-ignore lint: this is just a progressive enhancement
-      onClick={handleClick}
-    >
+    // biome-ignore lint: this is just a progressive enhancement
+    <a {...props} onClick={handleClick}>
       {props.children}
     </a>
   )

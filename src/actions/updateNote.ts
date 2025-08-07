@@ -1,9 +1,9 @@
+import { Effect, pipe, Schema } from 'effect'
+import type { Client } from 'gel'
 import { updateNotesMutation } from '@/mutations'
 import { NoteData, type NoteInForm } from '@/schemas'
 import { buildTraceAndMetrics } from '@/services/runtime'
 import { UnknownGelDBError } from '@/types/errors'
-import { Effect, Schema, pipe } from 'effect'
-import type { Client } from 'gel'
 import { getNotePlainText } from './createNotes'
 
 export function updateNote(

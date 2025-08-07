@@ -1,6 +1,6 @@
+import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 import type { EditSuggestionCardData } from '@/queries'
 import { cn } from '@/utils/cn'
-import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 import SuggestionCard from './SuggestionCard'
 
 export default function SuggestionsGrid({

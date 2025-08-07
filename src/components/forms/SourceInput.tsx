@@ -1,12 +1,12 @@
-import { m } from '@/paraglide/messages'
-import type { SourceType } from '@/types'
-import { SOURCE_TYPE_TO_LABEL } from '@/utils/labels'
 import {
   type ControllerRenderProps,
   type FieldPath,
   type FieldValues,
   useFormContext,
 } from 'react-hook-form'
+import { m } from '@/paraglide/messages'
+import type { SourceType } from '@/types'
+import { SOURCE_TYPE_TO_LABEL } from '@/utils/labels'
 import { Input } from '../ui/input'
 import Field from './Field'
 import RadioGroupInput from './RadioGroupInput'

@@ -1,7 +1,7 @@
 'use client'
 
+import { CircleAlertIcon } from 'lucide-react'
 import { type Label as LabelPrimitive, Slot as SlotPrimitive } from 'radix-ui'
-
 import * as React from 'react'
 import {
   Controller,
@@ -12,11 +12,9 @@ import {
   FormProvider as RHFProvider,
   useFormContext,
 } from 'react-hook-form'
-
 import { Label } from '@/components/ui/label'
 import { m } from '@/paraglide/messages'
 import { cn } from '@/utils/cn'
-import { CircleAlertIcon } from 'lucide-react'
 import { Text } from './text'
 
 const FormProvider = RHFProvider

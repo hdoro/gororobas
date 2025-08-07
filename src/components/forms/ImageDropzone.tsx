@@ -1,8 +1,5 @@
 'use client'
 
-import { m } from '@/paraglide/messages'
-import { cn } from '@/utils/cn'
-import { generateId } from '@/utils/ids'
 import { CircleXIcon, UploadCloudIcon } from 'lucide-react'
 import type React from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -11,6 +8,9 @@ import type {
   FieldPath,
   FieldValues,
 } from 'react-hook-form'
+import { m } from '@/paraglide/messages'
+import { cn } from '@/utils/cn'
+import { generateId } from '@/utils/ids'
 import { Button } from '../ui/button'
 import { FormControl, FormLabel } from '../ui/form'
 import { useToast } from '../ui/use-toast'

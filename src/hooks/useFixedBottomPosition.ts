@@ -1,6 +1,6 @@
+import type { CSSProperties } from 'react'
 import useViewport from '@/hooks/useViewport'
 import { cn } from '@/utils/cn'
-import type { CSSProperties } from 'react'
 
 /**
  * Hook that accounts for the mobile keyboard's height by using the visual viewport's height.

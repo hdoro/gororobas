@@ -1,7 +1,7 @@
 // Adapted from: https://github.com/troop-dev/tiptap-react-render/blob/main/src/tip-tap-render.tsx
 
-import type { TiptapNode } from '@/types'
 import type { JSX } from 'react'
+import type { TiptapNode } from '@/types'
 
 /**
  * Render a tip tap JSON node and all its children

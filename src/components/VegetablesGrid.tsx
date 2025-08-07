@@ -1,10 +1,10 @@
-import type { VegetableCardData } from '@/queries'
-import { cn } from '@/utils/cn'
 import type {
   DetailedHTMLProps,
   HTMLAttributes,
   PropsWithChildren,
 } from 'react'
+import type { VegetableCardData } from '@/queries'
+import { cn } from '@/utils/cn'
 import VegetableCard from './VegetableCard'
 
 export function VegetablesGridWrapper(

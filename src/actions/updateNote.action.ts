@@ -1,10 +1,10 @@
 'use server'
 
+import { Effect } from 'effect'
 import { auth } from '@/gel'
 import type { NoteInForm } from '@/schemas'
 import { runServerEffect } from '@/services/runtime'
 import { NoteUpdateFailedError } from '@/types/errors'
-import { Effect } from 'effect'
 import { updateNote } from './updateNote'
 
 export async function updateNoteAction(input: {

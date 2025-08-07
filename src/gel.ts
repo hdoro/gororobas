@@ -1,5 +1,5 @@
 import createAuth from '@gel/auth-nextjs/app'
-import { IsolationLevel, createClient } from 'gel'
+import { createClient, IsolationLevel } from 'gel'
 import { BASE_URL } from './utils/config'
 
 export const client = createClient({

@@ -1,13 +1,13 @@
-import { m } from '@/paraglide/messages'
-import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
+  dehydrate,
   HydrationBoundary,
   QueryClient,
-  dehydrate,
 } from '@tanstack/react-query'
 import type { Metadata } from 'next'
-import ResourcesIndex from './ResourcesIndex'
+import { m } from '@/paraglide/messages'
+import { queryParamsToQueryKey } from '@/utils/queryParams'
 import fetchResourcesIndex from './fetchResourcesIndex'
+import ResourcesIndex from './ResourcesIndex'
 import { resourcesNextSearchParamsToQueryParams } from './resourcesFilters'
 
 export const generateMetadata = (): Metadata => ({

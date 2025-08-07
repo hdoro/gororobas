@@ -1,9 +1,9 @@
-import { getEditSuggestionData } from '@/actions/getEditSuggestionData'
-import { m } from '@/paraglide/messages'
-import { runServerEffect } from '@/services/runtime'
 import { Effect } from 'effect'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { getEditSuggestionData } from '@/actions/getEditSuggestionData'
+import { m } from '@/paraglide/messages'
+import { runServerEffect } from '@/services/runtime'
 import SuggestionPage from './SuggestionPage'
 
 type RouteParams = {

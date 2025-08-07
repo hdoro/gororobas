@@ -1,9 +1,11 @@
 'use client'
 
-import Link from '@/components/LinkWithTransition'
-import { ProfilePhoto } from '@/components/ProfileCard'
+import { Edit2Icon } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import RainbowIcon from '@/components/icons/RainbowIcon'
 import SeedlingIcon from '@/components/icons/SeedlingIcon'
+import Link from '@/components/LinkWithTransition'
+import { ProfilePhoto } from '@/components/ProfileCard'
 import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
@@ -11,8 +13,6 @@ import { m } from '@/paraglide/messages'
 import type { ProfileLayoutData } from '@/queries'
 import { truncate } from '@/utils/strings'
 import { paths } from '@/utils/urls'
-import { Edit2Icon } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
 import { VegetablesInWishlist } from './VegetablesInWishlist'
 
 export default function ProfilePageHeader({

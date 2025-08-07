@@ -2,8 +2,8 @@
 
 import NextLink, { useLinkStatus } from 'next/link'
 import {
-  type PropsWithChildren,
   createContext,
+  type PropsWithChildren,
   useContext,
   useEffect,
   useRef,

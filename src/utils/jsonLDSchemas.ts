@@ -2,7 +2,7 @@ import type { ResourceFormat } from '@/gel.interfaces'
 import type { ResourceCardData } from '@/queries'
 import { getImageProps } from '@/utils/getImageProps'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
-import { pathToAbsUrl, paths } from '@/utils/urls'
+import { paths, pathToAbsUrl } from '@/utils/urls'
 
 const FORMAT_TO_SCHEMA_TYPE = {
   ACADEMIC_WORK: 'ScholarlyArticle',

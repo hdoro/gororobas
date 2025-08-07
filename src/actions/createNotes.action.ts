@@ -1,9 +1,9 @@
 'use server'
 
+import { Effect } from 'effect'
 import { auth } from '@/gel'
 import type { NotesForDB } from '@/schemas'
 import { runServerEffect } from '@/services/runtime'
-import { Effect } from 'effect'
 import { createNotes } from './createNotes'
 
 export async function createNotesAction(input: NotesForDB) {

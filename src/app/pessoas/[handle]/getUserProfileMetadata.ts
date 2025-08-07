@@ -1,9 +1,9 @@
+import type { Metadata } from 'next'
 import { m } from '@/paraglide/messages'
 import type { ProfileLayoutData } from '@/queries'
 import { imageBuilder } from '@/utils/imageBuilder'
 import { truncate } from '@/utils/strings'
-import { pathToAbsUrl, paths } from '@/utils/urls'
-import type { Metadata } from 'next'
+import { paths, pathToAbsUrl } from '@/utils/urls'
 
 export default function getUserProfileMetadata(
   profile: ProfileLayoutData | null,

@@ -1,8 +1,8 @@
 'use client'
 
+import { type PropsWithChildren, useState } from 'react'
 import { cn } from '@/utils/cn'
 import type { ElementTransform } from '@/utils/noteCardTransforms'
-import { type PropsWithChildren, useState } from 'react'
 
 /** Wrapper component for NoteCard to prevent having to ship it as a client component.
  * Sole responsibility is toggling the `data-flipped` state for CSS changes to have an effect.

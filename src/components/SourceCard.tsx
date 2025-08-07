@@ -1,5 +1,5 @@
-import type { SourceCardData } from '@/queries'
 import { ExternalLinkIcon } from 'lucide-react'
+import type { SourceCardData } from '@/queries'
 import ProfileCard from './ProfileCard'
 import { Badge } from './ui/badge'
 import { buttonVariants } from './ui/button'

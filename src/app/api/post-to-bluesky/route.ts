@@ -1,10 +1,10 @@
+import { FetchHttpClient } from '@effect/platform'
+import { NodeContext } from '@effect/platform-node'
+import { Effect, Layer, Logger, LogLevel } from 'effect'
+import type { NextRequest } from 'next/server'
 import { postContentToBluesky } from '@/bluesky-bot/bluesky-bot'
 import { Bluesky, Gel, Mailpit, Resend } from '@/services'
 import { runServerEffect } from '@/services/runtime'
-import { FetchHttpClient } from '@effect/platform'
-import { NodeContext } from '@effect/platform-node'
-import { Effect, Layer, LogLevel, Logger } from 'effect'
-import type { NextRequest } from 'next/server'
 
 const AllServices = Layer.mergeAll(
   Bluesky.fromEnv,

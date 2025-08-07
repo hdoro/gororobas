@@ -1,3 +1,5 @@
+import { Effect, pipe } from 'effect'
+import type { Metadata } from 'next'
 import HomePage from '@/components/HomePage'
 import JsonLD from '@/components/JsonLD'
 import { client } from '@/gel'
@@ -6,8 +8,6 @@ import { homePageQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { shuffleArray } from '@/utils/arrays'
 import { pathToAbsUrl } from '@/utils/urls'
-import { Effect, pipe } from 'effect'
-import type { Metadata } from 'next'
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

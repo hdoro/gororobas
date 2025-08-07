@@ -1,11 +1,11 @@
+import type { Metadata } from 'next'
+import Image from 'next/image'
 import ReplaceI18nFragments from '@/components/ReplaceI18nFragments'
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
 import { m } from '@/paraglide/messages'
 import { configureRequestLocale } from '@/utils/i18n.server'
 import { paths } from '@/utils/urls'
-import type { Metadata } from 'next'
-import Image from 'next/image'
 import bgImage from '../404-bg.png'
 
 export async function generateMetadata(): Promise<Metadata> {

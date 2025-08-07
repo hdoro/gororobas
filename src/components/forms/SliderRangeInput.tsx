@@ -1,11 +1,11 @@
-import type { RangeFormValue } from '@/schemas'
-import { cn } from '@/utils/cn'
 import * as SliderPrimitive from '@radix-ui/react-slider'
 import type {
   ControllerRenderProps,
   FieldPath,
   FieldValues,
 } from 'react-hook-form'
+import type { RangeFormValue } from '@/schemas'
+import { cn } from '@/utils/cn'
 import { FormControl } from '../ui/form'
 
 export default function SliderRangeInput<

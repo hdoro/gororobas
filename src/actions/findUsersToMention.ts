@@ -1,9 +1,9 @@
 'use server'
 
+import { Effect, pipe } from 'effect'
 import { auth } from '@/gel'
 import { findUsersToMentionQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { Effect, pipe } from 'effect'
 
 export async function findUsersToMention(query: string) {
   const session = await auth.getSession()

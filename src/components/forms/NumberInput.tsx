@@ -1,9 +1,9 @@
-import { type NumberFormat, formatNumber } from '@/utils/numbers'
 import type {
   ControllerRenderProps,
   FieldPath,
   FieldValues,
 } from 'react-hook-form'
+import { formatNumber, type NumberFormat } from '@/utils/numbers'
 import { FormControl } from '../ui/form'
 import { Input } from '../ui/input'
 

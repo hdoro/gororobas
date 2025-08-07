@@ -1,3 +1,5 @@
+import { Effect, pipe, Schema } from 'effect'
+import { notFound, redirect } from 'next/navigation'
 import { auth } from '@/gel'
 import { noteEditingQuery } from '@/queries'
 import { NoteData, type RichTextValue } from '@/schemas'
@@ -5,8 +7,6 @@ import { runQuery } from '@/services/runQuery'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { InvalidInputError } from '@/types/errors'
 import { paths } from '@/utils/urls'
-import { Effect, Schema, pipe } from 'effect'
-import { notFound, redirect } from 'next/navigation'
 import EditNoteForm from './EditNoteForm'
 
 function getRouteData(handle: string) {

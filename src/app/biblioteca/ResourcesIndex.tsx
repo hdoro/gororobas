@@ -1,14 +1,29 @@
 'use client'
 
-import Link from '@/components/LinkWithTransition'
-import LoadingSpinner from '@/components/LoadingSpinner'
-import ResourceCard from '@/components/ResourceCard'
-import { SanityImage } from '@/components/SanityImage'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import {
+  ArrowLeft,
+  ArrowRightCircle,
+  FilterIcon,
+  PlusCircleIcon,
+  XIcon,
+} from 'lucide-react'
+import { AnimatePresence } from 'motion/react'
+import * as motion from 'motion/react-client'
+import { useSearchParams } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { InView } from 'react-intersection-observer'
+import { useDebounce } from 'use-debounce'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
 import ReferenceListInput, {
   useReferenceOptions,
 } from '@/components/forms/ReferenceListInput'
+import Link from '@/components/LinkWithTransition'
+import LoadingSpinner from '@/components/LoadingSpinner'
+import ResourceCard from '@/components/ResourceCard'
+import { SanityImage } from '@/components/SanityImage'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -28,26 +43,11 @@ import {
   persistParamsInUrl,
   searchParamsToNextSearchParams,
 } from '@/utils/urls'
-import { useInfiniteQuery } from '@tanstack/react-query'
-import {
-  ArrowLeft,
-  ArrowRightCircle,
-  FilterIcon,
-  PlusCircleIcon,
-  XIcon,
-} from 'lucide-react'
-import { AnimatePresence } from 'motion/react'
-import * as motion from 'motion/react-client'
-import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { InView } from 'react-intersection-observer'
-import { useDebounce } from 'use-debounce'
 import type { ResourcesIndexRouteData } from './fetchResourcesIndex'
 import { FILTER_DEFINITIONS } from './resourceFilterDefinitions'
 import {
-  type ResourcesSearchFormValue,
   queryParamsToSearchParams,
+  type ResourcesSearchFormValue,
   resourcesNextSearchParamsToQueryParams,
 } from './resourcesFilters'
 

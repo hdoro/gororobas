@@ -1,9 +1,9 @@
+import { Effect, pipe } from 'effect'
 import { auth } from '@/gel'
 import { vegetablesIndexQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import type { NextSearchParams } from '@/types'
 import { searchParamsToNextSearchParams } from '@/utils/urls'
-import { Effect, pipe } from 'effect'
 import { vegetablesNextSearchParamsToQueryParams } from './vegetablesFilters'
 
 export type VegetablesIndexRouteData = Awaited<

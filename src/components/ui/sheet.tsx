@@ -3,7 +3,7 @@
 import { X } from 'lucide-react'
 import { Dialog as SheetPrimitive } from 'radix-ui'
 import * as React from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv, type VariantProps } from 'tailwind-variants'
 
 import { m } from '@/paraglide/messages'
 import { cn } from '@/utils/cn'

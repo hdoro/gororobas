@@ -1,8 +1,8 @@
+import { SearchIcon, ShapesIcon } from 'lucide-react'
 import type { NotesIndexFilterParams, NotesIndexQueryParams } from '@/queries'
 import type { NextSearchParams } from '@/types'
 import { NOTES_PER_PAGE } from '@/utils/config'
 import { NOTE_TYPE_TO_LABEL } from '@/utils/labels'
-import { SearchIcon, ShapesIcon } from 'lucide-react'
 import type { FilterDefinition } from '../vegetais/vegetableFilterDefinitions'
 
 const PAGE_INDEX_QUERY_KEY = 'pagina'

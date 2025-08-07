@@ -1,6 +1,6 @@
-import type { ImageForRendering } from '@/types'
 import type { ImageUrlBuilder } from '@sanity/image-url/lib/types/builder'
 import type { SanityImageCrop } from '@sanity/image-url/lib/types/types'
+import type { ImageForRendering } from '@/types'
 import { imageBuilder } from './imageBuilder'
 
 export const getImageProps = createGetImageProps(imageBuilder)

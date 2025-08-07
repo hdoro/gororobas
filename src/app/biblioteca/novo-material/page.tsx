@@ -1,6 +1,6 @@
+import { redirect } from 'next/navigation'
 import { auth } from '@/gel'
 import { paths } from '@/utils/urls'
-import { redirect } from 'next/navigation'
 import NewResourceForm from './NewResourceForm'
 
 export default async function NewResourceRoute() {

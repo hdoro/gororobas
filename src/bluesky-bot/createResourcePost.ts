@@ -1,3 +1,4 @@
+import { Effect, Either, Schema } from 'effect'
 import type { ContentToPostData } from '@/queries'
 import * as Bluesky from '@/services/bluesky'
 import {
@@ -6,7 +7,6 @@ import {
 } from '@/utils/labels'
 import { stringToHashtag, truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
-import { Effect, Either, Schema } from 'effect'
 
 export const createResourcePost = (
   resource: ContentToPostData['resources'][number],

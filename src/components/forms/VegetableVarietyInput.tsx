@@ -1,3 +1,10 @@
+import { ImageOffIcon } from 'lucide-react'
+import {
+  type ControllerRenderProps,
+  type FieldPath,
+  type FieldValues,
+  useFormContext,
+} from 'react-hook-form'
 import {
   Dialog,
   DialogBody,
@@ -11,13 +18,6 @@ import { m } from '@/paraglide/messages'
 import type { VegetableVarietyInForm } from '@/schemas'
 import { cn } from '@/utils/cn'
 import { truncate } from '@/utils/strings'
-import { ImageOffIcon } from 'lucide-react'
-import {
-  type ControllerRenderProps,
-  type FieldPath,
-  type FieldValues,
-  useFormContext,
-} from 'react-hook-form'
 import { SanityImage } from '../SanityImage'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'

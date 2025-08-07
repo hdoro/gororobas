@@ -1,9 +1,9 @@
 'use server'
 
+import { Effect, pipe, Schema } from 'effect'
 import { auth } from '@/gel'
 import { rejectSuggestionMutation } from '@/mutations'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { Effect, Schema, pipe } from 'effect'
 
 export async function rejectEditSuggestionAction({
   suggestion_id,

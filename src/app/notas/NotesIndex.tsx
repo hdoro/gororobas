@@ -1,11 +1,17 @@
 'use client'
 
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { useSearchParams } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { InView } from 'react-intersection-observer'
+import { useDebounce } from 'use-debounce'
+import CheckboxesInput from '@/components/forms/CheckboxesInput'
+import Field from '@/components/forms/Field'
 import Link from '@/components/LinkWithTransition'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import NoteCard from '@/components/NoteCard'
 import { NotesGridWrapper } from '@/components/NotesGrid'
-import CheckboxesInput from '@/components/forms/CheckboxesInput'
-import Field from '@/components/forms/Field'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -20,12 +26,6 @@ import {
   persistParamsInUrl,
   searchParamsToNextSearchParams,
 } from '@/utils/urls'
-import { useInfiniteQuery } from '@tanstack/react-query'
-import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { InView } from 'react-intersection-observer'
-import { useDebounce } from 'use-debounce'
 import type { NotesIndexRouteData } from './fetchNotesIndex'
 import {
   notesNextSearchParamsToQueryParams,

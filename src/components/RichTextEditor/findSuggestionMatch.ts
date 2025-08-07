@@ -2,7 +2,7 @@
  * Copy of https://github.com/ueberdosis/tiptap/blob/develop/packages/suggestion/src/findSuggestionMatch.ts
  */
 
-import { type Range, escapeForRegEx } from '@tiptap/core'
+import { escapeForRegEx, type Range } from '@tiptap/core'
 import type { ResolvedPos } from '@tiptap/pm/model'
 
 export interface Trigger {

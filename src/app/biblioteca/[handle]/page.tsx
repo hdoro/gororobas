@@ -1,11 +1,11 @@
-import { type ResourcePageData, resourcePageQuery } from '@/queries'
-import { runQuery } from '@/services/runQuery'
-import { runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import ResourcePage from './ResourcePage'
+import { type ResourcePageData, resourcePageQuery } from '@/queries'
+import { runQuery } from '@/services/runQuery'
+import { runServerEffect } from '@/services/runtime'
 import getResourceMetadata from './getResourceMetadata'
+import ResourcePage from './ResourcePage'
 
 function getRouteData(handle: string) {
   return runServerEffect(

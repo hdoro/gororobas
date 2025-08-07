@@ -1,6 +1,6 @@
+import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 import { m } from '@/paraglide/messages'
 import { cn } from '@/utils/cn'
-import type { DetailedHTMLProps, HTMLAttributes } from 'react'
 import Carrot from './icons/Carrot'
 
 export default function LoadingSpinner({

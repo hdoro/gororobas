@@ -1,4 +1,7 @@
 import crypto from 'node:crypto'
+import { Config, Data, Effect, Layer, Logger, LogLevel, Schema } from 'effect'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import MagicLinkEmail from '@/emails/magic-link'
 import { getUserEmail } from '@/queries'
 import { Gel, Mailpit, Resend } from '@/services'
@@ -6,9 +9,6 @@ import { runServerEffect } from '@/services/runtime'
 import { configureRequestLocale } from '@/utils/i18n.server'
 import * as Email from '@/utils/sendEmail'
 import { paths } from '@/utils/urls'
-import { Config, Data, Effect, Layer, LogLevel, Logger, Schema } from 'effect'
-import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
 
 const AllServices = Layer.mergeAll(Resend.fromEnv, Mailpit.fromEnv, Gel.layer)
 

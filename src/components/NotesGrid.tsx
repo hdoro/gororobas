@@ -1,10 +1,10 @@
-import type { NoteCardData } from '@/queries'
-import { cn } from '@/utils/cn'
 import type {
   DetailedHTMLProps,
   HTMLAttributes,
   PropsWithChildren,
 } from 'react'
+import type { NoteCardData } from '@/queries'
+import { cn } from '@/utils/cn'
 import NoteCard from './NoteCard'
 
 export function NotesGridWrapper(

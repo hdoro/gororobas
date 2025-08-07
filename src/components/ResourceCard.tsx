@@ -1,5 +1,19 @@
 'use client'
 
+import {
+  BookOpen,
+  Database,
+  ExternalLinkIcon,
+  File,
+  FileText,
+  FileVideo,
+  FilmIcon,
+  Globe,
+  GraduationCap,
+  Headphones,
+  type LucideIcon,
+} from 'lucide-react'
+import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -19,23 +33,8 @@ import {
   RESOURCE_FORMAT_TO_LABEL,
 } from '@/utils/labels'
 import { truncateTiptapContent } from '@/utils/tiptap'
-import {
-  BookOpen,
-  Database,
-  ExternalLinkIcon,
-  File,
-  FileText,
-  FileVideo,
-  FilmIcon,
-  Globe,
-  GraduationCap,
-  Headphones,
-  type LucideIcon,
-} from 'lucide-react'
-import { useState } from 'react'
 import JsonLD from './JsonLD'
 import { SanityImage } from './SanityImage'
-import VegetableBadge from './VegetableChip'
 import DefaultTipTapRenderer from './tiptap/DefaultTipTapRenderer'
 import { Button } from './ui/button'
 import {
@@ -44,6 +43,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from './ui/tooltip'
+import VegetableBadge from './VegetableChip'
 
 const FORMAT_ICONS = {
   BOOK: BookOpen,

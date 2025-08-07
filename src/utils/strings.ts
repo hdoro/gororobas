@@ -47,7 +47,6 @@ export function slugify(str: string) {
       .toString()
       .normalize('NFD') // split an accented letter in the base letter and the acent
       // Replace unicode characters, such as accents
-      // biome-ignore lint:
       .replace(/[\u0300-\u036f\u0023]/g, '') // remove all previously split accents
       .toLowerCase()
       // Replace any character that isn't accepted

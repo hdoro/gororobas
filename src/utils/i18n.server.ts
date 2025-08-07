@@ -1,17 +1,17 @@
 import 'server-only'
 
+import { cookies, headers } from 'next/headers'
+import { cache } from 'react'
 import {
-  type Locale,
   assertIsLocale,
   baseLocale,
   cookieName,
   isLocale,
+  type Locale,
   overwriteGetLocale,
   overwriteGetUrlOrigin,
 } from '@/paraglide/runtime'
 import type { UsersToMentionData } from '@/queries'
-import { cookies, headers } from 'next/headers'
-import { cache } from 'react'
 import { BASE_URL } from './config'
 import { LOCALE_HEADER_KEY } from './i18n'
 
@@ -24,7 +24,7 @@ export const ssrLocale = cache(() => ({
 overwriteGetLocale(() => {
   try {
     return assertIsLocale(ssrLocale().locale)
-  } catch (error) {
+  } catch (_error) {
     return baseLocale
   }
 })

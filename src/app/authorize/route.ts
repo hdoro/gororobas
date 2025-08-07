@@ -1,6 +1,6 @@
-import { client } from '@/gel'
 import type { ResolvedConnectConfig } from 'gel/dist/conUtils'
 import { redirect } from 'next/navigation'
+import { client } from '@/gel'
 
 /** Adapted from: https://github.com/geldata/gel-js/blob/f02ffa38933191e95f207ec7852a0e4e5f7bbaf1/packages/auth-core/src/core.ts#L34-L41 */
 async function getGelAuthServerUrl() {

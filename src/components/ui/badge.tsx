@@ -1,5 +1,5 @@
+import { tv, type VariantProps } from 'tailwind-variants'
 import { cn } from '@/utils/cn'
-import { type VariantProps, tv } from 'tailwind-variants'
 
 const badgeVariants = tv({
   base: 'inline-flex items-center rounded-full border leading-none whitespace-nowrap text-ellipsis font-medium transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2',

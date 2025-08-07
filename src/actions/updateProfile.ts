@@ -1,5 +1,7 @@
 'use server'
 
+import { Effect, pipe, Schema } from 'effect'
+import type { Client } from 'gel'
 import { auth } from '@/gel'
 import { updateProfileMutation, upsertSourcesMutation } from '@/mutations'
 import { ProfileDataWithImage } from '@/schemas'
@@ -8,8 +10,6 @@ import {
   sourcesToParam,
   upsertImagesInTransaction,
 } from '@/utils/mutation.utils'
-import { Effect, Schema, pipe } from 'effect'
-import type { Client } from 'gel'
 
 export async function updateProfileAction(
   input: typeof ProfileDataWithImage.Type,

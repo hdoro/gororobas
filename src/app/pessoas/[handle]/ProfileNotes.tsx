@@ -1,7 +1,7 @@
+import NoteIcon from '@/components/icons/NoteIcon'
 import Link from '@/components/LinkWithTransition'
 import NotesGrid from '@/components/NotesGrid'
 import SectionTitle from '@/components/SectionTitle'
-import NoteIcon from '@/components/icons/NoteIcon'
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
 import { m } from '@/paraglide/messages'

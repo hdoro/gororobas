@@ -1,18 +1,18 @@
 'use client'
 
+import { Schema } from 'effect'
 import useGlobalKeyDown from '@/hooks/useGlobalKeyDown'
 import { m } from '@/paraglide/messages'
 import {
   RichTextMentionAttributes,
   type RichTextMentionAttributesInForm,
 } from '@/schemas'
-import { Schema } from 'effect'
-import { SanityImage } from '../SanityImage'
 import Carrot from '../icons/Carrot'
+import { SanityImage } from '../SanityImage'
 import { Button } from '../ui/button'
 import { Text } from '../ui/text'
-import ResponsiveFloater from './ResponsiveFloater'
 import { findMentionMatch } from './findSuggestionMatch'
+import ResponsiveFloater from './ResponsiveFloater'
 import type { EditorUIProps } from './tiptapStateMachine'
 import useMentionOptions from './useMentionOptions'
 

@@ -1,4 +1,3 @@
-import { pathToAbsUrl } from '@/utils/urls'
 import {
   Body,
   Container,
@@ -10,6 +9,7 @@ import {
   Tailwind,
 } from '@react-email/components'
 import type { PropsWithChildren } from 'react'
+import { pathToAbsUrl } from '@/utils/urls'
 
 export default function EmailLayout(
   props: PropsWithChildren<{ preview: string }>,

@@ -1,13 +1,13 @@
+import { Effect, pipe } from 'effect'
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { m } from '@/paraglide/messages'
 import { notePageQuery } from '@/queries'
 import { runQuery } from '@/services/runQuery'
 import { runServerEffect } from '@/services/runtime'
 import { truncate } from '@/utils/strings'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
-import { pathToAbsUrl, paths } from '@/utils/urls'
-import { Effect, pipe } from 'effect'
-import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { paths, pathToAbsUrl } from '@/utils/urls'
 import NotePage from './NotePage'
 
 export function getNoteRouteData(handle: string) {

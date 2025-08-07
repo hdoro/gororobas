@@ -1,10 +1,10 @@
+import { Effect } from 'effect'
+import { RedirectType, redirect } from 'next/navigation'
 import { auth } from '@/gel'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { EmailNotVerifiedError, SigninFailedError } from '@/types/errors'
 import { configureRequestLocale } from '@/utils/i18n.server'
 import { paths } from '@/utils/urls'
-import { Effect } from 'effect'
-import { RedirectType, redirect } from 'next/navigation'
 import {
   clearAuthRedirectCookie,
   getAuthRedirectCookie,

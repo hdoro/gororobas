@@ -1,3 +1,6 @@
+import { mergeAttributes, Node, nodeInputRule } from '@tiptap/core'
+import { PluginKey } from '@tiptap/pm/state'
+import { Schema } from 'effect'
 import { m } from '@/paraglide/messages'
 import {
   RichTextImageAttributes,
@@ -5,9 +8,6 @@ import {
 } from '@/schemas'
 import { getImageProps } from '@/utils/getImageProps'
 import { sourcesToPlainText } from '@/utils/sources'
-import { Node, mergeAttributes, nodeInputRule } from '@tiptap/core'
-import { PluginKey } from '@tiptap/pm/state'
-import { Schema } from 'effect'
 
 export const inputRegex =
   /(?:^|\s)(!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\))$/
@@ -89,7 +89,7 @@ export const Image = Node.create<ImageOptions>({
           },
         ],
       ]
-    } catch (error) {
+    } catch (_error) {
       return ['div']
     }
   },
@@ -107,7 +107,7 @@ export const Image = Node.create<ImageOptions>({
           sourcesToPlainText({ sources: image.sources, prefix: 'por' }) ||
           'false',
       })
-    } catch (error) {}
+    } catch (_error) {}
 
     return `\n(${label})\n`
   },

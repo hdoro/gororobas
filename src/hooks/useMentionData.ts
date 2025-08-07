@@ -1,9 +1,9 @@
+import { useQuery } from '@tanstack/react-query'
+import { Effect, Ref, Schedule } from 'effect'
 import {
   type GetMentionByIdResult,
   getMentionsById,
 } from '@/actions/getMentionsData'
-import { useQuery } from '@tanstack/react-query'
-import { Effect, Ref, Schedule } from 'effect'
 
 interface QueueItem {
   id: string

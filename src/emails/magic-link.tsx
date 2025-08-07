@@ -1,5 +1,5 @@
-import { m } from '@/paraglide/messages'
 import { Button, Heading, Section, Text } from '@react-email/components'
+import { m } from '@/paraglide/messages'
 import EmailLayout from './email-layout'
 
 export default function MagicLinkEmail({

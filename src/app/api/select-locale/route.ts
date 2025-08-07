@@ -1,7 +1,7 @@
+import { NextResponse } from 'next/server'
 import { cookieName, isLocale, localizeHref } from '@/paraglide/runtime'
 import { LOCALE_HEADER_KEY } from '@/utils/i18n'
 import { configureRequestLocale } from '@/utils/i18n.server'
-import { NextResponse } from 'next/server'
 
 export async function GET(request: Request): Promise<Response> {
   const currentLocale = await configureRequestLocale(request)

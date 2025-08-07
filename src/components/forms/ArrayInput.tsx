@@ -1,12 +1,10 @@
-import { m } from '@/paraglide/messages'
-import { generateId } from '@/utils/ids'
 import {
+  closestCenter,
   DndContext,
   type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   type UniqueIdentifier,
-  closestCenter,
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
@@ -27,6 +25,8 @@ import {
   useFieldArray,
   useFormContext,
 } from 'react-hook-form'
+import { m } from '@/paraglide/messages'
+import { generateId } from '@/utils/ids'
 import { Button } from '../ui/button'
 import { Separator } from '../ui/separator'
 

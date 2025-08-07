@@ -1,9 +1,9 @@
-import { richTextEditorTheme } from '@/components/RichTextEditor/RichTextEditor.theme'
-import { getTiptapExtensions } from '@/components/RichTextEditor/getTiptapExtensions'
-import { RichText, type RichTextValue } from '@/schemas'
-import type { TiptapNode } from '@/types'
 import { generateText } from '@tiptap/core'
 import { Schema } from 'effect'
+import { getTiptapExtensions } from '@/components/RichTextEditor/getTiptapExtensions'
+import { richTextEditorTheme } from '@/components/RichTextEditor/RichTextEditor.theme'
+import { RichText, type RichTextValue } from '@/schemas'
+import type { TiptapNode } from '@/types'
 
 function removeEmptyTextNodes(json: TiptapNode): TiptapNode {
   if (!json.content) return json
@@ -38,7 +38,7 @@ export function tiptapJSONtoPlainText(json: TiptapNode) {
       //   },
       // },
     })
-  } catch (error) {
+  } catch (_error) {
     return JSON.stringify(json)
   }
 }

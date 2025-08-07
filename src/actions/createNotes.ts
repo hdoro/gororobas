@@ -1,11 +1,11 @@
+import { Effect, pipe, Schema } from 'effect'
+import type { Client } from 'gel'
 import { insertNotesMutation } from '@/mutations'
 import { NoteDataArray, type NoteInForm, type NotesForDB } from '@/schemas'
 import { buildTraceAndMetrics } from '@/services/runtime'
 import { UnknownGelDBError } from '@/types/errors'
 import { tiptapJSONtoPlainText } from '@/utils/tiptap'
 import { getStandardHandle } from '@/utils/urls'
-import { Effect, Schema, pipe } from 'effect'
-import type { Client } from 'gel'
 
 export function createNotes(input: NotesForDB, client: Client) {
   return pipe(

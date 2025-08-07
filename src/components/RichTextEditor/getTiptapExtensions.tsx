@@ -1,7 +1,7 @@
-import { cn } from '@/utils/cn'
 import { Placeholder } from '@tiptap/extensions'
 import type { Extensions } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { cn } from '@/utils/cn'
 import { Image } from './ImageExtension'
 import { Mention } from './MentionExtension'
 import type { richTextEditorTheme } from './RichTextEditor.theme'

@@ -1,6 +1,6 @@
+import { Effect, pipe } from 'effect'
 import type { $infer } from '@/edgeql'
 import { auth } from '@/gel'
-import { Effect, pipe } from 'effect'
 import { buildTraceAndMetrics } from './runtime'
 
 class QueryError {

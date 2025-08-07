@@ -1,3 +1,16 @@
+import {
+  ArrowUpNarrowWide,
+  BeanIcon,
+  CalendarClockIcon,
+  CookingPotIcon,
+  type LucideIcon,
+  RecycleIcon,
+  RulerIcon,
+  SearchIcon,
+  ShapesIcon,
+  ThermometerIcon,
+} from 'lucide-react'
+import type { ComponentProps } from 'react'
 import type SliderRangeInput from '@/components/forms/SliderRangeInput'
 import { m } from '@/paraglide/messages'
 import {
@@ -14,19 +27,6 @@ import {
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
 import { MAX_ACCEPTED_HEIGHT, type NumberFormat } from '@/utils/numbers'
-import {
-  ArrowUpNarrowWide,
-  BeanIcon,
-  CalendarClockIcon,
-  CookingPotIcon,
-  type LucideIcon,
-  RecycleIcon,
-  RulerIcon,
-  SearchIcon,
-  ShapesIcon,
-  ThermometerIcon,
-} from 'lucide-react'
-import type { ComponentProps } from 'react'
 
 export type FilterDefinition = {
   queryKey: string

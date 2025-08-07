@@ -1,10 +1,10 @@
+import { SproutIcon } from 'lucide-react'
+import { tv, type VariantProps } from 'tailwind-variants'
 import { m } from '@/paraglide/messages'
 import type { ProfileData, StoredImageDataInForm } from '@/schemas'
 import type { ImageForRendering } from '@/types'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
-import { SproutIcon } from 'lucide-react'
-import { type VariantProps, tv } from 'tailwind-variants'
 import ProfileCardLink from './ProfileCardLink'
 import { SanityImage } from './SanityImage'
 import { Text } from './ui/text'
@@ -121,6 +121,7 @@ export function ProfilePhoto({
 
   if (photo && 'file' in photo && photo.file instanceof File) {
     return (
+      // biome-ignore lint: <img> element is fine as it's a local blob
       <img
         src={URL.createObjectURL(photo.file)}
         alt={m.tidy_true_mole_gasp()}

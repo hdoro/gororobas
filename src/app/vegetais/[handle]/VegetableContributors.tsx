@@ -1,18 +1,18 @@
+import { Effect, pipe } from 'effect'
+import SparklesIcon from '@/components/icons/SparklesIcon'
 import SectionTitle from '@/components/SectionTitle'
 import SourcesGrid from '@/components/SourcesGrid'
 import SuggestionsGrid from '@/components/SuggestionsGrid'
-import SparklesIcon from '@/components/icons/SparklesIcon'
 import { Text } from '@/components/ui/text'
 import { client } from '@/gel'
 import { m } from '@/paraglide/messages'
 import {
+  editHistoryQuery,
   type SourceCardData,
   type VegetablePageData,
-  editHistoryQuery,
 } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { generateId } from '@/utils/ids'
-import { Effect, pipe } from 'effect'
 
 const fetchEditHistory = (vegetable_id: string) =>
   pipe(

@@ -1,8 +1,8 @@
+import type { LucideIcon } from 'lucide-react'
+import { CarrotIcon, SearchIcon, ShapesIcon, TagsIcon } from 'lucide-react'
 import { m } from '@/paraglide/messages'
 import type { ReferenceObjectType } from '@/types'
 import { RESOURCE_FORMAT_TO_LABEL } from '@/utils/labels'
-import type { LucideIcon } from 'lucide-react'
-import { CarrotIcon, SearchIcon, ShapesIcon, TagsIcon } from 'lucide-react'
 
 export type ResourceFilterDefinition = {
   queryKey: string

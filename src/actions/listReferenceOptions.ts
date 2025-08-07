@@ -1,5 +1,6 @@
 'use server'
 
+import { Effect, pipe } from 'effect'
 import { auth } from '@/gel'
 import {
   profilesForReferenceQuery,
@@ -12,7 +13,6 @@ import type {
   ReferenceOption,
   ReferenceValueType,
 } from '@/types'
-import { Effect, pipe } from 'effect'
 
 export async function listReferenceOptions(
   objectTypes: ReferenceObjectType[],

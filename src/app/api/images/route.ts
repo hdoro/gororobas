@@ -1,9 +1,9 @@
+import { Effect, pipe } from 'effect'
 import { auth } from '@/gel'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { FailedUploadingImageError } from '@/types/errors'
 import { BASE_URL } from '@/utils/config'
 import { sanityServerClient } from '@/utils/sanity.client'
-import { Effect, pipe } from 'effect'
 
 export async function POST(request: Request): Promise<Response> {
   const session = await auth.getSession()

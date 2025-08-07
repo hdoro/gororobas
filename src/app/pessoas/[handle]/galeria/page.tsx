@@ -1,9 +1,9 @@
+import { Effect, pipe } from 'effect'
+import { notFound } from 'next/navigation'
 import { profileGalleryQuery } from '@/queries'
 import { runQuery } from '@/services/runQuery'
 import { runServerEffect } from '@/services/runtime'
 import { shuffleArray } from '@/utils/arrays'
-import { Effect, pipe } from 'effect'
-import { notFound } from 'next/navigation'
 import ProfileGallery from './ProfileGallery'
 
 function getRouteData(handle: string) {

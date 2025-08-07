@@ -1,12 +1,12 @@
+import { Effect, pipe } from 'effect'
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import SuggestionsGrid from '@/components/SuggestionsGrid'
 import { Text } from '@/components/ui/text'
 import { client } from '@/gel'
 import { m } from '@/paraglide/messages'
 import { pendingSuggestionsIndexQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { Effect, pipe } from 'effect'
-import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: m.male_polite_myna_arrive(),

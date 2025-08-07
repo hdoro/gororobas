@@ -4,13 +4,11 @@ import {
   type VegetablePageHeroData,
 } from '@/app/vegetais/[handle]/VegetablePageHero'
 import ChangeIndicator from '@/components/ChangeIndicator'
-import ProfileCard from '@/components/ProfileCard'
-import SectionTitle from '@/components/SectionTitle'
-import VegetableVarietyCard from '@/components/VegetableVarietyCard'
-import VegetablesGrid from '@/components/VegetablesGrid'
 import BulbIcon from '@/components/icons/BulbIcon'
 import RainbowIcon from '@/components/icons/RainbowIcon'
 import VegetableFriendsIcon from '@/components/icons/VegetableFriendsIcon'
+import ProfileCard from '@/components/ProfileCard'
+import SectionTitle from '@/components/SectionTitle'
 import DefaultTipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Badge, type BadgeProps } from '@/components/ui/badge'
 import {
@@ -21,6 +19,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Text } from '@/components/ui/text'
+import VegetablesGrid from '@/components/VegetablesGrid'
+import VegetableVarietyCard from '@/components/VegetableVarietyCard'
 import { auth } from '@/gel'
 import type { EditSuggestionStatus, Gender } from '@/gel.interfaces'
 import { m } from '@/paraglide/messages'
@@ -136,7 +136,6 @@ export default async function SuggestionPage({
             <a
               href={paths.vegetable(data.target_object.handle)}
               className="link"
-              // biome-ignore lint: same-site link
               target="_blank"
             >
               {data.target_object.names[0] || m.tidy_swift_wren_breathe()}

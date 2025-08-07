@@ -1,5 +1,5 @@
-import { debounce } from '@/utils/debounce'
 import { useEffect, useState } from 'react'
+import { debounce } from '@/utils/debounce'
 
 const getViewports = () => {
   if (typeof window === 'undefined' || !window)

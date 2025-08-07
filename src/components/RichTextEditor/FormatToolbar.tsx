@@ -1,6 +1,5 @@
 'use client'
 
-import { m } from '@/paraglide/messages'
 import {
   BoldIcon,
   ItalicIcon,
@@ -9,6 +8,7 @@ import {
   ListOrderedIcon,
   StrikethroughIcon,
 } from 'lucide-react'
+import { m } from '@/paraglide/messages'
 import { Button } from '../ui/button'
 import ResponsiveFloater from './ResponsiveFloater'
 import type { EditorUIProps } from './tiptapStateMachine'

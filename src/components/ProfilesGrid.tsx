@@ -1,9 +1,9 @@
-import { cn } from '@/utils/cn'
 import type {
   DetailedHTMLProps,
   HTMLAttributes,
   PropsWithChildren,
 } from 'react'
+import { cn } from '@/utils/cn'
 import ProfileAvatar, { type ProfileCardProps } from './ProfileCard'
 
 export function ProfilesGridWrapper(

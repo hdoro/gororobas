@@ -1,6 +1,6 @@
+import type { PropsWithChildren } from 'react'
 import type { NoteCardData } from '@/queries'
 import { cn } from '@/utils/cn'
-import type { PropsWithChildren } from 'react'
 import NoteCard from './NoteCard'
 
 export default function NotesStrip(

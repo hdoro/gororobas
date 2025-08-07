@@ -1,6 +1,6 @@
-import type { ReferenceObjectType, ReferenceOption } from '@/types'
 import { matchSorter } from 'match-sorter'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import type { ReferenceObjectType, ReferenceOption } from '@/types'
 import { useReferenceOptions } from '../forms/ReferenceListInput'
 
 const OBJECT_TYPES: ReferenceObjectType[] = ['UserProfile', 'Vegetable']

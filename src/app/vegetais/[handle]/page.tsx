@@ -1,11 +1,11 @@
-import { vegetablePageQuery } from '@/queries'
-import { runQuery } from '@/services/runQuery'
-import { runServerEffect } from '@/services/runtime'
 import { Effect, pipe } from 'effect'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import VegetablePage from './VegetablePage'
+import { vegetablePageQuery } from '@/queries'
+import { runQuery } from '@/services/runQuery'
+import { runServerEffect } from '@/services/runtime'
 import getVegetableMetadata from './getVegetableMetadata'
+import VegetablePage from './VegetablePage'
 
 function getRouteData(handle: string) {
   return runServerEffect(

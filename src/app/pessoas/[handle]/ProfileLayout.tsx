@@ -1,5 +1,5 @@
-import type { ProfileLayoutData } from '@/queries'
 import type { PropsWithChildren } from 'react'
+import type { ProfileLayoutData } from '@/queries'
 import ProfilePageHeader from './ProfilePageHeader'
 import { ProfilePageNavigation } from './ProfilePageNavigation'
 

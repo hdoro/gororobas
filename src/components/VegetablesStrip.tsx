@@ -1,8 +1,8 @@
 'use client'
 
-import type { VegetableCardData } from '@/queries'
 import type { PropsWithChildren } from 'react'
 import { useEffect, useRef, useState } from 'react'
+import type { VegetableCardData } from '@/queries'
 import VegetableCard from './VegetableCard'
 
 const SPEED = 0.08 // pixels per millisecond

@@ -1,9 +1,9 @@
 'use server'
 
+import { Effect, pipe, Schema } from 'effect'
 import { setAuthRedirectCookie } from '@/app/auth/[...auth]/authRedirects'
 import { EmailSchema } from '@/schemas'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
-import { Effect, Schema, pipe } from 'effect'
 import { magicLinkSignIn, magicLinkSignUp } from './gelAuthActions'
 
 export type SendMagicLinkState = {

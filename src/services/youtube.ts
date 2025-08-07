@@ -1,9 +1,10 @@
 // Adaptation of https://github.com/bmdavis419/notion-discord-notifications/blob/main/src/redis.ts
 // See: https://youtu.be/S1YKKpLR7XI
-import { YoutubeVideoId } from '@/schemas'
+
 import { youtube_v3 } from '@googleapis/youtube'
 import { Config, Context, Data, Effect, Layer, Schema } from 'effect'
 import { YoutubeTranscript } from 'youtube-transcript'
+import { YoutubeVideoId } from '@/schemas'
 import * as Level from './level'
 
 export class YoutubeError extends Data.TaggedError('YoutubeError')<{

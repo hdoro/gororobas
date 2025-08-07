@@ -1,5 +1,7 @@
 'use client'
 
+import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
+import { useCallback, useEffect, useState } from 'react'
 import Link from '@/components/LinkWithTransition'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -13,8 +15,6 @@ import {
 import type { ImageForRenderingData, VegetableCardData } from '@/queries'
 import { cn } from '@/utils/cn'
 import { paths } from '@/utils/urls'
-import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
-import { useCallback, useEffect, useState } from 'react'
 import { SanityImage } from './SanityImage'
 
 export default function VegetableCard({

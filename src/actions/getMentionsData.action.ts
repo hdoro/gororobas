@@ -1,10 +1,10 @@
 'use server'
 
+import { Effect, pipe, Schema } from 'effect'
 import { getMentionsDataQuery } from '@/queries'
 import { runQuery } from '@/services/runQuery'
 import { runServerEffect } from '@/services/runtime'
 import type { ImageForRendering } from '@/types'
-import { Effect, Schema, pipe } from 'effect'
 import type { FreshMentionData } from './getMentionsData'
 
 export async function getMentionsDataAction(rawIds: readonly string[]) {

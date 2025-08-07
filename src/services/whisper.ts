@@ -11,9 +11,9 @@ import {
   Effect,
   String as EffectString,
   Layer,
+  pipe,
   type Scope,
   Stream,
-  pipe,
 } from 'effect'
 
 type WhisperOptions = {

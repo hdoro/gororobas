@@ -1,6 +1,6 @@
-import { cn } from '@/utils/cn'
 import * as React from 'react'
-import { type VariantProps, tv } from 'tailwind-variants'
+import { tv, type VariantProps } from 'tailwind-variants'
+import { cn } from '@/utils/cn'
 
 const textVariants = tv({
   variants: {

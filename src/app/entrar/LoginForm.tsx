@@ -1,5 +1,8 @@
 'use client'
 
+import { SendIcon } from 'lucide-react'
+import { useActionState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { type SendMagicLinkState, sendMagicLink } from '@/actions/sendMagicLink'
 import GoogleMonogram from '@/components/icons/GoogleMonogram'
 import NoteIcon from '@/components/icons/NoteIcon'
@@ -12,9 +15,6 @@ import { Label } from '@/components/ui/label'
 import { Text } from '@/components/ui/text'
 import { m } from '@/paraglide/messages'
 import { paths } from '@/utils/urls'
-import { SendIcon } from 'lucide-react'
-import { useActionState } from 'react'
-import { useFormStatus } from 'react-dom'
 
 function MagicLinkForm({
   state,

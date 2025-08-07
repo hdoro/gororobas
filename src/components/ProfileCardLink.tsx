@@ -1,12 +1,12 @@
 'use client'
 
-import Link from '@/components/LinkWithTransition'
 import type {
   ComponentProps,
   DetailedHTMLProps,
   HTMLAttributes,
   PropsWithChildren,
 } from 'react'
+import Link from '@/components/LinkWithTransition'
 
 export default function ProfileCardLink({
   asLink,

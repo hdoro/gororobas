@@ -1,8 +1,3 @@
-import { ImageObjectInDB } from '@/schemas'
-import { downloadImageFile } from '@/utils/downloadImageFile'
-import { getImageProps } from '@/utils/getImageProps'
-import { sourcesToPlainText } from '@/utils/sources'
-import { truncate } from '@/utils/strings'
 import {
   type AppBskyEmbedDefs,
   type AppBskyEmbedImages,
@@ -11,6 +6,11 @@ import {
   RichText,
 } from '@atproto/api'
 import { Config, Context, Data, Effect, Layer, Schema } from 'effect'
+import { ImageObjectInDB } from '@/schemas'
+import { downloadImageFile } from '@/utils/downloadImageFile'
+import { getImageProps } from '@/utils/getImageProps'
+import { sourcesToPlainText } from '@/utils/sources'
+import { truncate } from '@/utils/strings'
 
 export class BlueskyError extends Data.TaggedError('BlueskyError')<{
   cause?: unknown

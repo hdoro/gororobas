@@ -1,5 +1,6 @@
 'use client'
 
+import { CheckIcon, LanguagesIcon } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +12,6 @@ import {
 import { m } from '@/paraglide/messages'
 import { getLocale } from '@/paraglide/runtime'
 import { LOCALE_LABELS } from '@/utils/i18n'
-import { CheckIcon, LanguagesIcon } from 'lucide-react'
 import { Button } from './ui/button'
 
 export default function LocaleSelector({

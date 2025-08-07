@@ -1,3 +1,5 @@
+import { CircleHelp, Edit2Icon, InfoIcon } from 'lucide-react'
+import { Fragment, Suspense } from 'react'
 import ChangeIndicator from '@/components/ChangeIndicator'
 import Link from '@/components/LinkWithTransition'
 import ReplaceI18nFragment from '@/components/ReplaceI18nFragments'
@@ -25,8 +27,6 @@ import {
 } from '@/utils/labels'
 import { rangeValueToLabel } from '@/utils/numbers'
 import { paths } from '@/utils/urls'
-import { CircleHelp, Edit2Icon, InfoIcon } from 'lucide-react'
-import { Fragment, Suspense } from 'react'
 import { VegetableHeroPhotos } from './VegetableHeroPhotos'
 import WishlistButtonData from './WishlistButtonData'
 
@@ -270,10 +270,7 @@ function TwoColInfo({
             if (!item) return null
 
             if (typeof item === 'string') {
-              return (
-                // biome-ignore lint: we need to use the index to account for empty paragraphs
-                <Badge key={item}>{item}</Badge>
-              )
+              return <Badge key={item}>{item}</Badge>
             }
 
             return (
@@ -292,17 +289,13 @@ function TwoColInfo({
               </Tooltip>
             )
           })}
-        {typeof right === 'string' && (
-          <>
-            {right.split('\n').map((paragraph, idx, arr) => (
-              // biome-ignore lint: we need to use the index to account for empty paragraphs
-              <Fragment key={paragraph}>
-                {paragraph}
-                {idx < arr.length - 1 && <br />}
-              </Fragment>
-            ))}
-          </>
-        )}
+        {typeof right === 'string' &&
+          right.split('\n').map((paragraph, idx, arr) => (
+            <Fragment key={paragraph}>
+              {paragraph}
+              {idx < arr.length - 1 && <br />}
+            </Fragment>
+          ))}
       </Text>
     </div>
   )

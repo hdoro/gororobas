@@ -1,5 +1,5 @@
-import { cn } from '@/utils/cn'
 import type { SVGProps } from 'react'
+import { cn } from '@/utils/cn'
 
 export default function GororobasLogo(props: SVGProps<SVGSVGElement>) {
   return (

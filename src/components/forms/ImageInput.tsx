@@ -1,8 +1,5 @@
 'use client'
 
-import { m } from '@/paraglide/messages'
-import type { ImageInForm } from '@/schemas'
-import { generateId } from '@/utils/ids'
 import { CircleXIcon } from 'lucide-react'
 import {
   type ControllerRenderProps,
@@ -11,6 +8,9 @@ import {
   useFormContext,
   useWatch,
 } from 'react-hook-form'
+import { m } from '@/paraglide/messages'
+import type { ImageInForm } from '@/schemas'
+import { generateId } from '@/utils/ids'
 import { SanityImage } from '../SanityImage'
 import { Button } from '../ui/button'
 import { FormControl } from '../ui/form'

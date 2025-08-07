@@ -1,4 +1,3 @@
-import { effectTsResolver } from '@/utils/effectResolver'
 import type { Schema } from 'effect'
 import {
   type FieldValues,
@@ -6,6 +5,7 @@ import {
   type UseFormReturn,
   useForm as useFormRHF,
 } from 'react-hook-form'
+import { effectTsResolver } from '@/utils/effectResolver'
 
 export function useFormWithSchema<
   TFieldValues extends FieldValues = FieldValues,

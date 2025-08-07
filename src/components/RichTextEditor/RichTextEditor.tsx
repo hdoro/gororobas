@@ -6,6 +6,7 @@ import { useMachine } from '@xstate/react'
 import { useEffect, useId, useMemo, useRef } from 'react'
 import BlocksToolbar from './BlocksToolbar'
 import FormatToolbar from './FormatToolbar'
+import { getTiptapExtensions } from './getTiptapExtensions'
 import ImageEditor from './ImageEditor'
 import LinkEditor from './LinkEditor'
 import MentionList from './MentionList'
@@ -13,9 +14,8 @@ import {
   type RichTextEditorThemeProps,
   richTextEditorTheme,
 } from './RichTextEditor.theme'
-import VideoEditor from './VideoEditor'
-import { getTiptapExtensions } from './getTiptapExtensions'
 import { type EditorUIProps, tiptapStateMachine } from './tiptapStateMachine'
+import VideoEditor from './VideoEditor'
 
 export default function RichTextEditor(
   props: {

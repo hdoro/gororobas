@@ -1,6 +1,6 @@
+import HistoryIcon from '@/components/icons/HistoryIcon'
 import SectionTitle from '@/components/SectionTitle'
 import SuggestionsGrid from '@/components/SuggestionsGrid'
-import HistoryIcon from '@/components/icons/HistoryIcon'
 import { Text } from '@/components/ui/text'
 import { m } from '@/paraglide/messages'
 import type { ProfileContributionsData } from '@/queries'

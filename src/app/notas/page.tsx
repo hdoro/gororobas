@@ -1,12 +1,12 @@
-import { queryParamsToQueryKey } from '@/utils/queryParams'
 import {
+  dehydrate,
   HydrationBoundary,
   QueryClient,
-  dehydrate,
 } from '@tanstack/react-query'
 import type { Metadata } from 'next'
-import NotesIndex from './NotesIndex'
+import { queryParamsToQueryKey } from '@/utils/queryParams'
 import fetchNotesIndex from './fetchNotesIndex'
+import NotesIndex from './NotesIndex'
 import { notesNextSearchParamsToQueryParams } from './notesFilterDefinition'
 
 export const metadata: Metadata = {

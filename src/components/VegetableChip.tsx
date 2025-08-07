@@ -1,8 +1,9 @@
 'use client'
 
+import { tv, type VariantProps } from 'tailwind-variants'
+import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import Link from '@/components/LinkWithTransition'
 import { SanityImage } from '@/components/SanityImage'
-import SeedlingIcon from '@/components/icons/SeedlingIcon'
 import { Text } from '@/components/ui/text'
 import {
   Tooltip,
@@ -11,7 +12,6 @@ import {
 } from '@/components/ui/tooltip'
 import type { WishlistForProfile } from '@/queries'
 import { paths } from '@/utils/urls'
-import { type VariantProps, tv } from 'tailwind-variants'
 
 const vegetableChipVariants = tv({
   slots: {

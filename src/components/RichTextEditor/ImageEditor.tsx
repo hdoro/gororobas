@@ -1,5 +1,9 @@
 'use client'
 
+import type { JSONContent } from '@tiptap/react'
+import { Effect, pipe, Schema } from 'effect'
+import React, { useEffect } from 'react'
+import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import { m } from '@/paraglide/messages'
 import {
   ImageFormToDBTransformer,
@@ -8,10 +12,6 @@ import {
   type StoredImageInFormType,
 } from '@/schemas'
 import { useFormWithSchema } from '@/utils/useFormWithSchema'
-import type { JSONContent } from '@tiptap/react'
-import { Effect, Schema, pipe } from 'effect'
-import React, { useEffect } from 'react'
-import { FormProvider, type SubmitHandler } from 'react-hook-form'
 import Field from '../forms/Field'
 import ImageInput from '../forms/ImageInput'
 import Carrot from '../icons/Carrot'

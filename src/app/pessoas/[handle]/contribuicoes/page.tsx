@@ -1,8 +1,8 @@
+import { Effect, pipe } from 'effect'
+import { notFound } from 'next/navigation'
 import { profileContributionsQuery } from '@/queries'
 import { runQuery } from '@/services/runQuery'
 import { runServerEffect } from '@/services/runtime'
-import { Effect, pipe } from 'effect'
-import { notFound } from 'next/navigation'
 import ProfileContributions from './ProfileContributions'
 
 function getRouteData(handle: string) {

@@ -1,8 +1,8 @@
+import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 import HideFooter from '@/components/HideFooter'
 import { auth } from '@/gel'
 import { getAuthRedirect, paths } from '@/utils/urls'
-import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
 import NewNoteForm from './NewNoteForm'
 
 export const metadata: Metadata = {

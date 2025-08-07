@@ -1,13 +1,13 @@
 'use client'
 
+import { CheckIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { acceptEditSuggestionAction } from '@/actions/acceptEditSuggestion'
 import { rejectEditSuggestionAction } from '@/actions/rejectEditSuggestion'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { m } from '@/paraglide/messages'
-import { CheckIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 
 export default function JudgeSuggestion({
   suggestion_id,

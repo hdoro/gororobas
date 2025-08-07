@@ -1,5 +1,8 @@
 'use client'
 
+import { TrashIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { deleteNotesAction } from '@/actions/deleteNotes.action'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import { Button } from '@/components/ui/button'
@@ -16,9 +19,6 @@ import { Text } from '@/components/ui/text'
 import { useToast } from '@/components/ui/use-toast'
 import { m } from '@/paraglide/messages'
 import { paths } from '@/utils/urls'
-import { TrashIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 
 export default function DeleteNoteButton({ noteId }: { noteId: string }) {
   const router = useRouter()

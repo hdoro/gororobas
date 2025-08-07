@@ -1,10 +1,10 @@
-import type { FormOption } from '@/types'
-import { cn } from '@/utils/cn'
 import type {
   ControllerRenderProps,
   FieldPath,
   FieldValues,
 } from 'react-hook-form'
+import type { FormOption } from '@/types'
+import { cn } from '@/utils/cn'
 import { buttonVariants } from '../ui/button'
 import { Checkbox } from '../ui/checkbox'
 import { FormControl, FormDescription, FormItem, FormLabel } from '../ui/form'

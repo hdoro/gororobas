@@ -1,11 +1,11 @@
+import { Effect, pipe } from 'effect'
+import type { Metadata } from 'next'
+import { notFound, redirect } from 'next/navigation'
 import { auth } from '@/gel'
 import { m } from '@/paraglide/messages'
 import { editProfileQuery } from '@/queries'
 import { buildTraceAndMetrics, runServerEffect } from '@/services/runtime'
 import { getAuthRedirect, paths } from '@/utils/urls'
-import { Effect, pipe } from 'effect'
-import type { Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
 import ProfileForm from './ProfileForm'
 
 export const metadata: Metadata = {

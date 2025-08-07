@@ -7,6 +7,8 @@
  * - `Type`: TS type
  */
 
+import type { JSONContent } from '@tiptap/react'
+import { Effect, ParseResult, Schema as S } from 'effect'
 import type {
   EdiblePart,
   Gender,
@@ -30,8 +32,6 @@ import {
   VEGETABLE_LIFECYCLE_TO_LABEL,
 } from '@/utils/labels'
 import { MAX_ACCEPTED_HEIGHT } from '@/utils/numbers'
-import type { JSONContent } from '@tiptap/react'
-import { Effect, ParseResult, Schema as S } from 'effect'
 import type {
   NotePublishStatus,
   NoteType,
@@ -504,7 +504,7 @@ export type RichTextMentionAttributesInForm =
   typeof RichTextMentionAttributes.Encoded
 
 export const YOUTUBE_REGEX =
-  /^((?:https?:)?\/\/)?((?:www|m|music)\.)?(?:youtube(?:-nocookie)?\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})(\S+)?$/g
+  /^((?:https?:)?\/\/)?((?:www|m|music)\.)?(?:youtube(?:-nocookie)?\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\/?\?(?:\S*?&?v=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})(\S+)?$/g
 
 export const YoutubeVideoURL = S.String.pipe(
   S.pattern(/youtu\.?be/, { message: () => 'Link de vídeo inválido' }),
@@ -573,7 +573,7 @@ export type RichTextImageAttributesInForm =
 // Copied from zod:
 // https://github.com/colinhacks/zod/blob/850871defc2c98928f1c7e8e05e93d4a84ed3c5f/src/types.ts#L660C1-L661C88
 const emailRegex =
-  /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i
+  /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9-]*\.)+[A-Z]{2,}$/i
 
 export const EmailSchema = S.String.pipe(
   S.pattern(emailRegex, { message: () => 'Email inválido' }),

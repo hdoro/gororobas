@@ -1,12 +1,19 @@
 'use client'
 
-import Link from '@/components/LinkWithTransition'
-import LoadingSpinner from '@/components/LoadingSpinner'
-import VegetableCard from '@/components/VegetableCard'
-import { VegetablesGridWrapper } from '@/components/VegetablesGrid'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { ArrowLeft, ArrowRightCircle, FilterIcon, XIcon } from 'lucide-react'
+import { AnimatePresence } from 'motion/react'
+import * as motion from 'motion/react-client'
+import { useSearchParams } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { InView } from 'react-intersection-observer'
+import { useDebounce } from 'use-debounce'
 import CheckboxesInput from '@/components/forms/CheckboxesInput'
 import Field from '@/components/forms/Field'
 import SliderRangeInput from '@/components/forms/SliderRangeInput'
+import Link from '@/components/LinkWithTransition'
+import LoadingSpinner from '@/components/LoadingSpinner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -16,6 +23,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Text } from '@/components/ui/text'
+import VegetableCard from '@/components/VegetableCard'
+import { VegetablesGridWrapper } from '@/components/VegetablesGrid'
 import { m } from '@/paraglide/messages'
 import type { VegetablesIndexFilterParams } from '@/queries'
 import type { RangeFormValue } from '@/schemas'
@@ -27,20 +36,11 @@ import {
   persistParamsInUrl,
   searchParamsToNextSearchParams,
 } from '@/utils/urls'
-import { useInfiniteQuery } from '@tanstack/react-query'
-import { ArrowLeft, ArrowRightCircle, FilterIcon, XIcon } from 'lucide-react'
-import { AnimatePresence } from 'motion/react'
-import * as motion from 'motion/react-client'
-import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { InView } from 'react-intersection-observer'
-import { useDebounce } from 'use-debounce'
 import type { VegetablesIndexRouteData } from './fetchVegetablesIndex'
 import { FILTER_DEFINITIONS } from './vegetableFilterDefinitions'
 import {
-  type VegetablesSearchFormValue,
   queryParamsToSearchParams,
+  type VegetablesSearchFormValue,
   vegetablesNextSearchParamsToQueryParams,
 } from './vegetablesFilters'
 
