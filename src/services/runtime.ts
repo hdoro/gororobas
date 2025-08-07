@@ -1,12 +1,20 @@
 import { Effect, Metric } from 'effect'
 import type { SpanOptions } from 'effect/Tracer'
+import { configureRequestLocale } from '@/utils/i18n.server'
 import { TracingLive } from './Tracing'
 
 export function runServerEffect<A, E>(
   effect: Effect.Effect<A, E, never>,
 ): Promise<A> {
   return Effect.runPromise(
-    Effect.provide(effect, TracingLive) as Effect.Effect<A, E, never>,
+    Effect.tryPromise({
+      try: () => configureRequestLocale(),
+      catch: () => Effect.succeed('pt'),
+    }).pipe(
+      Effect.flatMap(
+        () => Effect.provide(effect, TracingLive) as Effect.Effect<A, E, never>,
+      ),
+    ),
   )
 }
 
