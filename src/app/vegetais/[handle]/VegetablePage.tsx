@@ -11,7 +11,6 @@ import Link from '@/components/LinkWithTransition'
 import NotesGrid from '@/components/NotesGrid'
 import ResourceCard from '@/components/ResourceCard'
 import SectionTitle from '@/components/SectionTitle'
-import SourcesGrid from '@/components/SourcesGrid'
 import TipTapRenderer from '@/components/tiptap/DefaultTipTapRenderer'
 import { Button } from '@/components/ui/button'
 import { Text } from '@/components/ui/text'
@@ -30,26 +29,9 @@ export default function VegetablePage({
 }: {
   vegetable: VegetablePageData
 }) {
-  const { names = [], sources = [] } = vegetable
+  const { names = [] } = vegetable
 
   const friends = vegetable.friends || []
-
-  const externalSources = sources.flatMap((source, index) => {
-    if (source?.type !== 'EXTERNAL') return []
-
-    return (
-      sources
-        .slice(index + 1)
-        // Avoid displaying duplicates
-        .some(
-          (s) =>
-            s.credits === source.credits ||
-            (source.origin && s.origin === source.origin),
-        )
-        ? []
-        : source
-    )
-  })
 
   const carouselPhotos = [
     ...(vegetable.photos || []),
@@ -65,7 +47,7 @@ export default function VegetablePage({
           <VegetablePageHero vegetable={vegetable} />
           <VegetablePageSidebar
             vegetable={vegetable}
-            hasExternalSources={externalSources.length > 0}
+            hasResources={vegetable.related_resources.length > 0}
           />
         </div>
         {Array.isArray(vegetable.varieties) &&
@@ -114,20 +96,14 @@ export default function VegetablePage({
             <VegetablesGrid vegetables={friends} className="px-pageX mt-6" />
           </section>
         )}
-        {(externalSources.length || vegetable.related_resources.length) > 0 && (
-          <section className="my-36" id="fontes">
+        {vegetable.related_resources.length > 0 && (
+          <section className="my-36" id="recursos">
             <SectionTitle Icon={QuoteIcon}>
               {m.loud_happy_rooster_tap()}
             </SectionTitle>
             <Text level="h3" className="px-pageX font-normal">
               {m.stale_last_bulldog_rush()}
             </Text>
-            {externalSources.length > 0 && (
-              <SourcesGrid
-                sources={externalSources}
-                className="px-pageX mt-6"
-              />
-            )}
             {vegetable.related_resources.length > 0 && (
               <div className="px-page-x mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {vegetable.related_resources.map((related_resource) => (

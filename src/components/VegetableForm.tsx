@@ -45,7 +45,6 @@ import NumberInput from './forms/NumberInput'
 import RadioGroupInput from './forms/RadioGroupInput'
 import ReferenceListInput from './forms/ReferenceListInput'
 import RichTextInput from './forms/RichTextInput'
-import SourceInput from './forms/SourceInput'
 import VegetableVarietyInput from './forms/VegetableVarietyInput'
 import Carrot from './icons/Carrot'
 import { Button } from './ui/button'
@@ -345,33 +344,6 @@ export default function VegetableForm(props: {
                       <RichTextInput
                         field={field}
                         placeholder={m.agent_gross_tortoise_snap()}
-                      />
-                    )}
-                  />
-                  <ArrayField
-                    form={form}
-                    name={'sources'}
-                    label={VEGETABLE_FIELD_LABELS_MAP.sources}
-                    render={({ field: sourcesField }) => (
-                      <ArrayInput
-                        field={sourcesField}
-                        newItemLabel={m.any_lazy_penguin_honor()}
-                        renderItem={(index) => (
-                          <Field
-                            form={form}
-                            name={`${sourcesField.name}.${index}`}
-                            label={m.quick_active_termite_dazzle({
-                              number: index + 1,
-                            })}
-                            hideLabel
-                            render={({ field: subField }) => (
-                              <SourceInput
-                                field={subField}
-                                label={m.fancy_even_marmot_tap()}
-                              />
-                            )}
-                          />
-                        )}
                       />
                     )}
                   />

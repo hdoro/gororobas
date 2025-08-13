@@ -12,10 +12,10 @@ import WishlistedBy from './WishlistedBy'
 
 export default function VegetablePageSidebar({
   vegetable,
-  hasExternalSources,
+  hasResources,
 }: {
   vegetable: VegetablePageData
-  hasExternalSources: boolean
+  hasResources: boolean
 }) {
   const links = [
     {
@@ -41,9 +41,9 @@ export default function VegetablePageSidebar({
         label: m.tangy_patchy_salmon_treat(),
         href: '#amizades',
       },
-    hasExternalSources && {
-      label: m.top_muddy_skunk_seek(),
-      href: '#fontes',
+    hasResources && {
+      label: m.loud_happy_rooster_tap(),
+      href: '#recursos',
     },
     {
       label: m.wide_topical_blackbird_dial(),

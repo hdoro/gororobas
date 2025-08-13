@@ -220,7 +220,6 @@ const vegetablePageShape = e.shape(e.Vegetable, (vegetable) => ({
     },
   }),
   friends: vegetableForCard,
-  sources: sourceForCard,
 
   related_resources: (resource) => ({
     ...resourceForCard(resource),

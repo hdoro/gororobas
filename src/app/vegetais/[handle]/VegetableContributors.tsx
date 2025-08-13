@@ -48,7 +48,6 @@ export default async function VegetableContributors({
       (variety) =>
         variety?.photos?.flatMap((photo) => photo?.sources || []) || [],
     ),
-    ...(vegetable.sources || []),
     ...(acceptedSuggestions || []).flatMap((suggestion) => {
       if (!suggestion.created_by) return []
 

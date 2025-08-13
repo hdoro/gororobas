@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loud_happy_rooster_tap": "Recursos da biblioteca",
   "example_message": "Olá mundo {username}",
   "livid_vivid_bullock_foster": "Mais informação sobre",
   "every_inclusive_buzzard_greet": [
@@ -605,7 +606,6 @@
   "late_arable_bulldog_blink": "Ainda não temos dicas sobre esse vegetal. Que tal enviar a sua?",
   "patient_real_crab_nail": "Sugestões e dicas",
   "busy_candid_cockroach_radiate": "Variedades",
-  "loud_happy_rooster_tap": "Fontes e recursos",
   "stale_last_bulldog_rush": "Fontes que embasaram essas informações e recursos para ir mais a\n              fundo",
   "bad_honest_salmon_arise": "Enviar sua nota",
   "orange_front_myna_revive": "Aprendizados e experimentos",
