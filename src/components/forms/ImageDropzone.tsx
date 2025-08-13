@@ -15,8 +15,6 @@ import { Button } from '../ui/button'
 import { FormControl, FormLabel } from '../ui/form'
 import { useToast } from '../ui/use-toast'
 
-const MAX_UPLOAD_SIZE = 3 * 1024 * 1024
-
 export default function ImageDropzone<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -45,19 +43,12 @@ export default function ImageDropzone<
       'image/*': ['.png', '.jpg', '.jpeg', '.gif', '.webp'],
     },
     maxFiles: 1,
-    maxSize: MAX_UPLOAD_SIZE,
     onDropRejected: (fileRejections) => {
       const fileRejection = fileRejections[0]
       if (fileRejection.errors[0].code === 'file-invalid-type') {
         toast({
           title: m.major_hour_okapi_hope(),
           description: m.fancy_actual_albatross_gaze(),
-          variant: 'destructive',
-        })
-      } else if (fileRejection.errors[0].code === 'file-too-large') {
-        toast({
-          title: m.novel_fluffy_orangutan_love(),
-          description: m.muddy_these_crab_lend(),
           variant: 'destructive',
         })
       }

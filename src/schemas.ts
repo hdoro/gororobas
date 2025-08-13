@@ -8,6 +8,7 @@
  */
 
 import type { JSONContent } from '@tiptap/react'
+import imageCompression from 'browser-image-compression'
 import { Effect, ParseResult, Schema as S } from 'effect'
 import type {
   EdiblePart,
@@ -166,8 +167,20 @@ export const ImageFormToDBTransformer = S.transformOrFail(
           return imageInForm
         }
 
+        // First let's reduce the image to at most 2.5mb
+        const compressedFile = yield* Effect.tryPromise({
+          try: () =>
+            imageCompression(imageInForm.file, {
+              maxSizeMB: 2.5,
+              maxWidthOrHeight: 4096,
+              useWebWorker: true,
+            }),
+          catch: () => Effect.succeed(imageInForm.file),
+        })
+
+        // Then append it to FormData and upload it
         const formData = new FormData()
-        formData.append('file', imageInForm.file)
+        formData.append('file', compressedFile)
         const result = yield* _(
           Effect.tryPromise({
             try: () =>
